@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../widgets/calendar_popup.dart';
 
 class HomeTab extends StatelessWidget {
   final VoidCallback onOpenDrawer;
@@ -204,7 +205,9 @@ class HomeTab extends StatelessWidget {
                       _buildQuickAccessItem(Icons.description_outlined, "Learning\nMaterials", Colors.green),
                       _buildQuickAccessItem(Icons.assignment_outlined, "Exams", Colors.purple),
                       _buildQuickAccessItem(Icons.currency_rupee, "Fee\nPayment", Colors.orange),
-                      _buildQuickAccessItem(Icons.calendar_today_outlined, "Calendar", Colors.pink),
+                      _buildQuickAccessItem(Icons.calendar_today_outlined, "Calendar", Colors.pink, onTap: () {
+                        showCalendarPopup(context);
+                      }),
                       _buildQuickAccessItem(Icons.directions_bus_outlined, "Transport", Colors.indigo),
                     ],
                   ),
@@ -362,7 +365,7 @@ class HomeTab extends StatelessWidget {
                       ),
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () => showCalendarPopup(context),
                       child: const Text(
                         "View Calendar",
                         style: TextStyle(
@@ -396,32 +399,36 @@ class HomeTab extends StatelessWidget {
     );
   }
 
-  Widget _buildQuickAccessItem(IconData icon, String label, Color color) {
-    return Container(
-      width: 72,
-      margin: const EdgeInsets.only(right: 12),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(16),
+  Widget _buildQuickAccessItem(IconData icon, String label, Color color, {VoidCallback? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        width: 72,
+        margin: const EdgeInsets.only(right: 12),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Icon(icon, color: color, size: 26),
             ),
-            child: Icon(icon, color: color, size: 26),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            label,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF1E2875),
-              height: 1.2,
+            const SizedBox(height: 8),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF1E2875),
+                height: 1.2,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
