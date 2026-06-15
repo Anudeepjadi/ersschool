@@ -59,6 +59,8 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/logo.png
+    - assets/images/student_profile.png
+    - assets/images/student_welcome.png
 
 
 flutter_icons:
