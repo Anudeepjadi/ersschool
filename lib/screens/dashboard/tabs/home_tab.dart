@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../calendar/calendar_screen.dart';
+import '../../../widgets/calendar_popup.dart';
 
 class HomeTab extends StatelessWidget {
   final VoidCallback onOpenDrawer;
@@ -201,17 +201,14 @@ class HomeTab extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildQuickAccessItem(Icons.school_outlined, "My Class", Colors.blue, onTap: () {}),
-                      _buildQuickAccessItem(Icons.description_outlined, "Learning\nMaterials", Colors.green, onTap: () {}),
-                      _buildQuickAccessItem(Icons.assignment_outlined, "Exams", Colors.purple, onTap: () {}),
-                      _buildQuickAccessItem(Icons.currency_rupee, "Fee\nPayment", Colors.orange, onTap: () {}),
+                      _buildQuickAccessItem(Icons.school_outlined, "My Class", Colors.blue),
+                      _buildQuickAccessItem(Icons.description_outlined, "Learning\nMaterials", Colors.green),
+                      _buildQuickAccessItem(Icons.assignment_outlined, "Exams", Colors.purple),
+                      _buildQuickAccessItem(Icons.currency_rupee, "Fee\nPayment", Colors.orange),
                       _buildQuickAccessItem(Icons.calendar_today_outlined, "Calendar", Colors.pink, onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => const CalendarScreen()),
-                        );
+                        showCalendarPopup(context);
                       }),
-                      _buildQuickAccessItem(Icons.directions_bus_outlined, "Transport", Colors.indigo, onTap: () {}),
+                      _buildQuickAccessItem(Icons.directions_bus_outlined, "Transport", Colors.indigo),
                     ],
                   ),
                 ),
@@ -368,12 +365,7 @@ class HomeTab extends StatelessWidget {
                       ),
                     ),
                     TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => const CalendarScreen()),
-                        );
-                      },
+                      onPressed: () => showCalendarPopup(context),
                       child: const Text(
                         "View Calendar",
                         style: TextStyle(
