@@ -76,7 +76,7 @@ class _TransportScreenState extends State<TransportScreen> {
                 Text(
                   "Track your transport and view details",
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white.withValues(alpha: 0.8),
                     fontSize: 11,
                   ),
                 ),
@@ -102,9 +102,9 @@ class _TransportScreenState extends State<TransportScreen> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.12),
+                color: Colors.white.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.white.withOpacity(0.2)),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
               ),
               child: Row(
                 children: [
@@ -316,7 +316,7 @@ class _TransportScreenState extends State<TransportScreen> {
         border: Border.all(color: Colors.grey.shade100),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.015),
+            color: Colors.black.withValues(alpha: 0.015),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -476,7 +476,7 @@ class _TransportScreenState extends State<TransportScreen> {
         border: Border.all(color: Colors.grey.shade100),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.015),
+            color: Colors.black.withValues(alpha: 0.015),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -647,7 +647,7 @@ class _TransportScreenState extends State<TransportScreen> {
           Container(
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: isActive ? color.withOpacity(0.12) : Colors.grey.shade50,
+              color: isActive ? color.withValues(alpha: 0.12) : Colors.grey.shade50,
               shape: BoxShape.circle,
               border: Border.all(color: isActive ? color : Colors.grey.shade300, width: 1.5),
             ),
@@ -743,7 +743,7 @@ class _TransportScreenState extends State<TransportScreen> {
           Container(
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(icon, color: color, size: 16),
