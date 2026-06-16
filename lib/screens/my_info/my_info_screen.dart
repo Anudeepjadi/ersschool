@@ -863,12 +863,6 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
 
   Widget _vDiv() => Container(width: 1, height: 50, color: Colors.grey.shade200);
 
-  void _showReadOnly() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('This information is view-only. Please contact the school admin to update it.')),
-    );
-  }
-
   // ────────────────────────────────────────────────────────────────────────────
   //  3a. ACADEMIC CARD
   // ────────────────────────────────────────────────────────────────────────────
@@ -877,7 +871,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
       icon: Icons.school_rounded,
       iconColor: AppColors.primary,
       title: 'Academic Information',
-      onEdit: _showReadOnly,
+      onEdit: _openAcademicEdit,
       child: Column(children: [
         _row2('Admission No.', admissionNo),
         _row2('Class & Section', classSection),
@@ -897,7 +891,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
       icon: Icons.family_restroom,
       iconColor: AppColors.primary,
       title: 'Parent / Guardian Details',
-      onEdit: _showReadOnly,
+      onEdit: _openParentEdit,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         // Father
         const Text('Father', style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold, fontSize: 12)),
@@ -955,7 +949,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
       icon: Icons.emergency_rounded,
       iconColor: Colors.redAccent,
       title: 'Emergency Contact',
-      onEdit: _showReadOnly,
+      onEdit: _openEmergencyEdit,
       child: Column(children: [
         _row2('Contact Name', emergencyContact),
         _row2('Relationship', relationship),
@@ -972,7 +966,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
       icon: Icons.favorite_rounded,
       iconColor: Colors.green,
       title: 'Medical Information',
-      onEdit: _showReadOnly,
+      onEdit: _openMedicalEdit,
       child: Column(children: [
         _row2('Allergies', allergies),
         _row2('Medical Conditions', medicalConditions),

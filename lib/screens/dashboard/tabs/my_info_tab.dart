@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../my_info/my_info_screen.dart';
+import '../../../core/theme/app_colors.dart';
 
 class MyInfoTab extends StatelessWidget {
   const MyInfoTab({super.key});
