@@ -11,7 +11,6 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.8
-  video_player: ^2.9.2
 
 dev_dependencies:
   flutter_test:
@@ -22,11 +21,11 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/images/loginscreenlogo.png
+    - assets/images/logo.png
     - assets/images/student_profile.png
     - assets/images/student_welcome.png
     - assets/images/school_bus.png
-    - assets/animations/ers_animation.mp4
+
 
 flutter_icons:
   android: true

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
 import '../auth/login_screen.dart';
-<<<<<<< Updated upstream
 import 'tabs/home_tab.dart';
 import 'tabs/my_info_tab.dart';
 import 'tabs/class_tab.dart';
@@ -20,12 +19,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int currentIndex = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  late final List<Widget> _tabWidgets;
+  late final List<Widget> _tabs;
 
   @override
   void initState() {
     super.initState();
-    _tabWidgets = [
+    _tabs = [
       HomeTab(onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer()),
       const MyInfoTab(),
       ClassTab(onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer()),
@@ -35,40 +34,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     ];
   }
 
-  // ── Per-tab AppBar titles ─────────────────────────────────────────────────
-  static const List<_TabMeta> _tabs = [
-    _TabMeta('Ecstasy School ERP', ''),
-    _TabMeta('My Information', 'View and manage your personal details'),
-    _TabMeta('Class', 'Your class schedule & resources'),
-    _TabMeta('Fee', 'Fee details & payment history'),
-    _TabMeta('Exams', 'Upcoming exams & results'),
-    _TabMeta('More', 'Settings & other options'),
-  ];
-
-  // ── Tab bodies ────────────────────────────────────────────────────────────
-  Widget _buildBody() {
-    switch (currentIndex) {
-      case 1:
-        return const MyInfoScreen();
-      case 2:
-        return _ComingSoon(icon: Icons.menu_book, label: 'Class');
-      case 3:
-        return _ComingSoon(icon: Icons.currency_rupee, label: 'Fee');
-      case 4:
-        return _ComingSoon(icon: Icons.assignment_outlined, label: 'Exams');
-      case 5:
-        return _ComingSoon(icon: Icons.more_horiz, label: 'More');
-      default:
-        return _buildHomeBody();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final tab = _tabs[currentIndex];
 
     return Scaffold(
-      key: _scaffoldKey,
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -86,55 +56,31 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 child: Icon(Icons.person, size: 40, color: AppColors.primary),
               ),
               accountName: Text(
-                "Ananya Sharma",
+                "School Admin",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
-              accountEmail: Text("ananya.sharma@school.com"),
+              accountEmail: Text("admin@ecstasyschool.com"),
             ),
             ListTile(
-              leading: const Icon(Icons.home, color: AppColors.primary),
-              title: const Text("Home"),
-              selected: currentIndex == 0,
-              onTap: () {
-                setState(() => currentIndex = 0);
-                Navigator.pop(context);
-              },
+              leading: const Icon(Icons.dashboard, color: AppColors.primary),
+              title: const Text("Dashboard"),
+              selected: true,
+              onTap: () => Navigator.pop(context),
             ),
             ListTile(
-              leading: const Icon(Icons.person_outline),
-              title: const Text("My Info"),
-              selected: currentIndex == 1,
-              onTap: () {
-                setState(() => currentIndex = 1);
-                Navigator.pop(context);
-              },
+              leading: const Icon(Icons.school),
+              title: const Text("Students"),
+              onTap: () {},
             ),
             ListTile(
-              leading: const Icon(Icons.menu_book),
-              title: const Text("Class"),
-              selected: currentIndex == 2,
-              onTap: () {
-                setState(() => currentIndex = 2);
-                Navigator.pop(context);
-              },
+              leading: const Icon(Icons.people),
+              title: const Text("Teachers"),
+              onTap: () {},
             ),
             ListTile(
-              leading: const Icon(Icons.currency_rupee),
-              title: const Text("Fee"),
-              selected: currentIndex == 3,
-              onTap: () {
-                setState(() => currentIndex = 3);
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.assignment_outlined),
-              title: const Text("Exams"),
-              selected: currentIndex == 4,
-              onTap: () {
-                setState(() => currentIndex = 4);
-                Navigator.pop(context);
-              },
+              leading: const Icon(Icons.event),
+              title: const Text("Events Calendar"),
+              onTap: () {},
             ),
             const Divider(),
             ListTile(
@@ -150,84 +96,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ],
         ),
       ),
-<<<<<<< Updated upstream
-=======
-      appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              tab.title,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                fontSize: 18,
-              ),
-            ),
-            if (tab.subtitle.isNotEmpty)
-              Text(
-                tab.subtitle,
-                style: const TextStyle(
-                  color: Colors.white70,
-                  fontSize: 12,
-                  fontWeight: FontWeight.normal,
-                ),
-              ),
-          ],
-        ),
-        backgroundColor: AppColors.primary,
-        iconTheme: const IconThemeData(color: Colors.white),
-        actions: [
-          Stack(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.notifications_none, color: Colors.white),
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("No new notifications")),
-                  );
-                },
-              ),
-              Positioned(
-                right: 8,
-                top: 8,
-                child: Container(
-                  padding: const EdgeInsets.all(3),
-                  decoration: const BoxDecoration(
-                    color: Colors.red,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Text(
-                    '5',
-                    style: TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 12),
-            child: GestureDetector(
-              onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Profile tapped")),
-                );
-              },
-              child: const CircleAvatar(
-                radius: 16,
-                backgroundColor: Colors.white24,
-                child: Icon(Icons.person, color: Colors.white, size: 20),
-              ),
-            ),
-          ),
-        ],
-      ),
->>>>>>> Stashed changes
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: currentIndex,
         selectedItemColor: AppColors.primary,
-        unselectedItemColor: AppColors.primary.withValues(alpha: 0.7),
+        unselectedItemColor: const Color(0xFF1E2875),
         selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
         unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
         onTap: (index) {
@@ -394,6 +267,7 @@ class _ComingSoon extends StatelessWidget {
           ),
         ],
       ),
+      body: _tabs[currentIndex],
     );
   }
 }
