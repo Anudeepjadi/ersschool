@@ -19,23 +19,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int currentIndex = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  late final List<Widget> _tabs;
+  void _onTabChanged(int index) {
+    setState(() {
+      currentIndex = index;
+    });
+  }
 
   @override
-  void initState() {
-    super.initState();
-    _tabs = [
-      HomeTab(onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer()),
+  Widget build(BuildContext context) {
+    final List<Widget> tabs = [
+      HomeTab(
+        onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer(),
+        onTabSelected: _onTabChanged,
+      ),
       const MyInfoTab(),
       const ClassTab(),
       const FeeTab(),
       const ExamsTab(),
       const MoreTab(),
     ];
-  }
 
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
       drawer: Drawer(
@@ -65,7 +68,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               title: const Text("Home"),
               selected: currentIndex == 0,
               onTap: () {
-                setState(() => currentIndex = 0);
+                _onTabChanged(0);
                 Navigator.pop(context);
               },
             ),
@@ -74,7 +77,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               title: const Text("My Info"),
               selected: currentIndex == 1,
               onTap: () {
-                setState(() => currentIndex = 1);
+                _onTabChanged(1);
                 Navigator.pop(context);
               },
             ),
@@ -83,7 +86,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               title: const Text("Class"),
               selected: currentIndex == 2,
               onTap: () {
-                setState(() => currentIndex = 2);
+                _onTabChanged(2);
                 Navigator.pop(context);
               },
             ),
@@ -92,7 +95,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               title: const Text("Fee"),
               selected: currentIndex == 3,
               onTap: () {
-                setState(() => currentIndex = 3);
+                _onTabChanged(3);
                 Navigator.pop(context);
               },
             ),
@@ -101,7 +104,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               title: const Text("Exams"),
               selected: currentIndex == 4,
               onTap: () {
-                setState(() => currentIndex = 4);
+                _onTabChanged(4);
                 Navigator.pop(context);
               },
             ),
@@ -126,11 +129,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         unselectedItemColor: const Color(0xFF1E2875),
         selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
         unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
-        onTap: (index) {
-          setState(() {
-            currentIndex = index;
-          });
-        },
+        onTap: _onTabChanged,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -158,7 +157,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ],
       ),
-      body: _tabs[currentIndex],
+      body: tabs[currentIndex],
     );
   }
 }

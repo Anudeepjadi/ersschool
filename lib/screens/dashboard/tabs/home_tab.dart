@@ -4,8 +4,13 @@ import '../../../widgets/calendar_popup.dart';
 
 class HomeTab extends StatelessWidget {
   final VoidCallback onOpenDrawer;
+  final Function(int) onTabSelected;
 
-  const HomeTab({super.key, required this.onOpenDrawer});
+  const HomeTab({
+    super.key,
+    required this.onOpenDrawer,
+    required this.onTabSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -218,21 +223,25 @@ class HomeTab extends StatelessWidget {
                         Icons.school_outlined,
                         "My Class",
                         Colors.blue,
+                        onTap: () => onTabSelected(2),
                       ),
                       _buildQuickAccessItem(
                         Icons.description_outlined,
                         "Learning\nMaterials",
                         Colors.green,
+                        onTap: () => onTabSelected(5),
                       ),
                       _buildQuickAccessItem(
                         Icons.assignment_outlined,
                         "Exams",
                         Colors.purple,
+                        onTap: () => onTabSelected(4),
                       ),
                       _buildQuickAccessItem(
                         Icons.currency_rupee,
                         "Fee\nPayment",
                         Colors.orange,
+                        onTap: () => onTabSelected(3),
                       ),
                       _buildQuickAccessItem(
                         Icons.calendar_today_outlined,
