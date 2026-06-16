@@ -214,7 +214,7 @@ class _ClassScreenState extends State<ClassScreen> {
               Icon(Icons.calendar_month, size: 18, color: Colors.grey),
               SizedBox(width: 8),
               Text(
-                "Monday, 20 May 2024",
+                "Tuesday, 16 Jun 2026",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
               SizedBox(width: 16),
@@ -257,7 +257,6 @@ class _ClassScreenState extends State<ClassScreen> {
             room: "101",
             color: Colors.blue,
             icon: Icons.menu_book,
-            teacherImg: "https://i.pravatar.cc/150?u=teacher1",
           ),
           _buildTimetableItem(
             period: "2",
@@ -268,7 +267,6 @@ class _ClassScreenState extends State<ClassScreen> {
             room: "102",
             color: Colors.green,
             icon: Icons.menu_book,
-            teacherImg: "https://i.pravatar.cc/150?u=teacher2",
           ),
           _buildTimetableItem(
             period: "3",
@@ -279,7 +277,6 @@ class _ClassScreenState extends State<ClassScreen> {
             room: "103",
             color: Colors.orange,
             icon: Icons.science_outlined,
-            teacherImg: "https://i.pravatar.cc/150?u=teacher3",
           ),
           
           _buildBreakTime("Break Time", "10:15 AM - 10:30 AM"),
@@ -293,7 +290,6 @@ class _ClassScreenState extends State<ClassScreen> {
             room: "104",
             color: Colors.purple,
             icon: Icons.public,
-            teacherImg: "https://i.pravatar.cc/150?u=teacher4",
           ),
           _buildTimetableItem(
             period: "5",
@@ -304,7 +300,6 @@ class _ClassScreenState extends State<ClassScreen> {
             room: "105",
             color: Colors.indigo,
             icon: Icons.language,
-            teacherImg: "https://i.pravatar.cc/150?u=teacher5",
           ),
           _buildTimetableItem(
             period: "6",
@@ -315,7 +310,6 @@ class _ClassScreenState extends State<ClassScreen> {
             room: "106",
             color: Colors.teal,
             icon: Icons.computer,
-            teacherImg: "https://i.pravatar.cc/150?u=teacher6",
           ),
 
           const SizedBox(height: 32),
@@ -374,7 +368,6 @@ class _ClassScreenState extends State<ClassScreen> {
     required String room,
     required Color color,
     required IconData icon,
-    required String teacherImg,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -417,11 +410,6 @@ class _ClassScreenState extends State<ClassScreen> {
             flex: 30,
             child: Row(
               children: [
-                CircleAvatar(
-                  radius: 12,
-                  backgroundImage: NetworkImage(teacherImg),
-                ),
-                const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     teacher,
@@ -506,7 +494,7 @@ class _ClassScreenState extends State<ClassScreen> {
               children: [
                 Row(
                   children: [
-                    Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                    Expanded(child: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13), overflow: TextOverflow.ellipsis)),
                     const SizedBox(width: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),

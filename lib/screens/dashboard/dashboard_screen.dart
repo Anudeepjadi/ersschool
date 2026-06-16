@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
 import '../login/login_screen.dart';
 import '../class/class_screen.dart';
+import '../my_info/my_info_screen.dart';
 import 'tabs/home_tab.dart';
-import 'tabs/my_info_tab.dart';
 import 'tabs/fee_tab.dart';
 import 'tabs/exams_tab.dart';
 import 'tabs/more_tab.dart';
@@ -31,7 +31,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer(),
         onTabSelected: _onTabChanged,
       ),
-      const MyInfoTab(),
+      const MyInfoScreen(),
       ClassScreen(onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer()),
       FeeTab(onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer()),
       const ExamsTab(),
@@ -57,10 +57,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 child: Icon(Icons.person, size: 40, color: AppColors.primary),
               ),
               accountName: Text(
-                "School Admin",
+                "Anudeep Jaadi",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
-              accountEmail: Text("admin@ecstasyschool.com"),
+              accountEmail: Text("anudeepjaadi@ecstasyschool.com"),
             ),
             ListTile(
               leading: const Icon(Icons.home, color: AppColors.primary),

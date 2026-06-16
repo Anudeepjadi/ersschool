@@ -42,23 +42,26 @@ class HomeTab extends StatelessWidget {
                   onPressed: onOpenDrawer,
                 ),
                 const SizedBox(width: 8),
-                const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Hello, Anudeep👋",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Hello, Anudeep Jaadi👋",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                    SizedBox(height: 2),
-                    Text(
-                      "Good Morning!",
-                      style: TextStyle(color: Colors.white70, fontSize: 13),
-                    ),
-                  ],
+                      const SizedBox(height: 2),
+                      const Text(
+                        "Good Morning!",
+                        style: TextStyle(color: Colors.white70, fontSize: 13),
+                      ),
+                    ],
+                  ),
                 ),
                 const Spacer(),
                 // Notification bell with badge
