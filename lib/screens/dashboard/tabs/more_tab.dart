@@ -33,7 +33,7 @@ class MoreTab extends StatelessWidget {
     );
   }
 
-  Widget _buildMoreTile(IconData icon, String title, VoidCallback onTap, {Color color = const Color(0xFF1E2875)}) {
+  Widget _buildMoreTile(IconData icon, String title, VoidCallback onTap, {Color color = AppColors.primary}) {
     return Card(
       elevation: 0,
       margin: const EdgeInsets.only(bottom: 12),

@@ -178,7 +178,7 @@ class _CalendarPopupState extends State<_CalendarPopup> {
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFF1E2875),
+                              color: AppColors.primary,
                             ),
                           ),
                           Row(
@@ -275,7 +275,7 @@ class _CalendarPopupState extends State<_CalendarPopup> {
                                       color: isSelected
                                           ? Colors.white
                                           : isCurrentMonth
-                                              ? const Color(0xFF1E2875)
+                                              ? AppColors.primary
                                               : Colors.grey.shade400,
                                     ),
                                   ),
@@ -312,7 +312,7 @@ class _CalendarPopupState extends State<_CalendarPopup> {
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFF1E2875),
+                              color: AppColors.primary,
                             ),
                           ),
                           Container(
@@ -403,7 +403,7 @@ class _CalendarPopupState extends State<_CalendarPopup> {
                                 style: const TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold,
-                                  color: Color(0xFF1E2875),
+                                  color: AppColors.primary,
                                 ),
                               ),
                               if ((ev["desc"] ?? "").isNotEmpty) ...[

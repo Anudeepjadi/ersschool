@@ -25,7 +25,7 @@ class MyInfoTab extends StatelessWidget {
             const SizedBox(height: 16),
             const Text(
               "Ananya Sharma",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.primary),
             ),
             const Text(
               "Class 8-A | Roll No: 24",
@@ -54,7 +54,7 @@ class MyInfoTab extends StatelessWidget {
       child: ListTile(
         leading: Icon(icon, color: AppColors.primary),
         title: Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-        subtitle: Text(value, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+        subtitle: Text(value, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: AppColors.primary)),
       ),
     );
   }

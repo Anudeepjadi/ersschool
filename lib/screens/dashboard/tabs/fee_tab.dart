@@ -31,7 +31,7 @@ class FeeTab extends StatelessWidget {
                   children: [
                     Text("Pending Fee", style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold)),
                     SizedBox(height: 4),
-                    Text("₹12,500", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                    Text("₹12,500", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.primary)),
                   ],
                 ),
                 Icon(Icons.payment, size: 40, color: Colors.orange),
@@ -39,7 +39,7 @@ class FeeTab extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 25),
-          const Text("Payment History", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+          const Text("Payment History", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.primary)),
           const SizedBox(height: 12),
           _buildTransaction("Term 1 Tuition Fees", "Paid on 10 Apr 2026", "₹25,000", Colors.green),
           _buildTransaction("Bus Transport Charges", "Paid on 12 Apr 2026", "₹4,500", Colors.green),
@@ -59,9 +59,9 @@ class FeeTab extends StatelessWidget {
       ),
       child: ListTile(
         leading: Icon(Icons.check_circle_outline, color: color),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.primary)),
         subtitle: Text(date),
-        trailing: Text(amount, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFF1E2875))),
+        trailing: Text(amount, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.primary)),
       ),
     );
   }
