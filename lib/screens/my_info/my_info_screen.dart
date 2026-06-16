@@ -284,6 +284,8 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
   // ────────────────────────────────────────────────────────────────────────────
   void _openEditProfile() {
     final nameCtrl = TextEditingController(text: name);
+    final studentIdCtrl = TextEditingController(text: studentId);
+    final aadhaarCtrl = TextEditingController(text: aadhaar);
     final mobileCtrl = TextEditingController(text: mobile.replaceAll(RegExp(r'\D'), ''));
     final emailCtrl = TextEditingController(text: email);
     final addressCtrl = TextEditingController(text: address);
@@ -304,6 +306,10 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
             // Full Name
             _formField(ctrl: nameCtrl, label: 'Full Name', icon: Icons.person,
               validator: (v) => (v == null || v.trim().length < 2) ? 'Enter a valid name' : null),
+            const SizedBox(height: 14),
+
+            // Student ID
+            _formField(ctrl: studentIdCtrl, label: 'Student ID', icon: Icons.badge_outlined),
             const SizedBox(height: 14),
 
             // Phone + country code
@@ -384,12 +390,24 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
 
             // Address
             _formField(ctrl: addressCtrl, label: 'Address', icon: Icons.home, maxLines: 2),
+            const SizedBox(height: 14),
+
+            // Aadhaar Number
+            TextFormField(
+              controller: aadhaarCtrl,
+              keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(12)],
+              decoration: _inputDeco('Aadhaar Number (12 digits)', Icons.shield_outlined).copyWith(counterText: ''),
+              validator: (v) => (v != null && v.isNotEmpty && v.length != 12) ? 'Aadhaar must be 12 digits' : null,
+            ),
             const SizedBox(height: 22),
 
             _saveBtn(() {
               if (formKey.currentState!.validate()) {
                 setState(() {
                   name = nameCtrl.text.trim();
+                  studentId = studentIdCtrl.text.trim();
+                  aadhaar = aadhaarCtrl.text.trim();
                   mobile = mobileCtrl.text.trim();
                   countryCode = selCode;
                   email = emailCtrl.text.trim();
@@ -440,57 +458,168 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
   //  EDIT PARENT
   // ────────────────────────────────────────────────────────────────────────────
   void _openParentEdit() {
-    final ctrls = {
-      'Father Name': TextEditingController(text: fatherName),
-      'Father Phone': TextEditingController(text: fatherPhone),
-      'Father Email': TextEditingController(text: fatherEmail),
-      'Father Occupation': TextEditingController(text: fatherOccupation),
-      'Mother Name': TextEditingController(text: motherName),
-      'Mother Phone': TextEditingController(text: motherPhone),
-      'Mother Email': TextEditingController(text: motherEmail),
-      'Mother Occupation': TextEditingController(text: motherOccupation),
-    };
-    final icons = {
-      'Father Name': Icons.person,
-      'Father Phone': Icons.phone,
-      'Father Email': Icons.email,
-      'Father Occupation': Icons.work,
-      'Mother Name': Icons.person,
-      'Mother Phone': Icons.phone,
-      'Mother Email': Icons.email,
-      'Mother Occupation': Icons.work,
-    };
-    _openSimpleEdit('Edit Parent / Guardian Details', ctrls, icons, () {
-      setState(() {
-        fatherName = ctrls['Father Name']!.text;
-        fatherPhone = ctrls['Father Phone']!.text;
-        fatherEmail = ctrls['Father Email']!.text;
-        fatherOccupation = ctrls['Father Occupation']!.text;
-        motherName = ctrls['Mother Name']!.text;
-        motherPhone = ctrls['Mother Phone']!.text;
-        motherEmail = ctrls['Mother Email']!.text;
-        motherOccupation = ctrls['Mother Occupation']!.text;
-      });
-    });
+    String extractCode(String p) => p.contains(' ') ? p.split(' ')[0] : '+91';
+    String extractNum(String p) => p.contains(' ') ? p.split(' ')[1].replaceAll(RegExp(r'\D'), '') : p.replaceAll(RegExp(r'\D'), '');
+
+    final fNameCtrl = TextEditingController(text: fatherName);
+    final fPhoneCtrl = TextEditingController(text: extractNum(fatherPhone));
+    final fEmailCtrl = TextEditingController(text: fatherEmail);
+    final fOccCtrl = TextEditingController(text: fatherOccupation);
+    String selFCode = extractCode(fatherPhone);
+
+    final mNameCtrl = TextEditingController(text: motherName);
+    final mPhoneCtrl = TextEditingController(text: extractNum(motherPhone));
+    final mEmailCtrl = TextEditingController(text: motherEmail);
+    final mOccCtrl = TextEditingController(text: motherOccupation);
+    String selMCode = extractCode(motherPhone);
+
+    final formKey = GlobalKey<FormState>();
+
+    Widget phoneRow(String code, TextEditingController ctrl, void Function(String) onCodeChange) {
+      return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Container(
+          height: 56,
+          decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(12)),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              value: code,
+              menuMaxHeight: 300,
+              items: _countryCodes.map((c) => DropdownMenuItem(value: c.code, child: Text('${c.flag} ${c.code}', style: const TextStyle(fontSize: 13)))).toList(),
+              onChanged: (v) { if (v != null) onCodeChange(v); },
+            ),
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(child: TextFormField(
+          controller: ctrl,
+          keyboardType: TextInputType.phone,
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(10)],
+          decoration: _inputDeco('Mobile (10 digits)', Icons.phone).copyWith(counterText: ''),
+          validator: (v) => (v != null && v.isNotEmpty && v.length != 10) ? 'Enter 10-digit number' : null,
+        )),
+      ]);
+    }
+
+    String? emailVal(String? v) {
+      if (v != null && v.isNotEmpty && !RegExp(r'^[\w\.\-\+]+@[\w\.\-]+\.[a-zA-Z]{2,}$').hasMatch(v.trim())) return 'Enter a valid email';
+      return null;
+    }
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => StatefulBuilder(builder: (ctx, setSS) {
+        return _sheetWrapper(ctx, title: 'Edit Parent Details', child: Form(
+          key: formKey,
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const Text('Father Details', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange)),
+            const SizedBox(height: 10),
+            _formField(ctrl: fNameCtrl, label: 'Father Name', icon: Icons.person),
+            const SizedBox(height: 14),
+            phoneRow(selFCode, fPhoneCtrl, (c) => setSS(() => selFCode = c)),
+            const SizedBox(height: 14),
+            _formField(ctrl: fEmailCtrl, label: 'Father Email', icon: Icons.email, keyboardType: TextInputType.emailAddress, validator: emailVal),
+            const SizedBox(height: 14),
+            _formField(ctrl: fOccCtrl, label: 'Father Occupation', icon: Icons.work),
+            const SizedBox(height: 24),
+
+            const Text('Mother Details', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFE91E8C))),
+            const SizedBox(height: 10),
+            _formField(ctrl: mNameCtrl, label: 'Mother Name', icon: Icons.person),
+            const SizedBox(height: 14),
+            phoneRow(selMCode, mPhoneCtrl, (c) => setSS(() => selMCode = c)),
+            const SizedBox(height: 14),
+            _formField(ctrl: mEmailCtrl, label: 'Mother Email', icon: Icons.email, keyboardType: TextInputType.emailAddress, validator: emailVal),
+            const SizedBox(height: 14),
+            _formField(ctrl: mOccCtrl, label: 'Mother Occupation', icon: Icons.work),
+            const SizedBox(height: 22),
+
+            _saveBtn(() {
+              if (formKey.currentState!.validate()) {
+                setState(() {
+                  fatherName = fNameCtrl.text.trim();
+                  fatherPhone = fPhoneCtrl.text.isEmpty ? '' : '$selFCode ${fPhoneCtrl.text.trim()}';
+                  fatherEmail = fEmailCtrl.text.trim();
+                  fatherOccupation = fOccCtrl.text.trim();
+                  motherName = mNameCtrl.text.trim();
+                  motherPhone = mPhoneCtrl.text.isEmpty ? '' : '$selMCode ${mPhoneCtrl.text.trim()}';
+                  motherEmail = mEmailCtrl.text.trim();
+                  motherOccupation = mOccCtrl.text.trim();
+                });
+                Navigator.pop(context);
+              }
+            }),
+          ]),
+        ));
+      }),
+    );
   }
 
   // ────────────────────────────────────────────────────────────────────────────
   //  EDIT EMERGENCY
   // ────────────────────────────────────────────────────────────────────────────
   void _openEmergencyEdit() {
-    final ctrls = {
-      'Contact Name': TextEditingController(text: emergencyContact),
-      'Relationship': TextEditingController(text: relationship),
-      'Phone Number': TextEditingController(text: emergencyPhone),
-    };
-    final icons = {'Contact Name': Icons.person, 'Relationship': Icons.people, 'Phone Number': Icons.phone};
-    _openSimpleEdit('Edit Emergency Contact', ctrls, icons, () {
-      setState(() {
-        emergencyContact = ctrls['Contact Name']!.text;
-        relationship = ctrls['Relationship']!.text;
-        emergencyPhone = ctrls['Phone Number']!.text;
-      });
-    });
+    String extractCode(String p) => p.contains(' ') ? p.split(' ')[0] : '+91';
+    String extractNum(String p) => p.contains(' ') ? p.split(' ')[1].replaceAll(RegExp(r'\D'), '') : p.replaceAll(RegExp(r'\D'), '');
+
+    final nameCtrl = TextEditingController(text: emergencyContact);
+    final relCtrl = TextEditingController(text: relationship);
+    final phoneCtrl = TextEditingController(text: extractNum(emergencyPhone));
+    String selCode = extractCode(emergencyPhone);
+    final formKey = GlobalKey<FormState>();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => StatefulBuilder(builder: (ctx, setSS) {
+        return _sheetWrapper(ctx, title: 'Edit Emergency Contact', child: Form(
+          key: formKey,
+          child: Column(children: [
+            _formField(ctrl: nameCtrl, label: 'Contact Name', icon: Icons.person),
+            const SizedBox(height: 14),
+            _formField(ctrl: relCtrl, label: 'Relationship', icon: Icons.people),
+            const SizedBox(height: 14),
+            Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Container(
+                height: 56,
+                decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(12)),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    value: selCode,
+                    menuMaxHeight: 300,
+                    items: _countryCodes.map((c) => DropdownMenuItem(value: c.code, child: Text('${c.flag} ${c.code}', style: const TextStyle(fontSize: 13)))).toList(),
+                    onChanged: (v) { if (v != null) setSS(() => selCode = v); },
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(child: TextFormField(
+                controller: phoneCtrl,
+                keyboardType: TextInputType.phone,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(10)],
+                decoration: _inputDeco('Mobile (10 digits)', Icons.phone).copyWith(counterText: ''),
+                validator: (v) => (v != null && v.isNotEmpty && v.length != 10) ? 'Enter 10-digit number' : null,
+              )),
+            ]),
+            const SizedBox(height: 22),
+            _saveBtn(() {
+              if (formKey.currentState!.validate()) {
+                setState(() {
+                  emergencyContact = nameCtrl.text.trim();
+                  relationship = relCtrl.text.trim();
+                  emergencyPhone = phoneCtrl.text.isEmpty ? '' : '$selCode ${phoneCtrl.text.trim()}';
+                });
+                Navigator.pop(context);
+              }
+            }),
+          ]),
+        ));
+      }),
+    );
   }
 
   // ────────────────────────────────────────────────────────────────────────────
@@ -695,7 +824,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
         const SizedBox(width: 6),
         SizedBox(
           width: 90,
-          child: Text(label, style: TextStyle(fontSize: 11, color: Colors.grey.shade500)),
+          child: Text(label, style: const TextStyle(fontSize: 11, color: Color(0xFF1A1A1A))),
         ),
         Expanded(child: Text(displayValue, style: TextStyle(fontSize: 12, fontWeight: fw, color: color), overflow: TextOverflow.ellipsis)),
       ]),
@@ -734,6 +863,12 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
 
   Widget _vDiv() => Container(width: 1, height: 50, color: Colors.grey.shade200);
 
+  void _showReadOnly() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('This information is view-only. Please contact the school admin to update it.')),
+    );
+  }
+
   // ────────────────────────────────────────────────────────────────────────────
   //  3a. ACADEMIC CARD
   // ────────────────────────────────────────────────────────────────────────────
@@ -742,7 +877,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
       icon: Icons.school_rounded,
       iconColor: AppColors.primary,
       title: 'Academic Information',
-      onEdit: _openAcademicEdit,
+      onEdit: _showReadOnly,
       child: Column(children: [
         _row2('Admission No.', admissionNo),
         _row2('Class & Section', classSection),
@@ -762,7 +897,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
       icon: Icons.family_restroom,
       iconColor: AppColors.primary,
       title: 'Parent / Guardian Details',
-      onEdit: _openParentEdit,
+      onEdit: _showReadOnly,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         // Father
         const Text('Father', style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold, fontSize: 12)),
@@ -807,7 +942,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
     final fw = isEmpty ? FontWeight.normal : FontWeight.w600;
 
     return Row(children: [
-      Text('$label  ', style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
+      Text('$label  ', style: const TextStyle(fontSize: 11, color: Color(0xFF1A1A1A))),
       Expanded(child: Text(displayValue, style: TextStyle(fontSize: 11, fontWeight: fw, color: color), overflow: TextOverflow.ellipsis)),
     ]);
   }
@@ -820,7 +955,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
       icon: Icons.emergency_rounded,
       iconColor: Colors.redAccent,
       title: 'Emergency Contact',
-      onEdit: _openEmergencyEdit,
+      onEdit: _showReadOnly,
       child: Column(children: [
         _row2('Contact Name', emergencyContact),
         _row2('Relationship', relationship),
@@ -837,7 +972,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
       icon: Icons.favorite_rounded,
       iconColor: Colors.green,
       title: 'Medical Information',
-      onEdit: _openMedicalEdit,
+      onEdit: _showReadOnly,
       child: Column(children: [
         _row2('Allergies', allergies),
         _row2('Medical Conditions', medicalConditions),
@@ -903,7 +1038,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Expanded(flex: 5, child: Text(label, style: TextStyle(fontSize: 11, color: Colors.grey.shade600))),
+        Expanded(flex: 5, child: Text(label, style: const TextStyle(fontSize: 11, color: Color(0xFF1A1A1A)))),
         Expanded(flex: 5, child: Text(displayValue, style: TextStyle(fontSize: 11, fontWeight: fw, color: color), textAlign: TextAlign.right)),
       ]),
     );
