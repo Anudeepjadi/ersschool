@@ -97,7 +97,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.3"
-<<<<<<< Updated upstream
   ffi:
     dependency: transitive
     description:
@@ -106,7 +105,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
-=======
   file_selector_linux:
     dependency: transitive
     description:
@@ -139,7 +137,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.9.3+5"
->>>>>>> Stashed changes
   flutter:
     dependency: "direct main"
     description: flutter
@@ -174,24 +171,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-<<<<<<< Updated upstream
-  image:
-    dependency: transitive
-    description:
-      name: image
-      sha256: "6300175e00616bbc832e2fc91bfa4d776af5402c81c7151bee6905bb08473c52"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.9.1"
-  json_annotation:
-    dependency: transitive
-    description:
-      name: json_annotation
-      sha256: "2a743920d81b7910627f68ee2c9ac1fc0bfee32b9fc3403587d7c6791ca12f80"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.12.0"
-=======
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -213,6 +192,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.2"
+  image:
+    dependency: transitive
+    description:
+      name: image
+      sha256: "6300175e00616bbc832e2fc91bfa4d776af5402c81c7151bee6905bb08473c52"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.9.1"
   image_picker:
     dependency: "direct main"
     description:
@@ -277,7 +264,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.2"
->>>>>>> Stashed changes
+  json_annotation:
+    dependency: transitive
+    description:
+      name: json_annotation
+      sha256: "2a743920d81b7910627f68ee2c9ac1fc0bfee32b9fc3403587d7c6791ca12f80"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.12.0"
   leak_tracker:
     dependency: transitive
     description:
@@ -350,7 +344,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
-<<<<<<< Updated upstream
   petitparser:
     dependency: transitive
     description:
@@ -359,15 +352,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.2"
-  posix:
-    dependency: transitive
-    description:
-      name: posix
-      sha256: "185ef7606574f789b40f289c233efa52e96dead518aed988e040a10737febb07"
-      url: "https://pub.dev"
-    source: hosted
-    version: "6.5.0"
-=======
   plugin_platform_interface:
     dependency: transitive
     description:
@@ -376,7 +360,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
->>>>>>> Stashed changes
+  posix:
+    dependency: transitive
+    description:
+      name: posix
+      sha256: "185ef7606574f789b40f289c233efa52e96dead518aed988e040a10737febb07"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.5.0"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -454,7 +445,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "15.2.0"
-<<<<<<< Updated upstream
+  web:
+    dependency: transitive
+    description:
+      name: web
+      sha256: "868d88a33d8a87b18ffc05f9f030ba328ffefba92d6c127917a2ba740f9cfe4a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
   xml:
     dependency: transitive
     description:
@@ -471,16 +469,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.3"
-=======
-  web:
-    dependency: transitive
-    description:
-      name: web
-      sha256: "868d88a33d8a87b18ffc05f9f030ba328ffefba92d6c127917a2ba740f9cfe4a"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.1"
->>>>>>> Stashed changes
 sdks:
   dart: ">=3.11.1 <4.0.0"
   flutter: ">=3.38.0"
