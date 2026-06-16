@@ -10,7 +10,7 @@ class CalendarScreen extends StatefulWidget {
 
 class _CalendarScreenState extends State<CalendarScreen> {
   int _activeTab = 0; // 0: Calendar, 1: Holidays List
-  DateTime _selectedDate = DateTime(2024, 5, 20);
+  DateTime _selectedDate = DateTime(2026, 5, 20);
   String _selectedSchool = "Ecstasy School 1";
 
   final List<String> _schools = ["Ecstasy School 1", "Ecstasy School 2", "Ecstasy School 3"];
@@ -21,25 +21,25 @@ class _CalendarScreenState extends State<CalendarScreen> {
   // June has 1 day: 1.
   final List<DateTime> _mayGridDays = [
     // Row 1
-    DateTime(2024, 4, 28), DateTime(2024, 4, 29), DateTime(2024, 4, 30),
-    DateTime(2024, 5, 1), DateTime(2024, 5, 2), DateTime(2024, 5, 3), DateTime(2024, 5, 4),
+    DateTime(2024, 4, 28), DateTime(2026, 4, 29), DateTime(2024, 4, 30),
+    DateTime(2024, 5, 1), DateTime(2026, 5, 2), DateTime(2024, 5, 3), DateTime(2024, 5, 4),
     // Row 2
-    DateTime(2024, 5, 5), DateTime(2024, 5, 6), DateTime(2024, 5, 7),
-    DateTime(2024, 5, 8), DateTime(2024, 5, 9), DateTime(2024, 5, 10), DateTime(2024, 5, 11),
+    DateTime(2024, 5, 5), DateTime(2026, 5, 6), DateTime(2024, 5, 7),
+    DateTime(2024, 5, 8), DateTime(2026, 5, 9), DateTime(2024, 5, 10), DateTime(2024, 5, 11),
     // Row 3
-    DateTime(2024, 5, 12), DateTime(2024, 5, 13), DateTime(2024, 5, 14),
-    DateTime(2024, 5, 15), DateTime(2024, 5, 16), DateTime(2024, 5, 17), DateTime(2024, 5, 18),
+    DateTime(2024, 5, 12), DateTime(2026, 5, 13), DateTime(2024, 5, 14),
+    DateTime(2024, 5, 15), DateTime(2026, 5, 16), DateTime(2024, 5, 17), DateTime(2024, 5, 18),
     // Row 4
-    DateTime(2024, 5, 19), DateTime(2024, 5, 20), DateTime(2024, 5, 21),
-    DateTime(2024, 5, 22), DateTime(2024, 5, 23), DateTime(2024, 5, 24), DateTime(2024, 5, 25),
+    DateTime(2024, 5, 19), DateTime(2026, 5, 20), DateTime(2024, 5, 21),
+    DateTime(2024, 5, 22), DateTime(2026, 5, 23), DateTime(2024, 5, 24), DateTime(2024, 5, 25),
     // Row 5
-    DateTime(2024, 5, 26), DateTime(2024, 5, 27), DateTime(2024, 5, 28),
-    DateTime(2024, 5, 29), DateTime(2024, 5, 30), DateTime(2024, 5, 31), DateTime(2024, 6, 1),
+    DateTime(2024, 5, 26), DateTime(2026, 5, 27), DateTime(2024, 5, 28),
+    DateTime(2024, 5, 29), DateTime(2026, 5, 30), DateTime(2024, 5, 31), DateTime(2024, 6, 1),
   ];
 
   // Map dates to dot colors
   Color? _getEventColor(DateTime day) {
-    if (day.month != 5 || day.year != 2024) return null;
+    if (day.month != 5 || day.year != 2026) return null;
     if (day.day == 24) return const Color(0xFF8B5CF6); // Purple (Exams)
     if (day.day == 25) return const Color(0xFF22C55E); // Green (Meetings)
     if (day.day == 27) return const Color(0xFFEF4444); // Red (Holidays)
