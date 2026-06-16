@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
-import '../auth/login_screen.dart';
+import '../login/login_screen.dart';
 import 'tabs/home_tab.dart';
 import 'tabs/my_info_tab.dart';
 import 'tabs/class_tab.dart';

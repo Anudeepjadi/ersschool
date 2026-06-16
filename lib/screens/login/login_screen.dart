@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../dashboard/dashboard_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -30,7 +31,12 @@ class _LoginScreenState extends State<LoginScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Welcome $_selectedRole! Logging in...')),
         );
-        // TODO: Navigate to respective dashboard based on _selectedRole
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const DashboardScreen(),
+          ),
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Invalid password. Try "123456"')),
