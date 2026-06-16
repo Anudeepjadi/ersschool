@@ -28,7 +28,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       HomeTab(onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer()),
       const MyInfoTab(),
       const ClassTab(),
-      const FeeTab(),
+      FeeTab(onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer()),
       const ExamsTab(),
       const MoreTab(),
     ];
@@ -127,9 +127,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
         selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
         unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
         onTap: (index) {
-          setState(() {
-            currentIndex = index;
-          });
+          if (index == 5) {
+            showModalBottomSheet(
+              context: context,
+              backgroundColor: Colors.transparent,
+              barrierColor: Colors.black.withOpacity(0.15),
+              elevation: 0,
+              isScrollControlled: true,
+              builder: (BuildContext context) {
+                return const MoreTab();
+              },
+            );
+          } else {
+            setState(() {
+              currentIndex = index;
+            });
+          }
         },
         items: const [
           BottomNavigationBarItem(
