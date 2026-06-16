@@ -28,50 +28,50 @@ class MyInfoScreen extends StatefulWidget {
 
 class _MyInfoScreenState extends State<MyInfoScreen> {
   // ── Student data ───────────────────────────────────────────────────────────
-  String name = 'Ananya Sharma';
-  String classSection = 'Class 8 - A';
-  String studentId = 'STU2024001';
-  String mobile = '9876543210';
+  String name = '';
+  String classSection = '';
+  String studentId = '';
+  String mobile = '';
   String countryCode = '+91';
-  String email = 'ananya.sharma@email.com';
-  String bloodGroup = 'B+';
-  String dob = '12 May 2010';
-  String gender = 'Female';
-  String address = '12, Green Park,\nNew Delhi - 110016';
-  String aadhaar = '1234 5678 9012';
+  String email = '';
+  String bloodGroup = 'A+';
+  String dob = '';
+  String gender = 'Male';
+  String address = '';
+  String aadhaar = '';
 
   // Academic
-  String admissionNo = 'ADM2024001';
-  String rollNumber = '15';
-  String academicYear = '2024 - 2025';
-  String dateOfAdmission = '01 Apr 2024';
-  String house = 'Blue House';
+  String admissionNo = '';
+  String rollNumber = '';
+  String academicYear = '';
+  String dateOfAdmission = '';
+  String house = '';
 
   // Parent
-  String fatherName = 'Rajesh Sharma';
-  String fatherPhone = '+91 98765 43211';
-  String fatherEmail = 'rajesh.sharma@email.com';
-  String fatherOccupation = 'Business';
-  String motherName = 'Neha Sharma';
-  String motherPhone = '+91 98765 43212';
-  String motherEmail = 'neha.sharma@email.com';
-  String motherOccupation = 'Teacher';
+  String fatherName = '';
+  String fatherPhone = '';
+  String fatherEmail = '';
+  String fatherOccupation = '';
+  String motherName = '';
+  String motherPhone = '';
+  String motherEmail = '';
+  String motherOccupation = '';
 
   // Emergency
-  String emergencyContact = 'Amit Sharma (Uncle)';
-  String relationship = 'Uncle';
-  String emergencyPhone = '+91 98765 43213';
+  String emergencyContact = '';
+  String relationship = '';
+  String emergencyPhone = '';
 
   // Medical
-  String allergies = 'None';
-  String medicalConditions = 'None';
-  String regularMedication = 'None';
+  String allergies = '';
+  String medicalConditions = '';
+  String regularMedication = '';
 
   // Other
-  String nationality = 'Indian';
-  String religion = 'Hindu';
-  String casteCategory = 'General';
-  String languagesKnown = 'English, Hindi';
+  String nationality = '';
+  String religion = '';
+  String casteCategory = '';
+  String languagesKnown = '';
 
   // Profile photo
   File? _profileImage;
