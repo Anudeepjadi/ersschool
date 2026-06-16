@@ -1,6 +1,9 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import '../../core/theme/app_colors.dart';
+<<<<<<< Updated upstream
+=======
+import 'package:flutter/services.dart';
+>>>>>>> Stashed changes
+import 'package:video_player/video_player.dart';
 import '../auth/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -10,95 +13,181 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
-  late Animation<double> _scaleAnimation;
+class _SplashScreenState extends State<SplashScreen> {
+<<<<<<< Updated upstream
+  late VideoPlayerController _videoController;
+  bool _videoInitialized = false;
+  bool _hasNavigated = false;
+=======
+  VideoPlayerController? _videoController;
+  bool _videoReady = false;
+  Timer? _safetyTimer;
+>>>>>>> Stashed changes
 
   @override
   void initState() {
     super.initState();
 
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1500),
+<<<<<<< Updated upstream
+    _videoController = VideoPlayerController.asset(
+      'assets/animations/ecstasy_splash.mp4',
     );
 
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeIn),
-    );
+    _initializeVideo();
+  }
 
-    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeOutBack),
-    );
+  Future<void> _initializeVideo() async {
+    try {
+      await _videoController.initialize();
+      if (!mounted) return;
 
-    _animationController.forward();
+      setState(() => _videoInitialized = true);
 
-    Timer(
-      const Duration(seconds: 3),
-      () {
-        if (mounted) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (_) => const LoginScreen(),
-            ),
-          );
-        }
-      },
+      await _videoController.setVolume(0.0);
+      await _videoController.play();
+
+      _videoController.addListener(_onVideoProgress);
+    } catch (e) {
+      debugPrint('Video init failed: $e');
+      if (mounted) {
+        Future.delayed(const Duration(seconds: 3), () => _navigateToLogin());
+      }
+=======
+    // Hide system UI for a truly full-screen experience
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
+    _initVideo();
+  }
+
+  Future<void> _initVideo() async {
+    try {
+      _videoController = VideoPlayerController.asset(
+        'assets/animations/ers_animation.mp4',
+      );
+
+      await _videoController!.initialize();
+
+      if (!mounted) return;
+
+      setState(() => _videoReady = true);
+
+      _videoController!.addListener(_onVideoProgress);
+      _videoController!.play();
+
+      // Safety fallback in case the video listener doesn't fire
+      _safetyTimer = Timer(const Duration(seconds: 10), _navigateToLogin);
+    } catch (_) {
+      // Video failed — go straight to login
+      if (mounted) _navigateToLogin();
+>>>>>>> Stashed changes
+    }
+  }
+
+  void _onVideoProgress() {
+<<<<<<< Updated upstream
+    if (_hasNavigated) return;
+
+    final position = _videoController.value.position;
+    final duration = _videoController.value.duration;
+
+    if (duration > Duration.zero &&
+        position >= duration - const Duration(milliseconds: 100)) {
+=======
+    final ctrl = _videoController;
+    if (ctrl == null) return;
+    final pos = ctrl.value.position;
+    final dur = ctrl.value.duration;
+    if (dur.inMilliseconds > 0 &&
+        pos >= dur - const Duration(milliseconds: 200)) {
+>>>>>>> Stashed changes
+      _navigateToLogin();
+    }
+  }
+
+  void _navigateToLogin() {
+<<<<<<< Updated upstream
+    if (_hasNavigated || !mounted) return;
+    _hasNavigated = true;
+
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (!mounted) return;
+      Navigator.pushReplacement(
+        context,
+        PageRouteBuilder(
+          transitionDuration: const Duration(milliseconds: 500),
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              FadeTransition(
+            opacity: animation,
+            child: const LoginScreen(),
+          ),
+        ),
+      );
+    });
+=======
+    _safetyTimer?.cancel();
+    _videoController?.removeListener(_onVideoProgress);
+    if (!mounted) return;
+
+    // Restore normal system UI before leaving splash
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+
+    Navigator.pushReplacement(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (_, __, ___) => const LoginScreen(),
+        transitionsBuilder: (_, animation, __, child) =>
+            FadeTransition(opacity: animation, child: child),
+        transitionDuration: const Duration(milliseconds: 500),
+      ),
     );
+>>>>>>> Stashed changes
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
+<<<<<<< Updated upstream
+    _videoController.removeListener(_onVideoProgress);
+    _videoController.dispose();
+=======
+    _safetyTimer?.cancel();
+    _videoController?.removeListener(_onVideoProgress);
+    _videoController?.dispose();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+>>>>>>> Stashed changes
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              AppColors.primary,
-              AppColors.secondary,
-            ],
-          ),
-        ),
-        child: Center(
-          child: FadeTransition(
-            opacity: _fadeAnimation,
-            child: ScaleTransition(
-              scale: _scaleAnimation,
-              child: Hero(
-                tag: 'app_logo',
-                child: Image.asset(
-                  "assets/images/logo.png",
-                  width: 220,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.school,
-                        size: 100,
-                        color: Colors.white,
-                      ),
-                    );
-                  },
+<<<<<<< Updated upstream
+      backgroundColor: Colors.white,
+      body: Center(
+        child: _videoInitialized
+            ? SizedBox(
+                width: 220,
+                child: AspectRatio(
+                  aspectRatio: _videoController.value.aspectRatio,
+                  child: VideoPlayer(_videoController),
+                ),
+              )
+            : const SizedBox.shrink(),
+      ),
+=======
+      backgroundColor: Colors.black,
+      body: _videoReady
+          ? SizedBox.expand(
+              child: FittedBox(
+                fit: BoxFit.cover,
+                child: SizedBox(
+                  width: _videoController!.value.size.width,
+                  height: _videoController!.value.size.height,
+                  child: VideoPlayer(_videoController!),
                 ),
               ),
-            ),
-          ),
-        ),
-      ),
+            )
+          : const SizedBox.shrink(), // pure black while loading
+>>>>>>> Stashed changes
     );
   }
 }
