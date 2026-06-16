@@ -17,7 +17,8 @@ final Map<String, List<Map<String, String>>> schoolEvents = {
       "title": "Parents Teacher Meeting",
       "time": "09:00 AM - 11:00 AM",
       "location": "Conference Hall",
-      "desc": "Discussion regarding Quarterly Exam results and progress report.",
+      "desc":
+          "Discussion regarding Quarterly Exam results and progress report.",
       "type": "Meeting"
     }
   ],
@@ -69,11 +70,13 @@ class _CalendarPopupState extends State<_CalendarPopup> {
   }
 
   void _nextMonth() => setState(() {
-        _currentMonth = DateTime(_currentMonth.year, _currentMonth.month + 1, 1);
+        _currentMonth =
+            DateTime(_currentMonth.year, _currentMonth.month + 1, 1);
       });
 
   void _prevMonth() => setState(() {
-        _currentMonth = DateTime(_currentMonth.year, _currentMonth.month - 1, 1);
+        _currentMonth =
+            DateTime(_currentMonth.year, _currentMonth.month - 1, 1);
       });
 
   List<DateTime> _daysInMonth(DateTime month) {
@@ -94,8 +97,19 @@ class _CalendarPopupState extends State<_CalendarPopup> {
   }
 
   String _monthName(int m) => const [
-        "", "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        "",
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec"
       ][m];
 
   String _dateKey(DateTime d) =>
@@ -143,7 +157,8 @@ class _CalendarPopupState extends State<_CalendarPopup> {
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.calendar_month, color: Colors.white, size: 22),
+                  const Icon(Icons.calendar_month,
+                      color: Colors.white, size: 22),
                   const SizedBox(width: 8),
                   const Text(
                     "School Calendar",
@@ -156,7 +171,8 @@ class _CalendarPopupState extends State<_CalendarPopup> {
                   const Spacer(),
                   GestureDetector(
                     onTap: () => Navigator.pop(context),
-                    child: const Icon(Icons.close, color: Colors.white, size: 22),
+                    child:
+                        const Icon(Icons.close, color: Colors.white, size: 22),
                   ),
                 ],
               ),
@@ -421,8 +437,7 @@ class _CalendarPopupState extends State<_CalendarPopup> {
                                 Row(
                                   children: [
                                     Icon(Icons.location_on_outlined,
-                                        size: 13,
-                                        color: Colors.grey.shade500),
+                                        size: 13, color: Colors.grey.shade500),
                                     const SizedBox(width: 4),
                                     Text(
                                       ev["location"]!,

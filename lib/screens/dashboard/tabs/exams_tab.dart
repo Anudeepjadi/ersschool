@@ -8,7 +8,8 @@ class ExamsTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Exams", style: TextStyle(fontWeight: FontWeight.bold)),
+        title:
+            const Text("Exams", style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.transparent,
         elevation: 0,
         foregroundColor: AppColors.text,
@@ -18,13 +19,20 @@ class ExamsTab extends StatelessWidget {
         children: [
           const Text(
             "Quarterly Exam Timetable",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF1E2875)),
           ),
           const SizedBox(height: 12),
-          _buildExamRow("Mathematics", "20 May 2026", "09:00 AM - 12:00 PM", Colors.purple),
-          _buildExamRow("Physics", "22 May 2026", "09:00 AM - 12:00 PM", Colors.green),
-          _buildExamRow("Chemistry", "24 May 2026", "09:00 AM - 12:00 PM", Colors.orange),
-          _buildExamRow("English", "26 May 2026", "09:00 AM - 12:00 PM", Colors.blue),
+          _buildExamRow("Mathematics", "20 May 2026", "09:00 AM - 12:00 PM",
+              Colors.purple),
+          _buildExamRow(
+              "Physics", "22 May 2026", "09:00 AM - 12:00 PM", Colors.green),
+          _buildExamRow(
+              "Chemistry", "24 May 2026", "09:00 AM - 12:00 PM", Colors.orange),
+          _buildExamRow(
+              "English", "26 May 2026", "09:00 AM - 12:00 PM", Colors.blue),
         ],
       ),
     );
@@ -44,7 +52,9 @@ class ExamsTab extends StatelessWidget {
           children: [
             Container(
               padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
+              decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12)),
               child: Icon(Icons.assignment_outlined, color: color),
             ),
             const SizedBox(width: 16),
@@ -52,13 +62,22 @@ class ExamsTab extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(subject, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFF1E2875))),
+                  Text(subject,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: Color(0xFF1E2875))),
                   const SizedBox(height: 4),
-                  Text(date, style: const TextStyle(color: Colors.grey, fontSize: 13)),
+                  Text(date,
+                      style: const TextStyle(color: Colors.grey, fontSize: 13)),
                 ],
               ),
             ),
-            Text(time, style: TextStyle(color: Colors.grey.shade600, fontSize: 12, fontWeight: FontWeight.bold)),
+            Text(time,
+                style: TextStyle(
+                    color: Colors.grey.shade600,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold)),
           ],
         ),
       ),

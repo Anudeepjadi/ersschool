@@ -34,13 +34,14 @@ class _SplashScreenState extends State<SplashScreen> {
       setState(() => _videoInitialized = true);
 
       await _videoController.setVolume(0.0);
+      await _videoController.setPlaybackSpeed(1.8);
       await _videoController.play();
 
       _videoController.addListener(_onVideoProgress);
     } catch (e) {
       debugPrint('Video init failed: $e');
       if (mounted) {
-        Future.delayed(const Duration(seconds: 3), () => _navigateToLogin());
+        Future.delayed(const Duration(seconds: 1), () => _navigateToLogin());
       }
     }
   }
@@ -52,7 +53,7 @@ class _SplashScreenState extends State<SplashScreen> {
     final duration = _videoController.value.duration;
 
     if (duration > Duration.zero &&
-        position >= duration - const Duration(milliseconds: 100)) {
+        position >= duration - const Duration(milliseconds: 15)) {
       _navigateToLogin();
     }
   }
@@ -61,12 +62,12 @@ class _SplashScreenState extends State<SplashScreen> {
     if (_hasNavigated || !mounted) return;
     _hasNavigated = true;
 
-    Future.delayed(const Duration(milliseconds: 300), () {
+    Future.delayed(const Duration(milliseconds: 50), () {
       if (!mounted) return;
       Navigator.pushReplacement(
         context,
         PageRouteBuilder(
-          transitionDuration: const Duration(milliseconds: 500),
+          transitionDuration: const Duration(milliseconds: 50),
           pageBuilder: (context, animation, secondaryAnimation) =>
               FadeTransition(
             opacity: animation,
