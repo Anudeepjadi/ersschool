@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ClassScreen extends StatefulWidget {
-  const ClassScreen({super.key});
+  final VoidCallback? onOpenDrawer;
+  const ClassScreen({super.key, this.onOpenDrawer});
 
   @override
   State<ClassScreen> createState() => _ClassScreenState();
@@ -49,7 +50,12 @@ class _ClassScreenState extends State<ClassScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Icon(Icons.menu, color: Colors.white),
+              IconButton(
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                onPressed: widget.onOpenDrawer,
+                icon: const Icon(Icons.menu, color: Colors.white),
+              ),
               const Text(
                 "Class",
                 style: TextStyle(
