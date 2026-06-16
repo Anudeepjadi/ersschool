@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../calendar/calendar_screen.dart';
+import '../../transport/transport_screen.dart';
 
 class MoreTab extends StatelessWidget {
   const MoreTab({super.key});
@@ -45,9 +47,10 @@ class MoreTab extends StatelessWidget {
                   Icons.directions_bus_filled_outlined,
                   "Transport",
                   () {
-                    Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Opening Transport details...")),
+                    Navigator.pop(context); // Close bottom sheet
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const TransportScreen()),
                     );
                   },
                 ),
@@ -63,9 +66,10 @@ class MoreTab extends StatelessWidget {
                   Icons.calendar_month_outlined,
                   "Calendar",
                   () {
-                    Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Opening School Calendar...")),
+                    Navigator.pop(context); // Close bottom sheet
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const CalendarScreen()),
                     );
                   },
                 ),

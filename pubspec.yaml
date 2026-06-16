@@ -61,6 +61,7 @@ flutter:
     - assets/images/logo.png
     - assets/images/student_profile.png
     - assets/images/student_welcome.png
+    - assets/images/school_bus.png
 
 
 flutter_icons:
