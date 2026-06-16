@@ -24,7 +24,12 @@ class HomeTab extends StatelessWidget {
                 bottomRight: Radius.circular(30),
               ),
             ),
-            padding: const EdgeInsets.only(top: 50, bottom: 25, left: 20, right: 20),
+            padding: const EdgeInsets.only(
+              top: 50,
+              bottom: 25,
+              left: 20,
+              right: 20,
+            ),
             child: Row(
               children: [
                 IconButton(
@@ -36,7 +41,7 @@ class HomeTab extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Hello, Ananya 👋",
+                      "Hello, Anudeep👋",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -46,10 +51,7 @@ class HomeTab extends StatelessWidget {
                     SizedBox(height: 2),
                     Text(
                       "Good Morning!",
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 13,
-                      ),
+                      style: TextStyle(color: Colors.white70, fontSize: 13),
                     ),
                   ],
                 ),
@@ -58,7 +60,11 @@ class HomeTab extends StatelessWidget {
                 Stack(
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.notifications_none_outlined, color: Colors.white, size: 28),
+                      icon: const Icon(
+                        Icons.notifications_none_outlined,
+                        color: Colors.white,
+                        size: 28,
+                      ),
                       onPressed: () {},
                     ),
                     Positioned(
@@ -84,7 +90,7 @@ class HomeTab extends StatelessWidget {
                           ),
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
                 const SizedBox(width: 8),
@@ -104,7 +110,10 @@ class HomeTab extends StatelessWidget {
                         height: 40,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
-                          return const Icon(Icons.person, color: AppColors.primary);
+                          return const Icon(
+                            Icons.person,
+                            color: AppColors.primary,
+                          );
                         },
                       ),
                     ),
@@ -158,7 +167,11 @@ class HomeTab extends StatelessWidget {
                         "assets/images/student_welcome.png",
                         height: 120,
                         errorBuilder: (context, error, stackTrace) {
-                          return const Icon(Icons.school, size: 80, color: AppColors.primary);
+                          return const Icon(
+                            Icons.school,
+                            size: 80,
+                            color: AppColors.primary,
+                          );
                         },
                       ),
                     ],
@@ -201,14 +214,39 @@ class HomeTab extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildQuickAccessItem(Icons.school_outlined, "My Class", Colors.blue),
-                      _buildQuickAccessItem(Icons.description_outlined, "Learning\nMaterials", Colors.green),
-                      _buildQuickAccessItem(Icons.assignment_outlined, "Exams", Colors.purple),
-                      _buildQuickAccessItem(Icons.currency_rupee, "Fee\nPayment", Colors.orange),
-                      _buildQuickAccessItem(Icons.calendar_today_outlined, "Calendar", Colors.pink, onTap: () {
-                        showCalendarPopup(context);
-                      }),
-                      _buildQuickAccessItem(Icons.directions_bus_outlined, "Transport", Colors.indigo),
+                      _buildQuickAccessItem(
+                        Icons.school_outlined,
+                        "My Class",
+                        Colors.blue,
+                      ),
+                      _buildQuickAccessItem(
+                        Icons.description_outlined,
+                        "Learning\nMaterials",
+                        Colors.green,
+                      ),
+                      _buildQuickAccessItem(
+                        Icons.assignment_outlined,
+                        "Exams",
+                        Colors.purple,
+                      ),
+                      _buildQuickAccessItem(
+                        Icons.currency_rupee,
+                        "Fee\nPayment",
+                        Colors.orange,
+                      ),
+                      _buildQuickAccessItem(
+                        Icons.calendar_today_outlined,
+                        "Calendar",
+                        Colors.pink,
+                        onTap: () {
+                          showCalendarPopup(context);
+                        },
+                      ),
+                      _buildQuickAccessItem(
+                        Icons.directions_bus_outlined,
+                        "Transport",
+                        Colors.indigo,
+                      ),
                     ],
                   ),
                 ),
@@ -286,7 +324,10 @@ class HomeTab extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: const Color(0xFFF4F7FF),
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: const Color(0xFFE0E7FF), width: 1),
+                    border: Border.all(
+                      color: const Color(0xFFE0E7FF),
+                      width: 1,
+                    ),
                   ),
                   padding: const EdgeInsets.all(16),
                   child: Row(
@@ -399,7 +440,12 @@ class HomeTab extends StatelessWidget {
     );
   }
 
-  Widget _buildQuickAccessItem(IconData icon, String label, Color color, {VoidCallback? onTap}) {
+  Widget _buildQuickAccessItem(
+    IconData icon,
+    String label,
+    Color color, {
+    VoidCallback? onTap,
+  }) {
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
@@ -481,10 +527,7 @@ class HomeTab extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   subtitle,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey.shade600,
-                  ),
+                  style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
                 ),
               ],
             ),
@@ -552,10 +595,7 @@ class HomeTab extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   location,
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: Colors.grey.shade500,
-                  ),
+                  style: TextStyle(fontSize: 11, color: Colors.grey.shade500),
                 ),
               ],
             ),
