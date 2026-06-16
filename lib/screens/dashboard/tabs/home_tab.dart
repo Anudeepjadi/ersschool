@@ -147,7 +147,7 @@ class HomeTab extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 22,
                                 fontWeight: FontWeight.bold,
-                                color: AppColors.primary,
+                                color: Color(0xFF1E2875),
                               ),
                             ),
                             SizedBox(height: 8),
@@ -355,7 +355,7 @@ class HomeTab extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
-                                color: AppColors.primary,
+                                color: Color(0xFF1E2875),
                               ),
                             ),
                             SizedBox(height: 4),
@@ -469,7 +469,7 @@ class HomeTab extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.bold,
-                color: AppColors.primary,
+                color: Color(0xFF1E2875),
                 height: 1.2,
               ),
             ),
@@ -521,7 +521,7 @@ class HomeTab extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.primary,
+                    color: Color(0xFF1E2875),
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -580,7 +580,7 @@ class HomeTab extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.primary,
+                    color: Color(0xFF1E2875),
                   ),
                 ),
                 const SizedBox(height: 6),

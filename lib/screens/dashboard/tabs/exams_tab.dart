@@ -18,7 +18,7 @@ class ExamsTab extends StatelessWidget {
         children: [
           const Text(
             "Quarterly Exam Timetable",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.primary),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
           ),
           const SizedBox(height: 12),
           _buildExamRow("Mathematics", "20 May 2026", "09:00 AM - 12:00 PM", Colors.purple),
@@ -52,7 +52,7 @@ class ExamsTab extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(subject, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.primary)),
+                  Text(subject, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFF1E2875))),
                   const SizedBox(height: 4),
                   Text(date, style: const TextStyle(color: Colors.grey, fontSize: 13)),
                 ],
