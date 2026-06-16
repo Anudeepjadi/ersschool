@@ -649,11 +649,11 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1A1A1A))),
+              Text(name.isEmpty ? 'Student Name' : name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: name.isEmpty ? Colors.grey.shade400 : const Color(0xFF1A1A1A))),
               const SizedBox(height: 3),
               Text(
-                classSection,
-                style: const TextStyle(fontSize: 13, color: AppColors.primary, fontWeight: FontWeight.w600),
+                classSection.isEmpty ? 'Class & Section' : classSection,
+                style: TextStyle(fontSize: 13, color: classSection.isEmpty ? Colors.grey.shade400 : AppColors.primary, fontWeight: FontWeight.w600),
               ),
             ])),
             TextButton.icon(
@@ -668,7 +668,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
           ]),
           const SizedBox(height: 10),
           _detailLine(Icons.badge_outlined, 'Student ID', studentId),
-          _detailLine(Icons.phone_outlined, 'Mobile Number', '$countryCode ${_formatMobile(mobile)}'),
+          _detailLine(Icons.phone_outlined, 'Mobile Number', mobile.isEmpty ? '' : '$countryCode ${_formatMobile(mobile)}'),
           _detailLine(Icons.email_outlined, 'Email Address', email),
           _detailLine(Icons.water_drop_outlined, 'Blood Group', bloodGroup),
         ])),
@@ -683,6 +683,11 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
   }
 
   Widget _detailLine(IconData icon, String label, String value) {
+    final bool isEmpty = value.trim().isEmpty;
+    final displayValue = isEmpty ? label : value;
+    final color = isEmpty ? Colors.grey.shade400 : const Color(0xFF1A1A1A);
+    final fw = isEmpty ? FontWeight.normal : FontWeight.w600;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 5),
       child: Row(children: [
@@ -692,7 +697,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
           width: 90,
           child: Text(label, style: TextStyle(fontSize: 11, color: Colors.grey.shade500)),
         ),
-        Expanded(child: Text(value, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF1A1A1A)), overflow: TextOverflow.ellipsis)),
+        Expanded(child: Text(displayValue, style: TextStyle(fontSize: 12, fontWeight: fw, color: color), overflow: TextOverflow.ellipsis)),
       ]),
     );
   }
@@ -713,12 +718,17 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
   }
 
   Widget _statCell(IconData icon, String label, String val, {bool small = false}) {
+    final bool isEmpty = val.trim().isEmpty;
+    final displayValue = isEmpty ? label : val;
+    final color = isEmpty ? Colors.grey.shade400 : const Color(0xFF1A1A1A);
+    final fw = isEmpty ? FontWeight.normal : FontWeight.bold;
+
     return Expanded(child: Column(children: [
       Icon(icon, color: AppColors.primary, size: 20),
       const SizedBox(height: 4),
       Text(label, style: TextStyle(fontSize: 9, color: Colors.grey.shade500), textAlign: TextAlign.center),
       const SizedBox(height: 2),
-      Text(val, style: TextStyle(fontSize: small ? 9 : 11, fontWeight: FontWeight.bold, color: const Color(0xFF1A1A1A)), textAlign: TextAlign.center, maxLines: 2, overflow: TextOverflow.ellipsis),
+      Text(displayValue, style: TextStyle(fontSize: small ? 9 : 11, fontWeight: fw, color: color), textAlign: TextAlign.center, maxLines: 2, overflow: TextOverflow.ellipsis),
     ]));
   }
 
@@ -757,7 +767,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
         // Father
         const Text('Father', style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold, fontSize: 12)),
         const SizedBox(height: 4),
-        Text(fatherName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1A1A1A))),
+        Text(fatherName.isEmpty ? 'Father Name' : fatherName, style: TextStyle(fontWeight: fatherName.isEmpty ? FontWeight.normal : FontWeight.bold, fontSize: 13, color: fatherName.isEmpty ? Colors.grey.shade400 : const Color(0xFF1A1A1A))),
         const SizedBox(height: 4),
         _contactLine(Icons.phone, fatherPhone),
         _contactLine(Icons.email, fatherEmail),
@@ -766,7 +776,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
         // Mother
         const Text('Mother', style: TextStyle(color: Color(0xFFE91E8C), fontWeight: FontWeight.bold, fontSize: 12)),
         const SizedBox(height: 4),
-        Text(motherName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1A1A1A))),
+        Text(motherName.isEmpty ? 'Mother Name' : motherName, style: TextStyle(fontWeight: motherName.isEmpty ? FontWeight.normal : FontWeight.bold, fontSize: 13, color: motherName.isEmpty ? Colors.grey.shade400 : const Color(0xFF1A1A1A))),
         const SizedBox(height: 4),
         _contactLine(Icons.phone, motherPhone),
         _contactLine(Icons.email, motherEmail),
@@ -775,19 +785,32 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
     );
   }
 
-  Widget _contactLine(IconData icon, String val) => Padding(
-    padding: const EdgeInsets.only(bottom: 3),
-    child: Row(children: [
-      Icon(icon, size: 12, color: Colors.grey.shade500),
-      const SizedBox(width: 6),
-      Expanded(child: Text(val, style: const TextStyle(fontSize: 11), overflow: TextOverflow.ellipsis)),
-    ]),
-  );
+  Widget _contactLine(IconData icon, String val) {
+    final bool isEmpty = val.trim().isEmpty;
+    final displayValue = isEmpty ? 'Not provided' : val;
+    final color = isEmpty ? Colors.grey.shade400 : const Color(0xFF1A1A1A);
 
-  Widget _occupationRow(String label, String val) => Row(children: [
-    Text('$label  ', style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
-    Expanded(child: Text(val, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF1A1A1A)), overflow: TextOverflow.ellipsis)),
-  ]);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 3),
+      child: Row(children: [
+        Icon(icon, size: 12, color: Colors.grey.shade500),
+        const SizedBox(width: 6),
+        Expanded(child: Text(displayValue, style: TextStyle(fontSize: 11, color: color), overflow: TextOverflow.ellipsis)),
+      ]),
+    );
+  }
+
+  Widget _occupationRow(String label, String val) {
+    final bool isEmpty = val.trim().isEmpty;
+    final displayValue = isEmpty ? label : val;
+    final color = isEmpty ? Colors.grey.shade400 : const Color(0xFF1A1A1A);
+    final fw = isEmpty ? FontWeight.normal : FontWeight.w600;
+
+    return Row(children: [
+      Text('$label  ', style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
+      Expanded(child: Text(displayValue, style: TextStyle(fontSize: 11, fontWeight: fw, color: color), overflow: TextOverflow.ellipsis)),
+    ]);
+  }
 
   // ────────────────────────────────────────────────────────────────────────────
   //  4a. EMERGENCY CARD
@@ -872,11 +895,16 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
 
   /// A simple label-value row used inside section cards
   Widget _row2(String label, String value) {
+    final bool isEmpty = value.trim().isEmpty;
+    final displayValue = isEmpty ? label : value;
+    final color = isEmpty ? Colors.grey.shade400 : const Color(0xFF1A1A1A);
+    final fw = isEmpty ? FontWeight.normal : FontWeight.w600;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Expanded(flex: 5, child: Text(label, style: TextStyle(fontSize: 11, color: Colors.grey.shade600))),
-        Expanded(flex: 5, child: Text(value, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF1A1A1A)), textAlign: TextAlign.right)),
+        Expanded(flex: 5, child: Text(displayValue, style: TextStyle(fontSize: 11, fontWeight: fw, color: color), textAlign: TextAlign.right)),
       ]),
     );
   }
