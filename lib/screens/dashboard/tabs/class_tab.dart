@@ -2,12 +2,18 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 
 class ClassTab extends StatelessWidget {
-  const ClassTab({super.key});
+  final VoidCallback onOpenDrawer;
+
+  const ClassTab({super.key, required this.onOpenDrawer});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: onOpenDrawer,
+        ),
         title: const Text("My Class", style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.transparent,
         elevation: 0,

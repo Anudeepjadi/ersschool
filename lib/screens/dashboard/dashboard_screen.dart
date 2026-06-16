@@ -27,8 +27,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _tabs = [
       HomeTab(onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer()),
       const MyInfoTab(),
-      const ClassTab(),
-      FeeTab(onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer()),
+      ClassTab(onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer()),
+      const FeeTab(),
       const ExamsTab(),
       const MoreTab(),
     ];
@@ -123,26 +123,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
         type: BottomNavigationBarType.fixed,
         currentIndex: currentIndex,
         selectedItemColor: AppColors.primary,
-        unselectedItemColor: const Color(0xFF1E2875),
+        unselectedItemColor: AppColors.primary.withValues(alpha: 0.7),
         selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
         unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
         onTap: (index) {
-          if (index == 5) {
-            showModalBottomSheet(
-              context: context,
-              backgroundColor: Colors.transparent,
-              barrierColor: Colors.black.withOpacity(0.15),
-              elevation: 0,
-              isScrollControlled: true,
-              builder: (BuildContext context) {
-                return const MoreTab();
-              },
-            );
-          } else {
-            setState(() {
-              currentIndex = index;
-            });
-          }
+          setState(() {
+            currentIndex = index;
+          });
         },
         items: const [
           BottomNavigationBarItem(

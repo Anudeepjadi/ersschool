@@ -11,7 +11,6 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.8
-  lottie: ^3.3.3
   video_player: ^2.9.2
 
 dev_dependencies:
@@ -26,6 +25,7 @@ flutter:
     - assets/images/loginscreenlogo.png
     - assets/images/student_profile.png
     - assets/images/student_welcome.png
+    - assets/images/school_bus.png
     - assets/animations/ers_animation.mp4
 
 flutter_icons:
