@@ -24,6 +24,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       currentIndex = index;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     final List<Widget> tabs = [
@@ -126,15 +127,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
         currentIndex: currentIndex,
         selectedItemColor: AppColors.primary,
         unselectedItemColor: const Color(0xFF1E2875),
-        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
-        unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
+        selectedLabelStyle:
+            const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
+        unselectedLabelStyle:
+            const TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
         onTap: _onTabChanged,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: "My Info"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.person_outline), label: "My Info"),
           BottomNavigationBarItem(icon: Icon(Icons.menu_book), label: "Class"),
-          BottomNavigationBarItem(icon: Icon(Icons.currency_rupee), label: "Fee"),
-          BottomNavigationBarItem(icon: Icon(Icons.assignment_outlined), label: "Exams"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.currency_rupee), label: "Fee"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.assignment_outlined), label: "Exams"),
           BottomNavigationBarItem(icon: Icon(Icons.more_horiz), label: "More"),
         ],
       ),

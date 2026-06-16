@@ -12,7 +12,11 @@ class _TransportScreenState extends State<TransportScreen> {
   int _activeTab = 0; // 0: Transport, 1: Tracking, 2: Route Details
   String _selectedSchool = "Ecstasy School 1";
 
-  final List<String> _schools = ["Ecstasy School 1", "Ecstasy School 2", "Ecstasy School 3"];
+  final List<String> _schools = [
+    "Ecstasy School 1",
+    "Ecstasy School 2",
+    "Ecstasy School 3"
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +123,8 @@ class _TransportScreenState extends State<TransportScreen> {
                     ),
                   ),
                   const SizedBox(width: 2),
-                  const Icon(Icons.keyboard_arrow_down, size: 14, color: Colors.white),
+                  const Icon(Icons.keyboard_arrow_down,
+                      size: 14, color: Colors.white),
                 ],
               ),
             ),
@@ -130,7 +135,8 @@ class _TransportScreenState extends State<TransportScreen> {
             clipBehavior: Clip.none,
             children: [
               IconButton(
-                icon: const Icon(Icons.notifications_none, color: Colors.white, size: 26),
+                icon: const Icon(Icons.notifications_none,
+                    color: Colors.white, size: 26),
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text("No new notifications")),
@@ -294,7 +300,10 @@ class _TransportScreenState extends State<TransportScreen> {
             const SizedBox(height: 12),
             Text(
               _activeTab == 1 ? "Live Tracking Map" : "Route Map details",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey.shade700),
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey.shade700),
             ),
             const SizedBox(height: 4),
             Text(
@@ -362,7 +371,8 @@ class _TransportScreenState extends State<TransportScreen> {
                   ),
                   const SizedBox(width: 8),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
                       color: const Color(0xFFEEF2FF),
                       borderRadius: BorderRadius.circular(6),
@@ -384,9 +394,12 @@ class _TransportScreenState extends State<TransportScreen> {
                   Expanded(
                     child: Column(
                       children: [
-                        _buildDetailItem(Icons.directions_bus, "Route / Stop", "Route 12 / Green Park Stop"),
-                        _buildDetailItem(Icons.badge, "Transport ID", "TRP20240001"),
-                        _buildDetailItem(Icons.phone, "Mobile Number", "+91 98765 12345"),
+                        _buildDetailItem(Icons.directions_bus, "Route / Stop",
+                            "Route 12 / Green Park Stop"),
+                        _buildDetailItem(
+                            Icons.badge, "Transport ID", "TRP20240001"),
+                        _buildDetailItem(
+                            Icons.phone, "Mobile Number", "+91 98765 12345"),
                       ],
                     ),
                   ),
@@ -394,9 +407,12 @@ class _TransportScreenState extends State<TransportScreen> {
                   Expanded(
                     child: Column(
                       children: [
-                        _buildDetailItem(Icons.directions_car, "Vehicle Number", "DL 01 AB 1234"),
-                        _buildDetailItem(Icons.person, "Driver Name", "Ramesh Kumar"),
-                        _buildDetailItem(Icons.person_outline, "Bus Attendant", "Suresh Yadav"),
+                        _buildDetailItem(Icons.directions_car, "Vehicle Number",
+                            "DL 01 AB 1234"),
+                        _buildDetailItem(
+                            Icons.person, "Driver Name", "Ramesh Kumar"),
+                        _buildDetailItem(Icons.person_outline, "Bus Attendant",
+                            "Suresh Yadav"),
                       ],
                     ),
                   ),
@@ -500,7 +516,8 @@ class _TransportScreenState extends State<TransportScreen> {
                   ),
                   const SizedBox(width: 8),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
                       color: const Color(0xFFECFDF5),
                       borderRadius: BorderRadius.circular(6),
@@ -508,7 +525,8 @@ class _TransportScreenState extends State<TransportScreen> {
                     ),
                     child: const Row(
                       children: [
-                        Icon(Icons.fiber_manual_record, size: 6, color: Color(0xFF10B981)),
+                        Icon(Icons.fiber_manual_record,
+                            size: 6, color: Color(0xFF10B981)),
                         SizedBox(width: 3),
                         Text(
                           "Live",
@@ -532,10 +550,14 @@ class _TransportScreenState extends State<TransportScreen> {
                 icon: const Icon(Icons.map, size: 12, color: AppColors.primary),
                 label: const Text(
                   "View on Map",
-                  style: TextStyle(color: AppColors.primary, fontSize: 11, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: AppColors.primary,
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold),
                 ),
                 style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   side: BorderSide(color: Colors.grey.shade200),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -639,7 +661,8 @@ class _TransportScreenState extends State<TransportScreen> {
     );
   }
 
-  Widget _buildTimelineStep(IconData icon, String title, String subtitle, Color color, bool isActive) {
+  Widget _buildTimelineStep(IconData icon, String title, String subtitle,
+      Color color, bool isActive) {
     return SizedBox(
       width: 100,
       child: Column(
@@ -647,11 +670,15 @@ class _TransportScreenState extends State<TransportScreen> {
           Container(
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: isActive ? color.withValues(alpha: 0.12) : Colors.grey.shade50,
+              color: isActive
+                  ? color.withValues(alpha: 0.12)
+                  : Colors.grey.shade50,
               shape: BoxShape.circle,
-              border: Border.all(color: isActive ? color : Colors.grey.shade300, width: 1.5),
+              border: Border.all(
+                  color: isActive ? color : Colors.grey.shade300, width: 1.5),
             ),
-            child: Icon(icon, color: isActive ? color : Colors.grey.shade400, size: 16),
+            child: Icon(icon,
+                color: isActive ? color : Colors.grey.shade400, size: 16),
           ),
           const SizedBox(height: 8),
           Text(
@@ -669,10 +696,12 @@ class _TransportScreenState extends State<TransportScreen> {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 9,
-              color: subtitle.contains("Picked Up") || subtitle.contains("In Progress")
+              color: subtitle.contains("Picked Up") ||
+                      subtitle.contains("In Progress")
                   ? color
                   : Colors.grey.shade400,
-              fontWeight: subtitle.contains("Picked Up") || subtitle.contains("In Progress")
+              fontWeight: subtitle.contains("Picked Up") ||
+                      subtitle.contains("In Progress")
                   ? FontWeight.bold
                   : FontWeight.normal,
             ),
@@ -715,13 +744,20 @@ class _TransportScreenState extends State<TransportScreen> {
               mainAxisSpacing: 10,
               childAspectRatio: 2.3,
               children: [
-                _buildDetailGridItem(Icons.directions_bus, "Bus Type", "AC Bus", const Color(0xFF3B82F6)),
-                _buildDetailGridItem(Icons.event_seat, "Seat Number", "12", const Color(0xFF8B5CF6)),
-                _buildDetailGridItem(Icons.alt_route, "Total Stops", "14", const Color(0xFF10B981)),
-                _buildDetailGridItem(Icons.access_time, "Pickup Time", "08:20 AM", const Color(0xFFF59E0B)),
-                _buildDetailGridItem(Icons.school, "Drop Time (Est.)", "09:00 AM", const Color(0xFFEF4444)),
-                _buildDetailGridItem(Icons.straighten, "Distance (Approx.)", "18.6 km", const Color(0xFF06B6D4)),
-                _buildDetailGridItem(Icons.calendar_today, "Transport Validity", "31 Mar 2025", const Color(0xFFEC4899)),
+                _buildDetailGridItem(Icons.directions_bus, "Bus Type", "AC Bus",
+                    const Color(0xFF3B82F6)),
+                _buildDetailGridItem(Icons.event_seat, "Seat Number", "12",
+                    const Color(0xFF8B5CF6)),
+                _buildDetailGridItem(Icons.alt_route, "Total Stops", "14",
+                    const Color(0xFF10B981)),
+                _buildDetailGridItem(Icons.access_time, "Pickup Time",
+                    "08:20 AM", const Color(0xFFF59E0B)),
+                _buildDetailGridItem(Icons.school, "Drop Time (Est.)",
+                    "09:00 AM", const Color(0xFFEF4444)),
+                _buildDetailGridItem(Icons.straighten, "Distance (Approx.)",
+                    "18.6 km", const Color(0xFF06B6D4)),
+                _buildDetailGridItem(Icons.calendar_today, "Transport Validity",
+                    "31 Mar 2025", const Color(0xFFEC4899)),
               ],
             );
           },
@@ -730,7 +766,8 @@ class _TransportScreenState extends State<TransportScreen> {
     );
   }
 
-  Widget _buildDetailGridItem(IconData icon, String label, String value, Color color) {
+  Widget _buildDetailGridItem(
+      IconData icon, String label, String value, Color color) {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -796,7 +833,8 @@ class _TransportScreenState extends State<TransportScreen> {
             InkWell(
               onTap: () {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("All Announcements are up to date.")),
+                  const SnackBar(
+                      content: Text("All Announcements are up to date.")),
                 );
               },
               child: const Text(
@@ -811,13 +849,24 @@ class _TransportScreenState extends State<TransportScreen> {
           ],
         ),
         const SizedBox(height: 12),
-        _buildAnnouncementTile("Transport Timings Update", "From 20 May 2024, pickup time will be 10 minutes earlier.", "18 May 2024", const Color(0xFF10B981), const Color(0xFFECFDF5)),
-        _buildAnnouncementTile("Bus Route Change", "Route 12 will take a new route from 25 May 2024.", "15 May 2024", const Color(0xFFF59E0B), const Color(0xFFFEF3C7)),
+        _buildAnnouncementTile(
+            "Transport Timings Update",
+            "From 20 May 2024, pickup time will be 10 minutes earlier.",
+            "18 May 2024",
+            const Color(0xFF10B981),
+            const Color(0xFFECFDF5)),
+        _buildAnnouncementTile(
+            "Bus Route Change",
+            "Route 12 will take a new route from 25 May 2024.",
+            "15 May 2024",
+            const Color(0xFFF59E0B),
+            const Color(0xFFFEF3C7)),
       ],
     );
   }
 
-  Widget _buildAnnouncementTile(String title, String desc, String date, Color color, Color bgColor) {
+  Widget _buildAnnouncementTile(
+      String title, String desc, String date, Color color, Color bgColor) {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(12),
@@ -847,18 +896,25 @@ class _TransportScreenState extends State<TransportScreen> {
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+                      style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF1E2875)),
                     ),
                     Text(
                       date,
-                      style: TextStyle(fontSize: 9, color: Colors.grey.shade400, fontWeight: FontWeight.w500),
+                      style: TextStyle(
+                          fontSize: 9,
+                          color: Colors.grey.shade400,
+                          fontWeight: FontWeight.w500),
                     ),
                   ],
                 ),
                 const SizedBox(height: 4),
                 Text(
                   desc,
-                  style: TextStyle(fontSize: 10, color: Colors.grey.shade500, height: 1.3),
+                  style: TextStyle(
+                      fontSize: 10, color: Colors.grey.shade500, height: 1.3),
                 ),
               ],
             ),
@@ -884,17 +940,22 @@ class _TransportScreenState extends State<TransportScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _buildQuickActionItem("Transport ID Card", Icons.badge, const Color(0xFFF5F3FF), const Color(0xFF7C3AED)),
-            _buildQuickActionItem("Report an Issue", Icons.report_problem, const Color(0xFFFEE2E2), const Color(0xFFEF4444)),
-            _buildQuickActionItem("Contact Transport", Icons.phone, const Color(0xFFECFDF5), const Color(0xFF10B981)),
-            _buildQuickActionItem("Transport Rules", Icons.article, const Color(0xFFEEF2FF), const Color(0xFF3B82F6)),
+            _buildQuickActionItem("Transport ID Card", Icons.badge,
+                const Color(0xFFF5F3FF), const Color(0xFF7C3AED)),
+            _buildQuickActionItem("Report an Issue", Icons.report_problem,
+                const Color(0xFFFEE2E2), const Color(0xFFEF4444)),
+            _buildQuickActionItem("Contact Transport", Icons.phone,
+                const Color(0xFFECFDF5), const Color(0xFF10B981)),
+            _buildQuickActionItem("Transport Rules", Icons.article,
+                const Color(0xFFEEF2FF), const Color(0xFF3B82F6)),
           ],
         ),
       ],
     );
   }
 
-  Widget _buildQuickActionItem(String title, IconData icon, Color bgColor, Color iconColor) {
+  Widget _buildQuickActionItem(
+      String title, IconData icon, Color bgColor, Color iconColor) {
     return InkWell(
       onTap: () {
         ScaffoldMessenger.of(context).showSnackBar(

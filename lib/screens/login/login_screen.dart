@@ -61,7 +61,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     'assets/images/loginscreenlogo.png',
                     height: 120,
                     errorBuilder: (context, error, stackTrace) {
-                      return const Icon(Icons.school, size: 100, color: Colors.blue);
+                      return const Icon(Icons.school,
+                          size: 100, color: Colors.blue);
                     },
                   ),
                 ),
@@ -78,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   style: TextStyle(color: Colors.grey),
                 ),
                 const SizedBox(height: 40),
-                
+
                 // Role Selection
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -137,7 +138,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     prefixIcon: const Icon(Icons.lock_outline),
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                        _isPasswordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
                       ),
                       onPressed: () {
                         setState(() {

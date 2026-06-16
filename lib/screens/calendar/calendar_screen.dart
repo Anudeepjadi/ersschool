@@ -13,7 +13,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
   DateTime _selectedDate = DateTime(2026, 5, 20);
   String _selectedSchool = "Ecstasy School 1";
 
-  final List<String> _schools = ["Ecstasy School 1", "Ecstasy School 2", "Ecstasy School 3"];
+  final List<String> _schools = [
+    "Ecstasy School 1",
+    "Ecstasy School 2",
+    "Ecstasy School 3"
+  ];
 
   // Days mapping in May 2024
   // Starting day is Wednesday (Sun=0, Mon=1, Tue=2, Wed=3).
@@ -22,19 +26,24 @@ class _CalendarScreenState extends State<CalendarScreen> {
   final List<DateTime> _mayGridDays = [
     // Row 1
     DateTime(2024, 4, 28), DateTime(2026, 4, 29), DateTime(2024, 4, 30),
-    DateTime(2024, 5, 1), DateTime(2026, 5, 2), DateTime(2024, 5, 3), DateTime(2024, 5, 4),
+    DateTime(2024, 5, 1), DateTime(2026, 5, 2), DateTime(2024, 5, 3),
+    DateTime(2024, 5, 4),
     // Row 2
     DateTime(2024, 5, 5), DateTime(2026, 5, 6), DateTime(2024, 5, 7),
-    DateTime(2024, 5, 8), DateTime(2026, 5, 9), DateTime(2024, 5, 10), DateTime(2024, 5, 11),
+    DateTime(2024, 5, 8), DateTime(2026, 5, 9), DateTime(2024, 5, 10),
+    DateTime(2024, 5, 11),
     // Row 3
     DateTime(2024, 5, 12), DateTime(2026, 5, 13), DateTime(2024, 5, 14),
-    DateTime(2024, 5, 15), DateTime(2026, 5, 16), DateTime(2024, 5, 17), DateTime(2024, 5, 18),
+    DateTime(2024, 5, 15), DateTime(2026, 5, 16), DateTime(2024, 5, 17),
+    DateTime(2024, 5, 18),
     // Row 4
     DateTime(2024, 5, 19), DateTime(2026, 5, 20), DateTime(2024, 5, 21),
-    DateTime(2024, 5, 22), DateTime(2026, 5, 23), DateTime(2024, 5, 24), DateTime(2024, 5, 25),
+    DateTime(2024, 5, 22), DateTime(2026, 5, 23), DateTime(2024, 5, 24),
+    DateTime(2024, 5, 25),
     // Row 5
     DateTime(2024, 5, 26), DateTime(2026, 5, 27), DateTime(2024, 5, 28),
-    DateTime(2024, 5, 29), DateTime(2026, 5, 30), DateTime(2024, 5, 31), DateTime(2024, 6, 1),
+    DateTime(2024, 5, 29), DateTime(2026, 5, 30), DateTime(2024, 5, 31),
+    DateTime(2024, 6, 1),
   ];
 
   // Map dates to dot colors
@@ -152,7 +161,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     ),
                   ),
                   const SizedBox(width: 2),
-                  const Icon(Icons.keyboard_arrow_down, size: 14, color: Colors.white),
+                  const Icon(Icons.keyboard_arrow_down,
+                      size: 14, color: Colors.white),
                 ],
               ),
             ),
@@ -163,7 +173,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
             clipBehavior: Clip.none,
             children: [
               IconButton(
-                icon: const Icon(Icons.notifications_none, color: Colors.white, size: 26),
+                icon: const Icon(Icons.notifications_none,
+                    color: Colors.white, size: 26),
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text("No new notifications")),
@@ -394,18 +405,22 @@ class _CalendarScreenState extends State<CalendarScreen> {
               Row(
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.chevron_left, size: 20, color: Color(0xFF1E2875)),
+                    icon: const Icon(Icons.chevron_left,
+                        size: 20, color: Color(0xFF1E2875)),
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Currently viewing May 2024")),
+                        const SnackBar(
+                            content: Text("Currently viewing May 2024")),
                       );
                     },
                   ),
                   IconButton(
-                    icon: const Icon(Icons.chevron_right, size: 20, color: Color(0xFF1E2875)),
+                    icon: const Icon(Icons.chevron_right,
+                        size: 20, color: Color(0xFF1E2875)),
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Currently viewing May 2024")),
+                        const SnackBar(
+                            content: Text("Currently viewing May 2024")),
                       );
                     },
                   ),
@@ -446,7 +461,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
             itemBuilder: (context, index) {
               final day = _mayGridDays[index];
               final isCurrentMonth = day.month == 5;
-              final isSelected = day.day == _selectedDate.day && day.month == _selectedDate.month && day.year == _selectedDate.year;
+              final isSelected = day.day == _selectedDate.day &&
+                  day.month == _selectedDate.month &&
+                  day.year == _selectedDate.year;
               final dotColor = _getEventColor(day);
 
               return GestureDetector(
@@ -457,7 +474,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 },
                 child: Container(
                   decoration: BoxDecoration(
-                    color: isSelected ? const Color(0xFF0038FF) : Colors.transparent,
+                    color: isSelected
+                        ? const Color(0xFF0038FF)
+                        : Colors.transparent,
                     shape: BoxShape.circle,
                   ),
                   alignment: Alignment.center,
@@ -468,7 +487,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         "${day.day}",
                         style: TextStyle(
                           fontSize: 12,
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                          fontWeight:
+                              isSelected ? FontWeight.bold : FontWeight.normal,
                           color: isSelected
                               ? Colors.white
                               : isCurrentMonth
@@ -546,7 +566,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   Widget _buildEventsListCard() {
-    final bool isSelectedDateMay20 = _selectedDate.day == 20 && _selectedDate.month == 5 && _selectedDate.year == 2024;
+    final bool isSelectedDateMay20 = _selectedDate.day == 20 &&
+        _selectedDate.month == 5 &&
+        _selectedDate.year == 2024;
     final List<Map<String, String>> displayedEvents;
 
     if (isSelectedDateMay20) {
@@ -576,7 +598,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
           "type": "Other"
         },
       ];
-    } else if (_selectedDate.day == 24 && _selectedDate.month == 5 && _selectedDate.year == 2024) {
+    } else if (_selectedDate.day == 24 &&
+        _selectedDate.month == 5 &&
+        _selectedDate.year == 2024) {
       displayedEvents = [
         {
           "title": "Class Test - Science",
@@ -585,7 +609,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
           "type": "Exam"
         }
       ];
-    } else if (_selectedDate.day == 25 && _selectedDate.month == 5 && _selectedDate.year == 2024) {
+    } else if (_selectedDate.day == 25 &&
+        _selectedDate.month == 5 &&
+        _selectedDate.year == 2024) {
       displayedEvents = [
         {
           "title": "Parent Teacher Meeting - Class 8",
@@ -594,7 +620,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
           "type": "Meeting"
         }
       ];
-    } else if (_selectedDate.day == 27 && _selectedDate.month == 5 && _selectedDate.year == 2024) {
+    } else if (_selectedDate.day == 27 &&
+        _selectedDate.month == 5 &&
+        _selectedDate.year == 2024) {
       displayedEvents = [
         {
           "title": "Summer Break Begins",
@@ -603,7 +631,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
           "type": "Holiday"
         }
       ];
-    } else if (_selectedDate.day == 31 && _selectedDate.month == 5 && _selectedDate.year == 2024) {
+    } else if (_selectedDate.day == 31 &&
+        _selectedDate.month == 5 &&
+        _selectedDate.year == 2024) {
       displayedEvents = [
         {
           "title": "Annual Prize Distribution",
@@ -649,11 +679,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
               child: Center(
                 child: Column(
                   children: [
-                    Icon(Icons.event_busy, color: Colors.grey.shade300, size: 36),
+                    Icon(Icons.event_busy,
+                        color: Colors.grey.shade300, size: 36),
                     const SizedBox(height: 8),
                     Text(
                       "No events scheduled for this day.",
-                      style: TextStyle(color: Colors.grey.shade400, fontSize: 12),
+                      style:
+                          TextStyle(color: Colors.grey.shade400, fontSize: 12),
                     ),
                   ],
                 ),
@@ -661,7 +693,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
             )
           else
             Column(
-              children: displayedEvents.map((ev) => _buildEventCard(ev)).toList(),
+              children:
+                  displayedEvents.map((ev) => _buildEventCard(ev)).toList(),
             ),
         ],
       ),
@@ -735,22 +768,26 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    Icon(Icons.access_time, size: 12, color: Colors.grey.shade400),
+                    Icon(Icons.access_time,
+                        size: 12, color: Colors.grey.shade400),
                     const SizedBox(width: 4),
                     Text(
                       ev["time"] ?? "",
-                      style: TextStyle(fontSize: 11, color: Colors.grey.shade500),
+                      style:
+                          TextStyle(fontSize: 11, color: Colors.grey.shade500),
                     ),
                   ],
                 ),
                 const SizedBox(height: 2),
                 Row(
                   children: [
-                    Icon(Icons.location_on_outlined, size: 12, color: Colors.grey.shade400),
+                    Icon(Icons.location_on_outlined,
+                        size: 12, color: Colors.grey.shade400),
                     const SizedBox(width: 4),
                     Text(
                       ev["location"] ?? "",
-                      style: TextStyle(fontSize: 11, color: Colors.grey.shade500),
+                      style:
+                          TextStyle(fontSize: 11, color: Colors.grey.shade500),
                     ),
                   ],
                 ),
@@ -763,7 +800,21 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   String _monthName(int month) {
-    const months = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const months = [
+      "",
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ];
     return months[month];
   }
 
@@ -785,13 +836,18 @@ class _CalendarScreenState extends State<CalendarScreen> {
             TextButton.icon(
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Downloading Holiday Calendar...")),
+                  const SnackBar(
+                      content: Text("Downloading Holiday Calendar...")),
                 );
               },
-              icon: const Icon(Icons.download, size: 16, color: AppColors.primary),
+              icon: const Icon(Icons.download,
+                  size: 16, color: AppColors.primary),
               label: const Text(
                 "Download",
-                style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 12),
+                style: TextStyle(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12),
               ),
             ),
           ],
@@ -810,44 +866,92 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 flex: 3,
                 child: Text(
                   "Holiday Name",
-                  style: TextStyle(fontSize: 11, color: Color(0xFF6B7280), fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 11,
+                      color: Color(0xFF6B7280),
+                      fontWeight: FontWeight.bold),
                 ),
               ),
               Expanded(
                 flex: 3,
                 child: Text(
                   "Date",
-                  style: TextStyle(fontSize: 11, color: Color(0xFF6B7280), fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 11,
+                      color: Color(0xFF6B7280),
+                      fontWeight: FontWeight.bold),
                 ),
               ),
               Expanded(
                 flex: 2,
                 child: Text(
                   "Day",
-                  style: TextStyle(fontSize: 11, color: Color(0xFF6B7280), fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 11,
+                      color: Color(0xFF6B7280),
+                      fontWeight: FontWeight.bold),
                 ),
               ),
               Expanded(
                 flex: 4,
                 child: Text(
                   "Description",
-                  style: TextStyle(fontSize: 11, color: Color(0xFF6B7280), fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 11,
+                      color: Color(0xFF6B7280),
+                      fontWeight: FontWeight.bold),
                 ),
               ),
             ],
           ),
         ),
         const SizedBox(height: 6),
-        _buildHolidayRow("Summer Break", "20 May 2024 - 15 Jun 2024", "Mon - Sat", "School closed for summer vacation.", const Color(0xFFEF4444), const Color(0xFFFEE2E2), Icons.beach_access),
-        _buildHolidayRow("Independence Day", "15 Aug 2024", "Thursday", "National holiday.", const Color(0xFFF59E0B), const Color(0xFFFEF3C7), Icons.flag),
-        _buildHolidayRow("Janmashtami", "26 Aug 2024", "Monday", "Celebration of Lord Krishna's birthday.", const Color(0xFF22C55E), const Color(0xFFDCFCE7), Icons.celebration),
-        _buildHolidayRow("Gandhi Jayanti", "02 Oct 2024", "Wednesday", "Birth anniversary of Mahatma Gandhi.", const Color(0xFF8B5CF6), const Color(0xFFF3E8FF), Icons.person),
-        _buildHolidayRow("Diwali Break", "30 Oct 2024 - 03 Nov 2024", "Wed - Sun", "Festival of Lights.", const Color(0xFF3B82F6), const Color(0xFFDBEAFE), Icons.wb_sunny),
+        _buildHolidayRow(
+            "Summer Break",
+            "20 May 2024 - 15 Jun 2024",
+            "Mon - Sat",
+            "School closed for summer vacation.",
+            const Color(0xFFEF4444),
+            const Color(0xFFFEE2E2),
+            Icons.beach_access),
+        _buildHolidayRow(
+            "Independence Day",
+            "15 Aug 2024",
+            "Thursday",
+            "National holiday.",
+            const Color(0xFFF59E0B),
+            const Color(0xFFFEF3C7),
+            Icons.flag),
+        _buildHolidayRow(
+            "Janmashtami",
+            "26 Aug 2024",
+            "Monday",
+            "Celebration of Lord Krishna's birthday.",
+            const Color(0xFF22C55E),
+            const Color(0xFFDCFCE7),
+            Icons.celebration),
+        _buildHolidayRow(
+            "Gandhi Jayanti",
+            "02 Oct 2024",
+            "Wednesday",
+            "Birth anniversary of Mahatma Gandhi.",
+            const Color(0xFF8B5CF6),
+            const Color(0xFFF3E8FF),
+            Icons.person),
+        _buildHolidayRow(
+            "Diwali Break",
+            "30 Oct 2024 - 03 Nov 2024",
+            "Wed - Sun",
+            "Festival of Lights.",
+            const Color(0xFF3B82F6),
+            const Color(0xFFDBEAFE),
+            Icons.wb_sunny),
       ],
     );
   }
 
-  Widget _buildHolidayRow(String name, String date, String day, String desc, Color color, Color bgColor, IconData icon) {
+  Widget _buildHolidayRow(String name, String date, String day, String desc,
+      Color color, Color bgColor, IconData icon) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       decoration: const BoxDecoration(
@@ -871,7 +975,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 Expanded(
                   child: Text(
                     name,
-                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+                    style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF1E2875)),
                   ),
                 ),
               ],
@@ -881,7 +988,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
             flex: 3,
             child: Text(
               date,
-              style: TextStyle(fontSize: 11, color: Colors.grey.shade600, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                  fontSize: 11,
+                  color: Colors.grey.shade600,
+                  fontWeight: FontWeight.w500),
             ),
           ),
           Expanded(
@@ -895,7 +1005,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
             flex: 4,
             child: Text(
               desc,
-              style: TextStyle(fontSize: 11, color: Colors.grey.shade600, height: 1.3),
+              style: TextStyle(
+                  fontSize: 11, color: Colors.grey.shade600, height: 1.3),
             ),
           ),
         ],

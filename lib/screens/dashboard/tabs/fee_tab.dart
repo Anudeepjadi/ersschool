@@ -10,13 +10,22 @@ class FeeTab extends StatefulWidget {
 }
 
 class _FeeTabState extends State<FeeTab> {
-  int _activeSubTab = 0; // 0: Overview, 1: Fees Structure, 2: Transactions, 3: Receipts
+  int _activeSubTab =
+      0; // 0: Overview, 1: Fees Structure, 2: Transactions, 3: Receipts
   String _selectedAcademicYear = "2024 - 2025";
   String _selectedSchool = "Ecstasy School 1";
 
   // Dropdown options
-  final List<String> _academicYears = ["2024 - 2025", "2023 - 2024", "2022 - 2023"];
-  final List<String> _schools = ["Ecstasy School 1", "Ecstasy School 2", "Ecstasy School 3"];
+  final List<String> _academicYears = [
+    "2024 - 2025",
+    "2023 - 2024",
+    "2022 - 2023"
+  ];
+  final List<String> _schools = [
+    "Ecstasy School 1",
+    "Ecstasy School 2",
+    "Ecstasy School 3"
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +124,8 @@ class _FeeTabState extends State<FeeTab> {
                     ),
                   ),
                   const SizedBox(width: 2),
-                  const Icon(Icons.keyboard_arrow_down, size: 14, color: Colors.white),
+                  const Icon(Icons.keyboard_arrow_down,
+                      size: 14, color: Colors.white),
                 ],
               ),
             ),
@@ -126,7 +136,8 @@ class _FeeTabState extends State<FeeTab> {
             clipBehavior: Clip.none,
             children: [
               IconButton(
-                icon: const Icon(Icons.notifications_none, color: Colors.white, size: 26),
+                icon: const Icon(Icons.notifications_none,
+                    color: Colors.white, size: 26),
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text("No new notifications")),
@@ -282,7 +293,10 @@ class _FeeTabState extends State<FeeTab> {
           const SizedBox(height: 12),
           Text(
             "$title Details",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey.shade700),
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey.shade700),
           ),
           const SizedBox(height: 4),
           Text(
@@ -375,7 +389,8 @@ class _FeeTabState extends State<FeeTab> {
                   }).toList();
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                   decoration: BoxDecoration(
                     color: Colors.grey.shade50,
                     borderRadius: BorderRadius.circular(8),
@@ -404,7 +419,8 @@ class _FeeTabState extends State<FeeTab> {
                         ],
                       ),
                       const SizedBox(width: 4),
-                      Icon(Icons.keyboard_arrow_down, size: 14, color: Colors.grey.shade600),
+                      Icon(Icons.keyboard_arrow_down,
+                          size: 14, color: Colors.grey.shade600),
                     ],
                   ),
                 ),
@@ -417,8 +433,10 @@ class _FeeTabState extends State<FeeTab> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildSummaryItem("Total Paid", "₹ 20,000", const Color(0xFF10B981)),
-              _buildSummaryItem("Due Amount", "₹ 25,000", const Color(0xFFEF4444)),
+              _buildSummaryItem(
+                  "Total Paid", "₹ 20,000", const Color(0xFF10B981)),
+              _buildSummaryItem(
+                  "Due Amount", "₹ 25,000", const Color(0xFFEF4444)),
               _buildSummaryItemWithIcon(
                 "Due Date",
                 "30 Jun 2024",
@@ -457,7 +475,8 @@ class _FeeTabState extends State<FeeTab> {
     );
   }
 
-  Widget _buildSummaryItemWithIcon(String label, String value, Color valueColor, IconData icon) {
+  Widget _buildSummaryItemWithIcon(
+      String label, String value, Color valueColor, IconData icon) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -540,28 +559,40 @@ class _FeeTabState extends State<FeeTab> {
                 flex: 2,
                 child: Text(
                   "Particulars",
-                  style: TextStyle(fontSize: 10, color: Color(0xFF6B7280), fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 10,
+                      color: Color(0xFF6B7280),
+                      fontWeight: FontWeight.bold),
                 ),
               ),
               Expanded(
                 flex: 2,
                 child: Text(
                   "Due Date",
-                  style: TextStyle(fontSize: 10, color: Color(0xFF6B7280), fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 10,
+                      color: Color(0xFF6B7280),
+                      fontWeight: FontWeight.bold),
                 ),
               ),
               Expanded(
                 flex: 2,
                 child: Text(
                   "Amount (₹)",
-                  style: TextStyle(fontSize: 10, color: Color(0xFF6B7280), fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 10,
+                      color: Color(0xFF6B7280),
+                      fontWeight: FontWeight.bold),
                 ),
               ),
               Expanded(
                 flex: 2,
                 child: Text(
                   "Status",
-                  style: TextStyle(fontSize: 10, color: Color(0xFF6B7280), fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 10,
+                      color: Color(0xFF6B7280),
+                      fontWeight: FontWeight.bold),
                 ),
               ),
               SizedBox(width: 16), // space to match right chevron
@@ -583,11 +614,17 @@ class _FeeTabState extends State<FeeTab> {
               children: [
                 Text(
                   "Total Paid",
-                  style: TextStyle(color: Colors.grey.shade500, fontSize: 10, fontWeight: FontWeight.w500),
+                  style: TextStyle(
+                      color: Colors.grey.shade500,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w500),
                 ),
                 const Text(
                   "₹ 20,000",
-                  style: TextStyle(color: Color(0xFF10B981), fontSize: 14, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: Color(0xFF10B981),
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -596,11 +633,17 @@ class _FeeTabState extends State<FeeTab> {
               children: [
                 Text(
                   "Total Due",
-                  style: TextStyle(color: Colors.grey.shade500, fontSize: 10, fontWeight: FontWeight.w500),
+                  style: TextStyle(
+                      color: Colors.grey.shade500,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w500),
                 ),
                 const Text(
                   "₹ 25,000",
-                  style: TextStyle(color: Color(0xFFEF4444), fontSize: 14, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: Color(0xFFEF4444),
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -609,17 +652,22 @@ class _FeeTabState extends State<FeeTab> {
             ElevatedButton.icon(
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Redirecting to payment gateway...")),
+                  const SnackBar(
+                      content: Text("Redirecting to payment gateway...")),
                 );
               },
               icon: const Icon(Icons.payment, size: 14, color: Colors.white),
               label: const Text(
                 "Pay Now",
-                style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold),
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -632,7 +680,8 @@ class _FeeTabState extends State<FeeTab> {
     );
   }
 
-  Widget _buildFeeItem(String title, String term, String dueDate, String amount, bool isPaid) {
+  Widget _buildFeeItem(
+      String title, String term, String dueDate, String amount, bool isPaid) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: const BoxDecoration(
@@ -647,7 +696,10 @@ class _FeeTabState extends State<FeeTab> {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+                  style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1E2875)),
                 ),
                 Text(
                   term,
@@ -660,14 +712,20 @@ class _FeeTabState extends State<FeeTab> {
             flex: 2,
             child: Text(
               dueDate,
-              style: TextStyle(fontSize: 11, color: Colors.grey.shade600, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                  fontSize: 11,
+                  color: Colors.grey.shade600,
+                  fontWeight: FontWeight.w500),
             ),
           ),
           Expanded(
             flex: 2,
             child: Text(
               amount,
-              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+              style: const TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF1E2875)),
             ),
           ),
           Expanded(
@@ -676,7 +734,8 @@ class _FeeTabState extends State<FeeTab> {
               children: [
                 if (isPaid)
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
                       color: const Color(0xFFE6FDF4),
                       borderRadius: BorderRadius.circular(6),
@@ -689,7 +748,10 @@ class _FeeTabState extends State<FeeTab> {
                         SizedBox(width: 2),
                         Text(
                           "Paid",
-                          style: TextStyle(fontSize: 8, color: Color(0xFF10B981), fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 8,
+                              color: Color(0xFF10B981),
+                              fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
@@ -697,7 +759,10 @@ class _FeeTabState extends State<FeeTab> {
                 else
                   const Text(
                     "Unpaid",
-                    style: TextStyle(fontSize: 11, color: Color(0xFFEA580C), fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontSize: 11,
+                        color: Color(0xFFEA580C),
+                        fontWeight: FontWeight.bold),
                   ),
               ],
             ),
@@ -724,17 +789,22 @@ class _FeeTabState extends State<FeeTab> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _buildQuickActionItem("Pay Fee", Icons.credit_card, const Color(0xFFEEF2FF), const Color(0xFF4F46E5)),
-            _buildQuickActionItem("View Receipts", Icons.receipt, const Color(0xFFF5F3FF), const Color(0xFF7C3AED)),
-            _buildQuickActionItem("Fee Structure", Icons.list_alt, const Color(0xFFFFF7ED), const Color(0xFFEA580C)),
-            _buildQuickActionItem("Download Statement", Icons.download, const Color(0xFFECFDF5), const Color(0xFF059669)),
+            _buildQuickActionItem("Pay Fee", Icons.credit_card,
+                const Color(0xFFEEF2FF), const Color(0xFF4F46E5)),
+            _buildQuickActionItem("View Receipts", Icons.receipt,
+                const Color(0xFFF5F3FF), const Color(0xFF7C3AED)),
+            _buildQuickActionItem("Fee Structure", Icons.list_alt,
+                const Color(0xFFFFF7ED), const Color(0xFFEA580C)),
+            _buildQuickActionItem("Download Statement", Icons.download,
+                const Color(0xFFECFDF5), const Color(0xFF059669)),
           ],
         ),
       ],
     );
   }
 
-  Widget _buildQuickActionItem(String title, IconData icon, Color bgColor, Color iconColor) {
+  Widget _buildQuickActionItem(
+      String title, IconData icon, Color bgColor, Color iconColor) {
     return InkWell(
       onTap: () {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -803,14 +873,18 @@ class _FeeTabState extends State<FeeTab> {
           ],
         ),
         const SizedBox(height: 12),
-        _buildRecentPaymentItem("Tuition Fee - Term 2", "Receipt #FEE-2024-0021", "₹ 15,000", "UPI", "15 Apr 2024"),
-        _buildRecentPaymentItem("Tuition Fee - Term 1", "Receipt #FEE-2024-0015", "₹ 15,000", "Credit Card", "15 Jan 2024"),
-        _buildRecentPaymentItem("Admission Fee", "Receipt #FEE-2023-0098", "₹ 10,000", "Net Banking", "10 Apr 2023"),
+        _buildRecentPaymentItem("Tuition Fee - Term 2",
+            "Receipt #FEE-2024-0021", "₹ 15,000", "UPI", "15 Apr 2024"),
+        _buildRecentPaymentItem("Tuition Fee - Term 1",
+            "Receipt #FEE-2024-0015", "₹ 15,000", "Credit Card", "15 Jan 2024"),
+        _buildRecentPaymentItem("Admission Fee", "Receipt #FEE-2023-0098",
+            "₹ 10,000", "Net Banking", "10 Apr 2023"),
       ],
     );
   }
 
-  Widget _buildRecentPaymentItem(String title, String receipt, String amount, String method, String date) {
+  Widget _buildRecentPaymentItem(
+      String title, String receipt, String amount, String method, String date) {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(10),
@@ -829,7 +903,8 @@ class _FeeTabState extends State<FeeTab> {
               shape: BoxShape.circle,
             ),
             child: const Center(
-              child: Icon(Icons.check_circle_outline, size: 16, color: Color(0xFF10B981)),
+              child: Icon(Icons.check_circle_outline,
+                  size: 16, color: Color(0xFF10B981)),
             ),
           ),
           const SizedBox(width: 10),
@@ -840,7 +915,10 @@ class _FeeTabState extends State<FeeTab> {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+                  style: const TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1E2875)),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -855,7 +933,10 @@ class _FeeTabState extends State<FeeTab> {
             flex: 2,
             child: Text(
               amount,
-              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+              style: const TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF1E2875)),
             ),
           ),
           Expanded(
@@ -918,11 +999,14 @@ class _FeeTabState extends State<FeeTab> {
                   ],
                 ),
                 const SizedBox(height: 10),
-                _buildBulletPoint("Please ensure timely payment of fees to avoid late fee charges."),
+                _buildBulletPoint(
+                    "Please ensure timely payment of fees to avoid late fee charges."),
                 const SizedBox(height: 6),
-                _buildBulletPoint("Late fee of ₹100 per day will be applicable after the due date."),
+                _buildBulletPoint(
+                    "Late fee of ₹100 per day will be applicable after the due date."),
                 const SizedBox(height: 6),
-                _buildBulletPoint("For any fee related queries, contact the school office."),
+                _buildBulletPoint(
+                    "For any fee related queries, contact the school office."),
               ],
             ),
           ),
@@ -945,7 +1029,8 @@ class _FeeTabState extends State<FeeTab> {
                         opacity: 0.15,
                         child: Transform.rotate(
                           angle: -0.5,
-                          child: const Icon(Icons.spa, size: 30, color: Color(0xFF0038FF)),
+                          child: const Icon(Icons.spa,
+                              size: 30, color: Color(0xFF0038FF)),
                         ),
                       ),
                     ),
@@ -956,7 +1041,8 @@ class _FeeTabState extends State<FeeTab> {
                         opacity: 0.15,
                         child: Transform.rotate(
                           angle: 0.5,
-                          child: const Icon(Icons.spa, size: 30, color: Color(0xFF0038FF)),
+                          child: const Icon(Icons.spa,
+                              size: 30, color: Color(0xFF0038FF)),
                         ),
                       ),
                     ),
@@ -967,7 +1053,8 @@ class _FeeTabState extends State<FeeTab> {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(6),
-                        border: Border.all(color: const Color(0xFF0038FF), width: 1.5),
+                        border: Border.all(
+                            color: const Color(0xFF0038FF), width: 1.5),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withValues(alpha: 0.05),
@@ -990,11 +1077,20 @@ class _FeeTabState extends State<FeeTab> {
                           ),
                           const SizedBox(height: 4),
                           // Lines representing clipboard lines
-                          Container(height: 1.5, width: 32, color: Colors.grey.shade200),
+                          Container(
+                              height: 1.5,
+                              width: 32,
+                              color: Colors.grey.shade200),
                           const SizedBox(height: 3),
-                          Container(height: 1.5, width: 32, color: Colors.grey.shade200),
+                          Container(
+                              height: 1.5,
+                              width: 32,
+                              color: Colors.grey.shade200),
                           const SizedBox(height: 3),
-                          Container(height: 1.5, width: 20, color: Colors.grey.shade200),
+                          Container(
+                              height: 1.5,
+                              width: 20,
+                              color: Colors.grey.shade200),
                         ],
                       ),
                     ),
@@ -1056,7 +1152,8 @@ class _FeeTabState extends State<FeeTab> {
       children: [
         const Padding(
           padding: EdgeInsets.only(top: 4),
-          child: Icon(Icons.fiber_manual_record, size: 5, color: Colors.black54),
+          child:
+              Icon(Icons.fiber_manual_record, size: 5, color: Colors.black54),
         ),
         const SizedBox(width: 6),
         Expanded(
