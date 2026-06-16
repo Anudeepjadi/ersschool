@@ -4,8 +4,13 @@ import '../../../widgets/calendar_popup.dart';
 
 class HomeTab extends StatelessWidget {
   final VoidCallback onOpenDrawer;
+  final Function(int) onTabSelected;
 
-  const HomeTab({super.key, required this.onOpenDrawer});
+  const HomeTab({
+    super.key,
+    required this.onOpenDrawer,
+    required this.onTabSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -218,21 +223,25 @@ class HomeTab extends StatelessWidget {
                         Icons.school_outlined,
                         "My Class",
                         Colors.blue,
+                        onTap: () => onTabSelected(2),
                       ),
                       _buildQuickAccessItem(
                         Icons.description_outlined,
                         "Learning\nMaterials",
                         Colors.green,
+                        onTap: () => onTabSelected(5),
                       ),
                       _buildQuickAccessItem(
                         Icons.assignment_outlined,
                         "Exams",
                         Colors.purple,
+                        onTap: () => onTabSelected(4),
                       ),
                       _buildQuickAccessItem(
                         Icons.currency_rupee,
                         "Fee\nPayment",
                         Colors.orange,
+                        onTap: () => onTabSelected(3),
                       ),
                       _buildQuickAccessItem(
                         Icons.calendar_today_outlined,
@@ -446,34 +455,41 @@ class HomeTab extends StatelessWidget {
     Color color, {
     VoidCallback? onTap,
   }) {
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        width: 72,
-        margin: const EdgeInsets.only(right: 12),
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Icon(icon, color: color, size: 26),
+    return Container(
+      width: 76,
+      margin: const EdgeInsets.only(right: 8),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: color.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Icon(icon, color: color, size: 26),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  label,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF1E2875),
+                    height: 1.2,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 8),
-            Text(
-              label,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF1E2875),
-                height: 1.2,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

@@ -19,25 +19,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int currentIndex = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  late final List<Widget> _tabs;
+  void _onTabChanged(int index) {
+    setState(() {
+      currentIndex = index;
+    });
+  }
 
   @override
-  void initState() {
-    super.initState();
-    _tabs = [
-      HomeTab(onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer()),
+  Widget build(BuildContext context) {
+    final List<Widget> tabs = [
+      HomeTab(
+        onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer(),
+        onTabSelected: _onTabChanged,
+      ),
       const MyInfoTab(),
       ClassTab(onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer()),
       const FeeTab(),
       const ExamsTab(),
       const MoreTab(),
     ];
-  }
 
   @override
   Widget build(BuildContext context) {
-    final tab = _tabs[currentIndex];
-
     return Scaffold(
       drawer: Drawer(
         child: ListView(
@@ -62,25 +65,49 @@ class _DashboardScreenState extends State<DashboardScreen> {
               accountEmail: Text("admin@ecstasyschool.com"),
             ),
             ListTile(
-              leading: const Icon(Icons.dashboard, color: AppColors.primary),
-              title: const Text("Dashboard"),
-              selected: true,
-              onTap: () => Navigator.pop(context),
+              leading: const Icon(Icons.home, color: AppColors.primary),
+              title: const Text("Home"),
+              selected: currentIndex == 0,
+              onTap: () {
+                setState(() => currentIndex = 0);
+                Navigator.pop(context);
+              },
             ),
             ListTile(
-              leading: const Icon(Icons.school),
-              title: const Text("Students"),
-              onTap: () {},
+              leading: const Icon(Icons.person_outline),
+              title: const Text("My Info"),
+              selected: currentIndex == 1,
+              onTap: () {
+                setState(() => currentIndex = 1);
+                Navigator.pop(context);
+              },
             ),
             ListTile(
-              leading: const Icon(Icons.people),
-              title: const Text("Teachers"),
-              onTap: () {},
+              leading: const Icon(Icons.menu_book),
+              title: const Text("Class"),
+              selected: currentIndex == 2,
+              onTap: () {
+                setState(() => currentIndex = 2);
+                Navigator.pop(context);
+              },
             ),
             ListTile(
-              leading: const Icon(Icons.event),
-              title: const Text("Events Calendar"),
-              onTap: () {},
+              leading: const Icon(Icons.currency_rupee),
+              title: const Text("Fee"),
+              selected: currentIndex == 3,
+              onTap: () {
+                setState(() => currentIndex = 3);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.assignment_outlined),
+              title: const Text("Exams"),
+              selected: currentIndex == 4,
+              onTap: () {
+                setState(() => currentIndex = 4);
+                Navigator.pop(context);
+              },
             ),
             const Divider(),
             ListTile(
@@ -103,11 +130,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         unselectedItemColor: const Color(0xFF1E2875),
         selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
         unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
-        onTap: (index) {
-          setState(() {
-            currentIndex = index;
-          });
-        },
+        onTap: _onTabChanged,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
           BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: "My Info"),
@@ -267,7 +290,7 @@ class _ComingSoon extends StatelessWidget {
           ),
         ],
       ),
-      body: _tabs[currentIndex],
+      body: tabs[currentIndex],
     );
   }
 }
