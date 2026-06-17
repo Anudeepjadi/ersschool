@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../widgets/calendar_popup.dart';
+import '../../transport/transport_screen.dart';
 
 class HomeTab extends StatelessWidget {
   final VoidCallback onOpenDrawer;
@@ -258,6 +259,14 @@ class HomeTab extends StatelessWidget {
                         Icons.directions_bus_outlined,
                         "Transport",
                         Colors.indigo,
+                        onTap: () {
+                          onTabSelected(5);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => const TransportScreen()),
+                          );
+                        },
                       ),
                     ],
                   ),
