@@ -8,7 +8,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ersschool/main.dart';
 import 'package:ersschool/screens/splash/splash_screen.dart';
-import 'package:ersschool/screens/auth/login_screen.dart';
+import 'package:ersschool/screens/login/login_screen.dart';
 
 void main() {
   testWidgets('Splash screen loads and navigates to login screen test', (WidgetTester tester) async {

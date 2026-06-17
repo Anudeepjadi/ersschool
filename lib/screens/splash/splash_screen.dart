@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../../core/theme/app_colors.dart';
-import '../auth/login_screen.dart';
+import 'package:video_player/video_player.dart';
+import '../login/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -10,94 +10,95 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
-  late Animation<double> _scaleAnimation;
+class _SplashScreenState extends State<SplashScreen> {
+  late VideoPlayerController _videoController;
+  bool _videoInitialized = false;
+  bool _hasNavigated = false;
 
   @override
   void initState() {
     super.initState();
 
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1500),
+    _videoController = VideoPlayerController.asset(
+      'assets/animations/ers_animation.mp4',
     );
 
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeIn),
-    );
+    _initializeVideo();
+  }
 
-    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeOutBack),
-    );
+  Future<void> _initializeVideo() async {
+    try {
+      await _videoController.initialize();
+      if (!mounted) return;
 
-    _animationController.forward();
+      setState(() => _videoInitialized = true);
 
-    Timer(
-      const Duration(seconds: 3),
-      () {
-        if (mounted) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (_) => const LoginScreen(),
-            ),
-          );
-        }
-      },
-    );
+      await _videoController.setVolume(0.0);
+      await _videoController.setPlaybackSpeed(3.0);
+      await _videoController.play();
+
+      _videoController.addListener(_onVideoProgress);
+    } catch (e) {
+      debugPrint('Video init failed: $e');
+      if (mounted) {
+        Future.delayed(const Duration(seconds: 3), () => _navigateToLogin());
+      }
+    }
+  }
+
+  void _onVideoProgress() {
+    if (_hasNavigated) return;
+
+    final position = _videoController.value.position;
+    final duration = _videoController.value.duration;
+
+    if (duration > Duration.zero &&
+        position >= duration - const Duration(milliseconds: 100)) {
+      _navigateToLogin();
+    }
+  }
+
+  void _navigateToLogin() {
+    if (_hasNavigated || !mounted) return;
+    _hasNavigated = true;
+
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (!mounted) return;
+      Navigator.pushReplacement(
+        context,
+        PageRouteBuilder(
+          transitionDuration: const Duration(milliseconds: 500),
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              FadeTransition(
+            opacity: animation,
+            child: const LoginScreen(),
+          ),
+        ),
+      );
+    });
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
+    _videoController.removeListener(_onVideoProgress);
+    _videoController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              AppColors.primary,
-              AppColors.secondary,
-            ],
-          ),
-        ),
-        child: Center(
-          child: FadeTransition(
-            opacity: _fadeAnimation,
-            child: ScaleTransition(
-              scale: _scaleAnimation,
-              child: Hero(
-                tag: 'app_logo',
-                child: Image.asset(
-                  "assets/images/logo.png",
-                  width: 220,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.school,
-                        size: 100,
-                        color: Colors.white,
-                      ),
-                    );
-                  },
+      backgroundColor: Colors.white,
+      body: Center(
+        child: _videoInitialized
+            ? SizedBox(
+                width: 220,
+                child: AspectRatio(
+                  aspectRatio: _videoController.value.aspectRatio,
+                  child: VideoPlayer(_videoController),
                 ),
-              ),
-            ),
-          ),
-        ),
+              )
+            : const SizedBox.shrink(),
       ),
     );
   }

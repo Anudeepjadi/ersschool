@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
-import '../auth/login_screen.dart';
+import '../login/login_screen.dart';
+import '../class/class_screen.dart';
+import '../my_info/my_info_screen.dart';
 import 'tabs/home_tab.dart';
-import 'tabs/my_info_tab.dart';
-import 'tabs/class_tab.dart';
 import 'tabs/fee_tab.dart';
 import 'tabs/exams_tab.dart';
 import 'tabs/more_tab.dart';
@@ -19,23 +19,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int currentIndex = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  late final List<Widget> _tabs;
-
+  void _onTabChanged(int index) {
+    setState(() {
+      currentIndex = index;
+    });
+  }
   @override
-  void initState() {
-    super.initState();
-    _tabs = [
-      HomeTab(onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer()),
-      const MyInfoTab(),
-      const ClassTab(),
+  Widget build(BuildContext context) {
+    final List<Widget> tabs = [
+      HomeTab(
+        onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer(),
+        onTabSelected: _onTabChanged,
+      ),
+      const MyInfoScreen(),
+      ClassScreen(onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer()),
       FeeTab(onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer()),
       ExamsTab(onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer()),
       const MoreTab(),
     ];
-  }
 
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
       drawer: Drawer(
@@ -55,10 +57,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 child: Icon(Icons.person, size: 40, color: AppColors.primary),
               ),
               accountName: Text(
-                "Ananya Sharma",
+                "Anudeep Jaadi",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
-              accountEmail: Text("ananya.sharma@school.com"),
+              accountEmail: Text("anudeepjaadi@ecstasyschool.com"),
             ),
             ListTile(
               leading: const Icon(Icons.home, color: AppColors.primary),
@@ -126,52 +128,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
         unselectedItemColor: const Color(0xFF1E2875),
         selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
         unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
-        onTap: (index) {
-          if (index == 5) {
-            showModalBottomSheet(
-              context: context,
-              backgroundColor: Colors.transparent,
-              barrierColor: Colors.black.withOpacity(0.15),
-              elevation: 0,
-              isScrollControlled: true,
-              builder: (BuildContext context) {
-                return const MoreTab();
-              },
-            );
-          } else {
-            setState(() {
-              currentIndex = index;
-            });
-          }
-        },
+        onTap: _onTabChanged,
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "Home",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: "My Info",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.menu_book),
-            label: "Class",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.currency_rupee),
-            label: "Fee",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.assignment_outlined),
-            label: "Exams",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.more_horiz),
-            label: "More",
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: "My Info"),
+          BottomNavigationBarItem(icon: Icon(Icons.menu_book), label: "Class"),
+          BottomNavigationBarItem(icon: Icon(Icons.currency_rupee), label: "Fee"),
+          BottomNavigationBarItem(icon: Icon(Icons.assignment_outlined), label: "Exams"),
+          BottomNavigationBarItem(icon: Icon(Icons.more_horiz), label: "More"),
         ],
       ),
-      body: _tabs[currentIndex],
+      body: tabs[currentIndex],
     );
   }
 }

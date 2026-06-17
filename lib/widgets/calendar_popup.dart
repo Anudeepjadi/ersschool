@@ -3,7 +3,7 @@ import '../../core/theme/app_colors.dart';
 
 // Mock events shared across the popup
 final Map<String, List<Map<String, String>>> schoolEvents = {
-  "2026-05-24": [
+  "2026-06-24": [
     {
       "title": "Science Exhibition",
       "time": "10:00 AM - 02:00 PM",
@@ -12,7 +12,7 @@ final Map<String, List<Map<String, String>>> schoolEvents = {
       "type": "Exhibition"
     }
   ],
-  "2026-05-25": [
+  "2026-06-25": [
     {
       "title": "Parents Teacher Meeting",
       "time": "09:00 AM - 11:00 AM",
@@ -21,7 +21,7 @@ final Map<String, List<Map<String, String>>> schoolEvents = {
       "type": "Meeting"
     }
   ],
-  "2026-05-30": [
+  "2026-06-30": [
     {
       "title": "Art & Craft Workshop",
       "time": "11:00 AM - 01:00 PM",
@@ -30,7 +30,7 @@ final Map<String, List<Map<String, String>>> schoolEvents = {
       "type": "Workshop"
     }
   ],
-  "2026-06-15": [
+  "2026-07-01": [
     {
       "title": "School Reopens",
       "time": "08:30 AM",
