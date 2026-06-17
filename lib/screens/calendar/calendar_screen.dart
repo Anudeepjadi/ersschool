@@ -116,6 +116,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               }).toList();
             },
             child: Container(
+              constraints: const BoxConstraints(maxWidth: 120),
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               margin: const EdgeInsets.only(left: 10),
               decoration: BoxDecoration(
@@ -124,15 +125,19 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
               ),
               child: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   const Icon(Icons.school, size: 14, color: Colors.white),
                   const SizedBox(width: 4),
-                  Text(
-                    _selectedSchool,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
+                  Flexible(
+                    child: Text(
+                      _selectedSchool,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   const SizedBox(width: 2),

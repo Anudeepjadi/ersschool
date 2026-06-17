@@ -105,7 +105,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
 
   // ── Date helpers ───────────────────────────────────────────────────────────
   static const _months = [
-    'Jan','Feb','Mar','Apr','May','Jun',
+    'Jan','Feb','Mar','Apr','Jun','Jun',
     'Jul','Aug','Sep','Oct','Nov','Dec',
   ];
 
