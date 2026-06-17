@@ -12,8 +12,20 @@ class ClassScreen extends StatefulWidget {
   State<ClassScreen> createState() => _ClassScreenState();
 }
 
-class _ClassScreenState extends State<ClassScreen> {
-  int _selectedTab = 0;
+class _ClassScreenState extends State<ClassScreen> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 4, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   final List<Map<String, dynamic>> _tabs = [
     {'title': 'Timetable', 'icon': Icons.calendar_today_outlined},
@@ -32,10 +44,7 @@ class _ClassScreenState extends State<ClassScreen> {
           _buildTabBar(),
           const Divider(height: 1, thickness: 1),
           Expanded(
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: _buildContent(),
-            ),
+            child: _buildContent(),
           ),
         ],
       ),
@@ -144,101 +153,35 @@ class _ClassScreenState extends State<ClassScreen> {
   Widget _buildTabBar() {
     return Container(
       color: Colors.white,
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: List.generate(_tabs.length, (index) {
-          final isSelected = _selectedTab == index;
-          return GestureDetector(
-            onTap: () {
-              setState(() => _selectedTab = index);
-              switch (index) {
-                case 0:
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => const TimetableScreen()));
-                  break;
-                case 1:
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => const DiaryScreen()));
-                  break;
-                case 2:
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => const AssignmentsScreen()));
-                  break;
-                case 3:
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => const AttendanceScreen()));
-                  break;
-              }
-            },
-            behavior: HitTestBehavior.opaque,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  _tabs[index]['icon'],
-                  color: isSelected
-                      ? const Color(0xFF0038FF)
-                      : const Color(0xFF666666),
-                  size: 24,
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  _tabs[index]['title'],
-                  style: TextStyle(
-                    color: isSelected
-                        ? const Color(0xFF0038FF)
-                        : const Color(0xFF666666),
-                    fontSize: 12,
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                if (isSelected)
-                  Container(
-                    height: 3,
-                    width: 60,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF0038FF),
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  )
-                else
-                  const SizedBox(height: 3),
-              ],
-            ),
-          );
-        }),
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: TabBar(
+        controller: _tabController,
+        indicatorColor: const Color(0xFF0038FF),
+        indicatorWeight: 3,
+        labelColor: const Color(0xFF0038FF),
+        unselectedLabelColor: const Color(0xFF666666),
+        labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
+        unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
+        tabs: _tabs.map((tab) => Tab(
+          icon: Icon(tab['icon'] as IconData, size: 24),
+          text: tab['title'] as String,
+        )).toList(),
       ),
     );
   }
 
   Widget _buildContent() {
-    switch (_selectedTab) {
-      case 0:
-        return _buildTimetable();
-      case 1:
-        return _buildPlaceholder("Diary Content");
-      case 2:
-        return _buildPlaceholder("Assignments Content");
-      case 3:
-        return _buildPlaceholder("Attendance Content");
-      default:
-        return Container();
-    }
-  }
-
-  Widget _buildPlaceholder(String text) {
-    return Container(
-      height: 400,
-      alignment: Alignment.center,
-      child: Text(text, style: const TextStyle(color: Colors.grey)),
+    return TabBarView(
+      controller: _tabController,
+      children: [
+        SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: _buildTimetable(),
+        ),
+        const DiaryScreen(showAppBar: false),
+        const AssignmentsScreen(showAppBar: false),
+        const AttendanceScreen(showAppBar: false),
+      ],
     );
   }
 

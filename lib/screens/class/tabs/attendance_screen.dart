@@ -3,12 +3,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:ersschool/core/theme/app_theme.dart';
 
 class AttendanceScreen extends StatelessWidget {
-  const AttendanceScreen({super.key});
+  final bool showAppBar;
+  const AttendanceScreen({super.key, this.showAppBar = true});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: showAppBar ? AppBar(
         title: const Text('Attendance'),
         backgroundColor: AppColors.primaryDark,
         foregroundColor: Colors.white,
@@ -22,7 +23,7 @@ class AttendanceScreen extends StatelessWidget {
             icon: const Icon(Icons.download_outlined),
           ),
         ],
-      ),
+      ) : null,
       backgroundColor: AppColors.background,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

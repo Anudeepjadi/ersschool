@@ -3,7 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:ersschool/core/theme/app_theme.dart';
 
 class DiaryScreen extends StatefulWidget {
-  const DiaryScreen({super.key});
+  final bool showAppBar;
+  const DiaryScreen({super.key, this.showAppBar = true});
 
   @override
   State<DiaryScreen> createState() => _DiaryScreenState();
@@ -146,7 +147,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: widget.showAppBar ? AppBar(
         title: const Text('Diary'),
         backgroundColor: AppColors.primaryDark,
         foregroundColor: Colors.white,
@@ -160,7 +161,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
             icon: const Icon(Icons.filter_list_outlined),
           ),
         ],
-      ),
+      ) : null,
       backgroundColor: AppColors.background,
       body: Column(
         children: [

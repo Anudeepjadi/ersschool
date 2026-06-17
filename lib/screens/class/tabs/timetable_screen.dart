@@ -3,7 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:ersschool/core/theme/app_theme.dart';
 
 class TimetableScreen extends StatefulWidget {
-  const TimetableScreen({super.key});
+  final bool showAppBar;
+  const TimetableScreen({super.key, this.showAppBar = true});
 
   @override
   State<TimetableScreen> createState() => _TimetableScreenState();
@@ -88,11 +89,11 @@ class _TimetableScreenState extends State<TimetableScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: widget.showAppBar ? AppBar(
         title: const Text('Full Timetable'),
         backgroundColor: AppColors.primaryDark,
         foregroundColor: Colors.white,
-      ),
+      ) : null,
       backgroundColor: AppColors.background,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
