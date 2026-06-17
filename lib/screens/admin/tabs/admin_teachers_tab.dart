@@ -5,10 +5,10 @@ class AdminTeachersTab extends StatefulWidget {
   const AdminTeachersTab({super.key});
 
   @override
-  State<AdminTeachersTab> createState() => _AdminTeachersTabState();
+  State<AdminTeachersTab> createState() => AdminTeachersTabState();
 }
 
-class _AdminTeachersTabState extends State<AdminTeachersTab> {
+class AdminTeachersTabState extends State<AdminTeachersTab> {
   String _selectedFilter = 'All';
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
@@ -165,16 +165,7 @@ class _AdminTeachersTabState extends State<AdminTeachersTab> {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: const Text('Add Teacher — Coming soon!'),
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-            ),
-          );
-        },
+        onPressed: showAddTeacherBottomSheet,
         backgroundColor: AppColors.primary,
         icon: const Icon(Icons.person_add, color: Colors.white),
         label:
@@ -443,8 +434,350 @@ class _AdminTeachersTabState extends State<AdminTeachersTab> {
                 size: 12, color: Colors.grey.shade400),
           ],
         ),
-        onTap: () {},
+        onTap: () {
+          _showTeacherDetailsDialog(teacher);
+        },
       ),
+    );
+  }
+
+  void _showTeacherDetailsDialog(Map<String, dynamic> teacher) {
+    final isActive = teacher['status'] == 'Active';
+    final themeColor = teacher['gender'] == 'Male'
+        ? const Color(0xFF4361EE)
+        : const Color(0xFFEC4899);
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "Teacher Profile",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF1E2875),
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close, size: 20),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ],
+                ),
+                const Divider(),
+                const SizedBox(height: 10),
+                CircleAvatar(
+                  radius: 36,
+                  backgroundColor: themeColor.withValues(alpha: 0.1),
+                  child: Text(
+                    teacher['avatar'],
+                    style: TextStyle(
+                      color: themeColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 22,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  teacher['name'],
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF1E2875),
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: isActive
+                        ? const Color(0xFF10B981).withValues(alpha: 0.1)
+                        : const Color(0xFFF59E0B).withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    teacher['status'],
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                      color: isActive ? const Color(0xFF10B981) : const Color(0xFFF59E0B),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                _buildDetailRow(Icons.menu_book_outlined, "Subject", teacher['subject']),
+                const Divider(height: 14),
+                _buildDetailRow(Icons.apartment, "Department", teacher['department']),
+                const Divider(height: 14),
+                _buildDetailRow(Icons.timeline, "Experience", teacher['experience']),
+                const Divider(height: 14),
+                _buildDetailRow(Icons.phone_outlined, "Phone", teacher['phone']),
+                const Divider(height: 14),
+                _buildDetailRow(Icons.face_outlined, "Gender", teacher['gender']),
+                const SizedBox(height: 10),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildDetailRow(IconData icon, String label, String value) {
+    return Row(
+      children: [
+        Icon(icon, size: 18, color: const Color(0xFF4361EE)),
+        const SizedBox(width: 10),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey),
+        ),
+        const Spacer(),
+        Text(
+          value,
+          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+        ),
+      ],
+    );
+  }
+
+  void showAddTeacherBottomSheet() {
+    final nameController = TextEditingController();
+    final subjectController = TextEditingController();
+    final experienceController = TextEditingController();
+    final phoneController = TextEditingController();
+    String selectedDept = 'Science';
+    String selectedGender = 'Male';
+    String selectedStatus = 'Active';
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(24),
+          topRight: Radius.circular(24),
+        ),
+      ),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+                left: 20,
+                right: 20,
+                top: 24,
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Add New Teacher",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF1E2875),
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: nameController,
+                      decoration: const InputDecoration(
+                        labelText: "Teacher Name",
+                        prefixIcon: Icon(Icons.person_outline),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    TextField(
+                      controller: subjectController,
+                      decoration: const InputDecoration(
+                        labelText: "Subject (e.g. Mathematics)",
+                        prefixIcon: Icon(Icons.menu_book_outlined),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    DropdownButtonFormField<String>(
+                      initialValue: selectedDept,
+                      decoration: const InputDecoration(
+                        labelText: "Department",
+                        prefixIcon: Icon(Icons.apartment),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                        ),
+                      ),
+                      items: ['Science', 'Languages', 'Technology', 'Sports', 'Creative Arts', 'Humanities']
+                          .map((d) => DropdownMenuItem(value: d, child: Text(d)))
+                          .toList(),
+                      onChanged: (val) {
+                        if (val != null) {
+                          setModalState(() => selectedDept = val);
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 14),
+                    TextField(
+                      controller: experienceController,
+                      decoration: const InputDecoration(
+                        labelText: "Experience (e.g. 8 years)",
+                        prefixIcon: Icon(Icons.timeline),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    TextField(
+                      controller: phoneController,
+                      keyboardType: TextInputType.phone,
+                      decoration: const InputDecoration(
+                        labelText: "Mobile Number",
+                        prefixIcon: Icon(Icons.phone_outlined),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      "Gender",
+                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ChoiceChip(
+                            label: const Center(child: Text("Male")),
+                            selected: selectedGender == 'Male',
+                            onSelected: (val) {
+                              if (val) setModalState(() => selectedGender = 'Male');
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: ChoiceChip(
+                            label: const Center(child: Text("Female")),
+                            selected: selectedGender == 'Female',
+                            onSelected: (val) {
+                              if (val) setModalState(() => selectedGender = 'Female');
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    DropdownButtonFormField<String>(
+                      initialValue: selectedStatus,
+                      decoration: const InputDecoration(
+                        labelText: "Status",
+                        prefixIcon: Icon(Icons.info_outline),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                        ),
+                      ),
+                      items: ['Active', 'On Leave']
+                          .map((s) => DropdownMenuItem(value: s, child: Text(s)))
+                          .toList(),
+                      onChanged: (val) {
+                        if (val != null) {
+                          setModalState(() => selectedStatus = val);
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 24),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                      onPressed: () {
+                        if (nameController.text.trim().isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Please enter teacher name")),
+                          );
+                          return;
+                        }
+                        if (subjectController.text.trim().isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Please enter subject")),
+                          );
+                          return;
+                        }
+                        final nameWords = nameController.text.trim().split(' ');
+                        String avatarStr = 'TR';
+                        if (nameWords.isNotEmpty) {
+                          if (nameWords.length > 1) {
+                            avatarStr = '${nameWords[0][0]}${nameWords[1][0]}'.toUpperCase();
+                          } else if (nameWords[0].isNotEmpty) {
+                            avatarStr = nameWords[0].substring(0, nameWords[0].length >= 2 ? 2 : 1).toUpperCase();
+                          }
+                        }
+                        final newTeacher = {
+                          'name': nameController.text.trim(),
+                          'subject': subjectController.text.trim(),
+                          'department': selectedDept,
+                          'status': selectedStatus,
+                          'avatar': avatarStr,
+                          'phone': phoneController.text.trim().isEmpty ? "N/A" : phoneController.text.trim(),
+                          'experience': experienceController.text.trim().isEmpty ? "1 year" : experienceController.text.trim(),
+                          'gender': selectedGender,
+                        };
+
+                        setState(() {
+                          _teachers.insert(0, newTeacher);
+                        });
+
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Teacher ${newTeacher['name']} added successfully!"),
+                            behavior: SnackBarBehavior.floating,
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                      },
+                      child: const Text("Save Teacher", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

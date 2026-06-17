@@ -2,10 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../../core/theme/app_colors.dart';
 
+// Import sub-screens for quick action routing
+import '../screens/admin_attendance_screen.dart';
+import '../screens/admin_fees_screen.dart';
+import '../screens/admin_communications_screen.dart';
+import '../screens/admin_chat_support_screen.dart';
+
 class AdminHomeTab extends StatefulWidget {
   final VoidCallback onOpenDrawer;
+  final VoidCallback onOpenProfile;
+  final VoidCallback onAddStudent;
+  final VoidCallback onAddTeacher;
 
-  const AdminHomeTab({super.key, required this.onOpenDrawer});
+  const AdminHomeTab({
+    super.key,
+    required this.onOpenDrawer,
+    required this.onOpenProfile,
+    required this.onAddStudent,
+    required this.onAddTeacher,
+  });
 
   @override
   State<AdminHomeTab> createState() => _AdminHomeTabState();
@@ -192,16 +207,18 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
             ],
           ),
           // Profile avatar
-          Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 2),
-            ),
-            child: const CircleAvatar(
-              radius: 18,
-              backgroundColor: Colors.white,
-              child:
-                  Icon(Icons.person, color: AppColors.primary, size: 22),
+          GestureDetector(
+            onTap: widget.onOpenProfile,
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white, width: 2),
+              ),
+              child: const CircleAvatar(
+                radius: 18,
+                backgroundColor: Colors.white,
+                child: Icon(Icons.person, color: AppColors.primary, size: 22),
+              ),
             ),
           ),
         ],
@@ -427,31 +444,45 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
                 Icons.person_add,
                 "Add\nStudent",
                 const Color(0xFF4361EE),
+                widget.onAddStudent,
               ),
               _buildQuickActionItem(
                 Icons.people_alt_outlined,
                 "Add\nTeacher",
                 const Color(0xFF1E2875),
+                widget.onAddTeacher,
               ),
               _buildQuickActionItem(
                 Icons.how_to_reg,
                 "Mark\nAttendance",
                 const Color(0xFFF59E0B),
+                () {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminAttendanceScreen()));
+                },
               ),
               _buildQuickActionItem(
                 Icons.receipt_long,
                 "Collect\nFees",
                 const Color(0xFF10B981),
+                () {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminFeesScreen()));
+                },
               ),
               _buildQuickActionItem(
                 Icons.campaign,
                 "Notice\nBoard",
                 const Color(0xFF3B82F6),
+                () {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminCommunicationsScreen()));
+                },
               ),
               _buildQuickActionItem(
                 Icons.more_horiz,
                 "More",
                 const Color(0xFF6B7280),
+                () {
+                  widget.onOpenDrawer();
+                },
               ),
             ],
           ),
@@ -460,14 +491,14 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
     );
   }
 
-  Widget _buildQuickActionItem(IconData icon, String label, Color color) {
+  Widget _buildQuickActionItem(IconData icon, String label, Color color, VoidCallback onTap) {
     return Container(
       width: 74,
       margin: const EdgeInsets.only(right: 10),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () {},
+          onTap: onTap,
           borderRadius: BorderRadius.circular(12),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 4),
@@ -639,7 +670,9 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
           ),
           const SizedBox(height: 12),
           InkWell(
-            onTap: () {},
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminFeesScreen()));
+            },
             child: const Row(
               children: [
                 Text(
@@ -780,7 +813,9 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
           ),
           const SizedBox(height: 12),
           InkWell(
-            onTap: () {},
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminAttendanceScreen()));
+            },
             child: const Row(
               children: [
                 Text(
@@ -838,14 +873,14 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
   // 6. NOTICES & EVENTS
   // ══════════════════════════════════════════════════════════════════════════
   Widget _buildNoticesAndEvents() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         // Recent Notices
-        Expanded(child: _buildRecentNotices()),
-        const SizedBox(width: 12),
+        _buildRecentNotices(),
+        const SizedBox(height: 16),
         // Upcoming Events
-        Expanded(child: _buildUpcomingEvents()),
+        _buildUpcomingEvents(),
       ],
     );
   }
@@ -898,8 +933,8 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
             icon: Icons.wb_sunny,
             iconColor: const Color(0xFFF59E0B),
             title: "Summer Holiday Announcement",
-            subtitle: "Holiday will be from 25 May to 10 June 2024.",
-            date: "20 May 2024",
+            subtitle: "Holiday will be from 25 May to 10 June 2026.",
+            date: "20 May 2026",
           ),
           const SizedBox(height: 10),
           _buildNoticeItem(
@@ -907,7 +942,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
             iconColor: const Color(0xFF3B82F6),
             title: "Parent Meeting",
             subtitle: "Parent meeting on 26 May at 10 AM.",
-            date: "19 May 2024",
+            date: "19 May 2026",
           ),
           const SizedBox(height: 10),
           _buildNoticeItem(
@@ -915,7 +950,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
             iconColor: const Color(0xFF10B981),
             title: "Exam Schedule",
             subtitle: "Mid term exam schedule released.",
-            date: "18 May 2024",
+            date: "18 May 2026",
           ),
         ],
       ),
@@ -1026,21 +1061,21 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
             icon: Icons.groups,
             iconColor: const Color(0xFF3B82F6),
             title: "Parent Meeting",
-            datetime: "26 May 2024, 10:00 AM",
+            datetime: "26 May 2026, 10:00 AM",
           ),
           const SizedBox(height: 10),
           _buildEventItem(
             icon: Icons.science,
             iconColor: const Color(0xFF8B5CF6),
             title: "Science Exhibition",
-            datetime: "30 May 2024, 09:00 AM",
+            datetime: "30 May 2026, 09:00 AM",
           ),
           const SizedBox(height: 10),
           _buildEventItem(
             icon: Icons.sports_soccer,
             iconColor: const Color(0xFFF59E0B),
             title: "Annual Sports Day",
-            datetime: "17 June 2024, 08:00 AM",
+            datetime: "17 June 2026, 08:00 AM",
           ),
         ],
       ),
@@ -1348,9 +1383,11 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
         ),
         const SizedBox(height: 6),
         FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminChatSupportScreen()));
+          },
           backgroundColor: AppColors.primary,
-          child: const Icon(Icons.chat, color: Colors.white),
+          child: const Icon(Icons.smart_toy, color: Colors.white, size: 28),
         ),
       ],
     );

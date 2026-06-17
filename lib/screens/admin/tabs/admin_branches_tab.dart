@@ -59,7 +59,7 @@ class _AdminBranchesTabState extends State<AdminBranchesTab> {
       'students': 0,
       'teachers': 0,
       'status': 'Coming Soon',
-      'established': '2024',
+      'established': '2026',
       'principal': 'TBD',
       'color': const Color(0xFFEC4899),
     },
@@ -275,7 +275,7 @@ class _AdminBranchesTabState extends State<AdminBranchesTab> {
                         color: color.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Icon(Icons.business, color: color, size: 22),
+                      child: Icon(Icons.school, color: color, size: 22),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
