@@ -29,7 +29,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       const MyInfoTab(),
       const ClassTab(),
       FeeTab(onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer()),
-      const ExamsTab(),
+      ExamsTab(onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer()),
       const MoreTab(),
     ];
   }
