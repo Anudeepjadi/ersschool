@@ -55,32 +55,15 @@ class _TransportScreenState extends State<TransportScreen> {
             },
           ),
           const SizedBox(width: 4),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Transport",
-                    maxLines: 1,
-                    softWrap: false,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Text(
-                  "Track your transport and view details",
-                  style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.8),
-                    fontSize: 11,
-                  ),
-                ),
-              ],
+          const Expanded(
+            child: Text(
+              "Transport",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
           // School selector dropdown
@@ -100,22 +83,28 @@ class _TransportScreenState extends State<TransportScreen> {
               }).toList();
             },
             child: Container(
+              constraints: const BoxConstraints(maxWidth: 120),
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              margin: const EdgeInsets.only(left: 10),
               decoration: BoxDecoration(
                 color: Colors.white.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
               ),
               child: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   const Icon(Icons.school, size: 14, color: Colors.white),
                   const SizedBox(width: 4),
-                  Text(
-                    _selectedSchool,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
+                  Flexible(
+                    child: Text(
+                      _selectedSchool,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   const SizedBox(width: 2),
@@ -385,7 +374,7 @@ class _TransportScreenState extends State<TransportScreen> {
                     child: Column(
                       children: [
                         _buildDetailItem(Icons.directions_bus, "Route / Stop", "Route 12 / Green Park Stop"),
-                        _buildDetailItem(Icons.badge, "Transport ID", "TRP20240001"),
+                        _buildDetailItem(Icons.badge, "Transport ID", "TRP20260001"),
                         _buildDetailItem(Icons.phone, "Mobile Number", "+91 98765 12345"),
                       ],
                     ),
@@ -721,7 +710,7 @@ class _TransportScreenState extends State<TransportScreen> {
                 _buildDetailGridItem(Icons.access_time, "Pickup Time", "08:20 AM", const Color(0xFFF59E0B)),
                 _buildDetailGridItem(Icons.school, "Drop Time (Est.)", "09:00 AM", const Color(0xFFEF4444)),
                 _buildDetailGridItem(Icons.straighten, "Distance (Approx.)", "18.6 km", const Color(0xFF06B6D4)),
-                _buildDetailGridItem(Icons.calendar_today, "Transport Validity", "31 Mar 2025", const Color(0xFFEC4899)),
+                _buildDetailGridItem(Icons.calendar_today, "Transport Validity", "31 Mar 2027", const Color(0xFFEC4899)),
               ],
             );
           },
@@ -811,8 +800,8 @@ class _TransportScreenState extends State<TransportScreen> {
           ],
         ),
         const SizedBox(height: 12),
-        _buildAnnouncementTile("Transport Timings Update", "From 20 May 2024, pickup time will be 10 minutes earlier.", "18 May 2024", const Color(0xFF10B981), const Color(0xFFECFDF5)),
-        _buildAnnouncementTile("Bus Route Change", "Route 12 will take a new route from 25 May 2024.", "15 May 2024", const Color(0xFFF59E0B), const Color(0xFFFEF3C7)),
+        _buildAnnouncementTile("Transport Timings Update", "From 20 Jun 2026, pickup time will be 10 minutes earlier.", "18 Jun 2026", const Color(0xFF10B981), const Color(0xFFECFDF5)),
+        _buildAnnouncementTile("Bus Route Change", "Route 12 will take a new route from 25 Jun 2026.", "15 Jun 2026", const Color(0xFFF59E0B), const Color(0xFFFEF3C7)),
       ],
     );
   }

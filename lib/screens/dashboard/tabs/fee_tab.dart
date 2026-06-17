@@ -11,11 +11,11 @@ class FeeTab extends StatefulWidget {
 
 class _FeeTabState extends State<FeeTab> {
   int _activeSubTab = 0; // 0: Overview, 1: Fees Structure, 2: Transactions, 3: Receipts
-  String _selectedAcademicYear = "2024 - 2025";
+  String _selectedAcademicYear = "2026 - 2027";
   String _selectedSchool = "Ecstasy School 1";
 
   // Dropdown options
-  final List<String> _academicYears = ["2024 - 2025", "2023 - 2024", "2022 - 2023"];
+  final List<String> _academicYears = ["2026 - 2027", "2025 - 2026", "2024 - 2025"];
   final List<String> _schools = ["Ecstasy School 1", "Ecstasy School 2", "Ecstasy School 3"];
 
   @override
@@ -69,13 +69,6 @@ class _FeeTabState extends State<FeeTab> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(
-                  "View fee details and payment history",
-                  style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.8),
-                    fontSize: 11,
-                  ),
-                ),
               ],
             ),
           ),
@@ -96,6 +89,7 @@ class _FeeTabState extends State<FeeTab> {
               }).toList();
             },
             child: Container(
+              constraints: const BoxConstraints(maxWidth: 120),
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               decoration: BoxDecoration(
                 color: Colors.white.withValues(alpha: 0.12),
@@ -103,15 +97,19 @@ class _FeeTabState extends State<FeeTab> {
                 border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
               ),
               child: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   const Icon(Icons.school, size: 14, color: Colors.white),
                   const SizedBox(width: 4),
-                  Text(
-                    _selectedSchool,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
+                  Flexible(
+                    child: Text(
+                      _selectedSchool,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   const SizedBox(width: 2),
@@ -421,7 +419,7 @@ class _FeeTabState extends State<FeeTab> {
               _buildSummaryItem("Due Amount", "₹ 25,000", const Color(0xFFEF4444)),
               _buildSummaryItemWithIcon(
                 "Due Date",
-                "30 Jun 2024",
+                "30 Jun 2026",
                 const Color(0xFFEA580C),
                 Icons.calendar_today_outlined,
               ),
@@ -570,9 +568,9 @@ class _FeeTabState extends State<FeeTab> {
         ),
         const SizedBox(height: 6),
         // Items list
-        _buildFeeItem("Tuition Fee", "Term 1", "30 Apr 2024", "15,000", true),
-        _buildFeeItem("Tuition Fee", "Term 2", "30 Jun 2024", "15,000", true),
-        _buildFeeItem("Tuition Fee", "Term 3", "30 Sep 2024", "15,000", false),
+        _buildFeeItem("Tuition Fee", "Term 1", "30 Apr 2026", "15,000", true),
+        _buildFeeItem("Tuition Fee", "Term 2", "30 Jun 2026", "15,000", true),
+        _buildFeeItem("Tuition Fee", "Term 3", "30 Sep 2026", "15,000", false),
         const SizedBox(height: 16),
         // Totals and Pay Now Row
         Row(
@@ -803,9 +801,9 @@ class _FeeTabState extends State<FeeTab> {
           ],
         ),
         const SizedBox(height: 12),
-        _buildRecentPaymentItem("Tuition Fee - Term 2", "Receipt #FEE-2024-0021", "₹ 15,000", "UPI", "15 Apr 2024"),
-        _buildRecentPaymentItem("Tuition Fee - Term 1", "Receipt #FEE-2024-0015", "₹ 15,000", "Credit Card", "15 Jan 2024"),
-        _buildRecentPaymentItem("Admission Fee", "Receipt #FEE-2023-0098", "₹ 10,000", "Net Banking", "10 Apr 2023"),
+        _buildRecentPaymentItem("Tuition Fee - Term 2", "Receipt #FEE-2026-0021", "₹ 15,000", "UPI", "15 Apr 2026"),
+        _buildRecentPaymentItem("Tuition Fee - Term 1", "Receipt #FEE-2026-0015", "₹ 15,000", "Credit Card", "15 Jan 2026"),
+        _buildRecentPaymentItem("Admission Fee", "Receipt #FEE-2025-0098", "₹ 10,000", "Net Banking", "10 Apr 2025"),
       ],
     );
   }

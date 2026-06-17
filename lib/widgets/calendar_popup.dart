@@ -94,7 +94,7 @@ class _CalendarPopupState extends State<_CalendarPopup> {
   }
 
   String _monthName(int m) => const [
-        "", "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "", "Jan", "Feb", "Mar", "Apr", "Jun", "Jun",
         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
       ][m];
 

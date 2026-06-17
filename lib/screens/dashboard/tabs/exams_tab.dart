@@ -1,9 +1,167 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Data models
+// ─────────────────────────────────────────────────────────────────────────────
+class _Exam {
+  final String subject;
+  final String date;
+  final String time;
+  final String room;
+  final Color color;
+  final IconData icon;
+
+  const _Exam({
+    required this.subject,
+    required this.date,
+    required this.time,
+    required this.room,
+    required this.color,
+    required this.icon,
+  });
+}
+
+class _Result {
+  final String subject;
+  final int marks;
+  final int total;
+  final Color color;
+  final IconData icon;
+
+  const _Result({
+    required this.subject,
+    required this.marks,
+    required this.total,
+    required this.color,
+    required this.icon,
+  });
+
+  double get percentage => (marks / total) * 100;
+
+  String get grade {
+    final p = percentage;
+    if (p >= 90) return 'A+';
+    if (p >= 80) return 'A';
+    if (p >= 70) return 'B+';
+    if (p >= 60) return 'B';
+    if (p >= 50) return 'C';
+    return 'F';
+  }
+
+  Color get gradeColor {
+    final p = percentage;
+    if (p >= 80) return Colors.green;
+    if (p >= 60) return Colors.orange;
+    return Colors.red;
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Static data
+// ─────────────────────────────────────────────────────────────────────────────
+const List<_Exam> _exams = [
+  _Exam(
+    subject: 'Mathematics',
+    date: '18 Jun 2026',
+    time: '09:00 AM – 12:00 PM',
+    room: 'Hall A',
+    color: Colors.purple,
+    icon: Icons.calculate_outlined,
+  ),
+  _Exam(
+    subject: 'Physics',
+    date: '20 Jun 2026',
+    time: '09:00 AM – 12:00 PM',
+    room: 'Hall B',
+    color: Colors.green,
+    icon: Icons.science_outlined,
+  ),
+  _Exam(
+    subject: 'Chemistry',
+    date: '23 Jun 2026',
+    time: '09:00 AM – 12:00 PM',
+    room: 'Lab 1',
+    color: Colors.orange,
+    icon: Icons.biotech_outlined,
+  ),
+  _Exam(
+    subject: 'English',
+    date: '25 Jun 2026',
+    time: '09:00 AM – 12:00 PM',
+    room: 'Hall C',
+    color: Colors.blue,
+    icon: Icons.menu_book_outlined,
+  ),
+  _Exam(
+    subject: 'Social Studies',
+    date: '27 Jun 2026',
+    time: '09:00 AM – 12:00 PM',
+    room: 'Hall A',
+    color: Colors.teal,
+    icon: Icons.public_outlined,
+  ),
+  _Exam(
+    subject: 'Computer Science',
+    date: '30 Jun 2026',
+    time: '09:00 AM – 12:00 PM',
+    room: 'Lab 2',
+    color: Colors.indigo,
+    icon: Icons.computer_outlined,
+  ),
+];
+
+const List<_Result> _results = [
+  _Result(
+    subject: 'Mathematics',
+    marks: 87,
+    total: 100,
+    color: Colors.purple,
+    icon: Icons.calculate_outlined,
+  ),
+  _Result(
+    subject: 'Physics',
+    marks: 79,
+    total: 100,
+    color: Colors.green,
+    icon: Icons.science_outlined,
+  ),
+  _Result(
+    subject: 'Chemistry',
+    marks: 92,
+    total: 100,
+    color: Colors.orange,
+    icon: Icons.biotech_outlined,
+  ),
+  _Result(
+    subject: 'English',
+    marks: 85,
+    total: 100,
+    color: Colors.blue,
+    icon: Icons.menu_book_outlined,
+  ),
+  _Result(
+    subject: 'Social Studies',
+    marks: 74,
+    total: 100,
+    color: Colors.teal,
+    icon: Icons.public_outlined,
+  ),
+  _Result(
+    subject: 'Computer Science',
+    marks: 95,
+    total: 100,
+    color: Colors.indigo,
+    icon: Icons.computer_outlined,
+  ),
+];
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Main widget
+// ─────────────────────────────────────────────────────────────────────────────
 class ExamsTab extends StatefulWidget {
-  final VoidCallback onOpenDrawer;
-  const ExamsTab({super.key, required this.onOpenDrawer});
+  final VoidCallback? onOpenDrawer;
+  const ExamsTab({super.key, this.onOpenDrawer});
 
   @override
   State<ExamsTab> createState() => _ExExamsTabState();
@@ -11,7 +169,7 @@ class ExamsTab extends StatefulWidget {
 
 class _ExExamsTabState extends State<ExamsTab>
     with SingleTickerProviderStateMixin {
-  late final TabController _tabController;
+  late TabController _tabController;
 
   @override
   void initState() {
@@ -28,19 +186,12 @@ class _ExExamsTabState extends State<ExamsTab>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title:
-            const Text("Exams", style: TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        foregroundColor: AppColors.text,
-      ),
       backgroundColor: Colors.grey.shade50,
       body: SafeArea(
         top: false,
         child: Column(
           children: [
-// 1. Curved Gradient Header
+            // 1. Curved Gradient Header
             Container(
               width: double.infinity,
               decoration: const BoxDecoration(
@@ -51,8 +202,8 @@ class _ExExamsTabState extends State<ExamsTab>
                 ),
               ),
               padding: const EdgeInsets.only(
-                top: 50,
-                bottom: 20,
+                top: 60,
+                bottom: 25,
                 left: 16,
                 right: 16,
               ),
@@ -61,11 +212,12 @@ class _ExExamsTabState extends State<ExamsTab>
                 children: [
                   Row(
                     children: [
-                      IconButton(
-                        icon: const Icon(Icons.menu,
-                            color: Colors.white, size: 28),
-                        onPressed: widget.onOpenDrawer,
-                      ),
+                      if (widget.onOpenDrawer != null)
+                        IconButton(
+                          icon: const Icon(Icons.menu,
+                              color: Colors.white, size: 28),
+                          onPressed: widget.onOpenDrawer,
+                        ),
                       const SizedBox(width: 4),
                       const Expanded(
                         child: Text(
@@ -79,11 +231,11 @@ class _ExExamsTabState extends State<ExamsTab>
                         ),
                       ),
                       const SizedBox(width: 4),
-// Right-side icons row
+                      // Right-side icons row
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-// School dropdown badge
+                          // School dropdown badge
                           Container(
                             constraints: const BoxConstraints(maxWidth: 120),
                             padding: const EdgeInsets.symmetric(
@@ -116,7 +268,7 @@ class _ExExamsTabState extends State<ExamsTab>
                             ),
                           ),
                           const SizedBox(width: 4),
-// Notification bell with badge
+                          // Notification bell with badge
                           Stack(
                             children: [
                               IconButton(
@@ -157,7 +309,7 @@ class _ExExamsTabState extends State<ExamsTab>
                             ],
                           ),
                           const SizedBox(width: 4),
-// Profile Pic
+                          // Profile Pic
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -197,18 +349,11 @@ class _ExExamsTabState extends State<ExamsTab>
                       ),
                     ],
                   ),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 48, top: 4),
-                    child: Text(
-                      "View your exam details and results",
-                      style: TextStyle(color: Colors.white70, fontSize: 11),
-                    ),
-                  ),
                 ],
               ),
             ),
 
-// 2. Tab Bar Section
+            // 2. Tab Bar Section
             Container(
               color: Colors.white,
               child: TabBar(
@@ -239,7 +384,7 @@ class _ExExamsTabState extends State<ExamsTab>
               ),
             ),
 
-// 3. Tab Contents
+            // 3. Tab Contents
             Expanded(
               child: TabBarView(
                 controller: _tabController,
@@ -256,7 +401,7 @@ class _ExExamsTabState extends State<ExamsTab>
     );
   }
 
-// --- TAB BUILDERS ---
+  // --- TAB BUILDERS ---
 
   Widget _buildExamDetailsTab() {
     return SingleChildScrollView(
@@ -264,10 +409,10 @@ class _ExExamsTabState extends State<ExamsTab>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-// 1. Examination Overview
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
-            child: const Text(
+          // 1. Examination Overview
+          const Padding(
+            padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+            child: Text(
               "Examination Overview",
               style: TextStyle(
                 fontSize: 16,
@@ -278,7 +423,7 @@ class _ExExamsTabState extends State<ExamsTab>
           ),
           _buildOverviewStatsRow(),
 
-// 2. Upcoming Exams Section
+          // 2. Upcoming Exams Section
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
@@ -319,7 +464,7 @@ class _ExExamsTabState extends State<ExamsTab>
 
           const SizedBox(height: 25),
 
-// 3. Recent Exam Results Section
+          // 3. Recent Exam Results Section
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
@@ -360,7 +505,7 @@ class _ExExamsTabState extends State<ExamsTab>
 
           const SizedBox(height: 25),
 
-// 4. Quick Actions Section
+          // 4. Quick Actions Section
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
@@ -410,15 +555,15 @@ class _ExExamsTabState extends State<ExamsTab>
               color: Color(0xFF1E2875)),
         ),
         const SizedBox(height: 12),
-        _buildTimetableCard("Mathematics (MATH)", "25 May 2024", "10:00 AM",
+        _buildTimetableCard("Mathematics (MATH)", "25 Jun 2026", "10:00 AM",
             "1.30 Hrs", "Hall A", Colors.purple),
-        _buildTimetableCard("Science (SCI)", "27 May 2024", "10:00 AM",
+        _buildTimetableCard("Science (SCI)", "27 Jun 2026", "10:00 AM",
             "1.30 Hrs", "Hall B", Colors.green),
-        _buildTimetableCard("English (ENG)", "29 May 2024", "10:00 AM",
+        _buildTimetableCard("English (ENG)", "29 Jun 2026", "10:00 AM",
             "1.30 Hrs", "Hall A", Colors.orange),
-        _buildTimetableCard("Social Science (SST)", "31 May 2024", "10:00 AM",
+        _buildTimetableCard("Social Science (SST)", "31 Jun 2026", "10:00 AM",
             "1.30 Hrs", "Hall C", Colors.pink),
-        _buildTimetableCard("Hindi (HIN)", "03 Jun 2024", "10:00 AM",
+        _buildTimetableCard("Hindi (HIN)", "03 Jun 2026", "10:00 AM",
             "1.30 Hrs", "Hall B", Colors.blue),
       ],
     );
@@ -450,7 +595,7 @@ class _ExExamsTabState extends State<ExamsTab>
     );
   }
 
-// --- SUB-WIDGET BUILDERS ---
+  // --- SUB-WIDGET BUILDERS ---
 
   Widget _buildOverviewStatsRow() {
     return Container(
@@ -527,7 +672,7 @@ class _ExExamsTabState extends State<ExamsTab>
       ),
       child: Column(
         children: [
-// Header
+          // Header
           Row(
             children: [
               Expanded(flex: 6, child: Text("Exam Name", style: headerStyle)),
@@ -543,27 +688,27 @@ class _ExExamsTabState extends State<ExamsTab>
           ),
           const Divider(height: 20),
 
-// Items
+          // Items
           _buildUpcomingExamRow(
               "Unit Test - 1",
               "Term 1",
               "Mathematics",
               "MATH",
-              "25 May 2024",
+              "25 Jun 2026",
               "Saturday",
               "10:00 AM",
               "1.30 Hrs",
               Colors.purple),
           const Divider(height: 20),
           _buildUpcomingExamRow("Unit Test - 1", "Term 1", "Science", "SCI",
-              "27 May 2024", "Monday", "10:00 AM", "1.30 Hrs", Colors.green),
+              "27 Jun 2026", "Monday", "10:00 AM", "1.30 Hrs", Colors.green),
           const Divider(height: 20),
           _buildUpcomingExamRow(
               "Unit Test - 1",
               "Term 1",
               "English",
               "ENG",
-              "29 May 2024",
+              "29 Jun 2026",
               "Wednesday",
               "10:00 AM",
               "1.30 Hrs",
@@ -574,17 +719,17 @@ class _ExExamsTabState extends State<ExamsTab>
               "Term 1",
               "Social Science",
               "SST",
-              "31 May 2024",
+              "31 Jun 2026",
               "Friday",
               "10:00 AM",
               "1.30 Hrs",
               Colors.pink),
           const Divider(height: 20),
           _buildUpcomingExamRow("Unit Test - 1", "Term 1", "Hindi", "HIN",
-              "03 Jun 2024", "Monday", "10:00 AM", "1.30 Hrs", Colors.blue),
+              "03 Jun 2026", "Monday", "10:00 AM", "1.30 Hrs", Colors.blue),
 
           const Divider(height: 24),
-// View All Link
+          // View All Link
           GestureDetector(
             onTap: () => _tabController.animateTo(1),
             child: const Row(
@@ -621,7 +766,7 @@ class _ExExamsTabState extends State<ExamsTab>
   ) {
     return Row(
       children: [
-// Exam Name
+        // Exam Name
         Expanded(
           flex: 6,
           child: Row(
@@ -658,7 +803,7 @@ class _ExExamsTabState extends State<ExamsTab>
             ],
           ),
         ),
-// Subject
+        // Subject
         Expanded(
           flex: 4,
           child: Column(
@@ -678,7 +823,7 @@ class _ExExamsTabState extends State<ExamsTab>
             ],
           ),
         ),
-// Date
+        // Date
         Expanded(
           flex: 5,
           child: Column(
@@ -698,7 +843,7 @@ class _ExExamsTabState extends State<ExamsTab>
             ],
           ),
         ),
-// Time
+        // Time
         Expanded(
           flex: 4,
           child: Text(
@@ -706,7 +851,7 @@ class _ExExamsTabState extends State<ExamsTab>
             style: const TextStyle(fontSize: 11, color: Color(0xFF1E2875)),
           ),
         ),
-// Duration
+        // Duration
         Expanded(
           flex: 4,
           child: Text(
@@ -714,7 +859,7 @@ class _ExExamsTabState extends State<ExamsTab>
             style: const TextStyle(fontSize: 11, color: Color(0xFF1E2875)),
           ),
         ),
-// Syllabus Document Icon
+        // Syllabus Document Icon
         GestureDetector(
           onTap: () {},
           child: Container(
@@ -770,13 +915,13 @@ class _ExExamsTabState extends State<ExamsTab>
 
           // Items
           _buildRecentResultRow("Mid Term Exam", "Term 1", "Mathematics",
-              "MATH", "15 Apr 2024", "42", "50", "84%", "A", Colors.green),
+              "MATH", "15 Apr 2026", "42", "50", "84%", "A", Colors.green),
           const Divider(height: 20),
           _buildRecentResultRow("Mid Term Exam", "Term 1", "Science", "SCI",
-              "16 Apr 2024", "44", "50", "88%", "A", Colors.green),
+              "16 Apr 2026", "44", "50", "88%", "A", Colors.green),
           const Divider(height: 20),
           _buildRecentResultRow("Mid Term Exam", "Term 1", "English", "ENG",
-              "17 Apr 2024", "38", "50", "76%", "B+", Colors.teal),
+              "17 Apr 2026", "38", "50", "76%", "B+", Colors.teal),
 
           const Divider(height: 24),
           // View All Link
@@ -817,7 +962,7 @@ class _ExExamsTabState extends State<ExamsTab>
   ) {
     return Row(
       children: [
-// Exam Name
+        // Exam Name
         Expanded(
           flex: 6,
           child: Row(
@@ -851,7 +996,7 @@ class _ExExamsTabState extends State<ExamsTab>
             ],
           ),
         ),
-// Subject
+        // Subject
         Expanded(
           flex: 4,
           child: Column(
@@ -871,7 +1016,7 @@ class _ExExamsTabState extends State<ExamsTab>
             ],
           ),
         ),
-// Date
+        // Date
         Expanded(
           flex: 5,
           child: Text(
@@ -879,7 +1024,7 @@ class _ExExamsTabState extends State<ExamsTab>
             style: TextStyle(fontSize: 11, color: Colors.grey.shade700),
           ),
         ),
-// Marks Obtained
+        // Marks Obtained
         Expanded(
           flex: 4,
           child: Text(
@@ -891,7 +1036,7 @@ class _ExExamsTabState extends State<ExamsTab>
             textAlign: TextAlign.center,
           ),
         ),
-// Total Marks
+        // Total Marks
         Expanded(
           flex: 4,
           child: Text(
@@ -900,7 +1045,7 @@ class _ExExamsTabState extends State<ExamsTab>
             textAlign: TextAlign.center,
           ),
         ),
-// Percentage
+        // Percentage
         Expanded(
           flex: 4,
           child: Text(
@@ -910,7 +1055,7 @@ class _ExExamsTabState extends State<ExamsTab>
             textAlign: TextAlign.center,
           ),
         ),
-// Grade Pill
+        // Grade Pill
         Container(
           width: 36,
           padding: const EdgeInsets.symmetric(vertical: 4),
@@ -1095,21 +1240,37 @@ class _ExExamsTabState extends State<ExamsTab>
                   Text(
                     subject,
                     style: const TextStyle(
-                      fontSize: 13,
+                      fontSize: 14,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF1E2875),
                     ),
                   ),
-                  const SizedBox(height: 2),
-                  Text(
-                    "Score: $scored / $total ($percent)",
-                    style: TextStyle(fontSize: 10, color: Colors.grey.shade500),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Text(
+                        "Scored: $scored/$total",
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        "Percent: $percent",
+                        style: const TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
@@ -1117,7 +1278,7 @@ class _ExExamsTabState extends State<ExamsTab>
               child: Text(
                 grade,
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: color,
                 ),
