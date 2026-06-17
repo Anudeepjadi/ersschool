@@ -27,7 +27,7 @@ class MyInfoTab extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             const Text(
-              "Ananya Sharma",
+              "Anudeep Jaadi",
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -42,7 +42,7 @@ class MyInfoTab extends StatelessWidget {
             _buildInfoTile(
               Icons.email_outlined,
               "Email",
-              "ananya.sharma@school.com",
+              "anudeep.jaadi@school.com",
             ),
             _buildInfoTile(
               Icons.phone_iphone_outlined,

@@ -1,14 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:ersschool/screens/class/tabs/timetable_screen.dart';
+import 'package:ersschool/screens/class/tabs/diary_screen.dart';
+import 'package:ersschool/screens/class/tabs/assignments_screen.dart';
+import 'package:ersschool/screens/class/tabs/attendance_screen.dart';
 
 class ClassScreen extends StatefulWidget {
-  const ClassScreen({super.key});
+  final VoidCallback? onOpenDrawer;
+  const ClassScreen({super.key, this.onOpenDrawer});
 
   @override
   State<ClassScreen> createState() => _ClassScreenState();
 }
 
-class _ClassScreenState extends State<ClassScreen> {
-  int _selectedTab = 0;
+class _ClassScreenState extends State<ClassScreen> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 4, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   final List<Map<String, dynamic>> _tabs = [
     {'title': 'Timetable', 'icon': Icons.calendar_today_outlined},
@@ -27,10 +44,7 @@ class _ClassScreenState extends State<ClassScreen> {
           _buildTabBar(),
           const Divider(height: 1, thickness: 1),
           Expanded(
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: _buildContent(),
-            ),
+            child: _buildContent(),
           ),
         ],
       ),
@@ -49,7 +63,12 @@ class _ClassScreenState extends State<ClassScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Icon(Icons.menu, color: Colors.white),
+              IconButton(
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                onPressed: widget.onOpenDrawer,
+                icon: const Icon(Icons.menu, color: Colors.white),
+              ),
               const Text(
                 "Class",
                 style: TextStyle(
@@ -61,21 +80,28 @@ class _ClassScreenState extends State<ClassScreen> {
               Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    constraints: const BoxConstraints(maxWidth: 110),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: const [
                         Icon(Icons.business, color: Colors.white, size: 16),
                         SizedBox(width: 6),
-                        Text(
-                          "Ecstasy School 1",
-                          style: TextStyle(color: Colors.white, fontSize: 12),
+                        Flexible(
+                          child: Text(
+                            "Ecstasy School 1",
+                            style: TextStyle(color: Colors.white, fontSize: 12),
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                         SizedBox(width: 4),
-                        Icon(Icons.keyboard_arrow_down, color: Colors.white, size: 16),
+                        Icon(Icons.keyboard_arrow_down,
+                            color: Colors.white, size: 16),
                       ],
                     ),
                   ),
@@ -106,7 +132,8 @@ class _ClassScreenState extends State<ClassScreen> {
                     backgroundColor: Colors.white,
                     child: CircleAvatar(
                       radius: 15,
-                      backgroundImage: NetworkImage('https://i.pravatar.cc/150?u=school_student'),
+                      backgroundImage: NetworkImage(
+                          'https://i.pravatar.cc/150?u=school_student'),
                     ),
                   ),
                 ],
@@ -126,71 +153,35 @@ class _ClassScreenState extends State<ClassScreen> {
   Widget _buildTabBar() {
     return Container(
       color: Colors.white,
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: List.generate(_tabs.length, (index) {
-          final isSelected = _selectedTab == index;
-          return GestureDetector(
-            onTap: () => setState(() => _selectedTab = index),
-            behavior: HitTestBehavior.opaque,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  _tabs[index]['icon'],
-                  color: isSelected ? const Color(0xFF0038FF) : const Color(0xFF666666),
-                  size: 24,
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  _tabs[index]['title'],
-                  style: TextStyle(
-                    color: isSelected ? const Color(0xFF0038FF) : const Color(0xFF666666),
-                    fontSize: 12,
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                if (isSelected)
-                  Container(
-                    height: 3,
-                    width: 60,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF0038FF),
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  )
-                else
-                  const SizedBox(height: 3),
-              ],
-            ),
-          );
-        }),
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: TabBar(
+        controller: _tabController,
+        indicatorColor: const Color(0xFF0038FF),
+        indicatorWeight: 3,
+        labelColor: const Color(0xFF0038FF),
+        unselectedLabelColor: const Color(0xFF666666),
+        labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
+        unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
+        tabs: _tabs.map((tab) => Tab(
+          icon: Icon(tab['icon'] as IconData, size: 24),
+          text: tab['title'] as String,
+        )).toList(),
       ),
     );
   }
 
   Widget _buildContent() {
-    switch (_selectedTab) {
-      case 0:
-        return _buildTimetable();
-      case 1:
-        return _buildPlaceholder("Diary Content");
-      case 2:
-        return _buildPlaceholder("Assignments Content");
-      case 3:
-        return _buildPlaceholder("Attendance Content");
-      default:
-        return Container();
-    }
-  }
-
-  Widget _buildPlaceholder(String text) {
-    return Container(
-      height: 400,
-      alignment: Alignment.center,
-      child: Text(text, style: const TextStyle(color: Colors.grey)),
+    return TabBarView(
+      controller: _tabController,
+      children: [
+        SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: _buildTimetable(),
+        ),
+        const DiaryScreen(showAppBar: false),
+        const AssignmentsScreen(showAppBar: false),
+        const AttendanceScreen(showAppBar: false),
+      ],
     );
   }
 
@@ -208,7 +199,7 @@ class _ClassScreenState extends State<ClassScreen> {
               Icon(Icons.calendar_month, size: 18, color: Colors.grey),
               SizedBox(width: 8),
               Text(
-                "Monday, 20 May 2024",
+                "Wednesday, 17 Jun 2026",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
               SizedBox(width: 16),
@@ -218,14 +209,24 @@ class _ClassScreenState extends State<ClassScreen> {
           const SizedBox(height: 32),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Text(
+            children: [
+              const Text(
                 "Timetable",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E1E1E)),
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF1E1E1E)),
               ),
-              Text(
-                "View Full Timetable",
-                style: TextStyle(color: Color(0xFF0038FF), fontSize: 13, fontWeight: FontWeight.bold),
+              GestureDetector(
+                onTap: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => const TimetableScreen())),
+                child: Text(
+                  "View Full Timetable",
+                  style: TextStyle(
+                      color: Color(0xFF0038FF),
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold),
+                ),
               ),
             ],
           ),
@@ -233,11 +234,41 @@ class _ClassScreenState extends State<ClassScreen> {
           // Timetable Header
           Row(
             children: const [
-              Expanded(flex: 10, child: Text("Period", style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.w500))),
-              Expanded(flex: 20, child: Text("Time", style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.w500))),
-              Expanded(flex: 30, child: Text("Subject", style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.w500))),
-              Expanded(flex: 30, child: Text("Teacher", style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.w500))),
-              Expanded(flex: 10, child: Text("Room", style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.w500))),
+              Expanded(
+                  flex: 10,
+                  child: Text("Period",
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500))),
+              Expanded(
+                  flex: 20,
+                  child: Text("Time",
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500))),
+              Expanded(
+                  flex: 30,
+                  child: Text("Subject",
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500))),
+              Expanded(
+                  flex: 30,
+                  child: Text("Teacher",
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500))),
+              Expanded(
+                  flex: 10,
+                  child: Text("Room",
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500))),
             ],
           ),
           const SizedBox(height: 12),
@@ -251,7 +282,6 @@ class _ClassScreenState extends State<ClassScreen> {
             room: "101",
             color: Colors.blue,
             icon: Icons.menu_book,
-            teacherImg: "https://i.pravatar.cc/150?u=teacher1",
           ),
           _buildTimetableItem(
             period: "2",
@@ -262,7 +292,6 @@ class _ClassScreenState extends State<ClassScreen> {
             room: "102",
             color: Colors.green,
             icon: Icons.menu_book,
-            teacherImg: "https://i.pravatar.cc/150?u=teacher2",
           ),
           _buildTimetableItem(
             period: "3",
@@ -273,9 +302,8 @@ class _ClassScreenState extends State<ClassScreen> {
             room: "103",
             color: Colors.orange,
             icon: Icons.science_outlined,
-            teacherImg: "https://i.pravatar.cc/150?u=teacher3",
           ),
-          
+
           _buildBreakTime("Break Time", "10:15 AM - 10:30 AM"),
 
           _buildTimetableItem(
@@ -287,7 +315,6 @@ class _ClassScreenState extends State<ClassScreen> {
             room: "104",
             color: Colors.purple,
             icon: Icons.public,
-            teacherImg: "https://i.pravatar.cc/150?u=teacher4",
           ),
           _buildTimetableItem(
             period: "5",
@@ -298,7 +325,6 @@ class _ClassScreenState extends State<ClassScreen> {
             room: "105",
             color: Colors.indigo,
             icon: Icons.language,
-            teacherImg: "https://i.pravatar.cc/150?u=teacher5",
           ),
           _buildTimetableItem(
             period: "6",
@@ -309,11 +335,13 @@ class _ClassScreenState extends State<ClassScreen> {
             room: "106",
             color: Colors.teal,
             icon: Icons.computer,
-            teacherImg: "https://i.pravatar.cc/150?u=teacher6",
           ),
 
           const SizedBox(height: 32),
-          _buildSectionHeader("Today's Assignments", "View All"),
+          _buildSectionHeader("Today's Assignments", "View All", () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => const AssignmentsScreen()));
+          }),
           const SizedBox(height: 16),
           _buildAssignmentItem(
             title: "Maths - Chapter 5 Exercise",
@@ -335,7 +363,10 @@ class _ClassScreenState extends State<ClassScreen> {
           ),
 
           const SizedBox(height: 32),
-          _buildSectionHeader("Attendance Summary", "View Details"),
+          _buildSectionHeader("Attendance Summary", "View Details", () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => const AttendanceScreen()));
+          }),
           const SizedBox(height: 16),
           _buildAttendanceSummary(),
         ],
@@ -343,17 +374,27 @@ class _ClassScreenState extends State<ClassScreen> {
     );
   }
 
-  Widget _buildSectionHeader(String title, String action) {
+  Widget _buildSectionHeader(String title, String action,
+      [VoidCallback? onTap]) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           title,
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E1E1E)),
+          style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF1E1E1E)),
         ),
-        Text(
-          action,
-          style: const TextStyle(color: Color(0xFF0038FF), fontSize: 13, fontWeight: FontWeight.bold),
+        GestureDetector(
+          onTap: onTap,
+          child: Text(
+            action,
+            style: const TextStyle(
+                color: Color(0xFF0038FF),
+                fontSize: 13,
+                fontWeight: FontWeight.bold),
+          ),
         ),
       ],
     );
@@ -368,7 +409,6 @@ class _ClassScreenState extends State<ClassScreen> {
     required String room,
     required Color color,
     required IconData icon,
-    required String teacherImg,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -379,14 +419,18 @@ class _ClassScreenState extends State<ClassScreen> {
             flex: 10,
             child: Text(
               period,
-              style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 16),
+              style: TextStyle(
+                  color: color, fontWeight: FontWeight.bold, fontSize: 16),
             ),
           ),
           Expanded(
             flex: 20,
             child: Text(
               time,
-              style: const TextStyle(fontSize: 11, color: Color(0xFF333333), fontWeight: FontWeight.w500),
+              style: const TextStyle(
+                  fontSize: 11,
+                  color: Color(0xFF333333),
+                  fontWeight: FontWeight.w500),
             ),
           ),
           Expanded(
@@ -399,8 +443,12 @@ class _ClassScreenState extends State<ClassScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(subject, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
-                      Text(subjectCode, style: TextStyle(fontSize: 10, color: Colors.grey.shade600)),
+                      Text(subject,
+                          style: const TextStyle(
+                              fontSize: 11, fontWeight: FontWeight.bold)),
+                      Text(subjectCode,
+                          style: TextStyle(
+                              fontSize: 10, color: Colors.grey.shade600)),
                     ],
                   ),
                 ),
@@ -411,15 +459,11 @@ class _ClassScreenState extends State<ClassScreen> {
             flex: 30,
             child: Row(
               children: [
-                CircleAvatar(
-                  radius: 12,
-                  backgroundImage: NetworkImage(teacherImg),
-                ),
-                const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     teacher,
-                    style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
+                    style: const TextStyle(
+                        fontSize: 11, fontWeight: FontWeight.w500),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -430,7 +474,8 @@ class _ClassScreenState extends State<ClassScreen> {
             flex: 10,
             child: Text(
               room,
-              style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  color: color, fontSize: 11, fontWeight: FontWeight.bold),
               textAlign: TextAlign.end,
             ),
           ),
@@ -500,31 +545,45 @@ class _ClassScreenState extends State<ClassScreen> {
               children: [
                 Row(
                   children: [
-                    Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                    Expanded(
+                        child: Text(title,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 13),
+                            overflow: TextOverflow.ellipsis)),
                     const SizedBox(width: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
                         color: typeColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
                         type,
-                        style: TextStyle(color: typeColor, fontSize: 10, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            color: typeColor,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 4),
-                const Text("Solve exercise questions from chapter 5.", style: TextStyle(color: Colors.grey, fontSize: 11)),
+                const Text("Solve exercise questions from chapter 5.",
+                    style: TextStyle(color: Colors.grey, fontSize: 11)),
               ],
             ),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(dueText, style: const TextStyle(color: Colors.red, fontSize: 11, fontWeight: FontWeight.bold)),
-              Text(dueTime, style: const TextStyle(color: Colors.grey, fontSize: 11)),
+              Text(dueText,
+                  style: const TextStyle(
+                      color: Colors.red,
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold)),
+              Text(dueTime,
+                  style: const TextStyle(color: Colors.grey, fontSize: 11)),
             ],
           ),
           const SizedBox(width: 8),
@@ -538,22 +597,26 @@ class _ClassScreenState extends State<ClassScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _buildAttendanceStat("Total Classes", "120", Icons.calendar_today, Colors.green),
-        _buildAttendanceStat("Present", "108", Icons.check_circle_outline, Colors.blue),
+        _buildAttendanceStat(
+            "Total Classes", "120", Icons.calendar_today, Colors.green),
+        _buildAttendanceStat(
+            "Present", "108", Icons.check_circle_outline, Colors.blue),
         _buildAttendanceStat("Absent", "8", Icons.highlight_off, Colors.orange),
         _buildAttendanceStat("Attendance", "90%", Icons.percent, Colors.purple),
       ],
     );
   }
 
-  Widget _buildAttendanceStat(String label, String value, IconData icon, Color color) {
+  Widget _buildAttendanceStat(
+      String label, String value, IconData icon, Color color) {
     return Column(
       children: [
         Icon(icon, color: color, size: 24),
         const SizedBox(height: 8),
         Text(label, style: const TextStyle(color: Colors.grey, fontSize: 10)),
         const SizedBox(height: 4),
-        Text(value, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+        Text(value,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
       ],
     );
   }

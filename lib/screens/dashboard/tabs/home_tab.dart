@@ -42,23 +42,26 @@ class HomeTab extends StatelessWidget {
                   onPressed: onOpenDrawer,
                 ),
                 const SizedBox(width: 8),
-                const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Hello, Anudeep👋",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Hello, Anudeep Jaadi👋",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                    SizedBox(height: 2),
-                    Text(
-                      "Good Morning!",
-                      style: TextStyle(color: Colors.white70, fontSize: 13),
-                    ),
-                  ],
+                      const SizedBox(height: 2),
+                      const Text(
+                        "Good Morning!",
+                        style: TextStyle(color: Colors.white70, fontSize: 13),
+                      ),
+                    ],
+                  ),
                 ),
                 const Spacer(),
                 // Notification bell with badge
@@ -369,7 +372,7 @@ class HomeTab extends StatelessWidget {
                             ),
                             SizedBox(height: 4),
                             Text(
-                              "Science Exhibition is scheduled on 24 May 2024 at School Auditorium.",
+                              "Science Exhibition is scheduled on 24 Jun 2026 at School Auditorium.",
                               style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.black87,
@@ -431,13 +434,13 @@ class HomeTab extends StatelessWidget {
                 // Event cards
                 _buildEventCard(
                   title: "Parents Teacher Meeting",
-                  datetime: "25 May 2024 • 09:00 AM - 11:00 AM",
+                  datetime: "25 Jun 2026 • 09:00 AM - 11:00 AM",
                   location: "Conference Hall",
                   color: Colors.green,
                 ),
                 _buildEventCard(
                   title: "Science Exhibition",
-                  datetime: "24 May 2024 • 10:00 AM - 02:00 PM",
+                  datetime: "24 Jun 2026 • 10:00 AM - 02:00 PM",
                   location: "School Auditorium",
                   color: Colors.purple,
                 ),

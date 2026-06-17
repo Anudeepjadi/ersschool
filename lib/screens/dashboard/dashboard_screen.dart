@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
+<<<<<<<<< Temporary merge branch 1
 import '../auth/login_screen.dart';
+import '../class/class_screen.dart';
+=========
+import '../login/login_screen.dart';
+>>>>>>>>> Temporary merge branch 2
 import 'tabs/home_tab.dart';
 import 'tabs/my_info_tab.dart';
-import 'tabs/class_tab.dart';
 import 'tabs/fee_tab.dart';
 import 'tabs/exams_tab.dart';
 import 'tabs/more_tab.dart';
@@ -19,6 +23,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int currentIndex = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+<<<<<<<<< Temporary merge branch 1
   late final List<Widget> _tabs;
 
   @override
@@ -27,15 +32,37 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _tabs = [
       HomeTab(onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer()),
       const MyInfoTab(),
-      const ClassTab(),
+      ClassScreen(onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer()),
       FeeTab(onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer()),
       const ExamsTab(),
       const MoreTab(),
     ];
   }
 
+
+
+=========
+  void _onTabChanged(int index) {
+    setState(() {
+      currentIndex = index;
+    });
+  }
+
+>>>>>>>>> Temporary merge branch 2
   @override
   Widget build(BuildContext context) {
+    final List<Widget> tabs = [
+      HomeTab(
+        onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer(),
+        onTabSelected: _onTabChanged,
+      ),
+      const MyInfoTab(),
+      ClassTab(onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer()),
+      const FeeTab(),
+      const ExamsTab(),
+      const MoreTab(),
+    ];
+
     return Scaffold(
       key: _scaffoldKey,
       drawer: Drawer(
@@ -55,10 +82,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 child: Icon(Icons.person, size: 40, color: AppColors.primary),
               ),
               accountName: Text(
-                "Ananya Sharma",
+                "School Admin",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
-              accountEmail: Text("ananya.sharma@school.com"),
+              accountEmail: Text("admin@ecstasyschool.com"),
             ),
             ListTile(
               leading: const Icon(Icons.home, color: AppColors.primary),
@@ -145,6 +172,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           }
         },
         items: const [
+<<<<<<<<< Temporary merge branch 1
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: "Home",
@@ -172,6 +200,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ],
       ),
       body: _tabs[currentIndex],
+=========
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: "My Info"),
+          BottomNavigationBarItem(icon: Icon(Icons.menu_book), label: "Class"),
+          BottomNavigationBarItem(icon: Icon(Icons.currency_rupee), label: "Fee"),
+          BottomNavigationBarItem(icon: Icon(Icons.assignment_outlined), label: "Exams"),
+          BottomNavigationBarItem(icon: Icon(Icons.more_horiz), label: "More"),
+        ],
+      ),
+      body: tabs[currentIndex],
+>>>>>>>>> Temporary merge branch 2
     );
   }
 }

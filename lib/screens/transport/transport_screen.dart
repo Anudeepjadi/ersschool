@@ -55,32 +55,15 @@ class _TransportScreenState extends State<TransportScreen> {
             },
           ),
           const SizedBox(width: 4),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Transport",
-                    maxLines: 1,
-                    softWrap: false,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Text(
-                  "Track your transport and view details",
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.8),
-                    fontSize: 11,
-                  ),
-                ),
-              ],
+          const Expanded(
+            child: Text(
+              "Transport",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
           // School selector dropdown
@@ -100,22 +83,28 @@ class _TransportScreenState extends State<TransportScreen> {
               }).toList();
             },
             child: Container(
+              constraints: const BoxConstraints(maxWidth: 120),
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              margin: const EdgeInsets.only(left: 10),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.12),
+                color: Colors.white.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.white.withOpacity(0.2)),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
               ),
               child: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   const Icon(Icons.school, size: 14, color: Colors.white),
                   const SizedBox(width: 4),
-                  Text(
-                    _selectedSchool,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
+                  Flexible(
+                    child: Text(
+                      _selectedSchool,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   const SizedBox(width: 2),
@@ -316,7 +305,7 @@ class _TransportScreenState extends State<TransportScreen> {
         border: Border.all(color: Colors.grey.shade100),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.015),
+            color: Colors.black.withValues(alpha: 0.015),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -353,7 +342,7 @@ class _TransportScreenState extends State<TransportScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const Text(
-                    "Ananya Sharma",
+                    "Anudeep Jaadi",
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -385,7 +374,7 @@ class _TransportScreenState extends State<TransportScreen> {
                     child: Column(
                       children: [
                         _buildDetailItem(Icons.directions_bus, "Route / Stop", "Route 12 / Green Park Stop"),
-                        _buildDetailItem(Icons.badge, "Transport ID", "TRP20240001"),
+                        _buildDetailItem(Icons.badge, "Transport ID", "TRP20260001"),
                         _buildDetailItem(Icons.phone, "Mobile Number", "+91 98765 12345"),
                       ],
                     ),
@@ -476,7 +465,7 @@ class _TransportScreenState extends State<TransportScreen> {
         border: Border.all(color: Colors.grey.shade100),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.015),
+            color: Colors.black.withValues(alpha: 0.015),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -647,7 +636,7 @@ class _TransportScreenState extends State<TransportScreen> {
           Container(
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: isActive ? color.withOpacity(0.12) : Colors.grey.shade50,
+              color: isActive ? color.withValues(alpha: 0.12) : Colors.grey.shade50,
               shape: BoxShape.circle,
               border: Border.all(color: isActive ? color : Colors.grey.shade300, width: 1.5),
             ),
@@ -721,7 +710,7 @@ class _TransportScreenState extends State<TransportScreen> {
                 _buildDetailGridItem(Icons.access_time, "Pickup Time", "08:20 AM", const Color(0xFFF59E0B)),
                 _buildDetailGridItem(Icons.school, "Drop Time (Est.)", "09:00 AM", const Color(0xFFEF4444)),
                 _buildDetailGridItem(Icons.straighten, "Distance (Approx.)", "18.6 km", const Color(0xFF06B6D4)),
-                _buildDetailGridItem(Icons.calendar_today, "Transport Validity", "31 Mar 2025", const Color(0xFFEC4899)),
+                _buildDetailGridItem(Icons.calendar_today, "Transport Validity", "31 Mar 2027", const Color(0xFFEC4899)),
               ],
             );
           },
@@ -743,7 +732,7 @@ class _TransportScreenState extends State<TransportScreen> {
           Container(
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(icon, color: color, size: 16),
@@ -811,8 +800,8 @@ class _TransportScreenState extends State<TransportScreen> {
           ],
         ),
         const SizedBox(height: 12),
-        _buildAnnouncementTile("Transport Timings Update", "From 20 May 2024, pickup time will be 10 minutes earlier.", "18 May 2024", const Color(0xFF10B981), const Color(0xFFECFDF5)),
-        _buildAnnouncementTile("Bus Route Change", "Route 12 will take a new route from 25 May 2024.", "15 May 2024", const Color(0xFFF59E0B), const Color(0xFFFEF3C7)),
+        _buildAnnouncementTile("Transport Timings Update", "From 20 Jun 2026, pickup time will be 10 minutes earlier.", "18 Jun 2026", const Color(0xFF10B981), const Color(0xFFECFDF5)),
+        _buildAnnouncementTile("Bus Route Change", "Route 12 will take a new route from 25 Jun 2026.", "15 Jun 2026", const Color(0xFFF59E0B), const Color(0xFFFEF3C7)),
       ],
     );
   }
@@ -845,10 +834,14 @@ class _TransportScreenState extends State<TransportScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      title,
-                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+                    Expanded(
+                      child: Text(
+                        title,
+                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
+                    const SizedBox(width: 8),
                     Text(
                       date,
                       style: TextStyle(fontSize: 9, color: Colors.grey.shade400, fontWeight: FontWeight.w500),

@@ -34,6 +34,7 @@ class _SplashScreenState extends State<SplashScreen> {
       setState(() => _videoInitialized = true);
 
       await _videoController.setVolume(0.0);
+      await _videoController.setPlaybackSpeed(3.0);
       await _videoController.play();
 
       _videoController.addListener(_onVideoProgress);
