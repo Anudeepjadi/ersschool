@@ -3,7 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:ersschool/core/theme/app_theme.dart';
 
 class AssignmentsScreen extends StatefulWidget {
-  const AssignmentsScreen({super.key});
+  final bool showAppBar;
+  const AssignmentsScreen({super.key, this.showAppBar = true});
 
   @override
   State<AssignmentsScreen> createState() => _AssignmentsScreenState();
@@ -191,87 +192,106 @@ class _AssignmentsScreenState extends State<AssignmentsScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Assignments'),
-        backgroundColor: AppColors.primaryDark,
-        foregroundColor: Colors.white,
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.search),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.filter_list_outlined),
-          ),
-        ],
-        bottom: TabBar(
-          controller: _tabController,
-          indicatorColor: Colors.white,
-          indicatorWeight: 3,
-          labelColor: Colors.white,
-          unselectedLabelColor: Colors.white60,
-          labelStyle: GoogleFonts.poppins(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-          ),
-          tabs: [
-            Tab(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.pending_actions_outlined, size: 18),
-                  const SizedBox(width: 6),
-                  const Text('Pending'),
-                  const SizedBox(width: 6),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      '${pendingAssignments.length}',
-                      style: GoogleFonts.poppins(
-                          fontSize: 11, fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Tab(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.check_circle_outline, size: 18),
-                  const SizedBox(width: 6),
-                  const Text('Completed'),
-                  const SizedBox(width: 6),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      '${completedAssignments.length}',
-                      style: GoogleFonts.poppins(
-                          fontSize: 11, fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+    final tabBar = TabBar(
+      controller: _tabController,
+      indicatorColor: widget.showAppBar ? Colors.white : AppColors.primary,
+      indicatorWeight: 3,
+      labelColor: widget.showAppBar ? Colors.white : AppColors.primary,
+      unselectedLabelColor: widget.showAppBar ? Colors.white60 : Colors.grey.shade600,
+      labelStyle: GoogleFonts.poppins(
+        fontSize: 14,
+        fontWeight: FontWeight.w600,
       ),
+      tabs: [
+        Tab(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.pending_actions_outlined, size: 18),
+              const SizedBox(width: 6),
+              const Text('Pending'),
+              const SizedBox(width: 6),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: widget.showAppBar 
+                      ? Colors.white.withValues(alpha: 0.2) 
+                      : AppColors.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  '${pendingAssignments.length}',
+                  style: GoogleFonts.poppins(
+                      fontSize: 11, fontWeight: FontWeight.w600),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Tab(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.check_circle_outline, size: 18),
+              const SizedBox(width: 6),
+              const Text('Completed'),
+              const SizedBox(width: 6),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: widget.showAppBar 
+                      ? Colors.white.withValues(alpha: 0.2) 
+                      : AppColors.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  '${completedAssignments.length}',
+                  style: GoogleFonts.poppins(
+                      fontSize: 11, fontWeight: FontWeight.w600),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+
+    return Scaffold(
+      appBar: widget.showAppBar
+          ? AppBar(
+              title: const Text('Assignments'),
+              backgroundColor: AppColors.primaryDark,
+              foregroundColor: Colors.white,
+              actions: [
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.search),
+                ),
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.filter_list_outlined),
+                ),
+              ],
+              bottom: tabBar,
+            )
+          : null,
       backgroundColor: AppColors.background,
-      body: TabBarView(
-        controller: _tabController,
+      body: Column(
         children: [
-          _buildPendingList(),
-          _buildCompletedList(),
+          if (!widget.showAppBar)
+            Container(
+              color: Colors.white,
+              child: tabBar,
+            ),
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                _buildPendingList(),
+                _buildCompletedList(),
+              ],
+            ),
+          ),
         ],
       ),
     );
