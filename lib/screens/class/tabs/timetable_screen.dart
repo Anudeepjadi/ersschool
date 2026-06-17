@@ -118,7 +118,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -222,7 +222,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -235,7 +235,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
             width: 32,
             height: 32,
             decoration: BoxDecoration(
-              color: (period['color'] as Color).withOpacity(0.1),
+              color: (period['color'] as Color).withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             alignment: Alignment.center,
@@ -267,7 +267,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              color: (period['color'] as Color).withOpacity(0.1),
+              color: (period['color'] as Color).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
@@ -309,7 +309,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
                 children: [
                   CircleAvatar(
                     radius: 14,
-                    backgroundColor: (period['color'] as Color).withOpacity(0.2),
+                    backgroundColor: (period['color'] as Color).withValues(alpha: 0.2),
                     child: Icon(Icons.person, size: 16, color: period['color']),
                   ),
                   const SizedBox(width: 6),
@@ -330,7 +330,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: (period['color'] as Color).withOpacity(0.1),
+              color: (period['color'] as Color).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(6),
             ),
             child: Text(

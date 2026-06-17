@@ -236,8 +236,8 @@ class _DiaryScreenState extends State<DiaryScreen> {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                AppColors.primaryDark.withOpacity(0.1),
-                AppColors.primary.withOpacity(0.05),
+                AppColors.primaryDark.withValues(alpha: 0.1),
+                AppColors.primary.withValues(alpha: 0.05),
               ],
             ),
             borderRadius: BorderRadius.circular(10),
@@ -247,7 +247,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
               Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.1),
+                  color: AppColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Icon(Icons.calendar_today_outlined,
@@ -266,7 +266,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.1),
+                  color: AppColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
@@ -309,7 +309,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: color.withOpacity(0.3),
+                        color: color.withValues(alpha: 0.3),
                         blurRadius: 4,
                         spreadRadius: 1,
                       ),
@@ -320,7 +320,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
                   Expanded(
                     child: Container(
                       width: 2,
-                      color: color.withOpacity(0.2),
+                      color: color.withValues(alpha: 0.2),
                     ),
                   ),
               ],
@@ -336,7 +336,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
                 borderRadius: BorderRadius.circular(14),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.04),
+                    color: Colors.black.withValues(alpha: 0.04),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -355,7 +355,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
                         width: 38,
                         height: 38,
                         decoration: BoxDecoration(
-                          color: color.withOpacity(0.1),
+                          color: color.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Icon(entry['icon'], size: 18, color: color),
@@ -409,7 +409,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: color.withOpacity(0.1),
+                          color: color.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Row(

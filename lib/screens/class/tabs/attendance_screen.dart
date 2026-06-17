@@ -63,7 +63,7 @@ class AttendanceScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primaryDark.withOpacity(0.3),
+            color: AppColors.primaryDark.withValues(alpha: 0.3),
             blurRadius: 12,
             offset: const Offset(0, 6),
           ),
@@ -125,7 +125,7 @@ class AttendanceScreen extends StatelessWidget {
             child: LinearProgressIndicator(
               value: 0.9,
               minHeight: 8,
-              backgroundColor: Colors.white.withOpacity(0.2),
+              backgroundColor: Colors.white.withValues(alpha: 0.2),
               valueColor: const AlwaysStoppedAnimation(Color(0xFF34D399)),
             ),
           ),
@@ -156,7 +156,7 @@ class AttendanceScreen extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 6),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.12),
+          color: Colors.white.withValues(alpha: 0.12),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
@@ -205,7 +205,7 @@ class AttendanceScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -262,7 +262,7 @@ class AttendanceScreen extends StatelessWidget {
                           end: Alignment.bottomCenter,
                           colors: [
                             barColor,
-                            barColor.withOpacity(0.5),
+                            barColor.withValues(alpha: 0.5),
                           ],
                         ),
                         borderRadius: BorderRadius.circular(6),
@@ -350,7 +350,7 @@ class AttendanceScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -387,7 +387,7 @@ class AttendanceScreen extends StatelessWidget {
                     width: 34,
                     height: 34,
                     decoration: BoxDecoration(
-                      color: color.withOpacity(0.1),
+                      color: color.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(s['icon'] as IconData, size: 16, color: color),
@@ -423,7 +423,7 @@ class AttendanceScreen extends StatelessWidget {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 6, vertical: 2),
                                   decoration: BoxDecoration(
-                                    color: color.withOpacity(0.1),
+                                    color: color.withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                   child: Text(
@@ -444,7 +444,7 @@ class AttendanceScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(4),
                           child: LinearProgressIndicator(
                             value: percentage / 100,
-                            backgroundColor: color.withOpacity(0.1),
+                            backgroundColor: color.withValues(alpha: 0.1),
                             valueColor: AlwaysStoppedAnimation(color),
                             minHeight: 6,
                           ),
@@ -481,7 +481,7 @@ class AttendanceScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -544,7 +544,7 @@ class AttendanceScreen extends StatelessWidget {
               const SizedBox(width: 16),
               _buildLegendItem(AppColors.error, 'Absent'),
               const SizedBox(width: 16),
-              _buildLegendItem(AppColors.textLight.withOpacity(0.3), 'Weekend'),
+              _buildLegendItem(AppColors.textLight.withValues(alpha: 0.3), 'Weekend'),
               const SizedBox(width: 16),
               _buildLegendItem(AppColors.primary, 'Today'),
             ],
@@ -575,15 +575,15 @@ class AttendanceScreen extends StatelessWidget {
             bgColor = AppColors.primary;
             textColor = Colors.white;
           } else if (status == 'present') {
-            bgColor = AppColors.presentGreen.withOpacity(0.15);
+            bgColor = AppColors.presentGreen.withValues(alpha: 0.15);
             textColor = AppColors.presentGreen;
             icon = Icons.check;
           } else if (status == 'absent') {
-            bgColor = AppColors.error.withOpacity(0.15);
+            bgColor = AppColors.error.withValues(alpha: 0.15);
             textColor = AppColors.error;
             icon = Icons.close;
           } else if (status == 'weekend') {
-            bgColor = AppColors.textLight.withOpacity(0.08);
+            bgColor = AppColors.textLight.withValues(alpha: 0.08);
             textColor = AppColors.textLight;
           } else {
             bgColor = Colors.transparent;
@@ -737,7 +737,7 @@ class AttendanceScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -845,7 +845,7 @@ class AttendanceScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
-                      color: color.withOpacity(0.1),
+                      color: color.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(

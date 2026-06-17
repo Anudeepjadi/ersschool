@@ -277,30 +277,9 @@ class _ExamsTabState extends State<ExamsTab>
               ],
             ),
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  '${_overallPercentage.toStringAsFixed(1)}%',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  'Grade: $_overallGrade',
-                  style: const TextStyle(color: Colors.white70, fontSize: 12),
-                ),
-              ],
-            ),
-          ),
+<<<<<<< HEAD
+
+          const SizedBox(height: 30),
         ],
       ),
     );
@@ -318,15 +297,15 @@ class _ExamsTabState extends State<ExamsTab>
               color: Color(0xFF1E2875)),
         ),
         const SizedBox(height: 12),
-        _buildTimetableCard("Mathematics (MATH)", "25 May 2024", "10:00 AM",
+        _buildTimetableCard("Mathematics (MATH)", "25 Jun 2026", "10:00 AM",
             "1.30 Hrs", "Hall A", Colors.purple),
-        _buildTimetableCard("Science (SCI)", "27 May 2024", "10:00 AM",
+        _buildTimetableCard("Science (SCI)", "27 Jun 2026", "10:00 AM",
             "1.30 Hrs", "Hall B", Colors.green),
-        _buildTimetableCard("English (ENG)", "29 May 2024", "10:00 AM",
+        _buildTimetableCard("English (ENG)", "29 Jun 2026", "10:00 AM",
             "1.30 Hrs", "Hall A", Colors.orange),
-        _buildTimetableCard("Social Science (SST)", "31 May 2024", "10:00 AM",
+        _buildTimetableCard("Social Science (SST)", "31 Jun 2026", "10:00 AM",
             "1.30 Hrs", "Hall C", Colors.pink),
-        _buildTimetableCard("Hindi (HIN)", "03 Jun 2024", "10:00 AM",
+        _buildTimetableCard("Hindi (HIN)", "03 Jun 2026", "10:00 AM",
             "1.30 Hrs", "Hall B", Colors.blue),
       ],
     );
@@ -363,6 +342,179 @@ class _ExamsTabState extends State<ExamsTab>
   Widget _buildOverviewStatsRow() {
     return Container(
       margin: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildStatCard(
+              "Total Exams", "12", Icons.assignment_outlined, Colors.blue),
+          _buildStatCard(
+              "Completed", "7", Icons.check_circle_outline, Colors.green),
+          _buildStatCard(
+              "Upcoming", "5", Icons.calendar_today_outlined, Colors.orange),
+          _buildStatCard("Average Score", "85.6%",
+              Icons.bookmark_added_outlined, Colors.purple),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatCard(
+      String label, String value, IconData icon, Color color) {
+    return Expanded(
+      child: Column(
+        children: [
+=======
+>>>>>>> fa597f9236bc7bc7cbedd61fe889050b665c1765
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(16),
+            ),
+<<<<<<< HEAD
+            child: Icon(icon, color: color, size: 20),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            label,
+            style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 10,
+                fontWeight: FontWeight.w500),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF1E2875),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUpcomingExamsList() {
+    final headerStyle = TextStyle(
+        color: Colors.grey.shade600, fontSize: 11, fontWeight: FontWeight.bold);
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Column(
+        children: [
+// Header
+          Row(
+            children: [
+              Expanded(flex: 6, child: Text("Exam Name", style: headerStyle)),
+              Expanded(flex: 4, child: Text("Subject", style: headerStyle)),
+              Expanded(flex: 5, child: Text("Date", style: headerStyle)),
+              Expanded(flex: 4, child: Text("Time", style: headerStyle)),
+              Expanded(flex: 4, child: Text("Duration", style: headerStyle)),
+              SizedBox(
+                  width: 32,
+                  child: Text("Syllabus",
+                      style: headerStyle, textAlign: TextAlign.center)),
+            ],
+          ),
+          const Divider(height: 20),
+
+// Items
+          _buildUpcomingExamRow(
+              "Unit Test - 1",
+              "Term 1",
+              "Mathematics",
+              "MATH",
+              "25 Jun 2026",
+              "Saturday",
+              "10:00 AM",
+              "1.30 Hrs",
+              Colors.purple),
+          const Divider(height: 20),
+          _buildUpcomingExamRow("Unit Test - 1", "Term 1", "Science", "SCI",
+              "27 Jun 2026", "Monday", "10:00 AM", "1.30 Hrs", Colors.green),
+          const Divider(height: 20),
+          _buildUpcomingExamRow(
+              "Unit Test - 1",
+              "Term 1",
+              "English",
+              "ENG",
+              "29 Jun 2026",
+              "Wednesday",
+              "10:00 AM",
+              "1.30 Hrs",
+              Colors.orange),
+          const Divider(height: 20),
+          _buildUpcomingExamRow(
+              "Unit Test - 1",
+              "Term 1",
+              "Social Science",
+              "SST",
+              "31 Jun 2026",
+              "Friday",
+              "10:00 AM",
+              "1.30 Hrs",
+              Colors.pink),
+          const Divider(height: 20),
+          _buildUpcomingExamRow("Unit Test - 1", "Term 1", "Hindi", "HIN",
+              "03 Jun 2026", "Monday", "10:00 AM", "1.30 Hrs", Colors.blue),
+
+          const Divider(height: 24),
+// View All Link
+          GestureDetector(
+            onTap: () => _tabController.animateTo(1),
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+=======
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+>>>>>>> fa597f9236bc7bc7cbedd61fe889050b665c1765
+              children: [
+                Text(
+                  '${_overallPercentage.toStringAsFixed(1)}%',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'Grade: $_overallGrade',
+                  style: const TextStyle(color: Colors.white70, fontSize: 12),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Timetable Tab
+// ─────────────────────────────────────────────────────────────────────────────
+class _TimetableView extends StatelessWidget {
+  final List<_Exam> exams;
+  const _TimetableView({required this.exams});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
       padding: const EdgeInsets.all(16),
       children: [
         // Info banner
@@ -406,76 +558,57 @@ class _ExamCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
         color: Colors.white,
+<<<<<<< HEAD
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: Colors.grey.shade200),
       ),
       child: Column(
         children: [
-// Header
+          // Header
           Row(
             children: [
               Expanded(flex: 6, child: Text("Exam Name", style: headerStyle)),
               Expanded(flex: 4, child: Text("Subject", style: headerStyle)),
               Expanded(flex: 5, child: Text("Date", style: headerStyle)),
-              Expanded(flex: 4, child: Text("Time", style: headerStyle)),
-              Expanded(flex: 4, child: Text("Duration", style: headerStyle)),
+              Expanded(
+                  flex: 4,
+                  child: Text("Marks Obtained",
+                      style: headerStyle, textAlign: TextAlign.center)),
+              Expanded(
+                  flex: 4,
+                  child: Text("Total Marks",
+                      style: headerStyle, textAlign: TextAlign.center)),
+              Expanded(
+                  flex: 4,
+                  child: Text("Percentage",
+                      style: headerStyle, textAlign: TextAlign.center)),
               SizedBox(
-                  width: 32,
-                  child: Text("Syllabus",
+                  width: 36,
+                  child: Text("Grade",
                       style: headerStyle, textAlign: TextAlign.center)),
             ],
           ),
           const Divider(height: 20),
 
-// Items
-          _buildUpcomingExamRow(
-              "Unit Test - 1",
-              "Term 1",
-              "Mathematics",
-              "MATH",
-              "25 May 2024",
-              "Saturday",
-              "10:00 AM",
-              "1.30 Hrs",
-              Colors.purple),
+          // Items
+          _buildRecentResultRow("Mid Term Exam", "Term 1", "Mathematics",
+              "MATH", "15 Apr 2026", "42", "50", "84%", "A", Colors.green),
           const Divider(height: 20),
-          _buildUpcomingExamRow("Unit Test - 1", "Term 1", "Science", "SCI",
-              "27 May 2024", "Monday", "10:00 AM", "1.30 Hrs", Colors.green),
+          _buildRecentResultRow("Mid Term Exam", "Term 1", "Science", "SCI",
+              "16 Apr 2026", "44", "50", "88%", "A", Colors.green),
           const Divider(height: 20),
-          _buildUpcomingExamRow(
-              "Unit Test - 1",
-              "Term 1",
-              "English",
-              "ENG",
-              "29 May 2024",
-              "Wednesday",
-              "10:00 AM",
-              "1.30 Hrs",
-              Colors.orange),
-          const Divider(height: 20),
-          _buildUpcomingExamRow(
-              "Unit Test - 1",
-              "Term 1",
-              "Social Science",
-              "SST",
-              "31 May 2024",
-              "Friday",
-              "10:00 AM",
-              "1.30 Hrs",
-              Colors.pink),
-          const Divider(height: 20),
-          _buildUpcomingExamRow("Unit Test - 1", "Term 1", "Hindi", "HIN",
-              "03 Jun 2024", "Monday", "10:00 AM", "1.30 Hrs", Colors.blue),
+          _buildRecentResultRow("Mid Term Exam", "Term 1", "English", "ENG",
+              "17 Apr 2026", "38", "50", "76%", "B+", Colors.teal),
 
           const Divider(height: 24),
-// View All Link
+          // View All Link
           GestureDetector(
-            onTap: () => _tabController.animateTo(1),
+            onTap: () => _tabController.animateTo(2),
             child: const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "View All Upcoming Exams",
+                  "View All Results",
                   style: TextStyle(
                     color: Color(0xFF0038FF),
                     fontWeight: FontWeight.bold,
@@ -486,55 +619,43 @@ class _ExamCard extends StatelessWidget {
                 Icon(Icons.chevron_right, size: 16, color: Color(0xFF0038FF)),
               ],
             ),
+=======
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: exam.color.withValues(alpha: 0.08),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+>>>>>>> fa597f9236bc7bc7cbedd61fe889050b665c1765
           ),
         ],
+        border: Border(
+          left: BorderSide(color: exam.color, width: 4),
+        ),
       ),
-    );
-  }
-
-  Widget _buildUpcomingExamRow(
-    String examName,
-    String term,
-    String subject,
-    String subCode,
-    String date,
-    String day,
-    String time,
-    String duration,
-    Color iconColor,
-  ) {
-    return Row(
-      children: [
-// Exam Name
-        Expanded(
-          flex: 6,
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: iconColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child:
-                    Icon(Icons.assignment_outlined, color: iconColor, size: 14),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: exam.color.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
               ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      examName,
-                      style: const TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF1E2875)),
-                    ),
-                    Text(
-                      term,
-                      style:
-                          TextStyle(fontSize: 9, color: Colors.grey.shade500),
+              child: Icon(exam.icon, color: exam.color, size: 24),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    exam.subject,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                      color: Color(0xFF1E2875),
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -604,91 +725,19 @@ class _ResultsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: Column(
-        children: [
-          // Header
-          Row(
-            children: [
-              Expanded(flex: 6, child: Text("Exam Name", style: headerStyle)),
-              Expanded(flex: 4, child: Text("Subject", style: headerStyle)),
-              Expanded(flex: 5, child: Text("Date", style: headerStyle)),
-              Expanded(
-                  flex: 4,
-                  child: Text("Marks Obtained",
-                      style: headerStyle, textAlign: TextAlign.center)),
-              Expanded(
-                  flex: 4,
-                  child: Text("Total Marks",
-                      style: headerStyle, textAlign: TextAlign.center)),
-              Expanded(
-                  flex: 4,
-                  child: Text("Percentage",
-                      style: headerStyle, textAlign: TextAlign.center)),
-              SizedBox(
-                  width: 36,
-                  child: Text("Grade",
-                      style: headerStyle, textAlign: TextAlign.center)),
-            ],
-          ),
-          const Divider(height: 20),
-
-          // Items
-          _buildRecentResultRow("Mid Term Exam", "Term 1", "Mathematics",
-              "MATH", "15 Apr 2024", "42", "50", "84%", "A", Colors.green),
-          const Divider(height: 20),
-          _buildRecentResultRow("Mid Term Exam", "Term 1", "Science", "SCI",
-              "16 Apr 2024", "44", "50", "88%", "A", Colors.green),
-          const Divider(height: 20),
-          _buildRecentResultRow("Mid Term Exam", "Term 1", "English", "ENG",
-              "17 Apr 2024", "38", "50", "76%", "B+", Colors.teal),
-
-          const Divider(height: 24),
-          // View All Link
-          GestureDetector(
-            onTap: () => _tabController.animateTo(2),
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "View All Results",
-                  style: TextStyle(
-                    color: Color(0xFF0038FF),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                  ),
-                ),
-                SizedBox(width: 4),
-                Icon(Icons.chevron_right, size: 16, color: Color(0xFF0038FF)),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRecentResultRow(
-    String examName,
-    String term,
-    String subject,
-    String subCode,
-    String date,
-    String marksObtained,
-    String totalMarks,
-    String percentage,
-    String grade,
-    Color dotColor,
-  ) {
-    return Row(
       children: [
-// Exam Name
-        Expanded(
-          flex: 6,
+        // Overall summary card
+        Container(
+          padding: const EdgeInsets.all(20),
+          margin: const EdgeInsets.only(bottom: 16),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFF1E2875), AppColors.primary],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(20),
+          ),
           child: Row(
             children: [
               Expanded(
