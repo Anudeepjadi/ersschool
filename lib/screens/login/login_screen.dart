@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../dashboard/dashboard_screen.dart';
+import '../admin/admin_dashboard_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -31,10 +32,18 @@ class _LoginScreenState extends State<LoginScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Welcome $_selectedRole! Logging in...')),
         );
+
+        Widget destination;
+        if (_selectedRole == 'Admin') {
+          destination = const AdminDashboardScreen();
+        } else {
+          destination = const DashboardScreen();
+        }
+
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (_) => const DashboardScreen(),
+            builder: (_) => destination,
           ),
         );
       } else {
