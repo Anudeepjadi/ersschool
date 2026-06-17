@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../core/theme/app_colors.dart';
 
 class ExamsTab extends StatefulWidget {
   final VoidCallback onOpenDrawer;
@@ -28,13 +27,6 @@ class _ExExamsTabState extends State<ExamsTab>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title:
-            const Text("Exams", style: TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        foregroundColor: AppColors.text,
-      ),
       backgroundColor: Colors.grey.shade50,
       body: SafeArea(
         top: false,
@@ -51,8 +43,8 @@ class _ExExamsTabState extends State<ExamsTab>
                 ),
               ),
               padding: const EdgeInsets.only(
-                top: 50,
-                bottom: 20,
+                top: 60,
+                bottom: 25,
                 left: 16,
                 right: 16,
               ),
@@ -196,13 +188,6 @@ class _ExExamsTabState extends State<ExamsTab>
                         ],
                       ),
                     ],
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 48, top: 4),
-                    child: Text(
-                      "View your exam details and results",
-                      style: TextStyle(color: Colors.white70, fontSize: 11),
-                    ),
                   ),
                 ],
               ),

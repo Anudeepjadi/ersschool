@@ -46,6 +46,8 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
   String academicYear = '';
   String dateOfAdmission = '';
   String house = '';
+  String firstLanguage = 'Telugu';
+  String secondLanguage = 'Hindi';
 
   // Parent
   String fatherName = '';
@@ -435,6 +437,8 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
       'Academic Year': TextEditingController(text: academicYear),
       'Date of Admission': TextEditingController(text: dateOfAdmission),
       'House': TextEditingController(text: house),
+      'First Language': TextEditingController(text: firstLanguage),
+      'Second Language': TextEditingController(text: secondLanguage),
     };
     final icons = {
       'Admission No.': Icons.numbers,
@@ -442,6 +446,8 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
       'Academic Year': Icons.calendar_today,
       'Date of Admission': Icons.event,
       'House': Icons.shield,
+      'First Language': Icons.language,
+      'Second Language': Icons.language_outlined,
     };
     _openSimpleEdit('Edit Academic Information', ctrls, icons, () {
       setState(() {
@@ -450,6 +456,8 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
         academicYear = ctrls['Academic Year']!.text;
         dateOfAdmission = ctrls['Date of Admission']!.text;
         house = ctrls['House']!.text;
+        firstLanguage = ctrls['First Language']!.text;
+        secondLanguage = ctrls['Second Language']!.text;
       });
     });
   }
@@ -879,6 +887,8 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
         _row2('Academic Year', academicYear),
         _row2('Date of Admission', dateOfAdmission),
         _row2('House', house),
+        _row2('First Language', firstLanguage),
+        _row2('Second Language', secondLanguage),
       ]),
     );
   }

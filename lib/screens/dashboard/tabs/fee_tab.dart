@@ -69,13 +69,6 @@ class _FeeTabState extends State<FeeTab> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(
-                  "View fee details and payment history",
-                  style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.8),
-                    fontSize: 11,
-                  ),
-                ),
               ],
             ),
           ),
