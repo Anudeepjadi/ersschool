@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/utils/profile_manager.dart';
-import '../../../../widgets/calendar_popup.dart';
-import '../widgets/student_app_bar.dart';
-import '../../transport/transport_screen.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../widgets/calendar_popup.dart';
 
 class HomeTab extends StatelessWidget {
   final VoidCallback onOpenDrawer;
@@ -17,35 +14,126 @@ class HomeTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(48),
-        child: ValueListenableBuilder<String>(
-          valueListenable: ProfileManager().studentName,
-          builder: (context, studentName, _) {
-            return StudentAppBar(
-              title: "Welcome $studentName 👋",
-              subtitle: "Here's what's happening today.",
-              onOpenDrawer: onOpenDrawer,
-              onProfileTap: () => onTabSelected(1),
-            );
-          },
-        ),
-      ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          // Simulate a network request
-          await Future.delayed(const Duration(seconds: 1));
-        },
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 16, right: 16, top: 4, bottom: 16),
-                child: Column(
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 1. Curved Header
+          Container(
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              color: AppColors.primary,
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(30),
+                bottomRight: Radius.circular(30),
+              ),
+            ),
+            padding: const EdgeInsets.only(
+              top: 50,
+              bottom: 25,
+              left: 20,
+              right: 20,
+            ),
+            child: Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.menu, color: Colors.white, size: 28),
+                  onPressed: onOpenDrawer,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Hello, Anudeep Jaadi👋",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 2),
+                      const Text(
+                        "Good Morning!",
+                        style: TextStyle(color: Colors.white70, fontSize: 13),
+                      ),
+                    ],
+                  ),
+                ),
+                const Spacer(),
+                // Notification bell with badge
+                Stack(
+                  children: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.notifications_none_outlined,
+                        color: Colors.white,
+                        size: 28,
+                      ),
+                      onPressed: () {},
+                    ),
+                    Positioned(
+                      right: 8,
+                      top: 8,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                        constraints: const BoxConstraints(
+                          minWidth: 16,
+                          minHeight: 16,
+                        ),
+                        child: const Text(
+                          "5",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 9,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(width: 8),
+                // Circular profile picture
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white, width: 2),
+                  ),
+                  child: CircleAvatar(
+                    radius: 20,
+                    backgroundColor: Colors.white,
+                    child: ClipOval(
+                      child: Image.asset(
+                        "assets/images/student_profile.png",
+                        width: 40,
+                        height: 40,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Icon(
+                            Icons.person,
+                            color: AppColors.primary,
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // 2. Welcome Back Card
@@ -113,9 +201,7 @@ class HomeTab extends StatelessWidget {
                       ),
                     ),
                     TextButton(
-                      onPressed: () {
-                        onTabSelected(5); // Switch to More tab
-                      },
+                      onPressed: () {},
                       child: const Text(
                         "View All",
                         style: TextStyle(
@@ -143,7 +229,7 @@ class HomeTab extends StatelessWidget {
                         onTap: () => onTabSelected(2),
                       ),
                       _buildQuickAccessItem(
-                        Icons.library_books_outlined,
+                        Icons.description_outlined,
                         "Learning\nMaterials",
                         Colors.green,
                         onTap: () => onTabSelected(5),
@@ -172,12 +258,6 @@ class HomeTab extends StatelessWidget {
                         Icons.directions_bus_outlined,
                         "Transport",
                         Colors.indigo,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const TransportScreen()),
-                          );
-                        },
                       ),
                     ],
                   ),
@@ -198,9 +278,7 @@ class HomeTab extends StatelessWidget {
                       ),
                     ),
                     TextButton(
-                      onPressed: () {
-                        onTabSelected(5); // Switch to More tab for now
-                      },
+                      onPressed: () {},
                       child: const Text(
                         "View All",
                         style: TextStyle(
@@ -263,12 +341,12 @@ class HomeTab extends StatelessWidget {
                       width: 1,
                     ),
                   ),
-                  padding: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(16),
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                           color: AppColors.primary.withValues(alpha: 0.1),
                           shape: BoxShape.circle,
@@ -276,10 +354,10 @@ class HomeTab extends StatelessWidget {
                         child: const Icon(
                           Icons.campaign_outlined,
                           color: AppColors.primary,
-                          size: 20,
+                          size: 28,
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: 14),
                       const Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -287,16 +365,16 @@ class HomeTab extends StatelessWidget {
                             Text(
                               "Important Notice",
                               style: TextStyle(
-                                fontSize: 12,
+                                fontSize: 14,
                                 fontWeight: FontWeight.bold,
                                 color: Color(0xFF1E2875),
                               ),
                             ),
                             SizedBox(height: 4),
                             Text(
-                              "Science Exhibition is scheduled on 24 Jun 2026 at School Auditorium.",
+                              "Science Exhibition is scheduled on 24 May 2024 at School Auditorium.",
                               style: TextStyle(
-                                fontSize: 10,
+                                fontSize: 12,
                                 color: Colors.black87,
                                 height: 1.3,
                               ),
@@ -306,20 +384,18 @@ class HomeTab extends StatelessWidget {
                       ),
                       const SizedBox(width: 8),
                       TextButton(
-                        onPressed: () {
-                          onTabSelected(5); // Switch to More tab
-                        },
+                        onPressed: () {},
                         style: TextButton.styleFrom(
-                          minimumSize: Size.zero,
                           padding: EdgeInsets.zero,
+                          minimumSize: Size.zero,
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
                         child: const Text(
                           "View All",
                           style: TextStyle(
-                            fontSize: 12,
                             color: AppColors.primary,
                             fontWeight: FontWeight.bold,
+                            fontSize: 12,
                           ),
                         ),
                       ),
@@ -358,13 +434,13 @@ class HomeTab extends StatelessWidget {
                 // Event cards
                 _buildEventCard(
                   title: "Parents Teacher Meeting",
-                  datetime: "25 Jun 2026 | 09:00 AM - 11:00 AM",
+                  datetime: "25 May 2024 • 09:00 AM - 11:00 AM",
                   location: "Conference Hall",
                   color: Colors.green,
                 ),
                 _buildEventCard(
                   title: "Science Exhibition",
-                  datetime: "24 Jun 2026 | 10:00 AM - 02:00 PM",
+                  datetime: "24 May 2024 • 10:00 AM - 02:00 PM",
                   location: "School Auditorium",
                   color: Colors.purple,
                 ),
@@ -372,8 +448,6 @@ class HomeTab extends StatelessWidget {
             ),
           ),
         ],
-      ),
-      ),
       ),
     );
   }
@@ -385,26 +459,33 @@ class HomeTab extends StatelessWidget {
     VoidCallback? onTap,
   }) {
     return Container(
-      width: 65,
-      margin: const EdgeInsets.only(right: 0),
+      width: 76,
+      margin: const EdgeInsets.only(right: 8),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(12),
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4.0),
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(icon, color: color, size: 28),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: color.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Icon(icon, color: color, size: 26),
+                ),
                 const SizedBox(height: 8),
                 Text(
                   label,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
                     color: Color(0xFF1E2875),
                     height: 1.2,
                   ),
@@ -426,7 +507,7 @@ class HomeTab extends StatelessWidget {
   }) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -442,12 +523,12 @@ class HomeTab extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: iconColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(icon, color: iconColor, size: 16),
+            child: Icon(icon, color: iconColor, size: 22),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -457,19 +538,15 @@ class HomeTab extends StatelessWidget {
                 Text(
                   title,
                   style: const TextStyle(
-                    fontSize: 12,
+                    fontSize: 14,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF1E2875),
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 4),
                 Text(
                   subtitle,
-                  style: TextStyle(fontSize: 10, color: Colors.grey.shade600),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
                 ),
               ],
             ),
@@ -477,7 +554,7 @@ class HomeTab extends StatelessWidget {
           Text(
             time,
             style: TextStyle(
-              fontSize: 10,
+              fontSize: 12,
               fontWeight: FontWeight.bold,
               color: Colors.grey.shade600,
             ),
@@ -495,29 +572,22 @@ class HomeTab extends StatelessWidget {
   }) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.grey.shade100, width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.shade50,
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(Icons.event, color: color, size: 16),
+            child: Icon(Icons.event, color: color, size: 22),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -527,30 +597,24 @@ class HomeTab extends StatelessWidget {
                 Text(
                   title,
                   style: const TextStyle(
-                    fontSize: 12,
+                    fontSize: 14,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF1E2875),
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 6),
                 Text(
                   datetime,
                   style: TextStyle(
-                    fontSize: 10,
+                    fontSize: 11,
                     fontWeight: FontWeight.bold,
                     color: Colors.grey.shade700,
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: 4),
                 Text(
                   location,
-                  style: TextStyle(fontSize: 10, color: Colors.grey.shade500),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 11, color: Colors.grey.shade500),
                 ),
               ],
             ),
@@ -560,4 +624,3 @@ class HomeTab extends StatelessWidget {
     );
   }
 }
-
