@@ -45,7 +45,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         type: BottomNavigationBarType.fixed,
         currentIndex: currentIndex,
         selectedItemColor: AppColors.primary,
-        unselectedItemColor: const Color(0xFF1E2875),
+        unselectedItemColor: const Color(0xFF757897),
         selectedLabelStyle:
             const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
         unselectedLabelStyle:
@@ -53,19 +53,19 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         onTap: _onTabChanged,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard),
+            icon: Icon(Icons.grid_view_outlined),
             label: "Dashboard",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.people_outline),
+            icon: Icon(Icons.people_alt_outlined),
             label: "Students",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.school_outlined),
+            icon: Icon(Icons.co_present_outlined),
             label: "Teachers",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.business_outlined),
+            icon: Icon(Icons.corporate_fare_outlined),
             label: "Branches",
           ),
           BottomNavigationBarItem(
@@ -103,7 +103,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             accountEmail: Text("admin@ecstasyschool.com"),
           ),
           ListTile(
-            leading: const Icon(Icons.dashboard, color: AppColors.primary),
+            leading: const Icon(Icons.grid_view_outlined, color: AppColors.primary),
             title: const Text("Dashboard"),
             selected: currentIndex == 0,
             onTap: () {
@@ -112,7 +112,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.people_outline),
+            leading: const Icon(Icons.people_alt_outlined),
             title: const Text("Students"),
             selected: currentIndex == 1,
             onTap: () {
@@ -121,7 +121,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.school_outlined),
+            leading: const Icon(Icons.co_present_outlined),
             title: const Text("Teachers"),
             selected: currentIndex == 2,
             onTap: () {
@@ -130,7 +130,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.business_outlined),
+            leading: const Icon(Icons.corporate_fare_outlined),
             title: const Text("Branches"),
             selected: currentIndex == 3,
             onTap: () {
