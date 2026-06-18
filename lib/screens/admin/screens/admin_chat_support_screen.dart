@@ -84,7 +84,7 @@ class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
             ),
           ],
         ),
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.primaryDark,
         foregroundColor: Colors.white,
         elevation: 0,
       ),
@@ -273,7 +273,7 @@ class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
           ),
           const SizedBox(width: 8),
           CircleAvatar(
-            backgroundColor: AppColors.primary,
+            backgroundColor: AppColors.primaryDark,
             child: IconButton(
               icon: const Icon(Icons.send, color: Colors.white, size: 18),
               onPressed: () {
@@ -286,6 +286,17 @@ class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
                       'time': 'Just now',
                     });
                     _messageController.clear();
+                  });
+                  Future.delayed(const Duration(seconds: 1), () {
+                    if (mounted) {
+                      setState(() {
+                        _selectedChat!['messages'].add({
+                          'sender': 'user',
+                          'text': 'Got it! Thanks for the information.',
+                          'time': 'Just now',
+                        });
+                      });
+                    }
                   });
                 }
               },

@@ -92,7 +92,7 @@ class _AdminCommunicationsScreenState extends State<AdminCommunicationsScreen> {
             ),
           ],
         ),
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.primaryDark,
         foregroundColor: Colors.white,
         elevation: 0,
       ),

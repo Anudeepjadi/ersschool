@@ -7,6 +7,7 @@ import '../screens/admin_attendance_screen.dart';
 import '../screens/admin_fees_screen.dart';
 import '../screens/admin_communications_screen.dart';
 import '../screens/admin_chat_support_screen.dart';
+import '../widgets/admin_app_bar.dart';
 
 class AdminHomeTab extends StatefulWidget {
   final VoidCallback onOpenDrawer;
@@ -31,28 +32,148 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
   String _feeFilter = 'This Month';
   String _attendanceFilter = 'Today';
   String _chartFilter = 'This Year';
+  
+  Offset _fabPosition = Offset.zero;
+  bool _isFabInitialized = false;
 
   @override
   Widget build(BuildContext context) {
+    if (!_isFabInitialized) {
+      final size = MediaQuery.of(context).size;
+      _fabPosition = Offset(size.width - 120, size.height - 240);
+      _isFabInitialized = true;
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
-      floatingActionButton: _buildChatFab(),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // 1. Blue curved header
-            _buildHeader(),
+      appBar: AdminAppBar(
+        title: "Welcome Admin 👋",
+        subtitle: "Here's what's happening today.",
+        onOpenDrawer: widget.onOpenDrawer,
+        actions: [
 
+          // Notification bell
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.notifications_none_outlined,
+                    color: Colors.white, size: 26),
+                onPressed: () {},
+              ),
+              Positioned(
+                right: 8,
+                top: 8,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: const BoxDecoration(
+                    color: Colors.red,
+                    shape: BoxShape.circle,
+                  ),
+                  constraints:
+                      const BoxConstraints(minWidth: 16, minHeight: 16),
+                  child: const Text(
+                    "3",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 9,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(width: 4),
+          // Profile avatar
+          Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: GestureDetector(
+              onTap: widget.onOpenProfile,
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white, width: 2),
+                ),
+                child: const CircleAvatar(
+                  radius: 16,
+                  backgroundColor: Colors.white,
+                  child: Icon(Icons.person, color: AppColors.primary, size: 20),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 16),
-
-                  // 2. Date display
+                  
+                  // School Selector Container
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryDark.withValues(alpha: 0.05),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: AppColors.primaryDark.withValues(alpha: 0.1)),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryDark.withValues(alpha: 0.1),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(Icons.school, color: AppColors.primaryDark, size: 20),
+                        ),
+                        const SizedBox(width: 12),
+                        const Text(
+                          "Selected School",
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const Spacer(),
+                        DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            value: _selectedSchool,
+                            isDense: true,
+                            dropdownColor: Colors.white,
+                            style: const TextStyle(
+                              color: AppColors.primaryDark,
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            icon: const Icon(
+                              Icons.keyboard_arrow_down,
+                              color: AppColors.primaryDark,
+                              size: 18,
+                            ),
+                            items: ['Ecstasy School 1', 'Ecstasy School 2']
+                                .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                                .toList(),
+                            onChanged: (v) => setState(() => _selectedSchool = v!),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),  // 2. Date display
                   _buildDateDisplay(),
 
                   const SizedBox(height: 20),
@@ -87,138 +208,16 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
           ],
         ),
       ),
-    );
-  }
-
-  // ══════════════════════════════════════════════════════════════════════════
-  // 1. HEADER
-  // ══════════════════════════════════════════════════════════════════════════
-  Widget _buildHeader() {
-    return Container(
-      width: double.infinity,
-      decoration: const BoxDecoration(
-        color: AppColors.primary,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(30),
-          bottomRight: Radius.circular(30),
-        ),
-      ),
-      padding: const EdgeInsets.only(top: 50, bottom: 25, left: 16, right: 16),
-      child: Row(
-        children: [
-          IconButton(
-            icon: const Icon(Icons.menu, color: Colors.white, size: 28),
-            onPressed: widget.onOpenDrawer,
-          ),
-          const SizedBox(width: 4),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Welcome back, Admin 👋",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  "Here's what's happening in your school today.",
-                  style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.8),
-                    fontSize: 11,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 4),
-          // School selector
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.school, color: Colors.white, size: 16),
-                const SizedBox(width: 4),
-                DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    value: _selectedSchool,
-                    isDense: true,
-                    dropdownColor: AppColors.primary,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    icon: const Icon(
-                      Icons.keyboard_arrow_down,
-                      color: Colors.white,
-                      size: 16,
-                    ),
-                    items: ['Ecstasy School 1', 'Ecstasy School 2']
-                        .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                        .toList(),
-                    onChanged: (v) => setState(() => _selectedSchool = v!),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 4),
-          // Notification bell
-          Stack(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.notifications_none_outlined,
-                    color: Colors.white, size: 26),
-                onPressed: () {},
-              ),
-              Positioned(
-                right: 8,
-                top: 8,
-                child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: const BoxDecoration(
-                    color: Colors.red,
-                    shape: BoxShape.circle,
-                  ),
-                  constraints:
-                      const BoxConstraints(minWidth: 16, minHeight: 16),
-                  child: const Text(
-                    "3",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 9,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          // Profile avatar
-          GestureDetector(
-            onTap: widget.onOpenProfile,
-            child: Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.white, width: 2),
-              ),
-              child: const CircleAvatar(
-                radius: 18,
-                backgroundColor: Colors.white,
-                child: Icon(Icons.person, color: AppColors.primary, size: 22),
-              ),
+          Positioned(
+            left: _fabPosition.dx,
+            top: _fabPosition.dy,
+            child: GestureDetector(
+              onPanUpdate: (details) {
+                setState(() {
+                  _fabPosition += details.delta;
+                });
+              },
+              child: _buildChatFab(),
             ),
           ),
         ],
@@ -289,7 +288,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
         Expanded(
           child: _buildStatCard(
             icon: Icons.people,
-            iconBgColor: const Color(0xFF4361EE),
+            iconBgColor: const Color(0xFF0038FF),
             label: "Students",
             value: "1,245",
             change: "↑ 12 this month",
@@ -443,7 +442,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
               _buildQuickActionItem(
                 Icons.person_add,
                 "Add\nStudent",
-                const Color(0xFF4361EE),
+                const Color(0xFF0038FF),
                 widget.onAddStudent,
               ),
               _buildQuickActionItem(
@@ -1299,34 +1298,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
                       FlSpot(1, 10),
                       FlSpot(2, 12),
                       FlSpot(3, 14),
-                      FlSpot(4, 18.7),
-                      FlSpot(5, 16),
-                      FlSpot(6, 14),
-                      FlSpot(7, 12),
-                      FlSpot(8, 10),
-                      FlSpot(9, 15),
-                      FlSpot(10, 18),
-                      FlSpot(11, 22),
                     ],
-                    isCurved: true,
-                    color: const Color(0xFFEF4444),
-                    barWidth: 2.5,
-                    isStrokeCapRound: true,
-                    dotData: FlDotData(
-                      show: true,
-                      getDotPainter: (spot, percent, barData, index) {
-                        return FlDotCirclePainter(
-                          radius: 3,
-                          color: const Color(0xFFEF4444),
-                          strokeWidth: 1.5,
-                          strokeColor: Colors.white,
-                        );
-                      },
-                    ),
-                    belowBarData: BarAreaData(
-                      show: true,
-                      color: const Color(0xFFEF4444).withValues(alpha: 0.08),
-                    ),
                   ),
                 ],
               ),

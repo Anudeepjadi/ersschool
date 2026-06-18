@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
+import '../widgets/admin_app_bar.dart';
 
 class AdminBranchesTab extends StatefulWidget {
   const AdminBranchesTab({super.key});
@@ -21,7 +22,7 @@ class _AdminBranchesTabState extends State<AdminBranchesTab> {
       'status': 'Active',
       'established': '2010',
       'principal': 'Dr. Ravi Shankar',
-      'color': const Color(0xFF4361EE),
+      'color': const Color(0xFF0038FF),
     },
     {
       'name': 'Ecstasy School - City Center',
@@ -90,6 +91,10 @@ class _AdminBranchesTabState extends State<AdminBranchesTab> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FF),
+      appBar: const AdminAppBar(
+        title: "Branches",
+        subtitle: "Manage school branches and locations",
+      ),
       body: Column(
         children: [
           _buildHeader(activeBranches, totalStudents, totalTeachers),
@@ -133,54 +138,17 @@ class _AdminBranchesTabState extends State<AdminBranchesTab> {
   Widget _buildHeader(int active, int students, int teachers) {
     return Container(
       width: double.infinity,
-      decoration: const BoxDecoration(
-        color: AppColors.primary,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(30),
-          bottomRight: Radius.circular(30),
-        ),
-      ),
-      padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top + 16,
-        left: 20,
-        right: 20,
-        bottom: 24,
-      ),
+      color: Colors.white,
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Branches",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            "Manage school branches and locations",
-            style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.8),
-              fontSize: 13,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              _buildMiniStat(
-                  "Branches", "${_branches.length}", Icons.business),
-              const SizedBox(width: 10),
-              _buildMiniStat("Students", "$students", Icons.people),
-              const SizedBox(width: 10),
-              _buildMiniStat("Teachers", "$teachers", Icons.school),
-            ],
-          ),
-          const SizedBox(height: 16),
+          // Search bar
           Container(
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey.shade200),
             ),
             child: TextField(
               controller: _searchController,
@@ -188,42 +156,46 @@ class _AdminBranchesTabState extends State<AdminBranchesTab> {
               decoration: InputDecoration(
                 hintText: "Search branches...",
                 hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 13),
-                prefixIcon:
-                    Icon(Icons.search, color: Colors.grey.shade400, size: 20),
+                prefixIcon: Icon(Icons.search, color: Colors.grey.shade400, size: 20),
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.symmetric(vertical: 12),
               ),
             ),
+          ),
+          const SizedBox(height: 16),
+          // Stats cards
+          Row(
+            children: [
+              _buildMiniStat("Branches", "${_branches.length}", Icons.business, const Color(0xFF0038FF)),
+              const SizedBox(width: 10),
+              _buildMiniStat("Students", "$students", Icons.people, const Color(0xFF10B981)),
+              const SizedBox(width: 10),
+              _buildMiniStat("Teachers", "$teachers", Icons.school, const Color(0xFFF59E0B)),
+            ],
           ),
         ],
       ),
     );
   }
 
-  Widget _buildMiniStat(String label, String value, IconData icon) {
+  Widget _buildMiniStat(String label, String value, IconData icon, Color color) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.15),
+          color: Colors.white,
           borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey.shade200),
         ),
         child: Row(
           children: [
-            Icon(icon, color: Colors.white, size: 16),
-            const SizedBox(width: 6),
+            Icon(icon, color: color, size: 20),
+            const SizedBox(width: 8),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(value,
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold)),
-                Text(label,
-                    style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.8),
-                        fontSize: 10)),
+                Text(value, style: const TextStyle(color: Color(0xFF1E2875), fontSize: 16, fontWeight: FontWeight.bold)),
+                Text(label, style: TextStyle(color: Colors.grey.shade600, fontSize: 10)),
               ],
             ),
           ],

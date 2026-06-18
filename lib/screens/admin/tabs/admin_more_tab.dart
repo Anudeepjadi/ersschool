@@ -5,7 +5,18 @@ import '../../../core/theme/app_colors.dart';
 import '../../login/login_screen.dart';
 import '../widgets/admin_app_bar.dart';
 import '../screens/admin_chat_support_screen.dart';
-
+import '../screens/admin_attendance_screen.dart';
+import '../screens/admin_fees_screen.dart';
+import '../screens/admin_examinations_screen.dart';
+import '../screens/admin_library_screen.dart';
+import '../screens/admin_transport_screen.dart';
+import '../screens/admin_hostel_screen.dart';
+import '../screens/admin_events_screen.dart';
+import '../screens/admin_communications_screen.dart';
+import '../screens/admin_id_cards_screen.dart';
+import '../screens/admin_certificates_screen.dart';
+import '../screens/admin_reports_screen.dart';
+import '../screens/admin_settings_screen.dart';
 class AdminMoreTab extends StatefulWidget {
   final VoidCallback onOpenDrawer;
 
@@ -23,7 +34,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
   String _adminLocation = 'Hyderabad, Telangana, India';
   
   File? _selectedLocalImage;
-  String _networkImageUrl = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop';
+  String? _networkImageUrl;
   
   bool _tfaEnabled = true;
   final ImagePicker _imagePicker = ImagePicker();
@@ -190,8 +201,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                                 Navigator.pop(context);
                                 setState(() {
                                   _selectedLocalImage = null; // Clear picked
-                                  // Update network photo to another professional face for demonstration
-                                  _networkImageUrl = 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200&auto=format&fit=crop';
+                                  _networkImageUrl = null; // Removed demo image
                                 });
                                 _showToast("Photo captured successfully via simulated camera!");
                               },
@@ -408,6 +418,10 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
             _buildProfileHeaderCard(),
             const SizedBox(height: 20),
 
+            // Admin Modules Grid
+            _buildAdminMenuGrid(),
+            const SizedBox(height: 20),
+
             // Account Information
             const Text(
               "Account Information",
@@ -456,13 +470,119 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
     );
   }
 
+  // 1. Admin Modules Grid
+  Widget _buildAdminMenuGrid() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "Admin Modules",
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF1E2875),
+          ),
+        ),
+        const SizedBox(height: 10),
+        GridView.count(
+          crossAxisCount: 3,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          mainAxisSpacing: 12,
+          crossAxisSpacing: 12,
+          childAspectRatio: 0.9,
+          children: [
+            _buildGridItem(Icons.how_to_reg, "Attendance", Colors.blue, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminAttendanceScreen()));
+            }),
+            _buildGridItem(Icons.receipt_long, "Fees", Colors.green, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminFeesScreen()));
+            }),
+            _buildGridItem(Icons.assignment, "Examination", Colors.orange, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminExaminationsScreen()));
+            }),
+            _buildGridItem(Icons.menu_book, "Library", Colors.purple, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminLibraryScreen()));
+            }),
+            _buildGridItem(Icons.directions_bus, "Transport", Colors.indigo, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminTransportScreen()));
+            }),
+            _buildGridItem(Icons.bed, "Hostel", Colors.teal, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminHostelScreen()));
+            }),
+            _buildGridItem(Icons.event, "Events", Colors.pink, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEventsScreen()));
+            }),
+            _buildGridItem(Icons.campaign, "Communicate", Colors.cyan, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminCommunicationsScreen()));
+            }),
+            _buildGridItem(Icons.badge, "ID Card", Colors.brown, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminIDCardsScreen()));
+            }),
+            _buildGridItem(Icons.workspace_premium, "Certificates", Colors.amber, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminCertificatesScreen()));
+            }),
+            _buildGridItem(Icons.assessment, "Reports", Colors.red, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminReportsScreen()));
+            }),
+            _buildGridItem(Icons.settings, "Settings", Colors.grey, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminSettingsScreen()));
+            }),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildGridItem(IconData icon, String label, Color color, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: color.withValues(alpha: 0.1),
+              blurRadius: 6,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.15),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, color: color, size: 24),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF1E2875),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   // 1. Profile Header Card
   Widget _buildProfileHeaderCard() {
-    ImageProvider avatarImage;
+    ImageProvider? avatarImage;
     if (_selectedLocalImage != null) {
       avatarImage = FileImage(_selectedLocalImage!);
-    } else {
-      avatarImage = NetworkImage(_networkImageUrl);
+    } else if (_networkImageUrl != null) {
+      avatarImage = NetworkImage(_networkImageUrl!);
     }
 
     return Container(
@@ -499,8 +619,11 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                 ),
                 child: CircleAvatar(
                   radius: 42,
+                  backgroundColor: Colors.grey.shade200,
                   backgroundImage: avatarImage,
-                  backgroundColor: Colors.grey.shade100,
+                  child: avatarImage == null
+                      ? Icon(Icons.person, size: 48, color: AppColors.primary)
+                      : null,
                 ),
               ),
               Positioned(
@@ -511,7 +634,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                   child: Container(
                     padding: const EdgeInsets.all(6),
                     decoration: const BoxDecoration(
-                      color: Color(0xFF4361EE),
+                      color: Color(0xFF0038FF),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
@@ -543,14 +666,14 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF4361EE).withValues(alpha: 0.1),
+                    color: const Color(0xFF0038FF).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: const Text(
                     "Super Administrator",
                     style: TextStyle(
                       fontSize: 10,
-                      color: Color(0xFF4361EE),
+                      color: Color(0xFF0038FF),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -561,9 +684,12 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                   children: [
                     const Icon(Icons.phone, size: 13, color: Colors.grey),
                     const SizedBox(width: 6),
-                    Text(
-                      _adminPhone,
-                      style: const TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.w500),
+                    Expanded(
+                      child: Text(
+                        _adminPhone,
+                        style: const TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.w500),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ],
                 ),
@@ -573,9 +699,12 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                   children: [
                     const Icon(Icons.email, size: 13, color: Colors.grey),
                     const SizedBox(width: 6),
-                    Text(
-                      _adminEmail,
-                      style: const TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.w500),
+                    Expanded(
+                      child: Text(
+                        _adminEmail,
+                        style: const TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.w500),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ],
                 ),
@@ -601,14 +730,14 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
           OutlinedButton.icon(
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-              side: const BorderSide(color: Color(0xFF4361EE)),
+              side: const BorderSide(color: Color(0xFF0038FF)),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
             onPressed: _openEditProfileDialog,
-            icon: const Icon(Icons.edit, size: 14, color: Color(0xFF4361EE)),
+            icon: const Icon(Icons.edit, size: 14, color: Color(0xFF0038FF)),
             label: const Text(
               "Edit Profile",
-              style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF4361EE)),
+              style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF0038FF)),
             ),
           ),
         ],
@@ -647,7 +776,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       child: Row(
         children: [
-          Icon(icon, size: 18, color: const Color(0xFF4361EE)),
+          Icon(icon, size: 18, color: const Color(0xFF0038FF)),
           const SizedBox(width: 12),
           Text(
             label,
@@ -686,7 +815,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
           const Divider(height: 1),
           SwitchListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            secondary: const Icon(Icons.security_outlined, color: Color(0xFF4361EE), size: 18),
+            secondary: const Icon(Icons.security_outlined, color: Color(0xFF0038FF), size: 18),
             title: const Text(
               "Two-Factor Authentication",
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
@@ -747,7 +876,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
 
   Widget _buildSettingsRow(IconData icon, String title, String subtitle, {required VoidCallback onTap}) {
     return ListTile(
-      leading: Icon(icon, color: const Color(0xFF4361EE), size: 18),
+      leading: Icon(icon, color: const Color(0xFF0038FF), size: 18),
       title: Text(
         title,
         style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),

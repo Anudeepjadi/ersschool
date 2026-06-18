@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
+import '../widgets/admin_app_bar.dart';
+import '../screens/admin_chat_support_screen.dart';
 
 class AdminStudentsTab extends StatefulWidget {
   const AdminStudentsTab({super.key});
@@ -125,386 +127,341 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
 
   @override
   Widget build(BuildContext context) {
-    final activeCount = _students.where((s) => s['status'] == 'Active').length;
-    final inactiveCount = _students.length - activeCount;
+    final inactiveCount = _students.where((s) => s['status'] == 'Inactive').length;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FF),
-      body: Column(
-        children: [
-          // Header
-          _buildHeader(activeCount, inactiveCount),
-          // Filter chips
-          _buildFilterRow(),
-          // Student list
-          Expanded(
-            child: _filteredStudents.isEmpty
-                ? const Center(
-                    child: Text(
-                      "No students found",
-                      style: TextStyle(color: Colors.grey, fontSize: 14),
-                    ),
-                  )
-                : ListView.builder(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: _filteredStudents.length,
-                    itemBuilder: (context, index) {
-                      return _buildStudentCard(_filteredStudents[index]);
-                    },
+      appBar: const AdminAppBar(
+        title: "Students",
+        subtitle: "",
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Search Bar and Add Student Button
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey.shade200),
                   ),
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: showAddStudentBottomSheet,
-        backgroundColor: AppColors.primary,
-        icon: const Icon(Icons.person_add, color: Colors.white),
-        label:
-            const Text("Add Student", style: TextStyle(color: Colors.white)),
-      ),
-    );
-  }
+                  child: TextField(
+                    controller: _searchController,
+                    onChanged: (value) => setState(() => _searchQuery = value),
+                    decoration: InputDecoration(
+                      hintText: "Search students by name, roll no., admission no. or mobile...",
+                      hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 13),
+                      prefixIcon: Icon(Icons.search, color: Colors.grey.shade400, size: 20),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                ElevatedButton.icon(
+                  onPressed: showAddStudentBottomSheet,
+                  icon: const Icon(Icons.add, size: 18),
+                  label: const Text("Add Student", style: TextStyle(fontWeight: FontWeight.bold)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF0038FF),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
 
-  Widget _buildHeader(int active, int inactive) {
-    return Container(
-      width: double.infinity,
-      decoration: const BoxDecoration(
-        color: AppColors.primary,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(30),
-          bottomRight: Radius.circular(30),
-        ),
-      ),
-      padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top + 16,
-        left: 20,
-        right: 20,
-        bottom: 24,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "Students",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            "Manage all students across branches",
-            style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.8),
-              fontSize: 13,
-            ),
-          ),
-          const SizedBox(height: 16),
-          // Stats cards
-          Row(
-            children: [
-              _buildMiniStat("Total", "${_students.length}", Icons.people),
-              const SizedBox(width: 10),
-              _buildMiniStat("Active", "$active", Icons.check_circle),
-              const SizedBox(width: 10),
-              _buildMiniStat("Inactive", "$inactive", Icons.cancel),
-            ],
-          ),
-          const SizedBox(height: 16),
-          // Search bar
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: TextField(
-              controller: _searchController,
-              onChanged: (value) => setState(() => _searchQuery = value),
-              decoration: InputDecoration(
-                hintText: "Search students...",
-                hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 13),
-                prefixIcon:
-                    Icon(Icons.search, color: Colors.grey.shade400, size: 20),
-                border: InputBorder.none,
-                contentPadding: const EdgeInsets.symmetric(vertical: 12),
+            // Filter Chips Row
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              child: Row(
+                children: [
+                  _buildFilterChip('All', _selectedFilter == 'All'),
+                  const SizedBox(width: 8),
+                  _buildFilterChip('Active', _selectedFilter == 'Active'),
+                  const SizedBox(width: 8),
+                  _buildFilterChip('Inactive', _selectedFilter == 'Inactive'),
+                  const SizedBox(width: 8),
+                  _buildFilterChip('Passed Out', _selectedFilter == 'Passed Out'),
+                  const SizedBox(width: 16),
+                  TextButton.icon(
+                    onPressed: () {},
+                    icon: const Icon(Icons.filter_list, size: 16, color: Colors.grey),
+                    label: const Text("More Filters", style: TextStyle(color: Colors.grey, fontSize: 13)),
+                  ),
+                ],
               ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
+            const SizedBox(height: 24),
 
-  Widget _buildMiniStat(String label, String value, IconData icon) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.15),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          children: [
-            Icon(icon, color: Colors.white, size: 16),
-            const SizedBox(width: 6),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            // Stats Row
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              child: Row(
+                children: [
+                  SizedBox(width: 140, child: _buildStatCard("Total Students", "${_students.length}", Icons.people, const Color(0xFF0038FF), true, "12 this month")),
+                  const SizedBox(width: 12),
+                  SizedBox(width: 140, child: _buildStatCard("Boys", "642", Icons.boy, const Color(0xFF10B981), true, "8 this month")),
+                  const SizedBox(width: 12),
+                  SizedBox(width: 140, child: _buildStatCard("Girls", "603", Icons.girl, const Color(0xFFEC4899), true, "4 this month")),
+                  const SizedBox(width: 12),
+                  SizedBox(width: 140, child: _buildStatCard("Inactive", "$inactiveCount", Icons.person_off, const Color(0xFFF59E0B), false, "2 this month")),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            // Student List Header
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(value,
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold)),
-                Text(label,
-                    style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.8),
-                        fontSize: 10)),
+                Text(
+                  "Student List (${_students.length})",
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+                ),
+                Row(
+                  children: [
+                    TextButton.icon(
+                      onPressed: () {},
+                      icon: const Icon(Icons.download, size: 16, color: Colors.grey),
+                      label: const Text("Export", style: TextStyle(color: Colors.grey, fontSize: 13)),
+                    ),
+                    const SizedBox(width: 8),
+                    DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        value: 'Sort By',
+                        icon: const Icon(Icons.keyboard_arrow_down, size: 16, color: Colors.grey),
+                        style: const TextStyle(color: Colors.grey, fontSize: 13),
+                        items: ['Sort By'].map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (_) {},
+                      ),
+                    ),
+                  ],
+                ),
               ],
+            ),
+            const SizedBox(height: 12),
+
+            // Data Table
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              child: Container(
+                width: 800, // Fixed width to enable horizontal scrolling and prevent overflow
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.grey.shade200),
+                ),
+                child: Column(
+                  children: [
+                    // Table Header
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      child: Row(
+                        children: [
+                          const Expanded(flex: 3, child: Text("Student", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey))),
+                          const Expanded(flex: 2, child: Text("Class", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey))),
+                          const Expanded(flex: 2, child: Text("Roll No.", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey))),
+                          const Expanded(flex: 2, child: Text("Admission No.", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey))),
+                          const Expanded(flex: 2, child: Text("Status", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey))),
+                          const Expanded(flex: 1, child: Text("Action", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey))),
+                        ],
+                      ),
+                    ),
+                    const Divider(height: 1),
+                    // Table Rows
+                    ..._filteredStudents.map((s) => _buildTableRow(s)),
+                    // Pagination
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Showing 1 to ${_filteredStudents.length} of ${_students.length} entries", style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                          Row(
+                            children: [
+                              const Icon(Icons.chevron_left, size: 20, color: Colors.grey),
+                              const SizedBox(width: 8),
+                              _buildPageButton("1", true),
+                              _buildPageButton("2", false),
+                              _buildPageButton("3", false),
+                              const Text("...", style: TextStyle(color: Colors.grey)),
+                              _buildPageButton("125", false),
+                              const SizedBox(width: 8),
+                              const Icon(Icons.chevron_right, size: 20, color: Colors.grey),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildFilterRow() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: Row(
-        children: [
-          _buildFilterButton('All'),
-          const SizedBox(width: 8),
-          _buildFilterButton('Active'),
-          const SizedBox(width: 8),
-          _buildFilterButton('Inactive'),
-        ],
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminChatSupportScreen()));
+        },
+        backgroundColor: Colors.white,
+        child: const Icon(Icons.smart_toy, color: Color(0xFF0038FF), size: 30),
       ),
     );
   }
 
-  Widget _buildFilterButton(String label) {
-    final isSelected = _selectedFilter == label;
+  Widget _buildFilterChip(String label, bool isSelected) {
     return GestureDetector(
       onTap: () => setState(() => _selectedFilter = label),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary : Colors.white,
+          color: isSelected ? const Color(0xFF0038FF) : Colors.white,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: isSelected ? AppColors.primary : Colors.grey.shade300,
-          ),
+          border: Border.all(color: isSelected ? const Color(0xFF0038FF) : Colors.grey.shade300),
         ),
         child: Text(
           label,
           style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            color: isSelected ? Colors.white : Colors.grey.shade700,
+            fontSize: 13,
+            fontWeight: FontWeight.bold,
+            color: isSelected ? Colors.white : const Color(0xFF1E2875),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildStudentCard(Map<String, dynamic> student) {
-    final isActive = student['status'] == 'Active';
-    final avatarColor = student['gender'] == 'Male'
-        ? const Color(0xFF4361EE)
-        : const Color(0xFFEC4899);
-
+  Widget _buildStatCard(String title, String value, IconData icon, Color color, bool isPositiveTrend, String trendText) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade100),
         boxShadow: [
-          BoxShadow(
-            color: Colors.grey.shade100,
-            blurRadius: 4,
-            offset: const Offset(0, 1),
+          BoxShadow(color: Colors.grey.shade50, blurRadius: 4, offset: const Offset(0, 2)),
+        ],
+      ),
+      child: Column(
+        children: [
+          Icon(icon, color: color, size: 28),
+          const SizedBox(height: 8),
+          Text(title, style: const TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+          const SizedBox(height: 4),
+          Text(value, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+          const SizedBox(height: 6),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(isPositiveTrend ? Icons.arrow_upward : Icons.arrow_upward, size: 10, color: isPositiveTrend ? Colors.green : Colors.red),
+              const SizedBox(width: 2),
+              Text(trendText, style: TextStyle(fontSize: 10, color: isPositiveTrend ? Colors.green : Colors.red, fontWeight: FontWeight.bold)),
+            ],
           ),
         ],
       ),
-      child: ListTile(
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-        leading: CircleAvatar(
-          backgroundColor: avatarColor.withValues(alpha: 0.1),
-          child: Text(
-            student['avatar'],
-            style: TextStyle(
-              color: avatarColor,
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-            ),
-          ),
+    );
+  }
+
+  Widget _buildPageButton(String page, bool isSelected) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: isSelected ? const Color(0xFF0038FF) : Colors.transparent,
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Text(
+        page,
+        style: TextStyle(
+          color: isSelected ? Colors.white : Colors.grey,
+          fontWeight: FontWeight.bold,
+          fontSize: 12,
         ),
-        title: Text(
-          student['name'],
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 14,
-            color: Color(0xFF1E2875),
-          ),
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 2),
-            Text(
-              "${student['class']}  •  ${student['roll']}",
-              style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              student['phone'],
-              style: TextStyle(fontSize: 10, color: Colors.grey.shade400),
-            ),
-          ],
-        ),
-        trailing: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-              decoration: BoxDecoration(
-                color: isActive
-                    ? const Color(0xFF10B981).withValues(alpha: 0.1)
-                    : const Color(0xFFEF4444).withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(
-                student['status'],
-                style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w600,
-                  color: isActive
-                      ? const Color(0xFF10B981)
-                      : const Color(0xFFEF4444),
-                ),
-              ),
-            ),
-            const SizedBox(height: 4),
-            Icon(Icons.arrow_forward_ios,
-                size: 12, color: Colors.grey.shade400),
-          ],
-        ),
-        onTap: () {
-          _showStudentDetailsDialog(student);
-        },
       ),
     );
   }
 
-  void _showStudentDetailsDialog(Map<String, dynamic> student) {
+  Widget _buildTableRow(Map<String, dynamic> student) {
     final isActive = student['status'] == 'Active';
-    final themeColor = student['gender'] == 'Male'
-        ? const Color(0xFF4361EE)
-        : const Color(0xFFEC4899);
+    final avatarColor = student['gender'] == 'Male' ? const Color(0xFF0038FF) : const Color(0xFFEC4899);
 
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Row(
+            children: [
+              Expanded(
+                flex: 3,
+                child: Row(
                   children: [
-                    const Text(
-                      "Student Profile",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF1E2875),
-                      ),
+                    CircleAvatar(
+                      radius: 16,
+                      backgroundColor: avatarColor.withValues(alpha: 0.1),
+                      child: Text(student['avatar'], style: TextStyle(color: avatarColor, fontWeight: FontWeight.bold, fontSize: 12)),
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.close, size: 20),
-                      onPressed: () => Navigator.pop(context),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(student['name'], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875))),
+                          const SizedBox(height: 2),
+                          Text("${student['name'].split(' ')[0].toLowerCase()}@email.com\n${student['phone']}", style: TextStyle(fontSize: 10, color: Colors.grey.shade500)),
+                        ],
+                      ),
                     ),
                   ],
                 ),
-                const Divider(),
-                const SizedBox(height: 10),
-                CircleAvatar(
-                  radius: 36,
-                  backgroundColor: themeColor.withValues(alpha: 0.1),
-                  child: Text(
-                    student['avatar'],
-                    style: TextStyle(
-                      color: themeColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 22,
+              ),
+              Expanded(flex: 2, child: Text(student['class'], style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)))),
+              Expanded(flex: 2, child: Text(student['roll'].replaceAll("Roll No: ", ""), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)))),
+              const Expanded(flex: 2, child: Text("ECS00123", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)))),
+              Expanded(
+                flex: 2,
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: isActive ? Colors.transparent : const Color(0xFFEF4444).withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        student['status'],
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          color: isActive ? const Color(0xFF10B981) : const Color(0xFFEF4444),
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-                const SizedBox(height: 12),
-                Text(
-                  student['name'],
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1E2875),
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                  decoration: BoxDecoration(
-                    color: isActive
-                        ? const Color(0xFF10B981).withValues(alpha: 0.1)
-                        : const Color(0xFFEF4444).withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    student['status'],
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      color: isActive ? const Color(0xFF10B981) : const Color(0xFFEF4444),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                _buildDetailRow(Icons.class_outlined, "Class", student['class']),
-                const Divider(height: 14),
-                _buildDetailRow(Icons.tag, "Roll Number", student['roll'].replaceAll("Roll No: ", "")),
-                const Divider(height: 14),
-                _buildDetailRow(Icons.phone_outlined, "Parent Phone", student['phone']),
-                const Divider(height: 14),
-                _buildDetailRow(Icons.face_outlined, "Gender", student['gender']),
-                const SizedBox(height: 10),
-              ],
-            ),
+              ),
+              Expanded(flex: 1, child: IconButton(icon: const Icon(Icons.more_vert, size: 18, color: Colors.grey), onPressed: () {})),
+            ],
           ),
-        );
-      },
-    );
-  }
-
-  Widget _buildDetailRow(IconData icon, String label, String value) {
-    return Row(
-      children: [
-        Icon(icon, size: 18, color: const Color(0xFF4361EE)),
-        const SizedBox(width: 10),
-        Text(
-          label,
-          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey),
         ),
-        const Spacer(),
-        Text(
-          value,
-          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
-        ),
+        const Divider(height: 1),
       ],
     );
   }
@@ -513,6 +470,8 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
     final nameController = TextEditingController();
     final rollController = TextEditingController();
     final phoneController = TextEditingController();
+    final passwordController = TextEditingController();
+    bool allowPhoneLogin = true;
     String selectedClass = 'Class 10-A';
     String selectedGender = 'Male';
     String selectedStatus = 'Active';
@@ -611,6 +570,28 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
                         ),
                       ),
                     ),
+                    const SizedBox(height: 14),
+                    TextField(
+                      controller: passwordController,
+                      obscureText: true,
+                      decoration: const InputDecoration(
+                        labelText: "Login Password",
+                        prefixIcon: Icon(Icons.lock_outline),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    SwitchListTile(
+                      title: const Text("Allow Login with Phone Number", style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                      value: allowPhoneLogin,
+                      onChanged: (val) {
+                        setModalState(() => allowPhoneLogin = val);
+                      },
+                      activeTrackColor: AppColors.primary,
+                      contentPadding: EdgeInsets.zero,
+                    ),
                     const SizedBox(height: 16),
                     const Text(
                       "Gender",
@@ -690,6 +671,8 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
                           'status': selectedStatus,
                           'avatar': avatarStr,
                           'phone': phoneController.text.trim().isEmpty ? "N/A" : phoneController.text.trim(),
+                          'password': passwordController.text.trim(),
+                          'phoneLoginEnabled': allowPhoneLogin,
                           'gender': selectedGender,
                         };
 

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../core/theme/app_colors.dart';
+import '../dashboard/widgets/student_curved_header.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Data model helpers
@@ -698,14 +699,37 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
       backgroundColor: const Color(0xFFF2F4F8),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
-        child: Center(
-          child: ConstrainedBox(
-            // cap max width for desktop
-            constraints: const BoxConstraints(maxWidth: 960),
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: hPad, vertical: 16),
-              child: Column(children: [
-                // ── 1. Profile header ────────────────────────────────────────
+        child: Column(
+          children: [
+            StudentCurvedHeader(
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.menu, color: Colors.white, size: 28),
+                    onPressed: () {
+                      Scaffold.of(context).openDrawer();
+                    },
+                  ),
+                  const SizedBox(width: 8),
+                  const Text(
+                    "My Info",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Center(
+              child: ConstrainedBox(
+                // cap max width for desktop
+                constraints: const BoxConstraints(maxWidth: 960),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: hPad, vertical: 16),
+                  child: Column(children: [
+                    // ── 1. Profile header ────────────────────────────────────────
                 _buildProfileCard(),
                 const SizedBox(height: 14),
 
@@ -747,6 +771,8 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
               ]),
             ),
           ),
+        ),
+          ],
         ),
       ),
     );

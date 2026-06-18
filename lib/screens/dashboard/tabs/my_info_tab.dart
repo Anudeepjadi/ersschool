@@ -22,8 +22,8 @@ class MyInfoTab extends StatelessWidget {
           children: [
             const CircleAvatar(
               radius: 60,
-              backgroundColor: AppColors.secondary,
-              backgroundImage: AssetImage("assets/images/student_profile.png"),
+              backgroundColor: Colors.white,
+              child: Icon(Icons.person, color: AppColors.primary, size: 80),
             ),
             const SizedBox(height: 16),
             const Text(

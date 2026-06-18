@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
+import '../widgets/student_curved_header.dart';
 import '../../login/login_screen.dart';
 import '../../transport/transport_screen.dart';
 import '../../calendar/calendar_screen.dart';
@@ -136,25 +137,7 @@ class MoreTab extends StatelessWidget {
 
   // ── Header ─────────────────────────────────────────────────────────────────
   Widget _buildHeader(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [AppColors.primary, Color(0xFF3B5BFF)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(30),
-          bottomRight: Radius.circular(30),
-        ),
-      ),
-      padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top + 16,
-        left: 20,
-        right: 20,
-        bottom: 28,
-      ),
+    return StudentCurvedHeader(
       child: Row(
         children: [
           // Profile avatar
@@ -163,21 +146,13 @@ class MoreTab extends StatelessWidget {
               shape: BoxShape.circle,
               border: Border.all(color: Colors.white, width: 2.5),
             ),
-            child: CircleAvatar(
+            child: const CircleAvatar(
               radius: 32,
               backgroundColor: Colors.white,
-              child: ClipOval(
-                child: Image.asset(
-                  'assets/images/student_profile.png',
-                  width: 64,
-                  height: 64,
-                  fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => const Icon(
-                    Icons.person,
-                    color: AppColors.primary,
-                    size: 36,
-                  ),
-                ),
+              child: Icon(
+                Icons.person,
+                color: AppColors.primary,
+                size: 36,
               ),
             ),
           ),

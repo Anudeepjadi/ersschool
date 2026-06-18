@@ -34,7 +34,7 @@ class _AdminHelpCenterScreenState extends State<AdminHelpCenterScreen> {
             ),
           ],
         ),
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.primaryDark,
         foregroundColor: Colors.white,
         elevation: 0,
       ),

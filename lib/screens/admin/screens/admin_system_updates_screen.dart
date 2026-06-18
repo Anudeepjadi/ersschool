@@ -60,7 +60,7 @@ class _AdminSystemUpdatesScreenState extends State<AdminSystemUpdatesScreen> {
             ),
           ],
         ),
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.primaryDark,
         foregroundColor: Colors.white,
         elevation: 0,
       ),

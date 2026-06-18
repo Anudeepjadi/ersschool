@@ -37,7 +37,7 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
             ),
           ],
         ),
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.primaryDark,
         foregroundColor: Colors.white,
         elevation: 0,
       ),

@@ -134,7 +134,7 @@ class _AdminFeesScreenState extends State<AdminFeesScreen> {
             ),
           ],
         ),
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.primaryDark,
         foregroundColor: Colors.white,
         elevation: 0,
       ),

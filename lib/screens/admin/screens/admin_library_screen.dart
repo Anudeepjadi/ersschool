@@ -146,7 +146,7 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
             ),
           ],
         ),
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.primaryDark,
         foregroundColor: Colors.white,
         elevation: 0,
         bottom: TabBar(
@@ -171,7 +171,7 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {},
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.primaryDark,
         icon: const Icon(Icons.add, color: Colors.white),
         label: const Text("Add Book", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
       ),

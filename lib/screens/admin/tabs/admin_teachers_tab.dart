@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
+import '../widgets/admin_app_bar.dart';
 
 class AdminTeachersTab extends StatefulWidget {
   const AdminTeachersTab({super.key});
@@ -140,6 +141,10 @@ class AdminTeachersTabState extends State<AdminTeachersTab> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FF),
+      appBar: const AdminAppBar(
+        title: "Teachers",
+        subtitle: "Manage all teaching staff",
+      ),
       body: Column(
         children: [
           _buildHeader(activeCount, onLeaveCount),
@@ -177,65 +182,43 @@ class AdminTeachersTabState extends State<AdminTeachersTab> {
   Widget _buildHeader(int active, int onLeave) {
     return Container(
       width: double.infinity,
-      decoration: const BoxDecoration(
-        color: AppColors.primary,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(30),
-          bottomRight: Radius.circular(30),
-        ),
-      ),
-      padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top + 16,
-        left: 20,
-        right: 20,
-        bottom: 24,
-      ),
+      color: Colors.white,
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Teachers",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            "Manage all teaching staff",
-            style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.8),
-              fontSize: 13,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              _buildMiniStat("Total", "${_teachers.length}", Icons.school),
-              const SizedBox(width: 10),
-              _buildMiniStat("Active", "$active", Icons.check_circle),
-              const SizedBox(width: 10),
-              _buildMiniStat("On Leave", "$onLeave", Icons.event_busy),
-            ],
-          ),
-          const SizedBox(height: 16),
+          // Search bar
           Container(
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey.shade200),
             ),
             child: TextField(
               controller: _searchController,
               onChanged: (value) => setState(() => _searchQuery = value),
               decoration: InputDecoration(
-                hintText: "Search teachers...",
+                hintText: "Search teachers by name or subject...",
                 hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 13),
-                prefixIcon:
-                    Icon(Icons.search, color: Colors.grey.shade400, size: 20),
+                prefixIcon: Icon(Icons.search, color: Colors.grey.shade400, size: 20),
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.symmetric(vertical: 12),
               ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          // Stats cards
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            child: Row(
+              children: [
+                SizedBox(width: 140, child: _buildMiniStat("Total", "${_teachers.length}", Icons.school, const Color(0xFF0038FF))),
+                const SizedBox(width: 10),
+                SizedBox(width: 140, child: _buildMiniStat("Active", "$active", Icons.check_circle, const Color(0xFF10B981))),
+                const SizedBox(width: 10),
+                SizedBox(width: 140, child: _buildMiniStat("On Leave", "$onLeave", Icons.event_busy, const Color(0xFFF59E0B))),
+              ],
             ),
           ),
         ],
@@ -243,34 +226,28 @@ class AdminTeachersTabState extends State<AdminTeachersTab> {
     );
   }
 
-  Widget _buildMiniStat(String label, String value, IconData icon) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.15),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          children: [
-            Icon(icon, color: Colors.white, size: 16),
-            const SizedBox(width: 6),
-            Column(
+  Widget _buildMiniStat(String label, String value, IconData icon, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: color, size: 20),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(value,
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold)),
-                Text(label,
-                    style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.8),
-                        fontSize: 10)),
+                Text(value, style: const TextStyle(color: Color(0xFF1E2875), fontSize: 16, fontWeight: FontWeight.bold)),
+                Text(label, style: TextStyle(color: Colors.grey.shade600, fontSize: 10), overflow: TextOverflow.ellipsis),
               ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -318,7 +295,7 @@ class AdminTeachersTabState extends State<AdminTeachersTab> {
   Widget _buildTeacherCard(Map<String, dynamic> teacher) {
     final isActive = teacher['status'] == 'Active';
     final avatarColor = teacher['gender'] == 'Male'
-        ? const Color(0xFF4361EE)
+        ? const Color(0xFF0038FF)
         : const Color(0xFFEC4899);
 
     // Color-code subjects
@@ -444,7 +421,7 @@ class AdminTeachersTabState extends State<AdminTeachersTab> {
   void _showTeacherDetailsDialog(Map<String, dynamic> teacher) {
     final isActive = teacher['status'] == 'Active';
     final themeColor = teacher['gender'] == 'Male'
-        ? const Color(0xFF4361EE)
+        ? const Color(0xFF0038FF)
         : const Color(0xFFEC4899);
 
     showDialog(
@@ -537,7 +514,7 @@ class AdminTeachersTabState extends State<AdminTeachersTab> {
   Widget _buildDetailRow(IconData icon, String label, String value) {
     return Row(
       children: [
-        Icon(icon, size: 18, color: const Color(0xFF4361EE)),
+        Icon(icon, size: 18, color: const Color(0xFF0038FF)),
         const SizedBox(width: 10),
         Text(
           label,

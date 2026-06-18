@@ -32,7 +32,7 @@ class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
             ),
           ],
         ),
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.primaryDark,
         foregroundColor: Colors.white,
         elevation: 0,
       ),

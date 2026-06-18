@@ -37,7 +37,7 @@ class _AdminCertificatesScreenState extends State<AdminCertificatesScreen> {
             ),
           ],
         ),
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.primaryDark,
         foregroundColor: Colors.white,
         elevation: 0,
       ),

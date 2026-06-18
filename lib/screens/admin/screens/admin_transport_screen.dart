@@ -128,7 +128,7 @@ class _AdminTransportScreenState extends State<AdminTransportScreen> with Single
             ),
           ],
         ),
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.primaryDark,
         foregroundColor: Colors.white,
         elevation: 0,
         bottom: TabBar(
@@ -153,7 +153,7 @@ class _AdminTransportScreenState extends State<AdminTransportScreen> with Single
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {},
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.primaryDark,
         icon: const Icon(Icons.add_road, color: Colors.white),
         label: const Text("New Route", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
       ),
