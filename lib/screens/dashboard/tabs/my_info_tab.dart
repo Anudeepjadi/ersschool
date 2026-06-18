@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/utils/profile_manager.dart';
 
 class MyInfoTab extends StatelessWidget {
   const MyInfoTab({super.key});
@@ -20,10 +22,16 @@ class MyInfoTab extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            const CircleAvatar(
-              radius: 60,
-              backgroundColor: Colors.white,
-              child: Icon(Icons.person, color: AppColors.primary, size: 80),
+            ValueListenableBuilder<String?>(
+              valueListenable: ProfileManager().studentProfileImagePath,
+              builder: (context, path, _) {
+                return CircleAvatar(
+                  radius: 60,
+                  backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+                  backgroundImage: path != null ? FileImage(File(path)) : null,
+                  child: path == null ? const Icon(Icons.person, size: 60, color: AppColors.primary) : null,
+                );
+              },
             ),
             const SizedBox(height: 16),
             const Text(

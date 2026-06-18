@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../login/login_screen.dart';
+import '../../../core/utils/profile_manager.dart';
 import '../widgets/admin_app_bar.dart';
-import '../screens/admin_chat_support_screen.dart';
+import '../widgets/ai_bot_fab.dart';
 import '../screens/admin_attendance_screen.dart';
 import '../screens/admin_fees_screen.dart';
 import '../screens/admin_examinations_screen.dart';
@@ -18,9 +19,9 @@ import '../screens/admin_certificates_screen.dart';
 import '../screens/admin_reports_screen.dart';
 import '../screens/admin_settings_screen.dart';
 class AdminMoreTab extends StatefulWidget {
-  final VoidCallback onOpenDrawer;
+  final VoidCallback? onOpenDrawer;
 
-  const AdminMoreTab({super.key, required this.onOpenDrawer});
+  const AdminMoreTab({super.key, this.onOpenDrawer});
 
   @override
   State<AdminMoreTab> createState() => _AdminMoreTabState();
@@ -39,6 +40,15 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
   bool _tfaEnabled = true;
   final ImagePicker _imagePicker = ImagePicker();
 
+  @override
+  void initState() {
+    super.initState();
+    final path = ProfileManager().adminProfileImagePath.value;
+    if (path != null) {
+      _selectedLocalImage = File(path);
+    }
+  }
+
   // Pick image helper
   Future<void> _pickImage(ImageSource source) async {
     try {
@@ -52,6 +62,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
         setState(() {
           _selectedLocalImage = File(image.path);
         });
+        ProfileManager().setAdminProfileImage(image.path);
         _showToast("Profile image updated successfully!");
       }
     } catch (e) {
@@ -289,6 +300,19 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                     _openSimulatedCamera();
                   },
                 ),
+                if (_selectedLocalImage != null)
+                  ListTile(
+                    leading: const Icon(Icons.delete_outline, color: Colors.red),
+                    title: const Text("Remove Photo", style: TextStyle(color: Colors.red)),
+                    onTap: () {
+                      Navigator.pop(context);
+                      setState(() {
+                        _selectedLocalImage = null;
+                        _networkImageUrl = null;
+                      });
+                      ProfileManager().setAdminProfileImage(null);
+                    },
+                  ),
               ],
             ),
           ),
@@ -407,7 +431,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
         subtitle: 'Manage your account details',
         onOpenDrawer: widget.onOpenDrawer,
       ),
-      floatingActionButton: _buildChatFab(),
+
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
@@ -467,6 +491,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
           ],
         ),
       ),
+      floatingActionButton: const AiBotFab(),
     );
   }
 
@@ -939,42 +964,6 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
           );
         },
       ),
-    );
-  }
-
-  // 6. CHATBOT FAB
-  Widget _buildChatFab() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.shade300,
-                blurRadius: 6,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: const Text(
-            "Hi! How can I help you?",
-            style: TextStyle(fontSize: 11, color: Color(0xFF1E2875)),
-          ),
-        ),
-        const SizedBox(height: 6),
-        FloatingActionButton(
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminChatSupportScreen()));
-          },
-          backgroundColor: AppColors.primary,
-          child: const Icon(Icons.smart_toy, color: Colors.white, size: 28),
-        ),
-      ],
     );
   }
 }

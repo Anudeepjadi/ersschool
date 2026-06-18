@@ -1,13 +1,19 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/utils/profile_manager.dart';
+import '../../../widgets/calendar_popup.dart';
 
 // Import sub-screens for quick action routing
 import '../screens/admin_attendance_screen.dart';
 import '../screens/admin_fees_screen.dart';
 import '../screens/admin_communications_screen.dart';
 import '../screens/admin_chat_support_screen.dart';
+import '../screens/admin_events_screen.dart';
+import '../../ai_assistant/ai_assistant_screen.dart';
 import '../widgets/admin_app_bar.dart';
+import '../widgets/ai_bot_fab.dart';
 
 class AdminHomeTab extends StatefulWidget {
   final VoidCallback onOpenDrawer;
@@ -33,16 +39,37 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
   String _attendanceFilter = 'Today';
   String _chartFilter = 'This Year';
   
-  Offset _fabPosition = Offset.zero;
-  bool _isFabInitialized = false;
+  late List<Map<String, dynamic>> _quickActions;
+
+  @override
+  void initState() {
+    super.initState();
+    _quickActions = [
+      {'id': 'add_student', 'icon': Icons.person_add, 'label': "Add\nStudent", 'color': const Color(0xFF0038FF)},
+      {'id': 'add_teacher', 'icon': Icons.people_alt_outlined, 'label': "Add\nTeacher", 'color': const Color(0xFF1E2875)},
+      {'id': 'mark_attendance', 'icon': Icons.how_to_reg, 'label': "Mark\nAttendance", 'color': const Color(0xFFF59E0B)},
+      {'id': 'collect_fees', 'icon': Icons.receipt_long, 'label': "Collect\nFees", 'color': const Color(0xFF10B981)},
+      {'id': 'notice_board', 'icon': Icons.campaign, 'label': "Notice\nBoard", 'color': const Color(0xFF3B82F6)},
+      {'id': 'ai_assistant', 'icon': Icons.smart_toy, 'label': "AI\nAssistant", 'color': const Color(0xFF8B5CF6)},
+      {'id': 'more', 'icon': Icons.more_horiz, 'label': "More", 'color': const Color(0xFF6B7280)},
+    ];
+  }
+
+  VoidCallback _getQuickActionCallback(String id) {
+    switch (id) {
+      case 'add_student': return widget.onAddStudent;
+      case 'add_teacher': return widget.onAddTeacher;
+      case 'mark_attendance': return () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminAttendanceScreen()));
+      case 'collect_fees': return () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminFeesScreen()));
+      case 'notice_board': return () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminCommunicationsScreen()));
+      case 'ai_assistant': return () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AiAssistantScreen()));
+      case 'more': return widget.onOpenDrawer;
+      default: return () {};
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    if (!_isFabInitialized) {
-      final size = MediaQuery.of(context).size;
-      _fabPosition = Offset(size.width - 120, size.height - 240);
-      _isFabInitialized = true;
-    }
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -50,61 +77,6 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
         title: "Welcome Admin 👋",
         subtitle: "Here's what's happening today.",
         onOpenDrawer: widget.onOpenDrawer,
-        actions: [
-
-          // Notification bell
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.notifications_none_outlined,
-                    color: Colors.white, size: 26),
-                onPressed: () {},
-              ),
-              Positioned(
-                right: 8,
-                top: 8,
-                child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: const BoxDecoration(
-                    color: Colors.red,
-                    shape: BoxShape.circle,
-                  ),
-                  constraints:
-                      const BoxConstraints(minWidth: 16, minHeight: 16),
-                  child: const Text(
-                    "3",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 9,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(width: 4),
-          // Profile avatar
-          Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: GestureDetector(
-              onTap: widget.onOpenProfile,
-              child: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 2),
-                ),
-                child: const CircleAvatar(
-                  radius: 16,
-                  backgroundColor: Colors.white,
-                  child: Icon(Icons.person, color: AppColors.primary, size: 20),
-                ),
-              ),
-            ),
-          ),
-        ],
       ),
       body: Stack(
         children: [
@@ -120,59 +92,6 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
                 children: [
                   const SizedBox(height: 16),
                   
-                  // School Selector Container
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryDark.withValues(alpha: 0.05),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: AppColors.primaryDark.withValues(alpha: 0.1)),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: AppColors.primaryDark.withValues(alpha: 0.1),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(Icons.school, color: AppColors.primaryDark, size: 20),
-                        ),
-                        const SizedBox(width: 12),
-                        const Text(
-                          "Selected School",
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const Spacer(),
-                        DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            value: _selectedSchool,
-                            isDense: true,
-                            dropdownColor: Colors.white,
-                            style: const TextStyle(
-                              color: AppColors.primaryDark,
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            icon: const Icon(
-                              Icons.keyboard_arrow_down,
-                              color: AppColors.primaryDark,
-                              size: 18,
-                            ),
-                            items: ['Ecstasy School 1', 'Ecstasy School 2']
-                                .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                                .toList(),
-                            onChanged: (v) => setState(() => _selectedSchool = v!),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                   const SizedBox(height: 16),  // 2. Date display
                   _buildDateDisplay(),
 
@@ -205,27 +124,14 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
                 ],
               ),
             ),
-          ],
-        ),
-      ),
-          Positioned(
-            left: _fabPosition.dx,
-            top: _fabPosition.dy,
-            child: GestureDetector(
-              onPanUpdate: (details) {
-                setState(() {
-                  _fabPosition += details.delta;
-                });
-              },
-              child: _buildChatFab(),
+              ],
             ),
           ),
         ],
       ),
+      floatingActionButton: const AiBotFab(),
     );
-  }
-
-  // ══════════════════════════════════════════════════════════════════════════
+  }  // ══════════════════════════════════════════════════════════════════════════
   // 2. DATE DISPLAY
   // ══════════════════════════════════════════════════════════════════════════
   Widget _buildDateDisplay() {
@@ -244,35 +150,41 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: const Color(0xFFF0F4FF),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.calendar_today, size: 14, color: AppColors.primary),
-              const SizedBox(width: 6),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    dateStr,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF1E2875),
+        InkWell(
+          onTap: () {
+            showCalendarPopup(context);
+          },
+          borderRadius: BorderRadius.circular(8),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF0F4FF),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.calendar_today, size: 14, color: AppColors.primary),
+                const SizedBox(width: 6),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      dateStr,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF1E2875),
+                      ),
                     ),
-                  ),
-                  Text(
-                    dayStr,
-                    style: const TextStyle(fontSize: 10, color: Colors.grey),
-                  ),
-                ],
-              ),
-            ],
+                    Text(
+                      dayStr,
+                      style: const TextStyle(fontSize: 10, color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ],
@@ -417,83 +329,116 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
                 color: Color(0xFF1E2875),
               ),
             ),
-            Row(
-              children: [
-                const Text(
-                  "Customize",
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.w600,
-                  ),
+            InkWell(
+              onTap: _showCustomizeBottomSheet,
+              borderRadius: BorderRadius.circular(12),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                child: Row(
+                  children: [
+                    const Text(
+                      "Customize",
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Icon(Icons.settings, size: 14, color: AppColors.primary.withValues(alpha: 0.7)),
+                  ],
                 ),
-                const SizedBox(width: 4),
-                Icon(Icons.settings, size: 14, color: AppColors.primary.withValues(alpha: 0.7)),
-              ],
+              ),
             ),
           ],
         ),
         const SizedBox(height: 14),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          physics: const BouncingScrollPhysics(),
-          child: Row(
-            children: [
-              _buildQuickActionItem(
-                Icons.person_add,
-                "Add\nStudent",
-                const Color(0xFF0038FF),
-                widget.onAddStudent,
-              ),
-              _buildQuickActionItem(
-                Icons.people_alt_outlined,
-                "Add\nTeacher",
-                const Color(0xFF1E2875),
-                widget.onAddTeacher,
-              ),
-              _buildQuickActionItem(
-                Icons.how_to_reg,
-                "Mark\nAttendance",
-                const Color(0xFFF59E0B),
-                () {
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminAttendanceScreen()));
-                },
-              ),
-              _buildQuickActionItem(
-                Icons.receipt_long,
-                "Collect\nFees",
-                const Color(0xFF10B981),
-                () {
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminFeesScreen()));
-                },
-              ),
-              _buildQuickActionItem(
-                Icons.campaign,
-                "Notice\nBoard",
-                const Color(0xFF3B82F6),
-                () {
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminCommunicationsScreen()));
-                },
-              ),
-              _buildQuickActionItem(
-                Icons.more_horiz,
-                "More",
-                const Color(0xFF6B7280),
-                () {
-                  widget.onOpenDrawer();
-                },
-              ),
-            ],
+        SizedBox(
+          width: double.infinity,
+          child: Wrap(
+            spacing: 12,
+            runSpacing: 16,
+            alignment: WrapAlignment.start,
+            children: _quickActions.map((action) {
+              return _buildQuickActionItem(
+                action['icon'] as IconData,
+                action['label'] as String,
+                action['color'] as Color,
+                _getQuickActionCallback(action['id'] as String),
+              );
+            }).toList(),
           ),
         ),
       ],
     );
   }
 
+  void _showCustomizeBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Container(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              height: 450,
+              child: Column(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Customize Quick Actions", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Text("Drag to reorder the icons below.", style: TextStyle(fontSize: 12, color: Colors.grey)),
+                  ),
+                  const SizedBox(height: 10),
+                  Expanded(
+                    child: ReorderableListView(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      onReorder: (oldIndex, newIndex) {
+                        setState(() {
+                          if (newIndex > oldIndex) newIndex -= 1;
+                          final item = _quickActions.removeAt(oldIndex);
+                          _quickActions.insert(newIndex, item);
+                        });
+                        setModalState(() {});
+                      },
+                      children: _quickActions.map((action) {
+                        return ListTile(
+                          key: ValueKey(action['id']),
+                          leading: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(color: (action['color'] as Color).withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
+                            child: Icon(action['icon'] as IconData, color: action['color'] as Color, size: 20),
+                          ),
+                          title: Text((action['label'] as String).replaceAll('\n', ' '), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF1E2875))),
+                          trailing: const Icon(Icons.drag_handle, color: Colors.grey),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   Widget _buildQuickActionItem(IconData icon, String label, Color color, VoidCallback onTap) {
-    return Container(
+    return SizedBox(
       width: 74,
-      margin: const EdgeInsets.only(right: 10),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
@@ -917,12 +862,17 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
                 ),
               ),
               const SizedBox(width: 8),
-              Text(
-                "View All",
-                style: TextStyle(
-                  fontSize: 11,
-                  color: AppColors.primary,
-                  fontWeight: FontWeight.w600,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminCommunicationsScreen()));
+                },
+                child: Text(
+                  "View All",
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ],
@@ -1045,12 +995,17 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
                 ),
               ),
               const SizedBox(width: 8),
-              Text(
-                "View All",
-                style: TextStyle(
-                  fontSize: 11,
-                  color: AppColors.primary,
-                  fontWeight: FontWeight.w600,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEventsScreen()));
+                },
+                child: Text(
+                  "View All",
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ],
@@ -1323,44 +1278,6 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
         ),
         const SizedBox(width: 4),
         Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey)),
-      ],
-    );
-  }
-
-  // ══════════════════════════════════════════════════════════════════════════
-  // CHAT FAB
-  // ══════════════════════════════════════════════════════════════════════════
-  Widget _buildChatFab() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.shade300,
-                blurRadius: 6,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: const Text(
-            "Hi! How can I help you?",
-            style: TextStyle(fontSize: 11, color: Color(0xFF1E2875)),
-          ),
-        ),
-        const SizedBox(height: 6),
-        FloatingActionButton(
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminChatSupportScreen()));
-          },
-          backgroundColor: AppColors.primary,
-          child: const Icon(Icons.smart_toy, color: Colors.white, size: 28),
-        ),
       ],
     );
   }

@@ -1,10 +1,15 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
-import '../widgets/student_curved_header.dart';
+import '../../../core/utils/profile_manager.dart';
+import '../../my_info/my_info_screen.dart';
+import '../widgets/student_app_bar.dart';
 
 class FeeTab extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
-  const FeeTab({super.key, this.onOpenDrawer});
+  final Function(int)? onTabSelected;
+
+  const FeeTab({super.key, this.onOpenDrawer, this.onTabSelected});
 
   @override
   State<FeeTab> createState() => _FeeTabState();
@@ -23,9 +28,13 @@ class _FeeTabState extends State<FeeTab> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
+      appBar: StudentAppBar(
+        title: "Fee",
+        subtitle: "Manage and track your payments",
+        onOpenDrawer: widget.onOpenDrawer ?? () => Scaffold.of(context).openDrawer(),
+      ),
       body: Column(
         children: [
-          _buildHeader(),
           _buildSubTabBar(),
           Expanded(
             child: _buildTabContent(),
@@ -35,139 +44,6 @@ class _FeeTabState extends State<FeeTab> {
     );
   }
 
-  Widget _buildHeader() {
-    return StudentCurvedHeader(
-      child: Row(
-        children: [
-          IconButton(
-            icon: const Icon(Icons.menu, color: Colors.white, size: 26),
-            onPressed: widget.onOpenDrawer,
-          ),
-          const SizedBox(width: 4),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Fee",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // School selector dropdown represented as PopupMenuButton
-          PopupMenuButton<String>(
-            onSelected: (String value) {
-              setState(() {
-                _selectedSchool = value;
-              });
-            },
-            offset: const Offset(0, 40),
-            itemBuilder: (BuildContext context) {
-              return _schools.map((String school) {
-                return PopupMenuItem<String>(
-                  value: school,
-                  child: Text(school, style: const TextStyle(fontSize: 13)),
-                );
-              }).toList();
-            },
-            child: Container(
-              constraints: const BoxConstraints(maxWidth: 120),
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(Icons.school, size: 14, color: Colors.white),
-                  const SizedBox(width: 4),
-                  Flexible(
-                    child: Text(
-                      _selectedSchool,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  const SizedBox(width: 2),
-                  const Icon(Icons.keyboard_arrow_down, size: 14, color: Colors.white),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          // Notification indicator
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.notifications_none, color: Colors.white, size: 26),
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("No new notifications")),
-                  );
-                },
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-              ),
-              Positioned(
-                top: 0,
-                right: 0,
-                child: Container(
-                  padding: const EdgeInsets.all(2),
-                  decoration: const BoxDecoration(
-                    color: Colors.red,
-                    shape: BoxShape.circle,
-                  ),
-                  constraints: const BoxConstraints(
-                    minWidth: 14,
-                    minHeight: 14,
-                  ),
-                  child: const Center(
-                    child: Text(
-                      "5",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 8,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(width: 12),
-          // Student Profile Avatar
-          Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 1.5),
-            ),
-            child: const CircleAvatar(
-              radius: 16,
-              backgroundColor: Colors.white,
-              child: Icon(
-                Icons.person,
-                color: AppColors.primary,
-                size: 20,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildSubTabBar() {
     return Container(

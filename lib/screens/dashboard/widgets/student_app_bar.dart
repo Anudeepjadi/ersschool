@@ -2,16 +2,16 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/profile_manager.dart';
-import '../tabs/admin_more_tab.dart';
+import '../../my_info/my_info_screen.dart';
 
-class AdminAppBar extends StatelessWidget implements PreferredSizeWidget {
+class StudentAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final String subtitle;
   final Widget? leading;
   final VoidCallback? onOpenDrawer;
   final List<Widget>? actions;
 
-  const AdminAppBar({
+  const StudentAppBar({
     super.key,
     required this.title,
     required this.subtitle,
@@ -77,45 +77,34 @@ class AdminAppBar extends StatelessWidget implements PreferredSizeWidget {
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                 PopupMenuItem<String>(
-                  value: 'mails',
+                  value: 'notices',
                   child: Row(
                     children: [
-                      Container(padding: const EdgeInsets.all(8), decoration: BoxDecoration(color: const Color(0xFFF0F4FF), borderRadius: BorderRadius.circular(8)), child: const Icon(Icons.mail_outline, color: Color(0xFF0038FF), size: 20)),
+                      Container(padding: const EdgeInsets.all(8), decoration: BoxDecoration(color: const Color(0xFFF0F4FF), borderRadius: BorderRadius.circular(8)), child: const Icon(Icons.campaign_outlined, color: Color(0xFF0038FF), size: 20)),
                       const SizedBox(width: 12),
-                      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [const Text("Support Mails", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875))), Text("12 unread queries", style: TextStyle(fontSize: 11, color: Colors.grey.shade600))]),
+                      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [const Text("Important Notices", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875))), Text("3 new notices", style: TextStyle(fontSize: 11, color: Colors.grey.shade600))]),
                     ],
                   ),
                 ),
                 const PopupMenuDivider(),
                 PopupMenuItem<String>(
-                  value: 'chats',
+                  value: 'events',
                   child: Row(
                     children: [
-                      Container(padding: const EdgeInsets.all(8), decoration: BoxDecoration(color: const Color(0xFFF0F4FF), borderRadius: BorderRadius.circular(8)), child: const Icon(Icons.chat_bubble_outline, color: Color(0xFF0038FF), size: 20)),
+                      Container(padding: const EdgeInsets.all(8), decoration: BoxDecoration(color: const Color(0xFF10B981).withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)), child: const Icon(Icons.event, color: Color(0xFF10B981), size: 20)),
                       const SizedBox(width: 12),
-                      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [const Text("Active Chats", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875))), Text("5 unread messages", style: TextStyle(fontSize: 11, color: Colors.grey.shade600))]),
+                      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [const Text("Upcoming Events", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875))), Text("Science Fair tomorrow", style: TextStyle(fontSize: 11, color: Colors.grey.shade600))]),
                     ],
                   ),
                 ),
                 const PopupMenuDivider(),
                 PopupMenuItem<String>(
-                  value: 'payments',
+                  value: 'exams',
                   child: Row(
                     children: [
-                      Container(padding: const EdgeInsets.all(8), decoration: BoxDecoration(color: const Color(0xFF10B981).withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)), child: const Icon(Icons.payment, color: Color(0xFF10B981), size: 20)),
+                      Container(padding: const EdgeInsets.all(8), decoration: BoxDecoration(color: const Color(0xFFF59E0B).withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)), child: const Icon(Icons.assignment_outlined, color: Color(0xFFF59E0B), size: 20)),
                       const SizedBox(width: 12),
-                      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [const Text("Payments Received", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875))), Text("3 recent transactions", style: TextStyle(fontSize: 11, color: Colors.grey.shade600))]),
-                    ],
-                  ),
-                ),
-                const PopupMenuDivider(),
-                PopupMenuItem<String>(
-                  value: 'leaves',
-                  child: Row(
-                    children: [
-                      Container(padding: const EdgeInsets.all(8), decoration: BoxDecoration(color: const Color(0xFFF59E0B).withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)), child: const Icon(Icons.event_note, color: Color(0xFFF59E0B), size: 20)),
-                      const SizedBox(width: 12),
-                      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [const Text("Leave Requests", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875))), Text("2 pending approvals", style: TextStyle(fontSize: 11, color: Colors.grey.shade600))]),
+                      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [const Text("Exams", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875))), Text("Math Test on Friday", style: TextStyle(fontSize: 11, color: Colors.grey.shade600))]),
                     ],
                   ),
                 ),
@@ -145,7 +134,7 @@ class AdminAppBar extends StatelessWidget implements PreferredSizeWidget {
           padding: const EdgeInsets.only(right: 16, left: 4),
           child: GestureDetector(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminMoreTab()));
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const MyInfoScreen()));
             },
             child: Container(
               decoration: BoxDecoration(
@@ -153,7 +142,7 @@ class AdminAppBar extends StatelessWidget implements PreferredSizeWidget {
                 border: Border.all(color: Colors.white, width: 1.5),
               ),
               child: ValueListenableBuilder<String?>(
-                valueListenable: ProfileManager().adminProfileImagePath,
+                valueListenable: ProfileManager().studentProfileImagePath,
                 builder: (context, path, _) {
                   return CircleAvatar(
                     radius: 15,

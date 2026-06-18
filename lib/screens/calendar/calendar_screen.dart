@@ -1,9 +1,16 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
-import '../dashboard/widgets/student_curved_header.dart';
+import '../../core/utils/profile_manager.dart';
+import '../my_info/my_info_screen.dart';
+import '../dashboard/widgets/student_app_bar.dart';
+import '../admin/widgets/ai_bot_fab.dart';
 
 class CalendarScreen extends StatefulWidget {
-  const CalendarScreen({super.key});
+  final VoidCallback? onOpenDrawer;
+  final Function(int)? onTabSelected;
+
+  const CalendarScreen({super.key, this.onOpenDrawer, this.onTabSelected});
 
   @override
   State<CalendarScreen> createState() => _CalendarScreenState();
@@ -52,144 +59,19 @@ class _CalendarScreenState extends State<CalendarScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
+      appBar: const StudentAppBar(
+        title: "Calendar",
+        subtitle: "View your schedule and holidays",
+      ),
       body: Column(
         children: [
-          _buildHeader(),
           _buildTabBar(),
           Expanded(
             child: _buildBody(),
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildHeader() {
-    return StudentCurvedHeader(
-      child: Row(
-        children: [
-          IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white, size: 26),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          const SizedBox(width: 4),
-          const Expanded(
-            child: Text(
-              "Calendar",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          // School selector dropdown represented as PopupMenuButton
-          PopupMenuButton<String>(
-            onSelected: (String value) {
-              setState(() {
-                _selectedSchool = value;
-              });
-            },
-            offset: const Offset(0, 40),
-            itemBuilder: (BuildContext context) {
-              return _schools.map((String school) {
-                return PopupMenuItem<String>(
-                  value: school,
-                  child: Text(school, style: const TextStyle(fontSize: 13)),
-                );
-              }).toList();
-            },
-            child: Container(
-              constraints: const BoxConstraints(maxWidth: 120),
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-              margin: const EdgeInsets.only(left: 10),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(Icons.school, size: 14, color: Colors.white),
-                  const SizedBox(width: 4),
-                  Flexible(
-                    child: Text(
-                      _selectedSchool,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  const SizedBox(width: 2),
-                  const Icon(Icons.keyboard_arrow_down, size: 14, color: Colors.white),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          // Notification indicator
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.notifications_none, color: Colors.white, size: 26),
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("No new notifications")),
-                  );
-                },
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-              ),
-              Positioned(
-                top: 0,
-                right: 0,
-                child: Container(
-                  padding: const EdgeInsets.all(2),
-                  decoration: const BoxDecoration(
-                    color: Colors.red,
-                    shape: BoxShape.circle,
-                  ),
-                  constraints: const BoxConstraints(
-                    minWidth: 14,
-                    minHeight: 14,
-                  ),
-                  child: const Center(
-                    child: Text(
-                      "5",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 8,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(width: 12),
-          // Student Profile Avatar
-          Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 1.5),
-            ),
-            child: const CircleAvatar(
-              radius: 15,
-              backgroundColor: Colors.white,
-              child: Icon(Icons.person, color: AppColors.primary, size: 20),
-            ),
-          ),
-        ],
-      ),
+      floatingActionButton: const AiBotFab(),
     );
   }
 

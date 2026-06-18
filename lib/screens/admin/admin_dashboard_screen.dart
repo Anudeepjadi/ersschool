@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/utils/profile_manager.dart';
 import '../login/login_screen.dart';
 import 'tabs/admin_home_tab.dart';
 import 'tabs/admin_students_tab.dart';
@@ -151,10 +153,16 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                         shape: BoxShape.circle,
                         border: Border.all(color: Colors.white, width: 2),
                       ),
-                      child: CircleAvatar(
-                        radius: 28,
-                        backgroundColor: Colors.white,
-                        child: Icon(Icons.person, color: AppColors.primary, size: 36),
+                      child: ValueListenableBuilder<String?>(
+                        valueListenable: ProfileManager().adminProfileImagePath,
+                        builder: (context, path, _) {
+                          return CircleAvatar(
+                            radius: 28,
+                            backgroundColor: Colors.white,
+                            backgroundImage: path != null ? FileImage(File(path)) : null,
+                            child: path == null ? const Icon(Icons.person, color: AppColors.primary, size: 36) : null,
+                          );
+                        },
                       ),
                     ),
                     const SizedBox(width: 14),
