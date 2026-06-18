@@ -3,6 +3,8 @@ import 'package:ersschool/screens/class/tabs/timetable_screen.dart';
 import 'package:ersschool/screens/class/tabs/diary_screen.dart';
 import 'package:ersschool/screens/class/tabs/assignments_screen.dart';
 import 'package:ersschool/screens/class/tabs/attendance_screen.dart';
+import '../dashboard/widgets/student_curved_header.dart';
+import '../../core/theme/app_colors.dart';
 
 class ClassScreen extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
@@ -52,11 +54,7 @@ class _ClassScreenState extends State<ClassScreen> with SingleTickerProviderStat
   }
 
   Widget _buildHeader() {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(16, 40, 16, 20),
-      decoration: const BoxDecoration(
-        color: Color(0xFF001A72),
-      ),
+    return StudentCurvedHeader(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -127,13 +125,15 @@ class _ClassScreenState extends State<ClassScreen> with SingleTickerProviderStat
                     ],
                   ),
                   const SizedBox(width: 12),
-                  const CircleAvatar(
-                    radius: 16,
-                    backgroundColor: Colors.white,
-                    child: CircleAvatar(
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 1.5),
+                    ),
+                    child: const CircleAvatar(
                       radius: 15,
-                      backgroundImage: NetworkImage(
-                          'https://i.pravatar.cc/150?u=school_student'),
+                      backgroundColor: Colors.white,
+                      child: Icon(Icons.person, color: AppColors.primary, size: 20),
                     ),
                   ),
                 ],

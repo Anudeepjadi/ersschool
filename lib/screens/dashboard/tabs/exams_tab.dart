@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
+import '../widgets/student_curved_header.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Data models
@@ -192,21 +193,7 @@ class _ExExamsTabState extends State<ExamsTab>
         child: Column(
           children: [
             // 1. Curved Gradient Header
-            Container(
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Color(0xFF101B54), Color(0xFF0022C4)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-              ),
-              padding: const EdgeInsets.only(
-                top: 60,
-                bottom: 25,
-                left: 16,
-                right: 16,
-              ),
+            StudentCurvedHeader(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -317,27 +304,12 @@ class _ExExamsTabState extends State<ExamsTab>
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   border: Border.all(
-                                      color: Colors.white, width: 1.0),
+                                      color: Colors.white, width: 1.5),
                                 ),
-                                child: CircleAvatar(
+                                child: const CircleAvatar(
                                   radius: 14,
                                   backgroundColor: Colors.white,
-                                  child: ClipOval(
-                                    child: Image.asset(
-                                      "assets/images/student_profile.png",
-                                      width: 28,
-                                      height: 28,
-                                      fit: BoxFit.cover,
-                                      errorBuilder:
-                                          (context, error, stackTrace) {
-                                        return const Icon(
-                                          Icons.person,
-                                          color: Color(0xFF101B54),
-                                          size: 16,
-                                        );
-                                      },
-                                    ),
-                                  ),
+                                  child: Icon(Icons.person, color: AppColors.primary, size: 20),
                                 ),
                               ),
                               const SizedBox(width: 2),

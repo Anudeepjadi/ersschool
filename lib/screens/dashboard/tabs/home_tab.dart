@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../widgets/calendar_popup.dart';
+import '../widgets/student_curved_header.dart';
 
 class HomeTab extends StatelessWidget {
   final VoidCallback onOpenDrawer;
@@ -14,28 +15,19 @@ class HomeTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 1. Curved Header
-          Container(
-            width: double.infinity,
-            decoration: const BoxDecoration(
-              color: AppColors.primary,
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(30),
-                bottomRight: Radius.circular(30),
-              ),
-            ),
-            padding: const EdgeInsets.only(
-              top: 50,
-              bottom: 25,
-              left: 20,
-              right: 20,
-            ),
-            child: Row(
+    return RefreshIndicator(
+      onRefresh: () async {
+        // Simulate a network request
+        await Future.delayed(const Duration(seconds: 1));
+      },
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 1. Curved Header
+            StudentCurvedHeader(
+              child: Row(
               children: [
                 IconButton(
                   icon: const Icon(Icons.menu, color: Colors.white, size: 28),
@@ -108,23 +100,10 @@ class HomeTab extends StatelessWidget {
                     shape: BoxShape.circle,
                     border: Border.all(color: Colors.white, width: 2),
                   ),
-                  child: CircleAvatar(
+                  child: const CircleAvatar(
                     radius: 20,
                     backgroundColor: Colors.white,
-                    child: ClipOval(
-                      child: Image.asset(
-                        "assets/images/student_profile.png",
-                        width: 40,
-                        height: 40,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return const Icon(
-                            Icons.person,
-                            color: AppColors.primary,
-                          );
-                        },
-                      ),
-                    ),
+                    child: Icon(Icons.person, color: AppColors.primary, size: 24),
                   ),
                 ),
               ],
@@ -448,6 +427,7 @@ class HomeTab extends StatelessWidget {
             ),
           ),
         ],
+      ),
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
+import '../dashboard/widgets/student_curved_header.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
@@ -64,21 +65,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   Widget _buildHeader() {
-    return Container(
-      width: double.infinity,
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xFF00145A), Color(0xFF00228C)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-      ),
-      padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top + 10,
-        left: 12,
-        right: 12,
-        bottom: 20,
-      ),
+    return StudentCurvedHeader(
       child: Row(
         children: [
           IconButton(
@@ -193,23 +180,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
           Container(
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.white24, width: 1.5),
+              border: Border.all(color: Colors.white, width: 1.5),
             ),
-            child: CircleAvatar(
-              radius: 16,
-              backgroundColor: Colors.transparent,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(16),
-                child: Image.asset(
-                  "assets/images/student_profile.png",
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => const Icon(
-                    Icons.person,
-                    color: Colors.white,
-                    size: 16,
-                  ),
-                ),
-              ),
+            child: const CircleAvatar(
+              radius: 15,
+              backgroundColor: Colors.white,
+              child: Icon(Icons.person, color: AppColors.primary, size: 20),
             ),
           ),
         ],
