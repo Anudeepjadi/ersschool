@@ -1,7 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/utils/profile_manager.dart';
+import '../../my_info/my_info_screen.dart';
 import '../../../widgets/calendar_popup.dart';
-import '../widgets/student_curved_header.dart';
+import '../widgets/student_app_bar.dart';
 
 class HomeTab extends StatelessWidget {
   final VoidCallback onOpenDrawer;
@@ -15,102 +18,24 @@ class HomeTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: () async {
-        // Simulate a network request
-        await Future.delayed(const Duration(seconds: 1));
-      },
-      child: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // 1. Curved Header
-            StudentCurvedHeader(
-              child: Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.menu, color: Colors.white, size: 28),
-                  onPressed: onOpenDrawer,
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Hello, Anudeep Jaadi👋",
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 2),
-                      const Text(
-                        "Good Morning!",
-                        style: TextStyle(color: Colors.white70, fontSize: 13),
-                      ),
-                    ],
-                  ),
-                ),
-                const Spacer(),
-                // Notification bell with badge
-                Stack(
-                  children: [
-                    IconButton(
-                      icon: const Icon(
-                        Icons.notifications_none_outlined,
-                        color: Colors.white,
-                        size: 28,
-                      ),
-                      onPressed: () {},
-                    ),
-                    Positioned(
-                      right: 8,
-                      top: 8,
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(
-                          color: Colors.red,
-                          shape: BoxShape.circle,
-                        ),
-                        constraints: const BoxConstraints(
-                          minWidth: 16,
-                          minHeight: 16,
-                        ),
-                        child: const Text(
-                          "5",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 9,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(width: 8),
-                // Circular profile picture
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 2),
-                  ),
-                  child: const CircleAvatar(
-                    radius: 20,
-                    backgroundColor: Colors.white,
-                    child: Icon(Icons.person, color: AppColors.primary, size: 24),
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          Padding(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: StudentAppBar(
+        title: "Hello, Anudeep Jaadi👋",
+        subtitle: "Good Morning!",
+        onOpenDrawer: onOpenDrawer,
+      ),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          // Simulate a network request
+          await Future.delayed(const Duration(seconds: 1));
+        },
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
             padding: const EdgeInsets.all(20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -180,7 +105,9 @@ class HomeTab extends StatelessWidget {
                       ),
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        onTabSelected(4); // Switch to More tab
+                      },
                       child: const Text(
                         "View All",
                         style: TextStyle(
@@ -257,7 +184,9 @@ class HomeTab extends StatelessWidget {
                       ),
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        onTabSelected(4); // Switch to More tab for now
+                      },
                       child: const Text(
                         "View All",
                         style: TextStyle(
@@ -363,18 +292,15 @@ class HomeTab extends StatelessWidget {
                       ),
                       const SizedBox(width: 8),
                       TextButton(
-                        onPressed: () {},
-                        style: TextButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                          minimumSize: Size.zero,
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        ),
+                        onPressed: () {
+                          onTabSelected(4);
+                        },
                         child: const Text(
                           "View All",
                           style: TextStyle(
+                            fontSize: 12,
                             color: AppColors.primary,
                             fontWeight: FontWeight.bold,
-                            fontSize: 12,
                           ),
                         ),
                       ),
@@ -427,6 +353,7 @@ class HomeTab extends StatelessWidget {
             ),
           ),
         ],
+      ),
       ),
       ),
     );

@@ -1,24 +1,36 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
-import '../widgets/student_curved_header.dart';
+import '../../../core/utils/profile_manager.dart';
+import '../../my_info/my_info_screen.dart';
+import '../widgets/student_app_bar.dart';
 import '../../login/login_screen.dart';
 import '../../transport/transport_screen.dart';
 import '../../calendar/calendar_screen.dart';
 
 class MoreTab extends StatelessWidget {
-  const MoreTab({super.key});
+  final Function(int)? onTabSelected;
+
+  const MoreTab({super.key, this.onTabSelected});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FF),
+      appBar: StudentAppBar(
+        title: "More",
+        subtitle: "Settings and additional options",
+        onOpenDrawer: () => Scaffold.of(context).openDrawer(),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Header with profile
-            _buildHeader(context),
-
             const SizedBox(height: 20),
+            
+            // Profile Info Section
+            _buildProfileSection(context),
+
+            const SizedBox(height: 24),
 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -39,7 +51,7 @@ class MoreTab extends StatelessWidget {
                           onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (_) => const TransportScreen()),
+                                builder: (_) => TransportScreen(onTabSelected: onTabSelected)),
                           ),
                         ),
                       ),
@@ -53,7 +65,7 @@ class MoreTab extends StatelessWidget {
                           onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (_) => const CalendarScreen()),
+                                builder: (_) => CalendarScreen(onTabSelected: onTabSelected)),
                           ),
                         ),
                       ),
@@ -135,75 +147,6 @@ class MoreTab extends StatelessWidget {
     );
   }
 
-  // ── Header ─────────────────────────────────────────────────────────────────
-  Widget _buildHeader(BuildContext context) {
-    return StudentCurvedHeader(
-      child: Row(
-        children: [
-          // Profile avatar
-          Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 2.5),
-            ),
-            child: const CircleAvatar(
-              radius: 32,
-              backgroundColor: Colors.white,
-              child: Icon(
-                Icons.person,
-                color: AppColors.primary,
-                size: 36,
-              ),
-            ),
-          ),
-          const SizedBox(width: 16),
-          // Name & class
-          const Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Anudeep Jaadi',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                SizedBox(height: 4),
-                Text(
-                  'Class 8-A  •  Roll No: 24',
-                  style: TextStyle(color: Colors.white70, fontSize: 13),
-                ),
-                SizedBox(height: 6),
-                Row(
-                  children: [
-                    Icon(Icons.verified_rounded,
-                        color: Colors.greenAccent, size: 14),
-                    SizedBox(width: 4),
-                    Text(
-                      'Active Student',
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 11,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          // Edit icon
-          IconButton(
-            icon: const Icon(Icons.edit_outlined,
-                color: Colors.white70, size: 22),
-            onPressed: () => _showComingSoon(context, 'Edit Profile'),
-          ),
-        ],
-      ),
-    );
-  }
 
   // ── Section title ──────────────────────────────────────────────────────────
   Widget _sectionTitle(String title) {
@@ -411,4 +354,112 @@ class MoreTab extends StatelessWidget {
       ],
     );
   }
+
+  // ── Profile Section ────────────────────────────────────────────────────────
+  Widget _buildProfileSection(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withValues(alpha: 0.1),
+              spreadRadius: 1,
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            // Profile avatar
+            GestureDetector(
+              onTap: () {
+                if (onTabSelected != null) {
+                  onTabSelected!(1);
+                } else {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const MyInfoScreen()));
+                }
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: AppColors.primary, width: 2.5),
+                ),
+                child: ValueListenableBuilder<String?>(
+                  valueListenable: ProfileManager().studentProfileImagePath,
+                  builder: (context, path, _) {
+                    return CircleAvatar(
+                      radius: 32,
+                      backgroundColor: const Color(0xFFF0F4FF),
+                      backgroundImage: path != null ? FileImage(File(path)) : null,
+                      child: path == null
+                          ? const Icon(
+                              Icons.person,
+                              color: AppColors.primary,
+                              size: 36,
+                            )
+                          : null,
+                    );
+                  },
+                ),
+              ),
+            ),
+            const SizedBox(width: 16),
+            // Name & class
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Anudeep Jaadi',
+                    style: TextStyle(
+                      color: Color(0xFF1E2875),
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  const Text(
+                    'Class 8-A  •  Roll No: 24',
+                    style: TextStyle(color: Colors.grey, fontSize: 13),
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      const Icon(Icons.verified_rounded,
+                          color: Colors.green, size: 14),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Active Student',
+                        style: TextStyle(
+                          color: Colors.grey.shade700,
+                          fontSize: 11,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            // Edit icon
+            IconButton(
+              icon: const Icon(Icons.edit_outlined,
+                  color: Colors.grey, size: 22),
+              onPressed: () {
+                if (onTabSelected != null) {
+                  onTabSelected!(1); // Switch to My Info tab
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
+

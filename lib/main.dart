@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'core/theme/app_theme.dart';
+import 'core/utils/profile_manager.dart';
 import 'screens/splash/splash_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await ProfileManager().init();
   runApp(const ERPApp());
 }
 

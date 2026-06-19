@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../core/theme/app_colors.dart';
-import '../dashboard/widgets/student_curved_header.dart';
+import '../../core/utils/profile_manager.dart';
+import '../../core/utils/profile_manager.dart';
+import '../dashboard/widgets/student_app_bar.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Data model helpers
@@ -27,7 +29,19 @@ class MyInfoScreen extends StatefulWidget {
   State<MyInfoScreen> createState() => _MyInfoScreenState();
 }
 
-class _MyInfoScreenState extends State<MyInfoScreen> {
+class _MyInfoScreenState extends State<MyInfoScreen> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+    final path = ProfileManager().studentProfileImagePath.value;
+    if (path != null) {
+      _profileImage = File(path);
+    }
+  }
+
   // ── Student data ───────────────────────────────────────────────────────────
   String name = '';
   String classSection = '';
@@ -146,7 +160,11 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton.icon(
-                  onPressed: () { setState(() => _profileImage = null); Navigator.pop(ctx); },
+                  onPressed: () { 
+                    setState(() => _profileImage = null); 
+                    ProfileManager().setStudentProfileImage(null);
+                    Navigator.pop(ctx); 
+                  },
                   icon: const Icon(Icons.delete_outline, color: Colors.red),
                   label: const Text('Remove Photo', style: TextStyle(color: Colors.red)),
                   style: OutlinedButton.styleFrom(
@@ -193,6 +211,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
       final XFile? picked = await _picker.pickImage(source: source, maxWidth: 512, maxHeight: 512, imageQuality: 85);
       if (picked != null && mounted) {
         setState(() => _profileImage = File(picked.path));
+        ProfileManager().setStudentProfileImage(picked.path);
         _showSnack('Profile photo updated!', Colors.green.shade600, Icons.check_circle);
       }
     } catch (_) {
@@ -697,31 +716,15 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF2F4F8),
+      appBar: StudentAppBar(
+        title: "My Info",
+        subtitle: "View and edit your profile",
+        onOpenDrawer: () => Scaffold.of(context).openDrawer(),
+      ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
-            StudentCurvedHeader(
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.menu, color: Colors.white, size: 28),
-                    onPressed: () {
-                      Scaffold.of(context).openDrawer();
-                    },
-                  ),
-                  const SizedBox(width: 8),
-                  const Text(
-                    "My Info",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
             Center(
               child: ConstrainedBox(
                 // cap max width for desktop

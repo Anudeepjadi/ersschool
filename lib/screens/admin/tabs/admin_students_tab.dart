@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../widgets/admin_app_bar.dart';
-import '../screens/admin_chat_support_screen.dart';
+import '../widgets/ai_bot_fab.dart';
 
 class AdminStudentsTab extends StatefulWidget {
   const AdminStudentsTab({super.key});
@@ -15,11 +15,20 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
 
+  final List<String> _classes = [
+    'Nursery', 'LKG', 'UKG', 'Class 1', 'Class 2', 'Class 3', 'Class 4',
+    'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'
+  ];
+
+  final Map<String, GlobalKey> _classKeys = {};
+  String? _expandedClass;
+
   final List<Map<String, dynamic>> _students = [
     {
       'name': 'Aarav Sharma',
-      'class': 'Class 10-A',
+      'class': 'Class 10',
       'roll': 'Roll No: 01',
+      'admission': 'ECS00123',
       'status': 'Active',
       'avatar': 'AS',
       'phone': '9876543210',
@@ -27,8 +36,9 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
     },
     {
       'name': 'Priya Patel',
-      'class': 'Class 10-B',
+      'class': 'Class 10',
       'roll': 'Roll No: 15',
+      'admission': 'ECS00124',
       'status': 'Active',
       'avatar': 'PP',
       'phone': '9876543211',
@@ -36,8 +46,9 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
     },
     {
       'name': 'Rohan Gupta',
-      'class': 'Class 9-A',
+      'class': 'Class 9',
       'roll': 'Roll No: 08',
+      'admission': 'ECS00125',
       'status': 'Active',
       'avatar': 'RG',
       'phone': '9876543212',
@@ -45,8 +56,9 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
     },
     {
       'name': 'Ananya Singh',
-      'class': 'Class 8-A',
+      'class': 'Class 8',
       'roll': 'Roll No: 22',
+      'admission': 'ECS00126',
       'status': 'Active',
       'avatar': 'AS',
       'phone': '9876543213',
@@ -54,8 +66,9 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
     },
     {
       'name': 'Vikram Reddy',
-      'class': 'Class 10-A',
+      'class': 'Class 10',
       'roll': 'Roll No: 03',
+      'admission': 'ECS00127',
       'status': 'Inactive',
       'avatar': 'VR',
       'phone': '9876543214',
@@ -63,8 +76,9 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
     },
     {
       'name': 'Sneha Joshi',
-      'class': 'Class 9-B',
+      'class': 'Class 9',
       'roll': 'Roll No: 11',
+      'admission': 'ECS00128',
       'status': 'Active',
       'avatar': 'SJ',
       'phone': '9876543215',
@@ -72,8 +86,9 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
     },
     {
       'name': 'Arjun Nair',
-      'class': 'Class 8-B',
+      'class': 'Class 8',
       'roll': 'Roll No: 05',
+      'admission': 'ECS00129',
       'status': 'Active',
       'avatar': 'AN',
       'phone': '9876543216',
@@ -81,8 +96,9 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
     },
     {
       'name': 'Kavya Menon',
-      'class': 'Class 7-A',
+      'class': 'Class 7',
       'roll': 'Roll No: 19',
+      'admission': 'ECS00130',
       'status': 'Active',
       'avatar': 'KM',
       'phone': '9876543217',
@@ -90,8 +106,9 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
     },
     {
       'name': 'Rahul Verma',
-      'class': 'Class 7-B',
+      'class': 'Class 7',
       'roll': 'Roll No: 02',
+      'admission': 'ECS00131',
       'status': 'Inactive',
       'avatar': 'RV',
       'phone': '9876543218',
@@ -99,19 +116,29 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
     },
     {
       'name': 'Meera Das',
-      'class': 'Class 6-A',
+      'class': 'Class 6',
       'roll': 'Roll No: 14',
+      'admission': 'ECS00132',
       'status': 'Active',
       'avatar': 'MD',
       'phone': '9876543219',
       'gender': 'Female',
     },
+    {
+      'name': 'Little Timmy',
+      'class': 'LKG',
+      'roll': 'Roll No: 01',
+      'admission': 'ECS00133',
+      'status': 'Active',
+      'avatar': 'LT',
+      'phone': '9876543220',
+      'gender': 'Male',
+    },
   ];
 
   List<Map<String, dynamic>> get _filteredStudents {
     return _students.where((s) {
-      final matchesFilter =
-          _selectedFilter == 'All' || s['status'] == _selectedFilter;
+      final matchesFilter = _selectedFilter == 'All' || s['status'] == _selectedFilter;
       final matchesSearch = _searchQuery.isEmpty ||
           s['name'].toLowerCase().contains(_searchQuery.toLowerCase()) ||
           s['class'].toLowerCase().contains(_searchQuery.toLowerCase());
@@ -120,9 +147,35 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    for (var c in _classes) {
+      _classKeys[c] = GlobalKey();
+    }
+  }
+
+  @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  void _scrollToClass(String className) {
+    final key = _classKeys[className];
+    if (key != null && key.currentContext != null) {
+      Scrollable.ensureVisible(
+        key.currentContext!,
+        duration: const Duration(milliseconds: 600),
+        curve: Curves.easeInOut,
+        alignment: 0.1,
+      );
+    }
+  }
+
+  void _toggleStatus(Map<String, dynamic> student) {
+    setState(() {
+      student['status'] = student['status'] == 'Active' ? 'Inactive' : 'Active';
+    });
   }
 
   @override
@@ -133,7 +186,7 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
       backgroundColor: const Color(0xFFF5F7FF),
       appBar: const AdminAppBar(
         title: "Students",
-        subtitle: "",
+        subtitle: "Manage 13 standard classes",
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -214,114 +267,195 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
                   const SizedBox(width: 12),
                   SizedBox(width: 140, child: _buildStatCard("Girls", "603", Icons.girl, const Color(0xFFEC4899), true, "4 this month")),
                   const SizedBox(width: 12),
-                  SizedBox(width: 140, child: _buildStatCard("Inactive", "$inactiveCount", Icons.person_off, const Color(0xFFF59E0B), false, "2 this month")),
+                  SizedBox(width: 140, child: _buildStatCard("Absent/Inactive", "$inactiveCount", Icons.person_off, const Color(0xFFF59E0B), false, "2 this month")),
                 ],
               ),
             ),
             const SizedBox(height: 24),
 
-            // Student List Header
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Student List (${_students.length})",
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
-                ),
-                Row(
-                  children: [
-                    TextButton.icon(
-                      onPressed: () {},
-                      icon: const Icon(Icons.download, size: 16, color: Colors.grey),
-                      label: const Text("Export", style: TextStyle(color: Colors.grey, fontSize: 13)),
-                    ),
-                    const SizedBox(width: 8),
-                    DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        value: 'Sort By',
-                        icon: const Icon(Icons.keyboard_arrow_down, size: 16, color: Colors.grey),
-                        style: const TextStyle(color: Colors.grey, fontSize: 13),
-                        items: ['Sort By'].map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (_) {},
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+            // Classes Expansion List
+            Text(
+              "Classes Overview (13)",
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
             ),
             const SizedBox(height: 12),
 
-            // Data Table
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              physics: const BouncingScrollPhysics(),
-              child: Container(
-                width: 800, // Fixed width to enable horizontal scrolling and prevent overflow
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.grey.shade200),
-                ),
-                child: Column(
-                  children: [
-                    // Table Header
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      child: Row(
-                        children: [
-                          const Expanded(flex: 3, child: Text("Student", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey))),
-                          const Expanded(flex: 2, child: Text("Class", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey))),
-                          const Expanded(flex: 2, child: Text("Roll No.", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey))),
-                          const Expanded(flex: 2, child: Text("Admission No.", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey))),
-                          const Expanded(flex: 2, child: Text("Status", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey))),
-                          const Expanded(flex: 1, child: Text("Action", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey))),
-                        ],
-                      ),
-                    ),
-                    const Divider(height: 1),
-                    // Table Rows
-                    ..._filteredStudents.map((s) => _buildTableRow(s)),
-                    // Pagination
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Showing 1 to ${_filteredStudents.length} of ${_students.length} entries", style: const TextStyle(fontSize: 12, color: Colors.grey)),
-                          Row(
-                            children: [
-                              const Icon(Icons.chevron_left, size: 20, color: Colors.grey),
-                              const SizedBox(width: 8),
-                              _buildPageButton("1", true),
-                              _buildPageButton("2", false),
-                              _buildPageButton("3", false),
-                              const Text("...", style: TextStyle(color: Colors.grey)),
-                              _buildPageButton("125", false),
-                              const SizedBox(width: 8),
-                              const Icon(Icons.chevron_right, size: 20, color: Colors.grey),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: _classes.length,
+              itemBuilder: (context, index) {
+                final className = _classes[index];
+                final classStudents = _filteredStudents.where((s) => s['class'] == className).toList();
+                
+                return _buildClassExpansionTile(className, classStudents);
+              },
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminChatSupportScreen()));
-        },
-        backgroundColor: Colors.white,
-        child: const Icon(Icons.smart_toy, color: Color(0xFF0038FF), size: 30),
+      floatingActionButton: const AiBotFab(),
+    );
+  }
+
+  Widget _buildClassExpansionTile(String className, List<Map<String, dynamic>> students) {
+    final isExpanded = _expandedClass == className;
+
+    return Container(
+      key: _classKeys[className],
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade200),
+        boxShadow: [
+          BoxShadow(color: Colors.grey.shade50, blurRadius: 4, offset: const Offset(0, 2)),
+        ],
+      ),
+      child: Theme(
+        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          initiallyExpanded: isExpanded,
+          onExpansionChanged: (expanded) {
+            setState(() {
+              if (expanded) {
+                _expandedClass = className;
+              } else if (_expandedClass == className) {
+                _expandedClass = null;
+              }
+            });
+          },
+          title: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF0038FF).withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(Icons.class_, color: Color(0xFF0038FF), size: 20),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                className,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: Color(0xFF1E2875),
+                ),
+              ),
+              const Spacer(),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  "${students.length} Students",
+                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey),
+                ),
+              ),
+            ],
+          ),
+          trailing: const Icon(Icons.keyboard_arrow_down, color: Colors.grey),
+          children: [
+            if (students.isEmpty)
+              const Padding(
+                padding: EdgeInsets.all(24.0),
+                child: Center(
+                  child: Text("No students found in this class.", style: TextStyle(color: Colors.grey)),
+                ),
+              )
+            else
+              Column(
+                children: [
+                  const Divider(height: 1),
+                  ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: students.length,
+                    separatorBuilder: (context, index) => const Divider(height: 1),
+                    itemBuilder: (context, index) {
+                      return _buildStudentRow(students[index]);
+                    },
+                  ),
+                ],
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStudentRow(Map<String, dynamic> student) {
+    final isActive = student['status'] == 'Active';
+    final avatarColor = student['gender'] == 'Male' ? const Color(0xFF0038FF) : const Color(0xFFEC4899);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          CircleAvatar(
+            radius: 20,
+            backgroundColor: avatarColor.withValues(alpha: 0.1),
+            child: Text(student['avatar'], style: TextStyle(color: avatarColor, fontWeight: FontWeight.bold, fontSize: 13)),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(student['name'], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF1E2875)), overflow: TextOverflow.ellipsis),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Icon(Icons.phone, size: 10, color: Colors.grey.shade500),
+                    const SizedBox(width: 4),
+                    Text(student['phone'], style: TextStyle(fontSize: 10, color: Colors.grey.shade600)),
+                    const SizedBox(width: 12),
+                    Icon(Icons.tag, size: 10, color: Colors.grey.shade500),
+                    const SizedBox(width: 4),
+                    Text(student['roll'].replaceAll("Roll No: ", ""), style: TextStyle(fontSize: 10, color: Colors.grey.shade600)),
+                  ],
+                ),
+                const SizedBox(height: 2),
+                Row(
+                  children: [
+                    Icon(Icons.badge_outlined, size: 10, color: Colors.grey.shade500),
+                    const SizedBox(width: 4),
+                    Text(student['admission'] ?? "ECS000", style: TextStyle(fontSize: 10, color: Colors.grey.shade600)),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          InkWell(
+            onTap: () => _toggleStatus(student),
+            borderRadius: BorderRadius.circular(6),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: isActive ? const Color(0xFF10B981).withValues(alpha: 0.1) : const Color(0xFFEF4444).withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: isActive ? const Color(0xFF10B981).withValues(alpha: 0.3) : const Color(0xFFEF4444).withValues(alpha: 0.3)),
+              ),
+              child: Text(
+                isActive ? "Present" : "Absent",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: isActive ? const Color(0xFF10B981) : const Color(0xFFEF4444),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 4),
+          const Icon(Icons.chevron_right, size: 18, color: Colors.grey),
+        ],
       ),
     );
   }
@@ -370,7 +504,7 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(isPositiveTrend ? Icons.arrow_upward : Icons.arrow_upward, size: 10, color: isPositiveTrend ? Colors.green : Colors.red),
+              Icon(isPositiveTrend ? Icons.arrow_upward : Icons.arrow_downward, size: 10, color: isPositiveTrend ? Colors.green : Colors.red),
               const SizedBox(width: 2),
               Text(trendText, style: TextStyle(fontSize: 10, color: isPositiveTrend ? Colors.green : Colors.red, fontWeight: FontWeight.bold)),
             ],
@@ -380,99 +514,12 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
     );
   }
 
-  Widget _buildPageButton(String page, bool isSelected) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 4),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(
-        color: isSelected ? const Color(0xFF0038FF) : Colors.transparent,
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Text(
-        page,
-        style: TextStyle(
-          color: isSelected ? Colors.white : Colors.grey,
-          fontWeight: FontWeight.bold,
-          fontSize: 12,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTableRow(Map<String, dynamic> student) {
-    final isActive = student['status'] == 'Active';
-    final avatarColor = student['gender'] == 'Male' ? const Color(0xFF0038FF) : const Color(0xFFEC4899);
-
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: Row(
-            children: [
-              Expanded(
-                flex: 3,
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 16,
-                      backgroundColor: avatarColor.withValues(alpha: 0.1),
-                      child: Text(student['avatar'], style: TextStyle(color: avatarColor, fontWeight: FontWeight.bold, fontSize: 12)),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(student['name'], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875))),
-                          const SizedBox(height: 2),
-                          Text("${student['name'].split(' ')[0].toLowerCase()}@email.com\n${student['phone']}", style: TextStyle(fontSize: 10, color: Colors.grey.shade500)),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(flex: 2, child: Text(student['class'], style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)))),
-              Expanded(flex: 2, child: Text(student['roll'].replaceAll("Roll No: ", ""), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)))),
-              const Expanded(flex: 2, child: Text("ECS00123", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)))),
-              Expanded(
-                flex: 2,
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: isActive ? Colors.transparent : const Color(0xFFEF4444).withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Text(
-                        student['status'],
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.bold,
-                          color: isActive ? const Color(0xFF10B981) : const Color(0xFFEF4444),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(flex: 1, child: IconButton(icon: const Icon(Icons.more_vert, size: 18, color: Colors.grey), onPressed: () {})),
-            ],
-          ),
-        ),
-        const Divider(height: 1),
-      ],
-    );
-  }
-
   void showAddStudentBottomSheet() {
     final nameController = TextEditingController();
     final rollController = TextEditingController();
     final phoneController = TextEditingController();
-    final passwordController = TextEditingController();
-    bool allowPhoneLogin = true;
-    String selectedClass = 'Class 10-A';
+    final admissionController = TextEditingController();
+    String selectedClass = 'Class 10';
     String selectedGender = 'Male';
     String selectedStatus = 'Active';
 
@@ -538,9 +585,7 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
                           borderRadius: BorderRadius.all(Radius.circular(12)),
                         ),
                       ),
-                      items: ['Class 10-A', 'Class 10-B', 'Class 9-A', 'Class 9-B', 'Class 8-A', 'Class 8-B', 'Class 7-A', 'Class 7-B', 'Class 6-A']
-                          .map((c) => DropdownMenuItem(value: c, child: Text(c)))
-                          .toList(),
+                      items: _classes.map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
                       onChanged: (val) {
                         if (val != null) {
                           setModalState(() => selectedClass = val);
@@ -560,6 +605,17 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
                     ),
                     const SizedBox(height: 14),
                     TextField(
+                      controller: admissionController,
+                      decoration: const InputDecoration(
+                        labelText: "Admission Number (e.g. ECS001)",
+                        prefixIcon: Icon(Icons.badge_outlined),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    TextField(
                       controller: phoneController,
                       keyboardType: TextInputType.phone,
                       decoration: const InputDecoration(
@@ -569,28 +625,6 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
                           borderRadius: BorderRadius.all(Radius.circular(12)),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 14),
-                    TextField(
-                      controller: passwordController,
-                      obscureText: true,
-                      decoration: const InputDecoration(
-                        labelText: "Login Password",
-                        prefixIcon: Icon(Icons.lock_outline),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(12)),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 14),
-                    SwitchListTile(
-                      title: const Text("Allow Login with Phone Number", style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                      value: allowPhoneLogin,
-                      onChanged: (val) {
-                        setModalState(() => allowPhoneLogin = val);
-                      },
-                      activeTrackColor: AppColors.primary,
-                      contentPadding: EdgeInsets.zero,
                     ),
                     const SizedBox(height: 16),
                     const Text(
@@ -664,20 +698,21 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
                             avatarStr = nameWords[0].substring(0, nameWords[0].length >= 2 ? 2 : 1).toUpperCase();
                           }
                         }
+                        
                         final newStudent = {
                           'name': nameController.text.trim(),
                           'class': selectedClass,
                           'roll': 'Roll No: ${rollController.text.trim().isEmpty ? "00" : rollController.text.trim()}',
+                          'admission': admissionController.text.trim().isEmpty ? "ECSNEW" : admissionController.text.trim(),
                           'status': selectedStatus,
                           'avatar': avatarStr,
                           'phone': phoneController.text.trim().isEmpty ? "N/A" : phoneController.text.trim(),
-                          'password': passwordController.text.trim(),
-                          'phoneLoginEnabled': allowPhoneLogin,
                           'gender': selectedGender,
                         };
 
                         setState(() {
                           _students.insert(0, newStudent);
+                          _expandedClass = selectedClass; // Auto-expand this class
                         });
 
                         Navigator.pop(context);
@@ -688,6 +723,11 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
                             backgroundColor: Colors.green,
                           ),
                         );
+                        
+                        // Scroll down to the expanded class
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          _scrollToClass(selectedClass);
+                        });
                       },
                       child: const Text("Save Student", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
                     ),

@@ -1,14 +1,24 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:ersschool/screens/class/tabs/timetable_screen.dart';
 import 'package:ersschool/screens/class/tabs/diary_screen.dart';
 import 'package:ersschool/screens/class/tabs/assignments_screen.dart';
 import 'package:ersschool/screens/class/tabs/attendance_screen.dart';
-import '../dashboard/widgets/student_curved_header.dart';
-import '../../core/theme/app_colors.dart';
+import '../../core/utils/profile_manager.dart';
+import '../my_info/my_info_screen.dart';
+import '../dashboard/widgets/student_app_bar.dart';
 
 class ClassScreen extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
-  const ClassScreen({super.key, this.onOpenDrawer});
+  final bool showAppBar;
+  final Function(int)? onTabSelected;
+
+  const ClassScreen({
+    super.key,
+    this.onOpenDrawer,
+    this.showAppBar = true,
+    this.onTabSelected,
+  });
 
   @override
   State<ClassScreen> createState() => _ClassScreenState();
@@ -40,9 +50,14 @@ class _ClassScreenState extends State<ClassScreen> with SingleTickerProviderStat
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: widget.showAppBar ? StudentAppBar(
+        title: "Class",
+        subtitle: "Access your class related information",
+        onOpenDrawer: widget.onOpenDrawer ?? () => Scaffold.of(context).openDrawer(),
+      ) : null,
       body: Column(
         children: [
-          _buildHeader(),
+          if (!widget.showAppBar) const SizedBox(height: 20),
           _buildTabBar(),
           const Divider(height: 1, thickness: 1),
           Expanded(
@@ -53,102 +68,6 @@ class _ClassScreenState extends State<ClassScreen> with SingleTickerProviderStat
     );
   }
 
-  Widget _buildHeader() {
-    return StudentCurvedHeader(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-                onPressed: widget.onOpenDrawer,
-                icon: const Icon(Icons.menu, color: Colors.white),
-              ),
-              const Text(
-                "Class",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Row(
-                children: [
-                  Container(
-                    constraints: const BoxConstraints(maxWidth: 110),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: const [
-                        Icon(Icons.business, color: Colors.white, size: 16),
-                        SizedBox(width: 6),
-                        Flexible(
-                          child: Text(
-                            "Ecstasy School 1",
-                            style: TextStyle(color: Colors.white, fontSize: 12),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        SizedBox(width: 4),
-                        Icon(Icons.keyboard_arrow_down,
-                            color: Colors.white, size: 16),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Stack(
-                    children: [
-                      const Icon(Icons.notifications_none, color: Colors.white),
-                      Positioned(
-                        right: 0,
-                        top: 0,
-                        child: Container(
-                          padding: const EdgeInsets.all(2),
-                          decoration: const BoxDecoration(
-                            color: Colors.red,
-                            shape: BoxShape.circle,
-                          ),
-                          constraints: const BoxConstraints(
-                            minWidth: 8,
-                            minHeight: 8,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                  const SizedBox(width: 12),
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 1.5),
-                    ),
-                    child: const CircleAvatar(
-                      radius: 15,
-                      backgroundColor: Colors.white,
-                      child: Icon(Icons.person, color: AppColors.primary, size: 20),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          const Text(
-            "Access your class related information",
-            style: TextStyle(color: Colors.white70, fontSize: 14),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildTabBar() {
     return Container(

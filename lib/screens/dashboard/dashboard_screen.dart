@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
-<<<<<<<<< Temporary merge branch 1
-import '../auth/login_screen.dart';
-import '../class/class_screen.dart';
-=========
 import '../login/login_screen.dart';
->>>>>>>>> Temporary merge branch 2
+import '../class/class_screen.dart';
+import '../my_info/my_info_screen.dart';
 import 'tabs/home_tab.dart';
-import 'tabs/my_info_tab.dart';
 import 'tabs/fee_tab.dart';
 import 'tabs/exams_tab.dart';
 import 'tabs/more_tab.dart';
@@ -23,32 +19,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int currentIndex = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-<<<<<<<<< Temporary merge branch 1
-  late final List<Widget> _tabs;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabs = [
-      HomeTab(onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer()),
-      const MyInfoTab(),
-      ClassScreen(onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer()),
-      FeeTab(onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer()),
-      const ExamsTab(),
-      const MoreTab(),
-    ];
-  }
-
-
-
-=========
   void _onTabChanged(int index) {
     setState(() {
       currentIndex = index;
     });
   }
-
->>>>>>>>> Temporary merge branch 2
   @override
   Widget build(BuildContext context) {
     final List<Widget> tabs = [
@@ -56,10 +31,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
         onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer(),
         onTabSelected: _onTabChanged,
       ),
-      const MyInfoTab(),
-      ClassTab(onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer()),
-      const FeeTab(),
-      const ExamsTab(),
+      const MyInfoScreen(),
+      ClassScreen(onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer()),
+      FeeTab(onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer()),
+      ExamsTab(onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer()),
       const MoreTab(),
     ];
 
@@ -82,10 +57,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 child: Icon(Icons.person, size: 40, color: AppColors.primary),
               ),
               accountName: Text(
-                "School Admin",
+                "Anudeep Jaadi",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
-              accountEmail: Text("admin@ecstasyschool.com"),
+              accountEmail: Text("anudeepjaadi@ecstasyschool.com"),
             ),
             ListTile(
               leading: const Icon(Icons.home, color: AppColors.primary),
@@ -153,54 +128,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
         unselectedItemColor: const Color(0xFF1E2875),
         selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
         unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
-        onTap: (index) {
-          if (index == 5) {
-            showModalBottomSheet(
-              context: context,
-              backgroundColor: Colors.transparent,
-              barrierColor: Colors.black.withOpacity(0.15),
-              elevation: 0,
-              isScrollControlled: true,
-              builder: (BuildContext context) {
-                return const MoreTab();
-              },
-            );
-          } else {
-            setState(() {
-              currentIndex = index;
-            });
-          }
-        },
+        onTap: _onTabChanged,
         items: const [
-<<<<<<<<< Temporary merge branch 1
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "Home",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: "My Info",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.menu_book),
-            label: "Class",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.currency_rupee),
-            label: "Fee",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.assignment_outlined),
-            label: "Exams",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.more_horiz),
-            label: "More",
-          ),
-        ],
-      ),
-      body: _tabs[currentIndex],
-=========
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
           BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: "My Info"),
           BottomNavigationBarItem(icon: Icon(Icons.menu_book), label: "Class"),
@@ -210,7 +139,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ],
       ),
       body: tabs[currentIndex],
->>>>>>>>> Temporary merge branch 2
     );
   }
 }

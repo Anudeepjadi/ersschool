@@ -1,6 +1,9 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
-import '../widgets/student_curved_header.dart';
+import '../../../core/utils/profile_manager.dart';
+import '../../my_info/my_info_screen.dart';
+import '../widgets/student_app_bar.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Data models
@@ -162,7 +165,9 @@ const List<_Result> _results = [
 // ─────────────────────────────────────────────────────────────────────────────
 class ExamsTab extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
-  const ExamsTab({super.key, this.onOpenDrawer});
+  final Function(int)? onTabSelected;
+
+  const ExamsTab({super.key, this.onOpenDrawer, this.onTabSelected});
 
   @override
   State<ExamsTab> createState() => _ExExamsTabState();
@@ -188,143 +193,16 @@ class _ExExamsTabState extends State<ExamsTab>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
+      appBar: StudentAppBar(
+        title: "Examination",
+        subtitle: "View your exam schedules and results",
+        onOpenDrawer: widget.onOpenDrawer ?? () => Scaffold.of(context).openDrawer(),
+      ),
       body: SafeArea(
         top: false,
         child: Column(
           children: [
-            // 1. Curved Gradient Header
-            StudentCurvedHeader(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      if (widget.onOpenDrawer != null)
-                        IconButton(
-                          icon: const Icon(Icons.menu,
-                              color: Colors.white, size: 28),
-                          onPressed: widget.onOpenDrawer,
-                        ),
-                      const SizedBox(width: 4),
-                      const Expanded(
-                        child: Text(
-                          "Examination",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      const SizedBox(width: 4),
-                      // Right-side icons row
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          // School dropdown badge
-                          Container(
-                            constraints: const BoxConstraints(maxWidth: 120),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.12),
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(color: Colors.white24),
-                            ),
-                            child: const Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.school_outlined,
-                                    color: Colors.white, size: 12),
-                                SizedBox(width: 4),
-                                Flexible(
-                                  child: Text(
-                                    "Ecstasy School 1",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 9,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                Icon(Icons.keyboard_arrow_down,
-                                    color: Colors.white, size: 12),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                          // Notification bell with badge
-                          Stack(
-                            children: [
-                              IconButton(
-                                icon: const Icon(
-                                  Icons.notifications_none_outlined,
-                                  color: Colors.white,
-                                  size: 24,
-                                ),
-                                onPressed: () {},
-                                padding: EdgeInsets.zero,
-                                constraints: const BoxConstraints(
-                                    minWidth: 32, minHeight: 32),
-                              ),
-                              Positioned(
-                                right: 2,
-                                top: 2,
-                                child: Container(
-                                  padding: const EdgeInsets.all(3),
-                                  decoration: const BoxDecoration(
-                                    color: Colors.red,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  constraints: const BoxConstraints(
-                                    minWidth: 12,
-                                    minHeight: 12,
-                                  ),
-                                  child: const Text(
-                                    "5",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 7,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(width: 4),
-                          // Profile Pic
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                      color: Colors.white, width: 1.5),
-                                ),
-                                child: const CircleAvatar(
-                                  radius: 14,
-                                  backgroundColor: Colors.white,
-                                  child: Icon(Icons.person, color: AppColors.primary, size: 20),
-                                ),
-                              ),
-                              const SizedBox(width: 2),
-                              const Icon(Icons.keyboard_arrow_down,
-                                  color: Colors.white, size: 12),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-
+            // 2. Tab Bar Section
             // 2. Tab Bar Section
             Container(
               color: Colors.white,
