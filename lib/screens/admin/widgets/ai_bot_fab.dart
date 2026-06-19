@@ -78,7 +78,7 @@ class _AiBotFabState extends State<AiBotFab> with SingleTickerProviderStateMixin
         FloatingActionButton(
           mini: true,
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminChatSupportScreen()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminChatSupportScreen(openBotChat: true)));
           },
           backgroundColor: Colors.white,
           child: const Icon(Icons.smart_toy, color: Color(0xFF0038FF), size: 22),

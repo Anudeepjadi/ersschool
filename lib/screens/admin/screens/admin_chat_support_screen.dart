@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
+import '../widgets/admin_app_bar.dart';
 
 class AdminChatSupportScreen extends StatefulWidget {
-  const AdminChatSupportScreen({super.key});
+  final VoidCallback? onOpenDrawer;
+  final bool openBotChat;
+  const AdminChatSupportScreen({super.key, this.onOpenDrawer, this.openBotChat = false});
 
   @override
   State<AdminChatSupportScreen> createState() => _AdminChatSupportScreenState();
@@ -90,7 +93,22 @@ class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
   @override
   void initState() {
     super.initState();
-    _selectedChat = _chats[0];
+    if (widget.openBotChat) {
+      _selectedChat = {
+        'title': 'AI Assistant',
+        'subtitle': 'Hi, how can I help you?',
+        'type': 'bot',
+        'icon': Icons.smart_toy,
+        'color': Colors.blue,
+        'time': 'Now',
+        'status': 'Open',
+        'unread': false,
+        'name': 'AI Assistant',
+        'role': 'Support Bot',
+      };
+    } else {
+      _selectedChat = _chats[0];
+    }
   }
 
   @override
@@ -102,6 +120,11 @@ class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AdminAppBar(
+        title: "Chat Support",
+        subtitle: "Manage student and staff queries",
+        onOpenDrawer: widget.onOpenDrawer,
+      ),
       bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
       body: SafeArea(
         child: isMobile 
@@ -430,39 +453,44 @@ class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
                 Center(child: Text("Today", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.black87))),
                 const SizedBox(height: 20),
                 
-                // User Message
-                _buildRightMessage("Hello, I need help downloading my hall ticket for the upcoming examination.", "10:30 AM"),
+                if (_selectedChat != null && _selectedChat!['type'] == 'bot') ...[
+                  _buildLeftMessage("Hi! 👋\nHow can I help you today?", "Now"),
+                ] else ...[
+                  // User Message
+                  _buildRightMessage("Hello, I need help downloading my hall ticket for the upcoming examination.", "10:30 AM"),
                 
-                // Agent Message
-                _buildLeftMessage("Hello Rahul! 👋\n\nI'd be happy to help you with that.\nMay I know which examination hall ticket you want to download?", "10:31 AM"),
+
+                  // Agent Message
+                  _buildLeftMessage("Hello Rahul! 👋\n\nI'd be happy to help you with that.\nMay I know which examination hall ticket you want to download?", "10:31 AM"),
                 
-                // User Message
-                _buildRightMessage("It's for the Half Yearly Examination 2024-25.", "10:32 AM"),
+                  // User Message
+                  _buildRightMessage("It's for the Half Yearly Examination 2024-25.", "10:32 AM"),
                 
-                // Agent Message
-                _buildLeftMessage("Thanks for the information.\nPlease give me a moment while I check this for you.", "10:32 AM"),
+                  // Agent Message
+                  _buildLeftMessage("Thanks for the information.\nPlease give me a moment while I check this for you.", "10:32 AM"),
                 
-                // Agent Message
-                _buildLeftMessage("Great! You can download your hall ticket by following these steps:\n\n1. Go to Examinations > Hall Tickets\n2. Select Half Yearly Examination 2024-25\n3. Click on Download Hall Ticket\n\nLet me know if you face any issues.", "10:33 AM"),
+                  // Agent Message
+                  _buildLeftMessage("Great! You can download your hall ticket by following these steps:\n\n1. Go to Examinations > Hall Tickets\n2. Select Half Yearly Examination 2024-25\n3. Click on Download Hall Ticket\n\nLet me know if you face any issues.", "10:33 AM"),
                 
-                // User Message
-                _buildRightMessage("Thank you! I was able to download it.", "10:34 AM"),
+                  // User Message
+                  _buildRightMessage("Thank you! I was able to download it.", "10:34 AM"),
                 
-                // Agent Message
-                _buildLeftMessage("You're welcome! 😊\nIf you need any more help, feel free to reach out anytime.", "10:34 AM"),
+                  // Agent Message
+                  _buildLeftMessage("You're welcome! 😊\nIf you need any more help, feel free to reach out anytime.", "10:34 AM"),
                 
-                // Survey
-                const SizedBox(height: 20),
-                _buildSurvey(),
-                
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Chat ID: #CS-10245", style: TextStyle(fontSize: 10, color: Colors.grey.shade500)),
-                    Text("10:34 AM", style: TextStyle(fontSize: 10, color: Colors.grey.shade500)),
-                  ],
-                ),
+                  // Survey
+                  const SizedBox(height: 20),
+                  _buildSurvey(),
+                  
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Chat ID: #CS-10245", style: TextStyle(fontSize: 10, color: Colors.grey.shade500)),
+                      Text("10:34 AM", style: TextStyle(fontSize: 10, color: Colors.grey.shade500)),
+                    ],
+                  ),
+                ],
               ],
             ),
           ),
