@@ -4,6 +4,8 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/profile_manager.dart';
 import '../../my_info/my_info_screen.dart';
 import '../widgets/student_app_bar.dart';
+import 'package:fl_chart/fl_chart.dart';
+import '../../../widgets/scrollable_table_wrapper.dart';
 
 class FeeTab extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
@@ -382,9 +384,7 @@ class _FeeTabState extends State<FeeTab> {
           ],
         ),
         const SizedBox(height: 12),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          physics: const BouncingScrollPhysics(),
+        ScrollableTableWrapper(
           child: SizedBox(
             width: 550,
             child: Column(
@@ -669,9 +669,7 @@ class _FeeTabState extends State<FeeTab> {
           ],
         ),
         const SizedBox(height: 12),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          physics: const BouncingScrollPhysics(),
+        ScrollableTableWrapper(
           child: SizedBox(
             width: 600,
             child: Column(

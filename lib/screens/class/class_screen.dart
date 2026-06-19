@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:ersschool/screens/class/tabs/timetable_screen.dart';
+import '../../widgets/scrollable_table_wrapper.dart';
 import 'package:ersschool/screens/class/tabs/diary_screen.dart';
 import 'package:ersschool/screens/class/tabs/assignments_screen.dart';
 import 'package:ersschool/screens/class/tabs/attendance_screen.dart';
@@ -152,9 +153,7 @@ class _ClassScreenState extends State<ClassScreen> with SingleTickerProviderStat
           ),
           const SizedBox(height: 20),
           // Timetable Header
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
+          ScrollableTableWrapper(
             child: SizedBox(
               width: 550,
               child: Column(

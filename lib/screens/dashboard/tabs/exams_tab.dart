@@ -4,6 +4,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/profile_manager.dart';
 import '../../my_info/my_info_screen.dart';
 import '../widgets/student_app_bar.dart';
+import '../../../widgets/scrollable_table_wrapper.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Data models
@@ -590,9 +591,7 @@ class _ExExamsTabState extends State<ExamsTab>
       ),
       child: Column(
         children: [
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
+          ScrollableTableWrapper(
             child: SizedBox(
               width: 650,
               child: Column(
@@ -816,9 +815,7 @@ class _ExExamsTabState extends State<ExamsTab>
       ),
       child: Column(
         children: [
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
+          ScrollableTableWrapper(
             child: SizedBox(
               width: 750,
               child: Column(

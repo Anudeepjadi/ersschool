@@ -5,6 +5,7 @@ import '../../core/utils/profile_manager.dart';
 import '../my_info/my_info_screen.dart';
 import '../dashboard/widgets/student_app_bar.dart';
 import '../admin/widgets/ai_bot_fab.dart';
+import '../../widgets/scrollable_table_wrapper.dart';
 
 class TransportScreen extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
@@ -436,9 +437,7 @@ class _TransportScreenState extends State<TransportScreen> {
   }
 
   Widget _buildTrackingTimeline() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      physics: const BouncingScrollPhysics(),
+    return ScrollableTableWrapper(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ersschool/core/theme/app_theme.dart';
+import 'package:ersschool/core/theme/app_colors.dart';
+import 'package:ersschool/widgets/scrollable_table_wrapper.dart';
 
 class TimetableScreen extends StatefulWidget {
   final bool showAppBar;
@@ -104,9 +106,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
             const SizedBox(height: 20),
             _buildTimetableHeader(),
             const SizedBox(height: 12),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              physics: const BouncingScrollPhysics(),
+            ScrollableTableWrapper(
               child: SizedBox(
                 width: 550,
                 child: Column(
