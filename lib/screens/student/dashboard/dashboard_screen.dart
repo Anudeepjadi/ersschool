@@ -1,15 +1,15 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import '../../core/theme/app_colors.dart';
-import '../../core/utils/profile_manager.dart';
-import '../login/login_screen.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/utils/profile_manager.dart';
+import '../../login/login_screen.dart';
 import '../class/class_screen.dart';
 import '../my_info/my_info_screen.dart';
 import 'tabs/home_tab.dart';
 import 'tabs/fee_tab.dart';
 import 'tabs/exams_tab.dart';
 import 'tabs/more_tab.dart';
-import '../admin/widgets/ai_bot_fab.dart';
+import '../../admin/widgets/ai_bot_fab.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});

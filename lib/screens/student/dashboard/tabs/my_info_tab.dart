@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import '../../../core/theme/app_colors.dart';
-import '../../../core/utils/profile_manager.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/profile_manager.dart';
 
 class MyInfoTab extends StatelessWidget {
   const MyInfoTab({super.key});

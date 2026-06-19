@@ -2,9 +2,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../core/theme/app_colors.dart';
-import '../../core/utils/profile_manager.dart';
-import '../../core/utils/profile_manager.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/utils/profile_manager.dart';
+import '../../../core/utils/profile_manager.dart';
 import '../dashboard/widgets/student_app_bar.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────

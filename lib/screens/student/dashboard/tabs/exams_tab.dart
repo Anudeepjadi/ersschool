@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import '../../../core/theme/app_colors.dart';
-import '../../../core/utils/profile_manager.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/profile_manager.dart';
 import '../../my_info/my_info_screen.dart';
 import '../widgets/student_app_bar.dart';
-import '../../../widgets/scrollable_table_wrapper.dart';
+import '../../../../widgets/scrollable_table_wrapper.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Data models

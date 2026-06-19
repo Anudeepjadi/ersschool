@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/utils/profile_manager.dart';
-import '../dashboard/dashboard_screen.dart';
+import '../student/dashboard/dashboard_screen.dart';
 import '../admin/admin_dashboard_screen.dart';
 
 class LoginScreen extends StatefulWidget {
