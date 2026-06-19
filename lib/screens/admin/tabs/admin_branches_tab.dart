@@ -3,7 +3,8 @@ import '../../../core/theme/app_colors.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/ai_bot_fab.dart';
 class AdminBranchesTab extends StatefulWidget {
-  const AdminBranchesTab({super.key});
+  final VoidCallback? onOpenDrawer;
+  const AdminBranchesTab({super.key, this.onOpenDrawer});
 
   @override
   State<AdminBranchesTab> createState() => _AdminBranchesTabState();
@@ -23,6 +24,7 @@ class _AdminBranchesTabState extends State<AdminBranchesTab> {
       'established': '2010',
       'principal': 'Dr. Ravi Shankar',
       'color': const Color(0xFF0038FF),
+      'icon': Icons.apartment,
     },
     {
       'name': 'Ecstasy School - City Center',
@@ -33,6 +35,7 @@ class _AdminBranchesTabState extends State<AdminBranchesTab> {
       'established': '2013',
       'principal': 'Mrs. Lakshmi Devi',
       'color': const Color(0xFF10B981),
+      'icon': Icons.location_city,
     },
     {
       'name': 'Ecstasy School - Tech Park',
@@ -43,6 +46,7 @@ class _AdminBranchesTabState extends State<AdminBranchesTab> {
       'established': '2016',
       'principal': 'Mr. Arun Mehta',
       'color': const Color(0xFFF59E0B),
+      'icon': Icons.computer,
     },
     {
       'name': 'Ecstasy School - Lake View',
@@ -53,6 +57,7 @@ class _AdminBranchesTabState extends State<AdminBranchesTab> {
       'established': '2020',
       'principal': 'Ms. Priya Reddy',
       'color': const Color(0xFF8B5CF6),
+      'icon': Icons.water,
     },
     {
       'name': 'Ecstasy School - North Campus',
@@ -63,6 +68,7 @@ class _AdminBranchesTabState extends State<AdminBranchesTab> {
       'established': '2026',
       'principal': 'TBD',
       'color': const Color(0xFFEC4899),
+      'icon': Icons.account_balance,
     },
   ];
 
@@ -91,9 +97,10 @@ class _AdminBranchesTabState extends State<AdminBranchesTab> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FF),
-      appBar: const AdminAppBar(
+      appBar: AdminAppBar(
         title: "Branches",
         subtitle: "Manage school branches and locations",
+        onOpenDrawer: widget.onOpenDrawer,
       ),
       body: Column(
         children: [
@@ -153,14 +160,7 @@ class _AdminBranchesTabState extends State<AdminBranchesTab> {
               const SizedBox(height: 12),
               ElevatedButton.icon(
                 onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text('Add Branch — Coming soon!'),
-                      behavior: SnackBarBehavior.floating,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                    ),
-                  );
+                  _showAddBranchSheet(context);
                 },
                 icon: const Icon(Icons.add_business, size: 18),
                 label: const Text("Add Branch", style: TextStyle(fontWeight: FontWeight.bold)),
@@ -215,6 +215,64 @@ class _AdminBranchesTabState extends State<AdminBranchesTab> {
     );
   }
 
+  void _showAddBranchSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) {
+        return Padding(
+          padding: EdgeInsets.only(
+            left: 20,
+            right: 20,
+            top: 20,
+            bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Text(
+                'Add New Branch',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              const TextField(
+                decoration: InputDecoration(labelText: 'Branch Name', border: OutlineInputBorder()),
+              ),
+              const SizedBox(height: 12),
+              const TextField(
+                decoration: InputDecoration(labelText: 'Principal Name', border: OutlineInputBorder()),
+              ),
+              const SizedBox(height: 12),
+              const TextField(
+                decoration: InputDecoration(labelText: 'Location/Address', border: OutlineInputBorder()),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(ctx);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Branch added successfully!')),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF0038FF),
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                ),
+                child: const Text('Save Branch', style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Widget _buildBranchCard(Map<String, dynamic> branch) {
     final isActive = branch['status'] == 'Active';
     final color = branch['color'] as Color;
@@ -258,7 +316,7 @@ class _AdminBranchesTabState extends State<AdminBranchesTab> {
                         color: color.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Icon(Icons.school, color: color, size: 22),
+                      child: Icon(branch['icon'] ?? Icons.school, color: color, size: 22),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -317,19 +375,30 @@ class _AdminBranchesTabState extends State<AdminBranchesTab> {
                 ),
                 const SizedBox(height: 14),
                 // Stats row
-                Row(
+                Column(
                   children: [
-                    _buildBranchStat(
-                        Icons.people, "${branch['students']}", "Students"),
-                    const SizedBox(width: 16),
-                    _buildBranchStat(
-                        Icons.school, "${branch['teachers']}", "Teachers"),
-                    const SizedBox(width: 16),
-                    _buildBranchStat(Icons.calendar_today,
-                        "Est. ${branch['established']}", ""),
-                    const Spacer(),
-                    _buildBranchStat(
-                        Icons.person, branch['principal'], "Principal"),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                            child: _buildBranchStat(Icons.people,
+                                "${branch['students']}", "Students")),
+                        Expanded(
+                            child: _buildBranchStat(Icons.school,
+                                "${branch['teachers']}", "Teachers")),
+                        Expanded(
+                            child: _buildBranchStat(Icons.calendar_today,
+                                "Est. ${branch['established']}", "")),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(
+                            child: _buildBranchStat(Icons.person,
+                                branch['principal'], "Principal")),
+                      ],
+                    ),
                   ],
                 ),
               ],
@@ -342,28 +411,31 @@ class _AdminBranchesTabState extends State<AdminBranchesTab> {
 
   Widget _buildBranchStat(IconData icon, String value, String label) {
     return Row(
-      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Icon(icon, size: 14, color: Colors.grey.shade500),
         const SizedBox(width: 4),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              value,
-              style: const TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF1E2875),
-              ),
-              overflow: TextOverflow.ellipsis,
-            ),
-            if (label.isNotEmpty)
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               Text(
-                label,
-                style: TextStyle(fontSize: 9, color: Colors.grey.shade500),
+                value,
+                style: const TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF1E2875),
+                ),
+                overflow: TextOverflow.ellipsis,
               ),
-          ],
+              if (label.isNotEmpty)
+                Text(
+                  label,
+                  style: TextStyle(fontSize: 9, color: Colors.grey.shade500),
+                  overflow: TextOverflow.ellipsis,
+                ),
+            ],
+          ),
         ),
       ],
     );

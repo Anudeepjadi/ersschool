@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/admin_app_bar.dart';
+import '../widgets/admin_bottom_nav_bar.dart';
 
 class AdminAboutUsScreen extends StatefulWidget {
   const AdminAboutUsScreen({super.key});
@@ -17,6 +18,7 @@ class _AdminAboutUsScreenState extends State<AdminAboutUsScreen> {
         title: "About Us",
         subtitle: "Know more about our mission, vision and values",
       ),
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
       body: SingleChildScrollView(
         child: Container(
           color: const Color(0xFFF9FAFB),
@@ -212,10 +214,10 @@ class _AdminAboutUsScreenState extends State<AdminAboutUsScreen> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(width: 160, child: _buildLeaderProfile("Mr. Rajesh Sharma", "Principal", "20+ years of experience in education leadership.", 'https://randomuser.me/api/portraits/men/32.jpg')),
-              SizedBox(width: 160, child: _buildLeaderProfile("Ms. Anita Verma", "Vice Principal", "Expert in academic planning.", 'https://randomuser.me/api/portraits/women/44.jpg')),
-              SizedBox(width: 160, child: _buildLeaderProfile("Mr. Vikram Singh", "Head of Academics", "Passionate about curriculum innovation.", 'https://randomuser.me/api/portraits/men/46.jpg')),
-              SizedBox(width: 160, child: _buildLeaderProfile("Ms. Neha Gupta", "Head of Operations", "Specialist in operations.", 'https://randomuser.me/api/portraits/women/65.jpg')),
+              SizedBox(width: 160, child: _buildLeaderProfile("Mr. Rajesh Sharma", "Principal", "20+ years of experience in education leadership.")),
+              SizedBox(width: 160, child: _buildLeaderProfile("Ms. Anita Verma", "Vice Principal", "Expert in academic planning.")),
+              SizedBox(width: 160, child: _buildLeaderProfile("Mr. Vikram Singh", "Head of Academics", "Passionate about curriculum innovation.")),
+              SizedBox(width: 160, child: _buildLeaderProfile("Ms. Neha Gupta", "Head of Operations", "Specialist in operations.")),
             ],
           ),
         ),
@@ -223,13 +225,11 @@ class _AdminAboutUsScreenState extends State<AdminAboutUsScreen> {
     );
   }
 
-  Widget _buildLeaderProfile(String name, String role, String desc, String imageUrl) {
+  Widget _buildLeaderProfile(String name, String role, String desc) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Column(
         children: [
-          CircleAvatar(radius: 40, backgroundImage: NetworkImage(imageUrl)),
-          const SizedBox(height: 12),
           Text(name, textAlign: TextAlign.center, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
           const SizedBox(height: 4),
           Text(role, textAlign: TextAlign.center, style: TextStyle(fontSize: 11, color: Colors.grey.shade600, fontWeight: FontWeight.bold)),

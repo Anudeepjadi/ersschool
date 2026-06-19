@@ -18,40 +18,69 @@ class CalendarScreen extends StatefulWidget {
 
 class _CalendarScreenState extends State<CalendarScreen> {
   int _activeTab = 0; // 0: Calendar, 1: Holidays List
-  DateTime _selectedDate = DateTime(2026, 5, 20);
+  late DateTime _selectedDate;
+  late DateTime _currentMonth;
+  late List<DateTime> _gridDays;
   String _selectedSchool = "Ecstasy School 1";
 
   final List<String> _schools = ["Ecstasy School 1", "Ecstasy School 2", "Ecstasy School 3"];
 
-  // Days mapping in June 2026
-  // Starting day is Wednesday (Sun=0, Mon=1, Tue=2, Wed=3).
-  // So April has 3 days: 28, 29, 30.
-  // June has 1 day: 1.
-  final List<DateTime> _juneGridDays = [
-    // Row 1
-    DateTime(2026, 4, 28), DateTime(2026, 4, 29), DateTime(2026, 4, 30),
-    DateTime(2026, 5, 1), DateTime(2026, 5, 2), DateTime(2026, 5, 3), DateTime(2026, 5, 4),
-    // Row 2
-    DateTime(2026, 5, 5), DateTime(2026, 5, 6), DateTime(2026, 5, 7),
-    DateTime(2026, 5, 8), DateTime(2026, 5, 9), DateTime(2026, 5, 10), DateTime(2026, 5, 11),
-    // Row 3
-    DateTime(2026, 5, 12), DateTime(2026, 5, 13), DateTime(2026, 5, 14),
-    DateTime(2026, 5, 15), DateTime(2026, 5, 16), DateTime(2026, 5, 17), DateTime(2026, 5, 18),
-    // Row 4
-    DateTime(2026, 5, 19), DateTime(2026, 5, 20), DateTime(2026, 5, 21),
-    DateTime(2026, 5, 22), DateTime(2026, 5, 23), DateTime(2026, 5, 24), DateTime(2026, 5, 25),
-    // Row 5
-    DateTime(2026, 5, 26), DateTime(2026, 5, 27), DateTime(2026, 5, 28),
-    DateTime(2026, 5, 29), DateTime(2026, 5, 30), DateTime(2026, 5, 31), DateTime(2026, 6, 1),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    final now = DateTime.now();
+    _selectedDate = DateTime(now.year, now.month, now.day);
+    _currentMonth = DateTime(now.year, now.month, 1);
+    _generateGridDays();
+  }
+
+  void _generateGridDays() {
+    final first = DateTime(_currentMonth.year, _currentMonth.month, 1);
+    final daysBefore = first.weekday == 7 ? 0 : first.weekday;
+    final firstToDisplay = first.subtract(Duration(days: daysBefore));
+    final last = DateTime(_currentMonth.year, _currentMonth.month + 1, 0);
+    final daysAfter = 6 - (last.weekday == 7 ? 0 : last.weekday);
+    final lastToDisplay = last.add(Duration(days: daysAfter));
+
+    final list = <DateTime>[];
+    DateTime temp = firstToDisplay;
+    while (!temp.isAfter(lastToDisplay)) {
+      list.add(temp);
+      temp = temp.add(const Duration(days: 1));
+    }
+    while (list.length % 7 != 0) {
+      list.add(temp);
+      temp = temp.add(const Duration(days: 1));
+    }
+    _gridDays = list;
+  }
+
+  void _nextMonth() {
+    setState(() {
+      _currentMonth = DateTime(_currentMonth.year, _currentMonth.month + 1, 1);
+      _generateGridDays();
+    });
+  }
+
+  void _prevMonth() {
+    setState(() {
+      _currentMonth = DateTime(_currentMonth.year, _currentMonth.month - 1, 1);
+      _generateGridDays();
+    });
+  }
+
+  String _monthName(int m) => const [
+        "", "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+      ][m];
 
   // Map dates to dot colors
   Color? _getEventColor(DateTime day) {
-    if (day.month != 5 || day.year != 2026) return null;
-    if (day.day == 24) return const Color(0xFF8B5CF6); // Purple (Exams)
-    if (day.day == 25) return const Color(0xFF22C55E); // Green (Meetings)
-    if (day.day == 27) return const Color(0xFFEF4444); // Red (Holidays)
-    if (day.day == 31) return const Color(0xFFF59E0B); // Orange (Events)
+    if (day.month != _currentMonth.month) return null;
+    if (day.day == 10) return const Color(0xFF8B5CF6); // Purple (Exams)
+    if (day.day == 15) return const Color(0xFF22C55E); // Green (Meetings)
+    if (day.day == 22) return const Color(0xFFEF4444); // Red (Holidays)
+    if (day.day == 28) return const Color(0xFFF59E0B); // Orange (Events)
     return null;
   }
 
@@ -230,9 +259,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                "June 2026",
-                style: TextStyle(
+              Text(
+                "${_monthName(_currentMonth.month)} ${_currentMonth.year}",
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF1E2875),
@@ -242,19 +271,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.chevron_left, size: 20, color: Color(0xFF1E2875)),
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Currently viewing June 2026")),
-                      );
-                    },
+                    onPressed: _prevMonth,
                   ),
                   IconButton(
                     icon: const Icon(Icons.chevron_right, size: 20, color: Color(0xFF1E2875)),
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Currently viewing June 2026")),
-                      );
-                    },
+                    onPressed: _nextMonth,
                   ),
                 ],
               ),
@@ -283,7 +304,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: _juneGridDays.length,
+            itemCount: _gridDays.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 7,
               crossAxisSpacing: 6,
@@ -291,8 +312,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
               childAspectRatio: 1.0,
             ),
             itemBuilder: (context, index) {
-              final day = _juneGridDays[index];
-              final isCurrentMonth = day.month == 5;
+              final day = _gridDays[index];
+              final isCurrentMonth = day.month == _currentMonth.month;
               final isSelected = day.day == _selectedDate.day && day.month == _selectedDate.month && day.year == _selectedDate.year;
               final dotColor = _getEventColor(day);
 
@@ -608,12 +629,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
       ),
     );
   }
-
-  String _monthName(int month) {
-    const months = ["", "Jan", "Feb", "Mar", "Apr", "June", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    return months[month];
-  }
-
   Widget _buildHolidaysSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -644,52 +659,63 @@ class _CalendarScreenState extends State<CalendarScreen> {
           ],
         ),
         const SizedBox(height: 12),
-        // Table headers
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-          decoration: BoxDecoration(
-            color: Colors.grey.shade50,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: const Row(
-            children: [
-              Expanded(
-                flex: 3,
-                child: Text(
-                  "Holiday Name",
-                  style: TextStyle(fontSize: 11, color: Color(0xFF6B7280), fontWeight: FontWeight.bold),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
+          child: SizedBox(
+            width: 650,
+            child: Column(
+              children: [
+                // Table headers
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade50,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Row(
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: Text(
+                          "Holiday Name",
+                          style: TextStyle(fontSize: 11, color: Color(0xFF6B7280), fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 3,
+                        child: Text(
+                          "Date",
+                          style: TextStyle(fontSize: 11, color: Color(0xFF6B7280), fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          "Day",
+                          style: TextStyle(fontSize: 11, color: Color(0xFF6B7280), fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 4,
+                        child: Text(
+                          "Description",
+                          style: TextStyle(fontSize: 11, color: Color(0xFF6B7280), fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Expanded(
-                flex: 3,
-                child: Text(
-                  "Date",
-                  style: TextStyle(fontSize: 11, color: Color(0xFF6B7280), fontWeight: FontWeight.bold),
-                ),
-              ),
-              Expanded(
-                flex: 2,
-                child: Text(
-                  "Day",
-                  style: TextStyle(fontSize: 11, color: Color(0xFF6B7280), fontWeight: FontWeight.bold),
-                ),
-              ),
-              Expanded(
-                flex: 4,
-                child: Text(
-                  "Description",
-                  style: TextStyle(fontSize: 11, color: Color(0xFF6B7280), fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
+                const SizedBox(height: 6),
+                _buildHolidayRow("Summer Break", "20 June 2026 - 15 Jun 2026", "Mon - Sat", "School closed for summer vacation.", const Color(0xFFEF4444), const Color(0xFFFEE2E2), Icons.beach_access),
+                _buildHolidayRow("Independence Day", "15 Aug 2026", "Thursday", "National holiday.", const Color(0xFFF59E0B), const Color(0xFFFEF3C7), Icons.flag),
+                _buildHolidayRow("Janmashtami", "26 Aug 2026", "Monday", "Celebration of Lord Krishna's birthday.", const Color(0xFF22C55E), const Color(0xFFDCFCE7), Icons.celebration),
+                _buildHolidayRow("Gandhi Jayanti", "02 Oct 2026", "Wednesday", "Birth anniversary of Mahatma Gandhi.", const Color(0xFF8B5CF6), const Color(0xFFF3E8FF), Icons.person),
+                _buildHolidayRow("Diwali Break", "30 Oct 2026 - 03 Nov 2026", "Wed - Sun", "Festival of Lights.", const Color(0xFF3B82F6), const Color(0xFFDBEAFE), Icons.wb_sunny),
+              ],
+            ),
           ),
         ),
-        const SizedBox(height: 6),
-        _buildHolidayRow("Summer Break", "20 June 2026 - 15 Jun 2026", "Mon - Sat", "School closed for summer vacation.", const Color(0xFFEF4444), const Color(0xFFFEE2E2), Icons.beach_access),
-        _buildHolidayRow("Independence Day", "15 Aug 2026", "Thursday", "National holiday.", const Color(0xFFF59E0B), const Color(0xFFFEF3C7), Icons.flag),
-        _buildHolidayRow("Janmashtami", "26 Aug 2026", "Monday", "Celebration of Lord Krishna's birthday.", const Color(0xFF22C55E), const Color(0xFFDCFCE7), Icons.celebration),
-        _buildHolidayRow("Gandhi Jayanti", "02 Oct 2026", "Wednesday", "Birth anniversary of Mahatma Gandhi.", const Color(0xFF8B5CF6), const Color(0xFFF3E8FF), Icons.person),
-        _buildHolidayRow("Diwali Break", "30 Oct 2026 - 03 Nov 2026", "Wed - Sun", "Festival of Lights.", const Color(0xFF3B82F6), const Color(0xFFDBEAFE), Icons.wb_sunny),
       ],
     );
   }

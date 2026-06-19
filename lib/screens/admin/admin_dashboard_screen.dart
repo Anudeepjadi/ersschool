@@ -28,8 +28,11 @@ import 'screens/admin_system_updates_screen.dart';
 import 'screens/admin_video_tutorials_screen.dart';
 import 'screens/admin_about_us_screen.dart';
 
+import 'widgets/admin_bottom_nav_bar.dart';
+
 class AdminDashboardScreen extends StatefulWidget {
-  const AdminDashboardScreen({super.key});
+  final int initialIndex;
+  const AdminDashboardScreen({super.key, this.initialIndex = 0});
 
   @override
   State<AdminDashboardScreen> createState() => _AdminDashboardScreenState();
@@ -40,6 +43,12 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<AdminStudentsTabState> _studentsTabKey = GlobalKey<AdminStudentsTabState>();
   final GlobalKey<AdminTeachersTabState> _teachersTabKey = GlobalKey<AdminTeachersTabState>();
+
+  @override
+  void initState() {
+    super.initState();
+    currentIndex = widget.initialIndex;
+  }
 
   void _onTabChanged(int index) {
     setState(() {
@@ -66,51 +75,34 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           });
         },
       ),
-      AdminStudentsTab(key: _studentsTabKey),
-      AdminTeachersTab(key: _teachersTabKey),
-      const AdminBranchesTab(),
+      AdminStudentsTab(
+        key: _studentsTabKey,
+        onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer(),
+      ),
+      AdminTeachersTab(
+        key: _teachersTabKey,
+        onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer(),
+      ),
+      AdminBranchesTab(
+        onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer(),
+      ),
       AdminMoreTab(
         onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer(),
+        onOpenProfile: () => _onTabChanged(4),
       ),
     ];
 
     return Scaffold(
       key: _scaffoldKey,
       drawer: _buildDrawer(),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
+      bottomNavigationBar: AdminBottomNavBar(
         currentIndex: currentIndex,
-        selectedItemColor: AppColors.primary,
-        unselectedItemColor: const Color(0xFF757897),
-        selectedLabelStyle:
-            const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
-        unselectedLabelStyle:
-            const TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
-        onTap: _onTabChanged,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.grid_view_outlined),
-            label: "Dashboard",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.people_alt_outlined),
-            label: "Students",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.co_present_outlined),
-            label: "Teachers",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.corporate_fare_outlined),
-            label: "Branches",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.more_horiz),
-            label: "More",
-          ),
-        ],
+        onTabSelected: _onTabChanged,
       ),
-      body: tabs[currentIndex],
+      body: IndexedStack(
+        index: currentIndex,
+        children: tabs,
+      ),
     );
   }
 

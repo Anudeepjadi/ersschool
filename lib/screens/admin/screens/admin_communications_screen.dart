@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
+import '../widgets/admin_bottom_nav_bar.dart';
+import '../widgets/admin_app_bar.dart';
 
 class AdminCommunicationsScreen extends StatefulWidget {
   const AdminCommunicationsScreen({super.key});
@@ -78,23 +80,10 @@ class _AdminCommunicationsScreenState extends State<AdminCommunicationsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FF),
-      appBar: AppBar(
-        title: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Communications",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white),
-            ),
-            Text(
-              "Manage all school communications",
-              style: TextStyle(fontSize: 12, color: Colors.white70),
-            ),
-          ],
-        ),
-        backgroundColor: AppColors.primaryDark,
-        foregroundColor: Colors.white,
-        elevation: 0,
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
+      appBar: const AdminAppBar(
+        title: "Communications",
+        subtitle: "Manage all school communications",
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -238,7 +227,7 @@ class _AdminCommunicationsScreenState extends State<AdminCommunicationsScreen> {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          fontSize: 13,
+                          fontSize: 14,
                           fontWeight: msg['unread'] ? FontWeight.bold : FontWeight.w600,
                           color: const Color(0xFF1E2875),
                         ),
@@ -248,7 +237,7 @@ class _AdminCommunicationsScreenState extends State<AdminCommunicationsScreen> {
                     Text(
                       msg['time'],
                       style: TextStyle(
-                        fontSize: 10,
+                        fontSize: 11,
                         color: msg['unread'] ? AppColors.primary : Colors.grey,
                         fontWeight: msg['unread'] ? FontWeight.bold : FontWeight.normal,
                       ),
@@ -265,7 +254,7 @@ class _AdminCommunicationsScreenState extends State<AdminCommunicationsScreen> {
                           msg['preview'],
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(fontSize: 11, color: Colors.grey),
+                          style: const TextStyle(fontSize: 12, color: Colors.grey),
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -277,7 +266,7 @@ class _AdminCommunicationsScreenState extends State<AdminCommunicationsScreen> {
                         ),
                         child: Text(
                           msg['audience'],
-                          style: const TextStyle(fontSize: 8, fontWeight: FontWeight.bold, color: Colors.blue),
+                          style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.blue),
                         ),
                       ),
                     ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../widgets/admin_app_bar.dart';
+import '../widgets/admin_bottom_nav_bar.dart';
 
 class AdminHostelScreen extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
@@ -35,6 +36,7 @@ class _AdminHostelScreenState extends State<AdminHostelScreen> {
         subtitle: "Manage hostel, rooms and residents",
         onOpenDrawer: widget.onOpenDrawer,
       ),
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.all(16),
@@ -160,15 +162,14 @@ class _AdminHostelScreenState extends State<AdminHostelScreen> {
 
   Widget _buildLegendRow(Color color, String label, String value) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Container(width: 10, height: 10, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(3))),
-            const SizedBox(width: 8),
-            Text(label, style: const TextStyle(fontSize: 12, color: Color(0xFF757897), fontWeight: FontWeight.w500)),
-          ],
+        Container(margin: const EdgeInsets.only(top: 4), width: 10, height: 10, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(3))),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(label, style: const TextStyle(fontSize: 12, color: Color(0xFF757897), fontWeight: FontWeight.w500)),
         ),
+        const SizedBox(width: 4),
         Text(value, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
       ],
     );

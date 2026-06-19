@@ -9,6 +9,7 @@ class StudentAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String subtitle;
   final Widget? leading;
   final VoidCallback? onOpenDrawer;
+  final VoidCallback? onProfileTap;
   final List<Widget>? actions;
 
   const StudentAppBar({
@@ -17,6 +18,7 @@ class StudentAppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.subtitle,
     this.leading,
     this.onOpenDrawer,
+    this.onProfileTap,
     this.actions,
   });
 
@@ -27,11 +29,6 @@ class StudentAppBar extends StatelessWidget implements PreferredSizeWidget {
       foregroundColor: Colors.white,
       elevation: 0,
       toolbarHeight: 48,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          bottom: Radius.circular(30),
-        ),
-      ),
       leading: leading ?? 
           (onOpenDrawer != null
               ? IconButton(
@@ -133,7 +130,7 @@ class StudentAppBar extends StatelessWidget implements PreferredSizeWidget {
         Padding(
           padding: const EdgeInsets.only(right: 16, left: 4),
           child: GestureDetector(
-            onTap: () {
+            onTap: onProfileTap ?? () {
               Navigator.push(context, MaterialPageRoute(builder: (_) => const MyInfoScreen()));
             },
             child: Container(

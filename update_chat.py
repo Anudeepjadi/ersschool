@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
+import os
+
+new_code = """import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
-import '../widgets/admin_bottom_nav_bar.dart';
 
 class AdminChatSupportScreen extends StatefulWidget {
   const AdminChatSupportScreen({super.key});
@@ -12,7 +13,6 @@ class AdminChatSupportScreen extends StatefulWidget {
 class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
   final TextEditingController _messageController = TextEditingController();
   Map<String, dynamic>? _selectedChat;
-  String _currentFilter = 'All';
 
   final List<Map<String, dynamic>> _chats = [
     {
@@ -102,7 +102,6 @@ class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
       body: SafeArea(
         child: isMobile 
             ? (_selectedChat == null ? sidebar : chatArea)
@@ -155,9 +154,9 @@ class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildTab("All", _currentFilter == 'All'),
-              _buildTab("Open", _currentFilter == 'Open'),
-              _buildTab("Resolved", _currentFilter == 'Resolved'),
+              _buildTab("All", true),
+              _buildTab("Open", false),
+              _buildTab("Resolved", false),
             ],
           ),
         ),
@@ -165,47 +164,32 @@ class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
         
         // Chat List
         Expanded(
-          child: Builder(
-            builder: (context) {
-              final filteredChats = _chats.where((chat) {
-                if (_currentFilter == 'All') return true;
-                if (_currentFilter == 'Open') return chat['status'] == 'Open';
-                if (_currentFilter == 'Resolved') return chat['status'] == 'Resolved' || chat['status'] == 'Closed';
-                return true;
-              }).toList();
-              return ListView.builder(
-                itemCount: filteredChats.length,
-                itemBuilder: (context, index) {
-                  final chat = filteredChats[index];
-                  return _buildChatListItem(chat);
-                },
-              );
-            }
+          child: ListView.builder(
+            itemCount: _chats.length,
+            itemBuilder: (context, index) {
+              final chat = _chats[index];
+              return _buildChatListItem(chat);
+            },
           ),
         ),
         
         // Start New Chat Button
-        InkWell(
-          onTap: () {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Starting new chat...')));
-          },
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            color: Colors.white,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text("Can't find your conversation?", style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    const Icon(Icons.chat_bubble_outline, color: Colors.blue, size: 16),
-                    const SizedBox(width: 8),
-                    Text("Start New Chat", style: TextStyle(fontSize: 14, color: Colors.blue.shade700, fontWeight: FontWeight.bold)),
-                  ],
-                ),
-              ],
-            ),
+        Container(
+          padding: const EdgeInsets.all(16),
+          color: Colors.white,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text("Can't find your conversation?", style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  const Icon(Icons.chat_bubble_outline, color: Colors.blue, size: 16),
+                  const SizedBox(width: 8),
+                  Text("Start New Chat", style: TextStyle(fontSize: 14, color: Colors.blue.shade700, fontWeight: FontWeight.bold)),
+                ],
+              ),
+            ],
           ),
         ),
       ],
@@ -213,29 +197,22 @@ class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
   }
 
   Widget _buildTab(String title, bool isSelected) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _currentFilter = title;
-        });
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              color: isSelected ? Colors.blue.shade700 : Colors.transparent,
-              width: 2,
-            ),
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: isSelected ? Colors.blue.shade700 : Colors.transparent,
+            width: 2,
           ),
         ),
-        child: Text(
-          title,
-          style: TextStyle(
-            color: isSelected ? Colors.blue.shade700 : Colors.black87,
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-            fontSize: 13,
-          ),
+      ),
+      child: Text(
+        title,
+        style: TextStyle(
+          color: isSelected ? Colors.blue.shade700 : Colors.black87,
+          fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+          fontSize: 13,
         ),
       ),
     );
@@ -620,3 +597,9 @@ class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
     );
   }
 }
+"""
+
+with open(r'c:\Users\DELL\ersschool\lib\screens\admin\screens\admin_chat_support_screen.dart', 'w', encoding='utf-8') as f:
+    f.write(new_code)
+
+print("Screen updated successfully.")

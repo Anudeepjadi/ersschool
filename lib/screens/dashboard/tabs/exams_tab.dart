@@ -194,9 +194,10 @@ class _ExExamsTabState extends State<ExamsTab>
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
       appBar: StudentAppBar(
-        title: "Examination",
-        subtitle: "View your exam schedules and results",
+        title: "Examinations",
+        subtitle: "View your schedules and results",
         onOpenDrawer: widget.onOpenDrawer ?? () => Scaffold.of(context).openDrawer(),
+        onProfileTap: widget.onTabSelected != null ? () => widget.onTabSelected!(1) : null,
       ),
       body: SafeArea(
         top: false,
@@ -374,13 +375,21 @@ class _ExExamsTabState extends State<ExamsTab>
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _buildQuickActionItem(Icons.calendar_month_outlined,
-                        "Term Exam\nTimetable", Colors.purple),
+                        "Term Exam\nTimetable", Colors.purple, onTap: () {
+                      _tabController.animateTo(1);
+                    }),
                     _buildQuickActionItem(
-                        Icons.analytics_outlined, "Grade Report", Colors.green),
+                        Icons.analytics_outlined, "Grade Report", Colors.green, onTap: () {
+                      _tabController.animateTo(2);
+                    }),
                     _buildQuickActionItem(Icons.download_for_offline_outlined,
-                        "Download\nHall Ticket", Colors.orange),
+                        "Download\nHall Ticket", Colors.orange, onTap: () {
+                      _downloadHallTicket(context);
+                    }),
                     _buildQuickActionItem(Icons.bar_chart_outlined,
-                        "Performance\nAnalysis", Colors.blue),
+                        "Performance\nAnalysis", Colors.blue, onTap: () {
+                      _showPerformanceAnalysisDialog(context);
+                    }),
                   ],
                 ),
               ],
@@ -390,6 +399,65 @@ class _ExExamsTabState extends State<ExamsTab>
           const SizedBox(height: 30),
         ],
       ),
+    );
+  }
+
+  void _showPerformanceAnalysisDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text('Performance Analysis', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Color(0xFF1E2875))),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Here is your academic overview based on recent exams:'),
+            const SizedBox(height: 16),
+            _buildPerformanceRow('Top Subject:', 'Science (88%)', Colors.green),
+            const SizedBox(height: 8),
+            _buildPerformanceRow('Weakest Subject:', 'Hindi (64%)', Colors.orange),
+            const SizedBox(height: 8),
+            _buildPerformanceRow('Overall Average:', '78.5%', Colors.blue),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.blue.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Row(
+                children: [
+                  Icon(Icons.trending_up, color: Colors.blue, size: 24),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Great job! Your performance has improved by 4% compared to the last term.',
+                      style: TextStyle(fontSize: 12, color: Colors.black87),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPerformanceRow(String label, String value, Color color) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.black54)),
+        Text(value, style: TextStyle(fontWeight: FontWeight.bold, color: color, fontSize: 15)),
+      ],
     );
   }
 
@@ -522,61 +590,72 @@ class _ExExamsTabState extends State<ExamsTab>
       ),
       child: Column(
         children: [
-          // Header
-          Row(
-            children: [
-              Expanded(flex: 6, child: Text("Exam Name", style: headerStyle)),
-              Expanded(flex: 4, child: Text("Subject", style: headerStyle)),
-              Expanded(flex: 5, child: Text("Date", style: headerStyle)),
-              Expanded(flex: 4, child: Text("Time", style: headerStyle)),
-              Expanded(flex: 4, child: Text("Duration", style: headerStyle)),
-              SizedBox(
-                  width: 32,
-                  child: Text("Syllabus",
-                      style: headerStyle, textAlign: TextAlign.center)),
-            ],
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            child: SizedBox(
+              width: 650,
+              child: Column(
+                children: [
+                  // Header
+                  Row(
+                    children: [
+                      Expanded(flex: 6, child: Text("Exam Name", style: headerStyle)),
+                      Expanded(flex: 4, child: Text("Subject", style: headerStyle)),
+                      Expanded(flex: 5, child: Text("Date", style: headerStyle)),
+                      Expanded(flex: 4, child: Text("Time", style: headerStyle)),
+                      Expanded(flex: 4, child: Text("Duration", style: headerStyle)),
+                      SizedBox(
+                          width: 32,
+                          child: Text("Syllabus",
+                              style: headerStyle, textAlign: TextAlign.center)),
+                    ],
+                  ),
+                  const Divider(height: 20),
+        
+                  // Items
+                  _buildUpcomingExamRow(
+                      "Unit Test - 1",
+                      "Term 1",
+                      "Mathematics",
+                      "MATH",
+                      "25 Jun 2026",
+                      "Saturday",
+                      "10:00 AM",
+                      "1.30 Hrs",
+                      Colors.purple),
+                  const Divider(height: 20),
+                  _buildUpcomingExamRow("Unit Test - 1", "Term 1", "Science", "SCI",
+                      "27 Jun 2026", "Monday", "10:00 AM", "1.30 Hrs", Colors.green),
+                  const Divider(height: 20),
+                  _buildUpcomingExamRow(
+                      "Unit Test - 1",
+                      "Term 1",
+                      "English",
+                      "ENG",
+                      "29 Jun 2026",
+                      "Wednesday",
+                      "10:00 AM",
+                      "1.30 Hrs",
+                      Colors.orange),
+                  const Divider(height: 20),
+                  _buildUpcomingExamRow(
+                      "Unit Test - 1",
+                      "Term 1",
+                      "Social Science",
+                      "SST",
+                      "31 Jun 2026",
+                      "Friday",
+                      "10:00 AM",
+                      "1.30 Hrs",
+                      Colors.pink),
+                  const Divider(height: 20),
+                  _buildUpcomingExamRow("Unit Test - 1", "Term 1", "Hindi", "HIN",
+                      "03 Jun 2026", "Monday", "10:00 AM", "1.30 Hrs", Colors.blue),
+                ],
+              ),
+            ),
           ),
-          const Divider(height: 20),
-
-          // Items
-          _buildUpcomingExamRow(
-              "Unit Test - 1",
-              "Term 1",
-              "Mathematics",
-              "MATH",
-              "25 Jun 2026",
-              "Saturday",
-              "10:00 AM",
-              "1.30 Hrs",
-              Colors.purple),
-          const Divider(height: 20),
-          _buildUpcomingExamRow("Unit Test - 1", "Term 1", "Science", "SCI",
-              "27 Jun 2026", "Monday", "10:00 AM", "1.30 Hrs", Colors.green),
-          const Divider(height: 20),
-          _buildUpcomingExamRow(
-              "Unit Test - 1",
-              "Term 1",
-              "English",
-              "ENG",
-              "29 Jun 2026",
-              "Wednesday",
-              "10:00 AM",
-              "1.30 Hrs",
-              Colors.orange),
-          const Divider(height: 20),
-          _buildUpcomingExamRow(
-              "Unit Test - 1",
-              "Term 1",
-              "Social Science",
-              "SST",
-              "31 Jun 2026",
-              "Friday",
-              "10:00 AM",
-              "1.30 Hrs",
-              Colors.pink),
-          const Divider(height: 20),
-          _buildUpcomingExamRow("Unit Test - 1", "Term 1", "Hindi", "HIN",
-              "03 Jun 2026", "Monday", "10:00 AM", "1.30 Hrs", Colors.blue),
 
           const Divider(height: 24),
           // View All Link
@@ -737,41 +816,52 @@ class _ExExamsTabState extends State<ExamsTab>
       ),
       child: Column(
         children: [
-          // Header
-          Row(
-            children: [
-              Expanded(flex: 6, child: Text("Exam Name", style: headerStyle)),
-              Expanded(flex: 4, child: Text("Subject", style: headerStyle)),
-              Expanded(flex: 5, child: Text("Date", style: headerStyle)),
-              Expanded(
-                  flex: 4,
-                  child: Text("Marks Obtained",
-                      style: headerStyle, textAlign: TextAlign.center)),
-              Expanded(
-                  flex: 4,
-                  child: Text("Total Marks",
-                      style: headerStyle, textAlign: TextAlign.center)),
-              Expanded(
-                  flex: 4,
-                  child: Text("Percentage",
-                      style: headerStyle, textAlign: TextAlign.center)),
-              SizedBox(
-                  width: 36,
-                  child: Text("Grade",
-                      style: headerStyle, textAlign: TextAlign.center)),
-            ],
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            child: SizedBox(
+              width: 750,
+              child: Column(
+                children: [
+                  // Header
+                  Row(
+                    children: [
+                      Expanded(flex: 6, child: Text("Exam Name", style: headerStyle)),
+                      Expanded(flex: 4, child: Text("Subject", style: headerStyle)),
+                      Expanded(flex: 5, child: Text("Date", style: headerStyle)),
+                      Expanded(
+                          flex: 4,
+                          child: Text("Marks Obtained",
+                              style: headerStyle, textAlign: TextAlign.center)),
+                      Expanded(
+                          flex: 4,
+                          child: Text("Total Marks",
+                              style: headerStyle, textAlign: TextAlign.center)),
+                      Expanded(
+                          flex: 4,
+                          child: Text("Percentage",
+                              style: headerStyle, textAlign: TextAlign.center)),
+                      SizedBox(
+                          width: 36,
+                          child: Text("Grade",
+                              style: headerStyle, textAlign: TextAlign.center)),
+                    ],
+                  ),
+                  const Divider(height: 20),
+        
+                  // Items
+                  _buildRecentResultRow("Mid Term Exam", "Term 1", "Mathematics",
+                      "MATH", "15 Apr 2026", "42", "50", "84%", "A", Colors.green),
+                  const Divider(height: 20),
+                  _buildRecentResultRow("Mid Term Exam", "Term 1", "Science", "SCI",
+                      "16 Apr 2026", "44", "50", "88%", "A", Colors.green),
+                  const Divider(height: 20),
+                  _buildRecentResultRow("Mid Term Exam", "Term 1", "English", "ENG",
+                      "17 Apr 2026", "38", "50", "76%", "B+", Colors.teal),
+                ],
+              ),
+            ),
           ),
-          const Divider(height: 20),
-
-          // Items
-          _buildRecentResultRow("Mid Term Exam", "Term 1", "Mathematics",
-              "MATH", "15 Apr 2026", "42", "50", "84%", "A", Colors.green),
-          const Divider(height: 20),
-          _buildRecentResultRow("Mid Term Exam", "Term 1", "Science", "SCI",
-              "16 Apr 2026", "44", "50", "88%", "A", Colors.green),
-          const Divider(height: 20),
-          _buildRecentResultRow("Mid Term Exam", "Term 1", "English", "ENG",
-              "17 Apr 2026", "38", "50", "76%", "B+", Colors.teal),
 
           const Divider(height: 24),
           // View All Link
@@ -924,29 +1014,53 @@ class _ExExamsTabState extends State<ExamsTab>
     );
   }
 
-  Widget _buildQuickActionItem(IconData icon, String label, Color color) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.08),
-            borderRadius: BorderRadius.circular(12),
+  Widget _buildQuickActionItem(IconData icon, String label, Color color, {VoidCallback? onTap}) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 4.0),
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(icon, color: color, size: 22),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                label,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF1E2875),
+                  height: 1.2,
+                ),
+              ),
+            ],
           ),
-          child: Icon(icon, color: color, size: 22),
         ),
-        const SizedBox(height: 6),
-        Text(
-          label,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 10,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF1E2875),
-            height: 1.2,
-          ),
-        ),
-      ],
+      ),
+    );
+  }
+
+  void _downloadHallTicket(BuildContext context) async {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Preparing Hall Ticket...')),
+    );
+    await Future.delayed(const Duration(seconds: 2));
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Hall Ticket downloaded successfully!'),
+        backgroundColor: Colors.green,
+      ),
     );
   }
 

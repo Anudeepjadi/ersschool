@@ -21,6 +21,7 @@ class MoreTab extends StatelessWidget {
         title: "More",
         subtitle: "Settings and additional options",
         onOpenDrawer: () => Scaffold.of(context).openDrawer(),
+        onProfileTap: onTabSelected != null ? () => onTabSelected!(1) : null,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -92,6 +93,14 @@ class MoreTab extends StatelessWidget {
                     subtitle: 'Update your login password',
                     color: Colors.purple,
                     onTap: () => _showComingSoon(context, 'Change Password'),
+                  ),
+                  _buildTile(
+                    context,
+                    icon: Icons.palette_outlined,
+                    title: 'Theme',
+                    subtitle: 'System Default',
+                    color: Colors.indigo,
+                    onTap: () => _showThemeSelectorDialog(context),
                   ),
                   _buildTile(
                     context,
@@ -323,13 +332,100 @@ class MoreTab extends StatelessWidget {
 
   // ── Helpers ────────────────────────────────────────────────────────────────
   void _showComingSoon(BuildContext context, String feature) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('$feature — Coming soon!'),
-        behavior: SnackBarBehavior.floating,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        duration: const Duration(seconds: 2),
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(feature, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Settings & details for $feature'),
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Row(
+                children: [
+                  Icon(Icons.info_outline, color: AppColors.primary, size: 20),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'This is dummy data representing the active status of this module.',
+                      style: TextStyle(fontSize: 12, color: Colors.black87),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Close'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('$feature settings saved successfully!')),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            ),
+            child: const Text('Save Changes'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showThemeSelectorDialog(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (ctx) => Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Select Theme', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 20),
+            ListTile(
+              leading: const Icon(Icons.brightness_auto),
+              title: const Text('System Default'),
+              onTap: () {
+                ProfileManager().themeMode.value = ThemeMode.system;
+                Navigator.pop(ctx);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.light_mode),
+              title: const Text('Light Theme'),
+              onTap: () {
+                ProfileManager().themeMode.value = ThemeMode.light;
+                Navigator.pop(ctx);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.dark_mode),
+              title: const Text('Dark Theme'),
+              onTap: () {
+                ProfileManager().themeMode.value = ThemeMode.dark;
+                Navigator.pop(ctx);
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -34,7 +34,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer(),
         onTabSelected: _onTabChanged,
       ),
-      const MyInfoScreen(),
+      MyInfoScreen(
+        onTabSelected: _onTabChanged,
+      ),
       ClassScreen(
         onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer(),
         onTabSelected: _onTabChanged,

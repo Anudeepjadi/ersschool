@@ -793,12 +793,16 @@ class AttendanceScreen extends StatelessWidget {
                               Icon(Icons.info_outline,
                                   size: 11, color: AppColors.textLight),
                               const SizedBox(width: 3),
-                              Text(
-                                h['reason'] as String,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 10,
-                                  color: AppColors.textLight,
-                                  fontStyle: FontStyle.italic,
+                              Expanded(
+                                child: Text(
+                                  h['reason'] as String,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 10,
+                                    color: AppColors.textLight,
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                             ],

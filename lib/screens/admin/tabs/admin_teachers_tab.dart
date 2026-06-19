@@ -3,7 +3,8 @@ import '../../../core/theme/app_colors.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/ai_bot_fab.dart';
 class AdminTeachersTab extends StatefulWidget {
-  const AdminTeachersTab({super.key});
+  final VoidCallback? onOpenDrawer;
+  const AdminTeachersTab({super.key, this.onOpenDrawer});
 
   @override
   State<AdminTeachersTab> createState() => AdminTeachersTabState();
@@ -141,9 +142,10 @@ class AdminTeachersTabState extends State<AdminTeachersTab> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FF),
-      appBar: const AdminAppBar(
+      appBar: AdminAppBar(
         title: "Teachers",
         subtitle: "Manage all teaching staff",
+        onOpenDrawer: widget.onOpenDrawer,
       ),
       body: Column(
         children: [
@@ -218,18 +220,14 @@ class AdminTeachersTabState extends State<AdminTeachersTab> {
           ),
           const SizedBox(height: 16),
           // Stats cards
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
-            child: Row(
-              children: [
-                SizedBox(width: 140, child: _buildMiniStat("Total", "${_teachers.length}", Icons.school, const Color(0xFF0038FF))),
-                const SizedBox(width: 10),
-                SizedBox(width: 140, child: _buildMiniStat("Active", "$active", Icons.check_circle, const Color(0xFF10B981))),
-                const SizedBox(width: 10),
-                SizedBox(width: 140, child: _buildMiniStat("On Leave", "$onLeave", Icons.event_busy, const Color(0xFFF59E0B))),
-              ],
-            ),
+          Row(
+            children: [
+              _buildMiniStat("Total", "${_teachers.length}", Icons.school, const Color(0xFF0038FF)),
+              const SizedBox(width: 10),
+              _buildMiniStat("Active", "$active", Icons.check_circle, const Color(0xFF10B981)),
+              const SizedBox(width: 10),
+              _buildMiniStat("On Leave", "$onLeave", Icons.event_busy, const Color(0xFFF59E0B)),
+            ],
           ),
         ],
       ),
@@ -237,27 +235,29 @@ class AdminTeachersTabState extends State<AdminTeachersTab> {
   }
 
   Widget _buildMiniStat(String label, String value, IconData icon, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, color: color, size: 20),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(value, style: const TextStyle(color: Color(0xFF1E2875), fontSize: 16, fontWeight: FontWeight.bold)),
-                Text(label, style: TextStyle(color: Colors.grey.shade600, fontSize: 10), overflow: TextOverflow.ellipsis),
-              ],
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey.shade200),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: color, size: 20),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(value, style: const TextStyle(color: Color(0xFF1E2875), fontSize: 16, fontWeight: FontWeight.bold), overflow: TextOverflow.ellipsis),
+                  Text(label, style: TextStyle(color: Colors.grey.shade600, fontSize: 10), overflow: TextOverflow.ellipsis),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -394,8 +394,8 @@ class AdminTeachersTabState extends State<AdminTeachersTab> {
             ),
           ],
         ),
-        trailing: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
@@ -416,7 +416,7 @@ class AdminTeachersTabState extends State<AdminTeachersTab> {
                 ),
               ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(width: 8),
             Icon(Icons.arrow_forward_ios,
                 size: 12, color: Colors.grey.shade400),
           ],

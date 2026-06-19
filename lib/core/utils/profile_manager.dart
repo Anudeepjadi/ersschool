@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -9,11 +10,30 @@ class ProfileManager {
   final ValueNotifier<String?> studentProfileImagePath = ValueNotifier<String?>(null);
   final ValueNotifier<String?> adminProfileImagePath = ValueNotifier<String?>(null);
   final ValueNotifier<String> selectedSchool = ValueNotifier<String>('Ecstasy School 1');
+  final ValueNotifier<ThemeMode> themeMode = ValueNotifier<ThemeMode>(ThemeMode.system);
 
   Future<void> init() async {
     final prefs = await SharedPreferences.getInstance();
     studentProfileImagePath.value = prefs.getString('student_profile_image');
     adminProfileImagePath.value = prefs.getString('admin_profile_image');
+    
+    final themeString = prefs.getString('theme_mode');
+    if (themeString == 'light') {
+      themeMode.value = ThemeMode.light;
+    } else if (themeString == 'dark') {
+      themeMode.value = ThemeMode.dark;
+    } else {
+      themeMode.value = ThemeMode.system;
+    }
+  }
+
+  Future<void> setThemeMode(ThemeMode mode) async {
+    final prefs = await SharedPreferences.getInstance();
+    String modeString = 'system';
+    if (mode == ThemeMode.light) modeString = 'light';
+    if (mode == ThemeMode.dark) modeString = 'dark';
+    await prefs.setString('theme_mode', modeString);
+    themeMode.value = mode;
   }
 
   Future<void> setStudentProfileImage(String? path) async {
