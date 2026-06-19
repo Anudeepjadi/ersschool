@@ -16,53 +16,7 @@ class MoreScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 12),
-          // User profile card
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFF1B263B), Color(0xFF0D1B2A)],
-              ),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Row(
-              children: [
-                const CircleAvatar(
-                  radius: 30,
-                  backgroundImage: NetworkImage('https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150'),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Ms. Priya Sharma",
-                        style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        "Mathematics Teacher (HOD)",
-                        style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 13),
-                      ),
-                      const SizedBox(height: 4),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: Colors.blue[800],
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: const Text(
-                          "EMP001",
-                          style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 24),
+
           const Text(
             "Quick Portals",
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1B263B)),
@@ -125,165 +79,319 @@ class MoreScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 24),
-          const Text(
-            "Account Options",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1B263B)),
+          // Account section
+          _sectionTitle('Account Options'),
+          const SizedBox(height: 10),
+          _buildTile(
+            context,
+            icon: Icons.notifications_outlined,
+            title: 'Notification Settings',
+            subtitle: 'Manage alerts & reminders',
+            color: Colors.orange,
+            onTap: () => _showComingSoon(context, 'Notification Settings'),
           ),
-          const SizedBox(height: 12),
-          // Settings list
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey[200]!),
-            ),
-            child: Column(
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.settings, color: Colors.grey),
-                  title: const Text("App Settings"),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () {
-                    bool pushEnabled = true;
-                    bool emailEnabled = false;
-                    String language = "English (US)";
+          _buildTile(
+            context,
+            icon: Icons.lock_reset_outlined,
+            title: 'Change Password',
+            subtitle: 'Update your login password',
+            color: Colors.purple,
+            onTap: () => _showComingSoon(context, 'Change Password'),
+          ),
+          _buildTile(
+            context,
+            icon: Icons.palette_outlined,
+            title: 'Theme',
+            subtitle: 'System Default',
+            color: Colors.indigo,
+            onTap: () => _showThemeSelectorDialog(context),
+          ),
+          _buildTile(
+            context,
+            icon: Icons.language_outlined,
+            title: 'Language',
+            subtitle: 'English (Default)',
+            color: Colors.teal,
+            onTap: () => _showComingSoon(context, 'Language Settings'),
+          ),
 
-                    showDialog(
-                      context: context,
-                      builder: (context) => StatefulBuilder(
-                        builder: (context, setModalState) {
-                          return AlertDialog(
-                            backgroundColor: const Color(0xFFF3E5F5), // Lavender background
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-                            title: const Text(
-                              "App Settings",
-                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22, color: Color(0xFF1B263B)),
-                            ),
-                            content: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const SizedBox(height: 12),
-                                SwitchListTile(
-                                  title: const Text("Push Notifications", style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16)),
-                                  activeColor: Colors.deepPurple,
-                                  value: pushEnabled,
-                                  onChanged: (v) {
-                                    setModalState(() => pushEnabled = v);
-                                  },
-                                ),
-                                const SizedBox(height: 8),
-                                SwitchListTile(
-                                  title: const Text("Email Alerts", style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16)),
-                                  activeColor: Colors.deepPurple,
-                                  value: emailEnabled,
-                                  onChanged: (v) {
-                                    setModalState(() => emailEnabled = v);
-                                  },
-                                ),
-                                const SizedBox(height: 12),
-                                ListTile(
-                                  title: const Text("App Language", style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16)),
-                                  trailing: Text(
-                                    language,
-                                    style: const TextStyle(fontSize: 12, color: Colors.grey),
-                                  ),
-                                  onTap: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) => SimpleDialog(
-                                        backgroundColor: Colors.white,
-                                        title: const Text("Select Language"),
-                                        children: ["English (US)", "Hindi", "Telugu", "Tamil"].map((lang) {
-                                          return SimpleDialogOption(
-                                            onPressed: () {
-                                              setModalState(() => language = lang);
-                                              Navigator.pop(context);
-                                            },
-                                            child: Text(lang),
-                                          );
-                                        }).toList(),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
-                            actions: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: TextButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  child: const Text("Done", style: TextStyle(color: Colors.deepPurple, fontWeight: FontWeight.bold, fontSize: 16)),
-                                ),
-                              )
-                            ],
-                          );
-                        },
-                      ),
-                    );
-                  },
-                ),
-                const Divider(height: 1),
-                ListTile(
-                  leading: const Icon(Icons.lock_outline, color: Colors.grey),
-                  title: const Text("Change Password"),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                        title: const Text("Change Password"),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const TextField(
-                              obscureText: true,
-                              decoration: InputDecoration(labelText: "Current Password"),
-                            ),
-                            const TextField(
-                              obscureText: true,
-                              decoration: InputDecoration(labelText: "New Password"),
-                            ),
-                            const TextField(
-                              obscureText: true,
-                              decoration: InputDecoration(labelText: "Confirm New Password"),
-                            ),
-                          ],
-                        ),
-                        actions: [
-                          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text("Password updated successfully")),
-                              );
-                            },
-                            child: const Text("Update"),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-                const Divider(height: 1),
-                ListTile(
-                  leading: const Icon(Icons.logout, color: Colors.red),
-                  title: const Text("Sign Out", style: TextStyle(color: Colors.red)),
-                onTap: () {
-                  // Sign out logic
-                  onOptionSelected("SignOut");
-                  // Since we are in a sub-portal pattern, we should trigger a reset to Home
-                  // This is handled in MainLayout if we map "SignOut" to a state reset.
-                },
-                ),
-              ],
-            ),
+          const SizedBox(height: 24),
+
+          // Support section
+          _sectionTitle('Support & Info'),
+          const SizedBox(height: 10),
+          _buildTile(
+            context,
+            icon: Icons.info_outline,
+            title: 'About School ERP',
+            subtitle: 'Ecstasy School Management v1.0',
+            color: Colors.blue,
+            onTap: () => _showAboutDialog(context),
           ),
+          _buildTile(
+            context,
+            icon: Icons.help_outline,
+            title: 'Help Desk',
+            subtitle: 'Contact support team',
+            color: Colors.green,
+            onTap: () => _showComingSoon(context, 'Help Desk'),
+          ),
+          _buildTile(
+            context,
+            icon: Icons.feedback_outlined,
+            title: 'Management Feedback',
+            subtitle: 'Send feedback to school management',
+            color: Colors.orange,
+            onTap: () => _showComingSoon(context, 'Management Feedback'),
+          ),
+          _buildTile(
+            context,
+            icon: Icons.privacy_tip_outlined,
+            title: 'Privacy Policy',
+            subtitle: 'Read our privacy policy',
+            color: Colors.grey,
+            onTap: () => _showComingSoon(context, 'Privacy Policy'),
+          ),
+
+          const SizedBox(height: 24),
+
+          // Logout
+          _buildLogoutButton(context),
+
           const SizedBox(height: 30),
         ],
       ),
+    );
+  }
+
+  // ── Section title ──────────────────────────────────────────────────────────
+  Widget _sectionTitle(String title) {
+    return Text(
+      title,
+      style: const TextStyle(
+        fontSize: 13,
+        fontWeight: FontWeight.bold,
+        color: Colors.grey,
+        letterSpacing: 0.8,
+      ),
+    );
+  }
+
+  // ── Settings tile ──────────────────────────────────────────────────────────
+  Widget _buildTile(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.shade100,
+            blurRadius: 4,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        leading: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Icon(icon, color: color, size: 20),
+        ),
+        title: Text(
+          title,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+            color: Color(0xFF1E2875),
+          ),
+        ),
+        subtitle: Text(
+          subtitle,
+          style: TextStyle(fontSize: 11, color: Colors.grey.shade500),
+        ),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 13, color: Colors.grey),
+        onTap: onTap,
+      ),
+    );
+  }
+
+  // ── Logout button ──────────────────────────────────────────────────────────
+  Widget _buildLogoutButton(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton.icon(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              title: const Text('Sign Out', style: TextStyle(fontWeight: FontWeight.bold)),
+              content: const Text('Are you sure you want to sign out?'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(ctx),
+                  child: const Text('Cancel'),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(ctx);
+                    onOptionSelected("SignOut");
+                  },
+                  child: const Text('Sign Out', style: TextStyle(color: Colors.white)),
+                ),
+              ],
+            ),
+          );
+        },
+        icon: const Icon(Icons.logout, color: Colors.white),
+        label: const Text(
+          'Sign Out',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.red,
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          elevation: 0,
+        ),
+      ),
+    );
+  }
+
+  // ── Helpers ────────────────────────────────────────────────────────────────
+  void _showComingSoon(BuildContext context, String feature) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(feature, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Settings & details for $feature'),
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Row(
+                children: [
+                  Icon(Icons.info_outline, color: Colors.blue, size: 20),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'This is dummy data representing the active status of this module.',
+                      style: TextStyle(fontSize: 12, color: Colors.black87),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Close'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('$feature settings saved successfully!')),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            ),
+            child: const Text('Save Changes'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showThemeSelectorDialog(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (ctx) => Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Select Theme', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 20),
+            ListTile(
+              leading: const Icon(Icons.brightness_auto),
+              title: const Text('System Default'),
+              onTap: () {
+                // ProfileManager().themeMode.value = ThemeMode.system;
+                Navigator.pop(ctx);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.light_mode),
+              title: const Text('Light Theme'),
+              onTap: () {
+                // ProfileManager().themeMode.value = ThemeMode.light;
+                Navigator.pop(ctx);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.dark_mode),
+              title: const Text('Dark Theme'),
+              onTap: () {
+                // ProfileManager().themeMode.value = ThemeMode.dark;
+                Navigator.pop(ctx);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showAboutDialog(BuildContext context) {
+    showAboutDialog(
+      context: context,
+      applicationName: 'Ecstasy School ERP',
+      applicationVersion: '1.0.0',
+      applicationIcon: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Colors.blue.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: const Icon(Icons.school, color: Colors.blue, size: 32),
+      ),
+      children: const [
+        Text(
+          'A comprehensive school management app for Ecstasy School staff and teachers.',
+        ),
+      ],
     );
   }
 

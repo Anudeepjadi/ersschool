@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../widgets/scrollable_table_wrapper.dart';
 import '../widgets/stat_card.dart';
 import '../widgets/quick_actions.dart';
 
@@ -203,11 +204,47 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.activeTab == 0) {
-      return _buildOverview();
-    } else {
-      return _buildReportDetailList();
-    }
+    return DefaultTabController(
+      length: 5,
+      initialIndex: widget.activeTab > 4 ? 0 : widget.activeTab,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Material(
+            color: Colors.white,
+            elevation: 1,
+            child: TabBar(
+              isScrollable: true,
+              tabAlignment: TabAlignment.start,
+              labelPadding: const EdgeInsets.symmetric(horizontal: 12),
+              dividerColor: Colors.transparent,
+              labelColor: Colors.blue,
+              unselectedLabelColor: Colors.grey,
+              indicatorColor: Colors.blue,
+              labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+              tabs: [
+                Tab(text: "Overall School Report"),
+                Tab(text: "Academic Report"),
+                Tab(text: "Financial Report"),
+                Tab(text: "HR Report"),
+                Tab(text: "Asset Report"),
+              ],
+            ),
+          ),
+          Expanded(
+            child: TabBarView(
+              children: [
+                _buildOverview(),
+                _buildReportDetailList(),
+                _buildReportDetailList(), // financial placeholder
+                _buildReportDetailList(), // hr placeholder
+                _buildReportDetailList(), // asset placeholder
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildOverview() {
@@ -252,26 +289,36 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     border: Border.all(color: Colors.grey[300]!),
                   ),
                   child: DropdownButton<String>(
-                    value: selectedPeriod,
+                    value: "Class 8 - A",
                     underline: const SizedBox(),
                     icon: const Icon(Icons.keyboard_arrow_down, size: 18),
                     style: const TextStyle(color: Colors.black87, fontSize: 13, fontWeight: FontWeight.bold),
-                    onChanged: (newValue) {
-                      if (newValue != null) {
-                        setState(() {
-                          selectedPeriod = newValue;
-                        });
-                      }
-                    },
+                    onChanged: (newValue) {},
                     items: const [
-                      DropdownMenuItem(value: "This Term", child: Text("This Term")),
-                      DropdownMenuItem(value: "This Month", child: Text("This Month")),
+                      DropdownMenuItem(value: "Class 8 - A", child: Text("Class 8 - A")),
+                      DropdownMenuItem(value: "Class 9 - A", child: Text("Class 9 - A")),
                     ],
                   ),
                 ),
               ],
             ),
           ),
+          
+          // Summary Row Text
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              spacing: 8,
+              runSpacing: 8,
+              children: const [
+                Text("Total Students: 538", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.blue)),
+                Text("Pass Percentage: 94%", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.green)),
+                Text("Average Attendance: 92%", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.orange)),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
 
           // 2. Overview Stats (Horizontal scroll)
           SizedBox(
@@ -281,63 +328,46 @@ class _ReportsScreenState extends State<ReportsScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               children: [
                 StatCard(
-                  title: "Total Reports",
-                  value: "$reportsTotal",
-                  subtitle: "Generated",
-                  icon: Icons.bar_chart,
+                  title: "Total Staff",
+                  value: "124",
+                  icon: Icons.people,
                   iconColor: Colors.blue,
                   iconBackgroundColor: Colors.blue.withValues(alpha: 0.1),
-                  onTap: () => widget.onSubTabSelected?.call(1), // Go to Student Reports as a sample "total" view
                 ),
                 StatCard(
-                  title: "Students",
-                  value: "$studentsIncluded",
-                  subtitle: "Included",
-                  icon: Icons.people,
+                  title: "Teaching Staff",
+                  value: "85",
+                  icon: Icons.school,
                   iconColor: Colors.green,
                   iconBackgroundColor: Colors.green.withValues(alpha: 0.1),
-                  onTap: () => widget.onSubTabSelected?.call(1),
                 ),
                 StatCard(
-                  title: "Reports Generated",
-                  value: "$termReports",
-                  subtitle: "This Term",
-                  icon: Icons.pie_chart,
+                  title: "Non-Teaching Staff",
+                  value: "39",
+                  icon: Icons.support_agent,
                   iconColor: Colors.orange,
                   iconBackgroundColor: Colors.orange.withValues(alpha: 0.1),
-                  onTap: () => widget.onSubTabSelected?.call(1),
                 ),
                 StatCard(
-                  title: "Downloads",
-                  value: "$downloads",
-                  subtitle: "This Term",
-                  icon: Icons.download,
+                  title: "Total Assets",
+                  value: "1,450",
+                  icon: Icons.inventory_2,
                   iconColor: Colors.purple,
                   iconBackgroundColor: Colors.purple.withValues(alpha: 0.1),
-                  onTap: _showExportDataDialog,
-                ),
-                StatCard(
-                  title: "Pending Reports",
-                  value: "$pending",
-                  subtitle: "To Generate",
-                  icon: Icons.pending_actions,
-                  iconColor: Colors.red,
-                  iconBackgroundColor: Colors.red.withValues(alpha: 0.1),
-                  onTap: _showGenerateReportDialog,
                 ),
               ],
             ),
           ),
           const SizedBox(height: 20),
 
-          // 3. Recent Reports Section Header
+          // 3. Academic Performance Overview
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  "Recent Reports",
+                  "Academic Performance Overview",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -428,11 +458,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
                               Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  CircleAvatar(
-                                    radius: 12,
-                                    backgroundImage: NetworkImage(report.avatarUrl),
-                                  ),
-                                  const SizedBox(width: 6),
                                   Text(
                                     report.author.split(' ').last,
                                     style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
@@ -460,46 +485,15 @@ class _ReportsScreenState extends State<ReportsScreen> {
           ),
           const SizedBox(height: 20),
 
-          // 4. Report Categories Section
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(
-              "Report Categories",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF1B263B),
-              ),
-            ),
-          ),
-          const SizedBox(height: 12),
-          GridView(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              childAspectRatio: 0.95,
-            ),
-            children: [
-              _buildCategoryCard(Icons.people, "Student Reports", "8 Reports", Colors.blue, 1),
-              _buildCategoryCard(Icons.checklist, "Attendance Reports", "5 Reports", Colors.green, 2),
-              _buildCategoryCard(Icons.quiz, "Exam Reports", "6 Reports", Colors.purple, 3),
-              _buildCategoryCard(Icons.school, "Class Reports", "3 Reports", Colors.pink, 4),
-              _buildCategoryCard(Icons.trending_up, "Grade Reports", "2 Reports", Colors.orange, 1), // Mapping to student reports for now
-              _buildCategoryCard(Icons.dashboard_customize, "Custom Reports", "0 Reports", Colors.teal, 5),
-            ],
-          ),
           const SizedBox(height: 20),
 
-          // 5. Quick Actions
+          // 4. Quick Actions
           QuickActionsBar(
             actions: [
-              QuickActionItem(title: "Generate Report", icon: Icons.add_circle_outline, onTap: _showGenerateReportDialog),
+              QuickActionItem(title: "Generate Reports", icon: Icons.add_circle_outline, onTap: _showGenerateReportDialog),
+              QuickActionItem(title: "Export Data", icon: Icons.file_download_outlined, onTap: _showExportDataDialog),
               QuickActionItem(
-                title: "Schedule Report",
+                title: "Schedule Reports",
                 icon: Icons.calendar_month,
                 onTap: () {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -507,18 +501,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   );
                 },
               ),
-              QuickActionItem(title: "Export Data", icon: Icons.file_download_outlined, onTap: _showExportDataDialog),
-              QuickActionItem(
-                title: "Report Settings",
-                icon: Icons.settings,
-                onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Settings feature coming soon...")),
-                  );
-                },
-              ),
             ],
           ),
+          const SizedBox(height: 20),
         ],
       ),
     );
@@ -596,6 +581,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
       child: Column(
         children: [
           const TabBar(
+            isScrollable: true,
+            tabAlignment: TabAlignment.start,
+            labelPadding: EdgeInsets.symmetric(horizontal: 12),
+            dividerColor: Colors.transparent,
             labelColor: Colors.blue,
             unselectedLabelColor: Colors.grey,
             indicatorColor: Colors.blue,
@@ -635,20 +624,22 @@ class _ReportsScreenState extends State<ReportsScreen> {
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: Colors.grey[200]!),
         ),
-        child: DataTable(
-          headingRowColor: WidgetStateProperty.all(Colors.grey[50]),
-          columns: const [
-            DataColumn(label: Text("Student Name", style: TextStyle(fontWeight: FontWeight.bold))),
-            DataColumn(label: Text("Presents", style: TextStyle(fontWeight: FontWeight.bold))),
-            DataColumn(label: Text("Absents", style: TextStyle(fontWeight: FontWeight.bold))),
-          ],
-          rows: studentAttendance.map((data) {
-            return DataRow(cells: [
-              DataCell(Text(data["name"])),
-              DataCell(Text("${data["presents"]}", style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold))),
-              DataCell(Text("${data["absents"]}", style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold))),
-            ]);
-          }).toList(),
+        child: ScrollableTableWrapper(
+          child: DataTable(
+            headingRowColor: WidgetStateProperty.all(Colors.grey[50]),
+            columns: const [
+              DataColumn(label: Text("Student Name", style: TextStyle(fontWeight: FontWeight.bold))),
+              DataColumn(label: Text("Presents", style: TextStyle(fontWeight: FontWeight.bold))),
+              DataColumn(label: Text("Absents", style: TextStyle(fontWeight: FontWeight.bold))),
+            ],
+            rows: studentAttendance.map((data) {
+              return DataRow(cells: [
+                DataCell(Text(data["name"])),
+                DataCell(Text("${data["presents"]}", style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold))),
+                DataCell(Text("${data["absents"]}", style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold))),
+              ]);
+            }).toList(),
+          ),
         ),
       ),
     );
@@ -670,8 +661,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: Colors.grey[200]!),
         ),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
+        child: ScrollableTableWrapper(
           child: DataTable(
             headingRowColor: WidgetStateProperty.all(Colors.grey[50]),
             columns: const [
@@ -771,8 +761,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: Colors.grey[200]!),
             ),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
+            child: ScrollableTableWrapper(
               child: DataTable(
                 headingRowColor: WidgetStateProperty.all(Colors.grey[50]),
                 columns: const [
@@ -1109,8 +1098,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: Colors.grey[200]!),
             ),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
+            child: ScrollableTableWrapper(
               child: DataTable(
                 headingRowColor: WidgetStateProperty.all(Colors.grey[50]),
                 columnSpacing: 24,

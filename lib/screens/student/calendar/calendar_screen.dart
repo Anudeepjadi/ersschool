@@ -77,10 +77,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
   // Map dates to dot colors
   Color? _getEventColor(DateTime day) {
     if (day.month != _currentMonth.month) return null;
-    if (day.day == 10) return const Color(0xFF8B5CF6); // Purple (Exams)
-    if (day.day == 15) return const Color(0xFF22C55E); // Green (Meetings)
-    if (day.day == 22) return const Color(0xFFEF4444); // Red (Holidays)
-    if (day.day == 28) return const Color(0xFFF59E0B); // Orange (Events)
+    final now = DateTime.now();
+    if (day.month == now.month && day.year == now.year) {
+      if (day.day == 10) return const Color(0xFF8B5CF6); // Purple (Exams)
+      if (day.day == 15) return const Color(0xFF22C55E); // Green (Meetings)
+      if (day.day == 19) return const Color(0xFF22C55E); // Green (Meetings)
+      if (day.day == 22) return const Color(0xFFEF4444); // Red (Holidays)
+      if (day.day == 28) return const Color(0xFFF59E0B); // Orange (Events)
+    }
     return null;
   }
 
@@ -414,10 +418,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   Widget _buildEventsListCard() {
-    final bool isSelectedDateJune20 = _selectedDate.day == 20 && _selectedDate.month == 5 && _selectedDate.year == 2026;
+    final now = DateTime.now();
+    final bool isCurrentMonth = _selectedDate.month == now.month && _selectedDate.year == now.year;
     final List<Map<String, String>> displayedEvents;
 
-    if (isSelectedDateJune20) {
+    if (isCurrentMonth && _selectedDate.day == 19) {
       displayedEvents = [
         {
           "title": "Class Test - Mathematics",
@@ -444,7 +449,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           "type": "Other"
         },
       ];
-    } else if (_selectedDate.day == 24 && _selectedDate.month == 5 && _selectedDate.year == 2026) {
+    } else if (isCurrentMonth && _selectedDate.day == 10) {
       displayedEvents = [
         {
           "title": "Class Test - Science",
@@ -453,7 +458,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           "type": "Exam"
         }
       ];
-    } else if (_selectedDate.day == 25 && _selectedDate.month == 5 && _selectedDate.year == 2026) {
+    } else if (isCurrentMonth && _selectedDate.day == 15) {
       displayedEvents = [
         {
           "title": "Parent Teacher Meeting - Class 8",
@@ -462,7 +467,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           "type": "Meeting"
         }
       ];
-    } else if (_selectedDate.day == 27 && _selectedDate.month == 5 && _selectedDate.year == 2026) {
+    } else if (isCurrentMonth && _selectedDate.day == 22) {
       displayedEvents = [
         {
           "title": "Summer Break Begins",
@@ -471,7 +476,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           "type": "Holiday"
         }
       ];
-    } else if (_selectedDate.day == 31 && _selectedDate.month == 5 && _selectedDate.year == 2026) {
+    } else if (isCurrentMonth && _selectedDate.day == 28) {
       displayedEvents = [
         {
           "title": "Annual Prize Distribution",

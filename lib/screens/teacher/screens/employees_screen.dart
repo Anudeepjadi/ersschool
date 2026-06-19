@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import '../../../widgets/scrollable_table_wrapper.dart';
 import '../widgets/stat_card.dart';
 import '../widgets/quick_actions.dart';
+import '../widgets/teacher_app_bar.dart';
+import '../widgets/teacher_drawer.dart';
+import '../widgets/teacher_bottom_nav.dart';
+import 'teacher_my_info_screen.dart';
 
 class EmployeeItem {
   final String name;
@@ -30,6 +35,7 @@ class EmployeesScreen extends StatefulWidget {
 }
 
 class EmployeesScreenState extends State<EmployeesScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String searchQuery = "";
   String roleTab = "Employees"; // Employees, Teachers, Attender/Aaya
   int currentPage = 1;
@@ -52,20 +58,35 @@ class EmployeesScreenState extends State<EmployeesScreen> {
       EmployeeItem(name: "Mr. Vijay Patel", id: "EMP008", role: "Lab Assistant", department: "Science Lab", isActive: false, avatarUrl: "https://images.unsplash.com/photo-1500048993953-d23a436266cf?w=100"),
     ];
 
-    // Padding items up to 56 total
-    for (int i = 9; i <= 56; i++) {
-      final isTeacher = i <= 32;
-      final role = isTeacher ? "Teacher" : (i <= 52 ? "Staff" : "Attender/Aaya");
-      final dept = isTeacher
-          ? (i % 3 == 0 ? "Chemistry" : (i % 2 == 0 ? "Physics" : "History"))
-          : (i % 2 == 0 ? "Administration" : "Security");
+    // Padding items to reach: 10 Teachers, 10 Non-teaching, 5 Attenders (Total 25)
+    for (int i = 9; i <= 25; i++) {
+      String role;
+      String dept;
+      String name;
+
+      if (i <= 13) {
+        // 5 more teachers -> total 10
+        role = "Teacher";
+        dept = (i % 2 == 0) ? "Physics" : "Chemistry";
+        name = "Teacher $i";
+      } else if (i <= 20) {
+        // 7 more non-teaching -> total 10
+        role = "Staff";
+        dept = (i % 2 == 0) ? "Administration" : "IT Support";
+        name = "Staff Member $i";
+      } else {
+        // 5 attenders -> total 5
+        role = "Attender/Aaya";
+        dept = "Support Staff";
+        name = "Attender $i";
+      }
 
       _employees.add(EmployeeItem(
-        name: isTeacher ? "Teacher $i" : "Staff Member $i",
+        name: name,
         id: "EMP${i.toString().padLeft(3, '0')}",
         role: role,
         department: dept,
-        isActive: i % 14 != 0,
+        isActive: i % 7 != 0, // Make a couple inactive just for variety
         avatarUrl: "https://images.unsplash.com/photo-${1500000000000 + i}?w=100",
       ));
     }
@@ -239,6 +260,70 @@ class EmployeesScreenState extends State<EmployeesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 4,
+      initialIndex: widget.activeTab > 3 ? 0 : widget.activeTab,
+      child: Scaffold(
+        key: _scaffoldKey,
+        backgroundColor: const Color(0xFFF5F7FF),
+        appBar: TeacherAppBar(
+          title: "Employees Directory",
+          subtitle: "Manage all school staff",
+          onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer(),
+        ),
+        drawer: TeacherDrawer(
+          currentIndex: 5,
+          onTabSelected: widget.onSubTabSelected,
+        ),
+        bottomNavigationBar: TeacherBottomNav(
+          currentIndex: 5,
+          onTabSelected: (idx) {
+            Navigator.pop(context); // Close EmployeesScreen
+            if (widget.onSubTabSelected != null) {
+              widget.onSubTabSelected!(idx);
+            }
+          },
+        ),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Material(
+              color: Colors.white,
+              elevation: 1,
+              child: TabBar(
+                isScrollable: true,
+                tabAlignment: TabAlignment.start,
+                labelPadding: EdgeInsets.symmetric(horizontal: 12),
+                dividerColor: Colors.transparent,
+                labelColor: Colors.blue,
+                unselectedLabelColor: Colors.grey,
+                indicatorColor: Colors.blue,
+                labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                tabs: [
+                  Tab(text: "All Staff"),
+                  Tab(text: "Teaching"),
+                  Tab(text: "Non-Teaching"),
+                  Tab(text: "Admin"),
+                ],
+              ),
+            ),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  _buildEmployeeListContent(context),
+                  _buildEmployeeListContent(context),
+                  _buildEmployeeListContent(context),
+                  _buildEmployeeListContent(context),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmployeeListContent(BuildContext context) {
     // 1. Filter employees by search query
     final searchFiltered = _employees.where((emp) {
       return emp.name.toLowerCase().contains(searchQuery.toLowerCase()) ||
@@ -256,12 +341,6 @@ class EmployeesScreenState extends State<EmployeesScreen> {
       if (roleTab == "Inactive") return !emp.isActive;
       return true;
     }).toList();
-
-    // Stats calculations (using searchFiltered so they stay constant across tabs)
-    final totalCountDisplay = searchFiltered.length;
-    final teachersCountDisplay = searchFiltered.where((emp) => emp.role == "Teacher").length;
-    final nonTeachingCountDisplay = searchFiltered.where((emp) => emp.role != "Teacher").length;
-    final inactiveCountDisplay = searchFiltered.where((emp) => !emp.isActive).length;
 
     // Pagination calculations
     final totalCount = filtered.length;
@@ -285,42 +364,38 @@ class EmployeesScreenState extends State<EmployeesScreen> {
 
           // 2. Employee Overview Stats (Horizontal scroll)
           SizedBox(
-            height: 110,
+            height: 135,
             child: ListView(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               children: [
                 StatCard(
                   title: "Total Employees",
-                  value: "$totalCountDisplay",
+                  value: _employees.length.toString(),
                   icon: Icons.people_outline,
                   iconColor: Colors.blue,
                   iconBackgroundColor: Colors.blue.withValues(alpha: 0.1),
-                  onTap: () => widget.onSubTabSelected?.call(0),
                 ),
                 StatCard(
-                  title: "Teachers",
-                  value: "$teachersCountDisplay",
+                  title: "On Leave Today",
+                  value: "8",
+                  icon: Icons.person_off_outlined,
+                  iconColor: Colors.orange,
+                  iconBackgroundColor: Colors.orange.withValues(alpha: 0.1),
+                ),
+                StatCard(
+                  title: "New Hires",
+                  value: "5",
                   icon: Icons.person_add_alt_1_outlined,
                   iconColor: Colors.green,
                   iconBackgroundColor: Colors.green.withValues(alpha: 0.1),
-                  onTap: () => widget.onSubTabSelected?.call(1),
                 ),
                 StatCard(
-                  title: "Non-Teaching Staff",
-                  value: "$nonTeachingCountDisplay",
-                  icon: Icons.group_outlined,
-                  iconColor: Colors.orange,
-                  iconBackgroundColor: Colors.orange.withValues(alpha: 0.1),
-                  onTap: () => widget.onSubTabSelected?.call(2),
-                ),
-                StatCard(
-                  title: "Inactive",
-                  value: "$inactiveCountDisplay",
-                  icon: Icons.person_off_outlined,
-                  iconColor: Colors.deepPurple,
-                  iconBackgroundColor: Colors.red.withValues(alpha: 0.1),
-                  onTap: () => widget.onSubTabSelected?.call(4),
+                  title: "Open Positions",
+                  value: "2",
+                  icon: Icons.work_outline,
+                  iconColor: Colors.purple,
+                  iconBackgroundColor: Colors.purple.withValues(alpha: 0.1),
                 ),
               ],
             ),
@@ -418,8 +493,7 @@ class EmployeesScreenState extends State<EmployeesScreen> {
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: Colors.grey[200]!),
               ),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
+              child: ScrollableTableWrapper(
                 child: SizedBox(
                   width: 580, // Fixed width for scrollable table effect
                   child: Column(
@@ -466,11 +540,6 @@ class EmployeesScreenState extends State<EmployeesScreen> {
                                   flex: 3,
                                   child: Row(
                                     children: [
-                                      CircleAvatar(
-                                        radius: 14,
-                                        backgroundImage: NetworkImage(emp.avatarUrl),
-                                      ),
-                                      const SizedBox(width: 8),
                                       Expanded(
                                         child: Text(
                                           emp.name,
@@ -638,9 +707,8 @@ class EmployeesScreenState extends State<EmployeesScreen> {
           QuickActionsBar(
             actions: [
               QuickActionItem(title: "Add Employee", icon: Icons.add_circle_outline, onTap: _showAddEmployeeDialog),
-              QuickActionItem(title: "Import Employees", icon: Icons.file_upload_outlined, onTap: _showImportDialog),
-              QuickActionItem(title: "Download List", icon: Icons.file_download_outlined, onTap: _showDownloadDialog),
-              QuickActionItem(title: "Generate ID Cards", icon: Icons.badge_outlined, onTap: _showGenerateIDCardsDialog),
+              QuickActionItem(title: "Approve Leave", icon: Icons.event_available, onTap: () {}),
+              QuickActionItem(title: "Run Payroll", icon: Icons.payments_outlined, onTap: () {}),
             ],
           ),
         ],

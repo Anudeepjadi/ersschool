@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../widgets/scrollable_table_wrapper.dart';
 import '../widgets/stat_card.dart';
 import '../widgets/quick_actions.dart';
 
@@ -313,8 +314,9 @@ class _StudentsScreenState extends State<StudentsScreen> {
   Widget _buildSiblingsView() {
     final siblingsList = _students.where((st) => st.siblings.isNotEmpty && st.className == selectedClass).toList();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -331,7 +333,10 @@ class _StudentsScreenState extends State<StudentsScreen> {
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             child: ListTile(
-              leading: CircleAvatar(backgroundImage: NetworkImage(st.avatarUrl)),
+              leading: CircleAvatar(
+                backgroundColor: Colors.blue.shade50,
+                child: Text(st.name[0], style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
+              ),
               title: Text(st.name, style: const TextStyle(fontWeight: FontWeight.bold)),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -344,15 +349,17 @@ class _StudentsScreenState extends State<StudentsScreen> {
             ),
           )),
       ],
-    );
+    ),
+  );
   }
 
   Widget _buildIdCardsView() {
     final classStudents = _students.where((st) => st.className == selectedClass).toList();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Text("Student ID Cards (${classStudents.length})", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
@@ -385,7 +392,11 @@ class _StudentsScreenState extends State<StudentsScreen> {
                         color: Colors.blue[50],
                         shape: BoxShape.circle,
                       ),
-                      child: CircleAvatar(radius: 35, backgroundImage: NetworkImage(st.avatarUrl)),
+                      child: CircleAvatar(
+                        radius: 35, 
+                        backgroundColor: Colors.blue.shade100,
+                        child: Text(st.name.substring(0, 2).toUpperCase(), style: const TextStyle(color: Colors.blue, fontSize: 24, fontWeight: FontWeight.bold)),
+                      ),
                     ),
                     const SizedBox(height: 8),
                     Text(st.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
@@ -433,8 +444,10 @@ class _StudentsScreenState extends State<StudentsScreen> {
             );
           },
         ),
+        const SizedBox(height: 30),
       ],
-    );
+    ),
+  );
   }
 
   void _importStudents() {
@@ -746,11 +759,38 @@ class _StudentsScreenState extends State<StudentsScreen> {
     final endIndex = startIndex + itemsPerPage > totalCount ? totalCount : startIndex + itemsPerPage;
     final pageItems = filtered.sublist(startIndex, endIndex);
 
-    return SingleChildScrollView(
+    return DefaultTabController(
+      length: 3,
+      initialIndex: widget.activeTab > 2 ? 0 : widget.activeTab,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 1. Class Overview Selector Header
+          const Material(
+            color: Colors.white,
+            elevation: 1,
+            child: TabBar(
+              isScrollable: true,
+              tabAlignment: TabAlignment.start,
+              labelPadding: const EdgeInsets.symmetric(horizontal: 12),
+              dividerColor: Colors.transparent,
+              labelColor: Colors.blue,
+              unselectedLabelColor: Colors.grey,
+              indicatorColor: Colors.blue,
+              labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+              tabs: [
+                Tab(text: "Students List"),
+                Tab(text: "All Student Siblings"),
+                Tab(text: "Student ID Cards"),
+              ],
+            ),
+          ),
+          Expanded(
+            child: TabBarView(
+              children: [
+                SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
@@ -796,7 +836,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
 
           // 2. Class Overview Stat Cards (Horizontal scroll)
           SizedBox(
-            height: 120,
+            height: 140,
             child: ListView(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -954,8 +994,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: Colors.grey[200]!),
                 ),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
+                child: ScrollableTableWrapper(
                   child: SizedBox(
                     width: 600, // Fixed width for scrollable table effect
                     child: Column(
@@ -1004,10 +1043,11 @@ class _StudentsScreenState extends State<StudentsScreen> {
                                     child: Row(
                                       children: [
                                         CircleAvatar(
-                                          radius: 14,
-                                          backgroundImage: NetworkImage(st.avatarUrl),
+                                          radius: 20,
+                                          backgroundColor: Colors.blue.shade50,
+                                          child: Text(st.name[0], style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
                                         ),
-                                        const SizedBox(width: 8),
+                                        const SizedBox(width: 12),
                                         Expanded(
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1115,15 +1155,20 @@ class _StudentsScreenState extends State<StudentsScreen> {
             // 6. Pagination Footer
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Wrap(
+                alignment: WrapAlignment.spaceBetween,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: 16,
+                runSpacing: 16,
                 children: [
                   Text(
                     "Showing ${startIndex + 1} to $endIndex of $totalCount students",
                     style: const TextStyle(fontSize: 11, color: Colors.grey),
                   ),
-                  Row(
-                    children: [
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
                       IconButton(
                         icon: const Icon(Icons.arrow_left, size: 18),
                         onPressed: currentPage > 1
@@ -1172,28 +1217,31 @@ class _StudentsScreenState extends State<StudentsScreen> {
                         }
                             : null,
                       ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
-          ] else if (widget.activeTab == 1)
-            _buildSiblingsView()
-          else if (widget.activeTab == 2)
-              _buildIdCardsView(),
-
-          const SizedBox(height: 12),
-
-          // 7. Quick Actions Row
-          QuickActionsBar(
-            actions: [
-              QuickActionItem(title: "Add Student", icon: Icons.add_circle_outline, onTap: _showAddStudentDialog),
-              QuickActionItem(title: "Import Students", icon: Icons.file_upload_outlined, onTap: _importStudents),
-              QuickActionItem(title: "Download Student List", icon: Icons.file_download_outlined, onTap: _downloadStudentList),
-              QuickActionItem(title: "Generate ID Cards", icon: Icons.badge_outlined, onTap: _generateIdCards),
-            ],
+            const SizedBox(height: 12),
+            QuickActionsBar(
+              actions: [
+                QuickActionItem(title: "Add Student", icon: Icons.add_circle_outline, onTap: _showAddStudentDialog),
+                QuickActionItem(title: "Import Students", icon: Icons.file_upload_outlined, onTap: _importStudents),
+                QuickActionItem(title: "Download Student List", icon: Icons.file_download_outlined, onTap: _downloadStudentList),
+                QuickActionItem(title: "Generate ID Cards", icon: Icons.badge_outlined, onTap: _generateIdCards),
+              ],
+            ),
+            const SizedBox(height: 20),
+          ],
+        ],
+      ),
+    ),
+                _buildSiblingsView(),
+                _buildIdCardsView(),
+              ],
+            ),
           ),
-          const SizedBox(height: 20),
         ],
       ),
     );

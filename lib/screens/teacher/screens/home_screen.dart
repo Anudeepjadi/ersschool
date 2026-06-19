@@ -182,7 +182,7 @@ class HomeScreen extends StatelessWidget {
                       Icons.calendar_month,
                       "Calendar",
                       () {
-                        onNavigateTab(5, moreSubScreen: "Meetings", subTab: 1);
+                        onNavigateTab(5, moreSubScreen: "Calendar");
                       },
                       Colors.indigo,
                     ),
@@ -194,20 +194,50 @@ class HomeScreen extends StatelessWidget {
           const SizedBox(height: 16),
 
           // 2. Overview Stats
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(
-              "Overview",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF1B263B),
-              ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "Overview",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF1B263B),
+                  ),
+                ),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey[300]!),
+                  ),
+                  child: DropdownButton<String>(
+                    value: "This Week",
+                    underline: const SizedBox(),
+                    icon: const Icon(Icons.keyboard_arrow_down, size: 18),
+                    style: const TextStyle(
+                        color: Colors.black87,
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold),
+                    onChanged: (newValue) {},
+                    items: const [
+                      DropdownMenuItem(
+                          value: "This Week", child: Text("This Week")),
+                      DropdownMenuItem(
+                          value: "This Month", child: Text("This Month")),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 8),
           SizedBox(
-            height: 125,
+            height: 140, // Increased for new StatCard design
             child: ListView(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -438,215 +468,215 @@ class HomeScreen extends StatelessWidget {
           // 4. Pending Tasks & Upcoming Events
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Row(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
                             "Pending Tasks",
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.bold,
                               color: Color(0xFF1B263B),
                             ),
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          InkWell(
-                            onTap: () => _showPendingTasksDialog(context),
-                            child: const Text(
-                              "View All",
-                              style: TextStyle(
-                                color: Colors.blue,
-                                fontSize: 11,
-                                fontWeight: FontWeight.bold,
-                              ),
+                        ),
+                        InkWell(
+                          onTap: () => _showPendingTasksDialog(context),
+                          child: const Text(
+                            "View All",
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      _buildPendingTaskCard(
-                        Icons.checklist,
-                        "Check Assignments",
-                        "8 Pending",
-                        Colors.purple,
-                        () => _showStatDetail(context, "Check Assignments", [
-                          {
-                            'title': 'Math Set A',
-                            'subtitle': 'Class 8-A',
-                            'trailing': '5 items',
-                          },
-                          {
-                            'title': 'Math Set B',
-                            'subtitle': 'Class 8-A',
-                            'trailing': '3 items',
-                          },
-                        ]),
-                      ),
-                      _buildPendingTaskCard(
-                        Icons.grade,
-                        "Grade Submissions",
-                        "5 Pending",
-                        Colors.orange,
-                        () => _showStatDetail(context, "Grade Submissions", [
-                          {
-                            'title': 'Unit Test 1',
-                            'subtitle': 'Science Class 9-A',
-                            'trailing': '5 pending',
-                          },
-                        ]),
-                      ),
-                      _buildPendingTaskCard(
-                        Icons.how_to_reg,
-                        "Mark Attendance",
-                        "2 Classes",
-                        Colors.blue,
-                        () => _showStatDetail(context, "Mark Attendance", [
-                          {
-                            'title': 'Class 9-B',
-                            'subtitle': 'Morning Session',
-                            'trailing': 'Not Marked',
-                          },
-                          {
-                            'title': 'Class 10-A',
-                            'subtitle': 'Afternoon Session',
-                            'trailing': 'Not Marked',
-                          },
-                        ]),
-                      ),
-                      _buildPendingTaskCard(
-                        Icons.campaign,
-                        "Announcements",
-                        "1 Unread",
-                        Colors.green,
-                        () => _showStatDetail(context, "Announcements", [
-                          {
-                            'title': 'Staff Meeting',
-                            'subtitle': 'Rescheduled to 4 PM',
-                            'trailing': 'New',
-                          },
-                        ]),
-                      ),
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    _buildPendingTaskCard(
+                      Icons.checklist,
+                      "Check Assignments",
+                      "8 Pending",
+                      Colors.purple,
+                      () => _showStatDetail(context, "Check Assignments", [
+                        {
+                          'title': 'Math Set A',
+                          'subtitle': 'Class 8-A',
+                          'trailing': '5 items',
+                        },
+                        {
+                          'title': 'Math Set B',
+                          'subtitle': 'Class 8-A',
+                          'trailing': '3 items',
+                        },
+                      ]),
+                    ),
+                    _buildPendingTaskCard(
+                      Icons.grade,
+                      "Grade Submissions",
+                      "5 Pending",
+                      Colors.orange,
+                      () => _showStatDetail(context, "Grade Submissions", [
+                        {
+                          'title': 'Unit Test 1',
+                          'subtitle': 'Science Class 9-A',
+                          'trailing': '5 pending',
+                        },
+                      ]),
+                    ),
+                    _buildPendingTaskCard(
+                      Icons.how_to_reg,
+                      "Mark Attendance",
+                      "2 Classes",
+                      Colors.blue,
+                      () => _showStatDetail(context, "Mark Attendance", [
+                        {
+                          'title': 'Class 9-B',
+                          'subtitle': 'Morning Session',
+                          'trailing': 'Not Marked',
+                        },
+                        {
+                          'title': 'Class 10-A',
+                          'subtitle': 'Afternoon Session',
+                          'trailing': 'Not Marked',
+                        },
+                      ]),
+                    ),
+                    _buildPendingTaskCard(
+                      Icons.campaign,
+                      "Announcements",
+                      "1 Unread",
+                      Colors.green,
+                      () => _showStatDetail(context, "Announcements", [
+                        {
+                          'title': 'Staff Meeting',
+                          'subtitle': 'Rescheduled to 4 PM',
+                          'trailing': 'New',
+                        },
+                      ]),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
+                const SizedBox(height: 24),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
                             "Upcoming Events",
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.bold,
                               color: Color(0xFF1B263B),
                             ),
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          InkWell(
-                            onTap: () {
-                              onNavigateTab(
-                                5,
-                                moreSubScreen: "Meetings",
-                                subTab: 1,
-                              ); // Go to Calendar
-                            },
-                            child: const Text(
-                              "View Calendar",
-                              style: TextStyle(
-                                color: Colors.blue,
-                                fontSize: 11,
-                                fontWeight: FontWeight.bold,
-                              ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            onNavigateTab(
+                              5,
+                              moreSubScreen: "Calendar",
+                            ); // Go to Calendar
+                          },
+                          child: const Text(
+                            "View Calendar",
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      _buildUpcomingEventCard(
-                        context,
-                        "MAY\n25",
-                        "Unit Test - Mathematics (Class 8)",
-                        "10:00 AM | Exam Hall 1",
-                        () => _showStatDetail(
-                          context,
-                          "Unit Test - Mathematics",
-                          [
-                            {
-                              'title': 'Subject',
-                              'subtitle': 'Mathematics (Set A)',
-                              'trailing': 'Class 8',
-                            },
-                            {
-                              'title': 'Time',
-                              'subtitle': 'Duration: 1h 30m',
-                              'trailing': '10:00 AM',
-                            },
-                            {
-                              'title': 'Location',
-                              'subtitle': 'School Building Block B',
-                              'trailing': 'Hall 1',
-                            },
-                          ],
                         ),
-                      ),
-                      _buildUpcomingEventCard(
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    _buildUpcomingEventCard(
+                      context,
+                      "MAY\n25",
+                      "Unit Test - Mathematics (Class 8)",
+                      "10:00 AM | Exam Hall 1",
+                      () => _showStatDetail(
                         context,
-                        "MAY\n27",
-                        "Parent Teacher Meeting",
-                        "11:30 AM | Conference Room",
-                        () =>
-                            _showStatDetail(context, "Parent Teacher Meeting", [
-                              {
-                                'title': 'Agenda',
-                                'subtitle': 'Term 1 Performance Discussion',
-                                'trailing': 'PTM',
-                              },
-                              {
-                                'title': 'Time',
-                                'subtitle': 'Slot: 11:30 AM - 01:30 PM',
-                                'trailing': '11:30 AM',
-                              },
-                              {
-                                'title': 'Location',
-                                'subtitle': 'Main Admin Block',
-                                'trailing': 'Room 102',
-                              },
-                            ]),
-                      ),
-                      _buildUpcomingEventCard(
-                        context,
-                        "MAY\n31",
-                        "Science Exhibition",
-                        "01:00 PM | School Auditorium",
-                        () => _showStatDetail(context, "Science Exhibition", [
+                        "Unit Test - Mathematics",
+                        [
                           {
-                            'title': 'Event',
-                            'subtitle': 'Annual Science & Tech Fair',
-                            'trailing': 'School-wide',
+                            'title': 'Subject',
+                            'subtitle': 'Mathematics (Set A)',
+                            'trailing': 'Class 8',
                           },
                           {
-                            'title': 'Coordinator',
-                            'subtitle': 'Mr. Ramesh Kumar',
-                            'trailing': 'Lead',
+                            'title': 'Time',
+                            'subtitle': 'Duration: 1h 30m',
+                            'trailing': '10:00 AM',
                           },
                           {
                             'title': 'Location',
-                            'subtitle': 'Assembly Grounds',
-                            'trailing': 'Auditorium',
+                            'subtitle': 'School Building Block B',
+                            'trailing': 'Hall 1',
                           },
-                        ]),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                    _buildUpcomingEventCard(
+                      context,
+                      "MAY\n27",
+                      "Parent Teacher Meeting",
+                      "11:30 AM | Conference Room",
+                      () => _showStatDetail(context, "Parent Teacher Meeting", [
+                        {
+                          'title': 'Agenda',
+                          'subtitle': 'Term 1 Performance Discussion',
+                          'trailing': 'PTM',
+                        },
+                        {
+                          'title': 'Time',
+                          'subtitle': 'Slot: 11:30 AM - 01:30 PM',
+                          'trailing': '11:30 AM',
+                        },
+                        {
+                          'title': 'Location',
+                          'subtitle': 'Main Admin Block',
+                          'trailing': 'Room 102',
+                        },
+                      ]),
+                    ),
+                    _buildUpcomingEventCard(
+                      context,
+                      "MAY\n31",
+                      "Science Exhibition",
+                      "01:00 PM | School Auditorium",
+                      () => _showStatDetail(context, "Science Exhibition", [
+                        {
+                          'title': 'Event',
+                          'subtitle': 'Annual Science & Tech Fair',
+                          'trailing': 'School-wide',
+                        },
+                        {
+                          'title': 'Coordinator',
+                          'subtitle': 'Mr. Ramesh Kumar',
+                          'trailing': 'Lead',
+                        },
+                        {
+                          'title': 'Location',
+                          'subtitle': 'Assembly Grounds',
+                          'trailing': 'Auditorium',
+                        },
+                      ]),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -827,7 +857,8 @@ class HomeScreen extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: isBreak ? Colors.purple[50]?.withValues(alpha: 0.1) : Colors.white,
+        color:
+            isBreak ? Colors.purple[50]?.withValues(alpha: 0.1) : Colors.white,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
@@ -870,33 +901,38 @@ class HomeScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.bold,
-                    color: isBreak
-                        ? Colors.purple[900]
-                        : const Color(0xFF1B263B),
+                    color:
+                        isBreak ? Colors.purple[900] : const Color(0xFF1B263B),
                   ),
                 ),
                 if (!isBreak) ...[
-                  const SizedBox(height: 2),
-                  Text(
-                    className,
-                    style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+                  const SizedBox(height: 4),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerLeft,
+                    child: Row(
+                      children: [
+                        Text(
+                          className,
+                          style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+                        ),
+                        const SizedBox(width: 8),
+                        const Icon(Icons.location_on,
+                            size: 12, color: Colors.grey),
+                        const SizedBox(width: 2),
+                        Text(
+                          room,
+                          style:
+                              const TextStyle(fontSize: 11, color: Colors.grey),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ],
             ),
           ),
           if (!isBreak) ...[
-            Row(
-              children: [
-                const Icon(Icons.location_on, size: 12, color: Colors.grey),
-                const SizedBox(width: 2),
-                Text(
-                  room,
-                  style: const TextStyle(fontSize: 11, color: Colors.grey),
-                ),
-              ],
-            ),
-            const SizedBox(width: 12),
             PopupMenuButton<String>(
               onSelected: (value) {
                 if (value == 'edit') {

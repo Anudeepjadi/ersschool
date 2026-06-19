@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../widgets/scrollable_table_wrapper.dart';
 import '../widgets/stat_card.dart';
 import '../widgets/quick_actions.dart';
 
@@ -211,48 +212,100 @@ class _ExamsScreenState extends State<ExamsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.activeTab == 0) return _buildOverviewTab();
-    if (widget.activeTab == 1) return _buildExamScheduleTab();
-    return _buildResultsTab();
+    return DefaultTabController(
+      length: 3,
+      initialIndex: widget.activeTab > 2 ? 0 : widget.activeTab,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Material(
+            color: Colors.white,
+            elevation: 1,
+            child: TabBar(
+              isScrollable: true,
+              tabAlignment: TabAlignment.start,
+              labelPadding: const EdgeInsets.symmetric(horizontal: 12),
+              dividerColor: Colors.transparent,
+              labelColor: Colors.blue,
+              unselectedLabelColor: Colors.grey,
+              indicatorColor: Colors.blue,
+              labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+              tabs: [
+                Tab(text: "View Examination"),
+                Tab(text: "Subject-wise Marks"),
+                Tab(text: "Students Performance"),
+              ],
+            ),
+          ),
+          Expanded(
+            child: TabBarView(
+              children: [
+                _buildOverviewTab(),
+                _buildExamScheduleTab(),
+                _buildResultsTab(),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildOverviewTab() {
-    final totalExams = _upcomingExams.length + _conductedExamsCount;
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 1. Overview Section
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
-              "Overview",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF1B263B),
-              ),
+          // 1. Class Overview Dropdown Header
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "Class Overview",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF1B263B),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey[300]!),
+                  ),
+                  child: DropdownButton<String>(
+                    value: "Class 8 - A",
+                    underline: const SizedBox(),
+                    icon: const Icon(Icons.keyboard_arrow_down, size: 18),
+                    style: const TextStyle(color: Colors.black87, fontSize: 13, fontWeight: FontWeight.bold),
+                    onChanged: (newValue) {},
+                    items: const [
+                      DropdownMenuItem(value: "Class 8 - A", child: Text("Class 8 - A")),
+                      DropdownMenuItem(value: "Class 9 - A", child: Text("Class 9 - A")),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
+          
+          // 2. Stat Cards
           SizedBox(
-            height: 120,
+            height: 140,
             child: ListView(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               children: [
                 StatCard(
-                  title: "Total Exams",
-                  value: "$totalExams",
-                  icon: Icons.assignment,
-                  iconColor: Colors.blue,
-                  iconBackgroundColor: Colors.blue.withValues(alpha: 0.1),
-                ),
-                StatCard(
-                  title: "Total Students",
-                  value: "538",
-                  icon: Icons.people,
-                  iconColor: Colors.green,
-                  iconBackgroundColor: Colors.green.withValues(alpha: 0.1),
+                  title: "Upcoming Exams",
+                  value: "${_upcomingExams.length}",
+                  icon: Icons.hourglass_empty,
+                  iconColor: Colors.purple,
+                  iconBackgroundColor: Colors.purple.withValues(alpha: 0.1),
                 ),
                 StatCard(
                   title: "Exams Conducted",
@@ -262,18 +315,25 @@ class _ExamsScreenState extends State<ExamsScreen> {
                   iconBackgroundColor: Colors.orange.withValues(alpha: 0.1),
                 ),
                 StatCard(
-                  title: "Upcoming Exams",
-                  value: "${_upcomingExams.length}",
-                  icon: Icons.hourglass_empty,
-                  iconColor: Colors.purple,
-                  iconBackgroundColor: Colors.purple.withValues(alpha: 0.1),
+                  title: "Passed Students",
+                  value: "38",
+                  icon: Icons.check_circle_outline,
+                  iconColor: Colors.green,
+                  iconBackgroundColor: Colors.green.withValues(alpha: 0.1),
+                ),
+                StatCard(
+                  title: "Failed Students",
+                  value: "4",
+                  icon: Icons.cancel_outlined,
+                  iconColor: Colors.red,
+                  iconBackgroundColor: Colors.red.withValues(alpha: 0.1),
                 ),
               ],
             ),
           ),
           const SizedBox(height: 20),
 
-          // 2. Upcoming Exams Section (Preview)
+          // 3. Upcoming Exams Table
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Row(
@@ -296,42 +356,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
           ),
           const SizedBox(height: 8),
 
-          // Upcoming Exams List
-          _buildExamsList(_upcomingExams.take(3).toList()),
-
-          const SizedBox(height: 12),
-          Center(
-            child: TextButton(
-              onPressed: () => widget.onSubTabSelected?.call(1),
-              child: const Text("View All Exams ->", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
-            ),
-          ),
-          const SizedBox(height: 12),
-
-          // 3. Recent Exam Results Section (Preview)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  "Recent Exam Results",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1B263B),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () => widget.onSubTabSelected?.call(2),
-                  child: const Text("View All", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 8),
-
-          _buildResultsList(_recentResults.take(2).toList()),
+          _buildExamsTable(_upcomingExams),
 
           const SizedBox(height: 20),
 
@@ -339,20 +364,60 @@ class _ExamsScreenState extends State<ExamsScreen> {
           QuickActionsBar(
             actions: [
               QuickActionItem(title: "Create Exam", icon: Icons.add_circle_outline, onTap: _showCreateExamDialog),
-              QuickActionItem(title: "Schedule Exam", icon: Icons.calendar_month, onTap: () {}),
-              QuickActionItem(title: "Generate Hall Tickets", icon: Icons.badge_outlined, onTap: () {}),
-              QuickActionItem(title: "Enter Marks", icon: Icons.edit_note, onTap: () {}),
-              QuickActionItem(title: "Publish Results", icon: Icons.campaign_outlined, onTap: () {
-                setState(() {
-                  _conductedExamsCount++;
-                });
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Mock Results published successfully!")),
-                );
-              }),
+              QuickActionItem(title: "Record Marks", icon: Icons.edit_note, onTap: () {}),
+              QuickActionItem(title: "Download Report Card", icon: Icons.file_download_outlined, onTap: () {}),
+              QuickActionItem(title: "Generate Syllabus", icon: Icons.menu_book, onTap: () {}),
             ],
           ),
+          const SizedBox(height: 20),
         ],
+      ),
+    );
+  }
+
+  Widget _buildExamsTable(List<ExamItem> exams) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Container(
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), border: Border.all(color: Colors.grey[200]!)),
+        child: ScrollableTableWrapper(
+          child: SizedBox(
+            width: 600,
+            child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              color: Colors.grey[50],
+              child: const Row(
+                children: [
+                  Expanded(flex: 2, child: Text("Name", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11))),
+                  Expanded(flex: 1, child: Text("Term", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11))),
+                  Expanded(flex: 2, child: Text("Subject", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11))),
+                  Expanded(flex: 2, child: Text("Date", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11))),
+                  Expanded(flex: 1, child: Text("Time", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11))),
+                  Expanded(flex: 1, child: Text("Duration", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11), textAlign: TextAlign.right)),
+                ],
+              ),
+            ),
+            const Divider(height: 1),
+            ...exams.map((e) => Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+              decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey[100]!))),
+              child: Row(
+                children: [
+                  Expanded(flex: 2, child: Text(e.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11))),
+                  Expanded(flex: 1, child: Text(e.term, style: const TextStyle(fontSize: 11))),
+                  Expanded(flex: 2, child: Text(e.subject, style: const TextStyle(fontSize: 11))),
+                  Expanded(flex: 2, child: Text(e.date, style: const TextStyle(fontSize: 11))),
+                  Expanded(flex: 1, child: Text(e.time, style: const TextStyle(fontSize: 11))),
+                  Expanded(flex: 1, child: Text(e.duration, style: const TextStyle(fontSize: 11), textAlign: TextAlign.right)),
+                ],
+              ),
+            )),
+          ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -467,10 +532,11 @@ class _ExamsScreenState extends State<ExamsScreen> {
                           style: TextStyle(color: Colors.grey[500], fontSize: 10),
                         ),
                         const SizedBox(height: 8),
-                        Row(
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 4,
                           children: [
                             _buildSmallChip("Class", exam.className, Colors.blue),
-                            const SizedBox(width: 8),
                             _buildSmallChip("Subject", exam.subject, Colors.green),
                           ],
                         ),

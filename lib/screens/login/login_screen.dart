@@ -3,6 +3,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/utils/profile_manager.dart';
 import '../student/dashboard/dashboard_screen.dart';
 import '../admin/admin_dashboard_screen.dart';
+import '../teacher/teacher_dashboard_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -18,47 +19,70 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isPasswordVisible = false;
 
   bool _isValidInput(String value) {
-    final cleanValue = value.trim();
-    // Allow 'admin' or email containing 'admin' for easy development testing
-    if (cleanValue.toLowerCase().contains('admin')) return true;
-    // Otherwise require 10-digit mobile number
-    return RegExp(r'^[0-9]{10}$').hasMatch(cleanValue);
+    return value.trim().isNotEmpty;
   }
 
   void _handleLogin() {
     if (_formKey.currentState!.validate()) {
-      if (_passwordController.text == '123456') {
-        final input = _idController.text.trim();
-        final isAdmin = input == '9876543210' || input.toLowerCase().contains('admin');
-        final role = isAdmin ? 'Admin' : 'Student';
+      final input = _idController.text.trim();
+      final password = _passwordController.text;
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Welcome $role! Logging in...'),
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          ),
-        );
+      final upperInput = input.toUpperCase();
 
-        Widget destination = isAdmin ? const AdminDashboardScreen() : const DashboardScreen();
-
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (_) => destination,
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Invalid password. Try "123456"'),
-            backgroundColor: AppColors.error,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          ),
-        );
+      // Admin Login Logic
+      if (input.toLowerCase() == 'admin') {
+        if (password == 'admin@123') {
+          _navigate(const AdminDashboardScreen(), 'Admin');
+        } else {
+          _showError('Invalid admin password. Try admin@123');
+        }
+        return;
       }
+
+      // Teacher Login Logic (Employee code starts with ECS00E)
+      if (upperInput.startsWith('ECS00E')) {
+        if (password.isNotEmpty) {
+          _navigate(const TeacherDashboardScreen(), 'Teacher');
+        } else {
+          _showError('Please enter password');
+        }
+        return;
+      }
+
+      // Student Login Logic (Admission code starts with ECS000)
+      if (upperInput.startsWith('ECS000')) {
+        if (password.isNotEmpty) {
+          _navigate(const DashboardScreen(), 'Student');
+        } else {
+          _showError('Please enter password');
+        }
+        return;
+      }
+
+      _showError('Invalid User ID. Must be Admin, ECS00E... or ECS000...');
     }
+  }
+
+  void _navigate(Widget destination, String role) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Welcome $role! Logging in...'),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => destination));
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: AppColors.error,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
   }
 
   void _showPasswordRecoveryDialog(BuildContext context) {
@@ -160,6 +184,21 @@ class _LoginScreenState extends State<LoginScreen> {
                   );
                 },
               ),
+              ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: Colors.green.shade400,
+                  child: const Text('T', style: TextStyle(color: Colors.white)),
+                ),
+                title: const Text('teacher@ecstasy.edu', style: TextStyle(fontWeight: FontWeight.bold)),
+                subtitle: const Text('Teacher Account'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const TeacherDashboardScreen()),
+                  );
+                },
+              ),
             ],
           ),
         );
@@ -250,12 +289,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 32),
 
-                // 3. Mobile Number Field (Outside Label)
+                // 3. User ID Field (Outside Label)
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Mobile Number",
+                      "User ID",
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.bold,
@@ -265,17 +304,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 8),
                     TextFormField(
                       controller: _idController,
-                      keyboardType: TextInputType.phone,
+                      keyboardType: TextInputType.text,
                       decoration: _buildInputDecoration(
-                        hintText: "Enter your mobile number",
-                        prefixIcon: Icons.smartphone_outlined,
+                        hintText: "Enter Admission No / Teacher Code / Admin ID",
+                        prefixIcon: Icons.person_outline,
                       ),
                       validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your mobile number';
-                        }
-                        if (!_isValidInput(value)) {
-                          return 'Enter a valid 10-digit mobile number';
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Please enter your User ID';
                         }
                         return null;
                       },

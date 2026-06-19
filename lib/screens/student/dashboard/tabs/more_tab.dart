@@ -134,6 +134,14 @@ class MoreTab extends StatelessWidget {
                   ),
                   _buildTile(
                     context,
+                    icon: Icons.feedback_outlined,
+                    title: 'Teachers Feedback',
+                    subtitle: 'Send feedback to your teachers',
+                    color: Colors.orange,
+                    onTap: () => _showComingSoon(context, 'Teachers Feedback'),
+                  ),
+                  _buildTile(
+                    context,
                     icon: Icons.privacy_tip_outlined,
                     title: 'Privacy Policy',
                     subtitle: 'Read our privacy policy',

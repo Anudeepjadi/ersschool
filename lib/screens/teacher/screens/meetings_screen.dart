@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import '../widgets/stat_card.dart';
 import '../widgets/quick_actions.dart';
+import '../widgets/teacher_drawer.dart';
+import '../widgets/teacher_bottom_nav.dart';
+import '../widgets/teacher_app_bar.dart';
 
 enum MeetingStatus { completed, pending, upcoming, cancelled }
 
@@ -39,6 +42,7 @@ class MeetingsScreen extends StatefulWidget {
 }
 
 class _MeetingsScreenState extends State<MeetingsScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int selectedDateDay = 24; // Default selected day (May 24)
   String? _selectedStatCategory; // "Completed", "Pending", "Total Participants"
   String? _selectedNavCategory; // "Join Meeting", "My Meetings", "Shared Meetings", "Meeting Logs"
@@ -198,57 +202,136 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.activeTab == 0) return _buildOverviewTab();
-    if (widget.activeTab == 1) return _buildScheduleMeetingTab();
-    return _buildCalendarTab();
+    return DefaultTabController(
+      length: 4,
+      initialIndex: widget.activeTab > 3 ? 0 : widget.activeTab,
+      child: Scaffold(
+        key: _scaffoldKey,
+        backgroundColor: const Color(0xFFF5F7FF),
+        appBar: TeacherAppBar(
+          title: "Meetings",
+          subtitle: "Manage your schedule",
+          onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer(),
+        ),
+        drawer: TeacherDrawer(
+          currentIndex: 5,
+          onTabSelected: widget.onSubTabSelected,
+        ),
+        bottomNavigationBar: TeacherBottomNav(
+          currentIndex: 5,
+          onTabSelected: (idx) {
+            Navigator.pop(context); // Close MeetingsScreen
+            if (widget.onSubTabSelected != null) {
+              widget.onSubTabSelected!(idx);
+            }
+          },
+        ),
+        body: Column(
+          children: [
+            const Material(
+              color: Colors.white,
+              elevation: 1,
+              child: TabBar(
+                isScrollable: true,
+                tabAlignment: TabAlignment.start,
+                labelPadding: EdgeInsets.symmetric(horizontal: 12),
+                dividerColor: Colors.transparent,
+                labelColor: Colors.blue,
+                unselectedLabelColor: Colors.grey,
+                indicatorColor: Colors.blue,
+                labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                tabs: [
+                  Tab(text: "Today"),
+                  Tab(text: "Upcoming"),
+                  Tab(text: "Past"),
+                  Tab(text: "All Meetings"),
+                ],
+              ),
+            ),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  _buildOverviewTab(),
+                  _buildOverviewTab(), // Placeholder for Upcoming
+                  _buildOverviewTab(), // Placeholder for Past
+                  _buildOverviewTab(), // Placeholder for All Meetings
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildOverviewTab() {
-    final completedCount = _meetings.where((m) => m.status == MeetingStatus.completed).length;
-    final pendingCount = _meetings.where((m) => m.status == MeetingStatus.pending).length;
-    final totalParticipants = _meetings.fold(0, (sum, m) => sum + m.participants);
-
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(padding: EdgeInsets.all(16.0), child: Text("Overview", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1B263B)))),
+          const SizedBox(height: 16),
+          // Overview Stats
           SizedBox(
             height: 135,
             child: ListView(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               children: [
-                StatCard(title: "Completed Meetings", value: "$completedCount", icon: Icons.check_circle_outline, iconColor: Colors.green, iconBackgroundColor: Colors.green.withValues(alpha: 0.1), isSelected: _selectedStatCategory == "Completed", onTap: () => setState(() { _selectedStatCategory = _selectedStatCategory == "Completed" ? null : "Completed"; _selectedNavCategory = null; })),
-                StatCard(title: "Pending Meetings", value: "$pendingCount", icon: Icons.hourglass_top, iconColor: Colors.orange, iconBackgroundColor: Colors.orange.withValues(alpha: 0.1), isSelected: _selectedStatCategory == "Pending", onTap: () => setState(() { _selectedStatCategory = _selectedStatCategory == "Pending" ? null : "Pending"; _selectedNavCategory = null; })),
-                StatCard(title: "Total Participants", value: "$totalParticipants", icon: Icons.group, iconColor: Colors.purple, iconBackgroundColor: Colors.purple.withValues(alpha: 0.1), isSelected: _selectedStatCategory == "Participants", onTap: () => setState(() { _selectedStatCategory = _selectedStatCategory == "Participants" ? null : "Participants"; _selectedNavCategory = null; })),
+                StatCard(
+                  title: "Scheduled Meetings", 
+                  value: "8", 
+                  icon: Icons.calendar_month, 
+                  iconColor: Colors.blue, 
+                  iconBackgroundColor: Colors.blue.withValues(alpha: 0.1),
+                ),
+                StatCard(
+                  title: "Completed Meetings", 
+                  value: "45", 
+                  icon: Icons.check_circle_outline, 
+                  iconColor: Colors.green, 
+                  iconBackgroundColor: Colors.green.withValues(alpha: 0.1),
+                ),
+                StatCard(
+                  title: "Upcoming Meetings", 
+                  value: "3", 
+                  icon: Icons.hourglass_top, 
+                  iconColor: Colors.orange, 
+                  iconBackgroundColor: Colors.orange.withValues(alpha: 0.1),
+                ),
+                StatCard(
+                  title: "Total Hours", 
+                  value: "120h", 
+                  icon: Icons.schedule, 
+                  iconColor: Colors.purple, 
+                  iconBackgroundColor: Colors.purple.withValues(alpha: 0.1),
+                ),
               ],
             ),
           ),
-          if (_selectedStatCategory != null) ...[const SizedBox(height: 24), Padding(padding: const EdgeInsets.symmetric(horizontal: 16.0), child: Text("$_selectedStatCategory Details", style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1B263B)))), const SizedBox(height: 12), _buildStatDetailsList()],
           const SizedBox(height: 24),
-          const Padding(padding: EdgeInsets.symmetric(horizontal: 16.0), child: Text("Navigation Buttons", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1B263B)))),
-          const SizedBox(height: 12),
+          
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: GridView.count(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisCount: 2,
-              mainAxisSpacing: 12,
-              crossAxisSpacing: 12,
-              childAspectRatio: 2.2,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildNavButton("Join Meeting", Icons.videocam, Colors.blue, () => _showJoinMeetingDialog()),
-                _buildNavButton("My Meetings", Icons.person, Colors.indigo, () => setState(() { _selectedNavCategory = _selectedNavCategory == "My Meetings" ? null : "My Meetings"; _selectedStatCategory = null; }), isSelected: _selectedNavCategory == "My Meetings"),
-                _buildNavButton("Shared Meetings", Icons.share, Colors.teal, () => setState(() { _selectedNavCategory = _selectedNavCategory == "Shared Meetings" ? null : "Shared Meetings"; _selectedStatCategory = null; }), isSelected: _selectedNavCategory == "Shared Meetings"),
-                _buildNavButton("Meeting Logs", Icons.list_alt, Colors.blueGrey, () => setState(() { _selectedNavCategory = _selectedNavCategory == "Meeting Logs" ? null : "Meeting Logs"; _selectedStatCategory = null; }), isSelected: _selectedNavCategory == "Meeting Logs"),
+                Text("Today's Meetings", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1B263B))),
+                TextButton(onPressed: () {}, child: const Text("View All", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold))),
               ],
             ),
           ),
-          if (_selectedNavCategory != null && _selectedNavCategory != "Join Meeting") ...[const SizedBox(height: 24), Padding(padding: const EdgeInsets.symmetric(horizontal: 16.0), child: Text("$_selectedNavCategory", style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1B263B)))), const SizedBox(height: 12), _buildNavDetailsList()],
+          const SizedBox(height: 12),
+          _buildMeetingList(_meetings, showJoinButton: true),
+          
           const SizedBox(height: 24),
-          QuickActionsBar(actions: [QuickActionItem(title: "Schedule Meeting", icon: Icons.add_circle_outline, onTap: () {}), QuickActionItem(title: "View Calendar", icon: Icons.calendar_month, onTap: () {}), QuickActionItem(title: "Meeting History", icon: Icons.history, onTap: () {})]),
+          QuickActionsBar(
+            actions: [
+              QuickActionItem(title: "Schedule Meeting", icon: Icons.add_circle_outline, onTap: () {}), 
+              QuickActionItem(title: "Join Meeting", icon: Icons.videocam, onTap: () {}), 
+              QuickActionItem(title: "Create Zoom Link", icon: Icons.link, onTap: () {})
+            ],
+          ),
+          const SizedBox(height: 20),
         ],
       ),
     );

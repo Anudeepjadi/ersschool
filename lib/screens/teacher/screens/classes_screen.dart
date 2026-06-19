@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../widgets/scrollable_table_wrapper.dart';
 import '../widgets/stat_card.dart';
 import '../widgets/quick_actions.dart';
 
@@ -397,15 +398,49 @@ class _ClassesScreenState extends State<ClassesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    switch (widget.activeTab) {
-      case 0: return _buildClassDetails();
-      case 1: return _buildTimetable();
-      case 2: return _buildAttendance();
-      case 3: return _buildDiary();
-      case 4: return _buildAssignments();
-      case 5: return _buildTeachers();
-      default: return _buildClassDetails();
-    }
+    return DefaultTabController(
+      length: 6,
+      initialIndex: widget.activeTab,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Material(
+            color: Colors.white,
+            elevation: 1,
+            child: TabBar(
+              isScrollable: true,
+              tabAlignment: TabAlignment.start,
+              labelPadding: const EdgeInsets.symmetric(horizontal: 12),
+              dividerColor: Colors.transparent,
+              labelColor: Colors.blue,
+              unselectedLabelColor: Colors.grey,
+              indicatorColor: Colors.blue,
+              labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+              tabs: [
+                Tab(text: "Class Details"),
+                Tab(text: "Class Timetable"),
+                Tab(text: "Class Attendance"),
+                Tab(text: "Class Dairy"),
+                Tab(text: "Assignments"),
+                Tab(text: "Class Teachers"),
+              ],
+            ),
+          ),
+          Expanded(
+            child: TabBarView(
+              children: [
+                _buildClassDetails(),
+                _buildTimetable(),
+                _buildAttendance(),
+                _buildDiary(),
+                _buildAssignments(),
+                _buildTeachers(),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   // 1. Class Timetable UI
@@ -676,7 +711,7 @@ class _ClassesScreenState extends State<ClassesScreen> {
 
   Widget _buildStatCards(ClassItem cls) {
     return SizedBox(
-      height: 160,
+      height: 140,
       child: ListView(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -783,7 +818,10 @@ class _ClassesScreenState extends State<ClassesScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Container(
         decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), border: Border.all(color: Colors.grey[200]!)),
-        child: Column(
+        child: ScrollableTableWrapper(
+          child: SizedBox(
+            width: 600,
+            child: Column(
           children: [
             Container(
               padding: const EdgeInsets.all(12),
@@ -793,6 +831,7 @@ class _ClassesScreenState extends State<ClassesScreen> {
                   Expanded(flex: 3, child: Text("Class / Section", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11))),
                   Expanded(flex: 2, child: Text("Students", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11), textAlign: TextAlign.center)),
                   Expanded(flex: 4, child: Text("Class Teacher", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11))),
+                  Expanded(flex: 2, child: Text("Room No.", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11))),
                   Expanded(flex: 1, child: Text("Actions", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11), textAlign: TextAlign.right)),
                 ],
               ),
@@ -815,6 +854,7 @@ class _ClassesScreenState extends State<ClassesScreen> {
                   ),
                   Expanded(flex: 2, child: Text("${c.students}", style: const TextStyle(fontSize: 12), textAlign: TextAlign.center)),
                   Expanded(flex: 4, child: Text(c.teacher, style: const TextStyle(fontSize: 12))),
+                  Expanded(flex: 2, child: Text(c.room, style: const TextStyle(fontSize: 12))),
                   Expanded(
                     flex: 1,
                     child: PopupMenuButton<String>(
@@ -841,6 +881,8 @@ class _ClassesScreenState extends State<ClassesScreen> {
               ),
             )),
           ],
+            ),
+          ),
         ),
       ),
     );
