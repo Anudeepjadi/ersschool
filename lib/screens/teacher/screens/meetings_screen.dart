@@ -121,9 +121,9 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          FloatingActionButton(backgroundColor: isMuted ? Colors.red : Colors.white24, child: Icon(isMuted ? Icons.mic_off : Icons.mic, color: Colors.white), onPressed: () => setOverlayState(() => isMuted = !isMuted)),
-                          FloatingActionButton(backgroundColor: isVideoOff ? Colors.red : Colors.white24, child: Icon(isVideoOff ? Icons.videocam_off : Icons.videocam, color: Colors.white), onPressed: () => setOverlayState(() => isVideoOff = !isVideoOff)),
-                          FloatingActionButton(backgroundColor: Colors.red, child: const Icon(Icons.call_end, color: Colors.white), onPressed: () => Navigator.pop(context)),
+                          FloatingActionButton(heroTag: null, backgroundColor: isMuted ? Colors.red : Colors.white24, child: Icon(isMuted ? Icons.mic_off : Icons.mic, color: Colors.white), onPressed: () => setOverlayState(() => isMuted = !isMuted)),
+                          FloatingActionButton(heroTag: null, backgroundColor: isVideoOff ? Colors.red : Colors.white24, child: Icon(isVideoOff ? Icons.videocam_off : Icons.videocam, color: Colors.white), onPressed: () => setOverlayState(() => isVideoOff = !isVideoOff)),
+                          FloatingActionButton(heroTag: null, backgroundColor: Colors.red, child: const Icon(Icons.call_end, color: Colors.white), onPressed: () => Navigator.pop(context)),
                         ],
                       ),
                       const SizedBox(height: 24),

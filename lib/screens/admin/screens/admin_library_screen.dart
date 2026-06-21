@@ -144,6 +144,7 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: null,
         onPressed: () {},
         backgroundColor: AppColors.primaryDark,
         icon: const Icon(Icons.add, color: Colors.white),
