@@ -49,7 +49,7 @@ class _AiAssistantScreenState extends State<AiAssistantScreen> {
 
     _messageController.clear();
     _scrollToBottom();
-    _focusNode.unfocus();
+    // _focusNode.unfocus(); // Keep keyboard open for next message
 
     // Simulate AI response delay
     Timer(const Duration(milliseconds: 1500), () {

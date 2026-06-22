@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../screens/admin_chat_support_screen.dart';
+import '../../ai_assistant/ai_assistant_screen.dart';
 
 class AiBotFab extends StatefulWidget {
   const AiBotFab({super.key});
@@ -79,7 +80,7 @@ class _AiBotFabState extends State<AiBotFab> with SingleTickerProviderStateMixin
           heroTag: null,
           mini: true,
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminChatSupportScreen(openBotChat: true)));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const AiAssistantScreen()));
           },
           backgroundColor: Colors.white,
           child: const Icon(Icons.smart_toy, color: Color(0xFF0038FF), size: 22),
