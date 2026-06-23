@@ -307,43 +307,159 @@ class _ReportsScreenState extends State<ReportsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 1. Period Dropdown Filter Row
+          // ── All Classes Overview Grid ────────────────────────────────────
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  "Overview",
+                  'Overview',
                   style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1B263B),
-                  ),
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1B263B)),
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey[300]!),
-                  ),
-                  child: DropdownButton<String>(
-                    value: _availableClasses.contains(selectedOverviewClass) ? selectedOverviewClass : (_availableClasses.isNotEmpty ? _availableClasses.first : null),
-                    underline: const SizedBox(),
-                    icon: const Icon(Icons.keyboard_arrow_down, size: 18),
-                    style: const TextStyle(color: Colors.black87, fontSize: 13, fontWeight: FontWeight.bold),
-                    onChanged: (newValue) {
-                      if (newValue != null) {
-                        setState(() { selectedOverviewClass = newValue; });
-                      }
-                    },
-                    items: _availableClasses.map((cls) {
-                      return DropdownMenuItem(value: cls, child: Text(cls));
-                    }).toList(),
-                  ),
+                const Spacer(),
+                Text(
+                  '${_availableClasses.length} Classes',
+                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                 ),
               ],
+            ),
+          ),
+          SizedBox(
+            height: 148,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              itemCount: _availableClasses.length,
+              separatorBuilder: (_, __) => const SizedBox(width: 10),
+              itemBuilder: (context, index) {
+                final clsName = _availableClasses[index];
+                final isSelected = clsName == selectedOverviewClass;
+                final colors = [
+                  Colors.blue, Colors.green, Colors.purple, Colors.orange,
+                  Colors.teal, Colors.red, Colors.indigo,
+                ];
+                final color = colors[index % colors.length];
+                
+                final totalSts = 35; // Mock data for reports view
+                final boysSts = 18;
+                final girlsSts = 17;
+                
+                final mapping = _store.classSubjectsMapping.where((m) {
+                  final baseClass = clsName.split(' - ').first;
+                  return m['class'] == baseClass;
+                }).toList();
+                final teacherName = mapping.isNotEmpty ? mapping.first['teacher']?.split(' ').last ?? 'N/A' : 'TBD';
+                final subjectCount = mapping.length;
+                
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      selectedOverviewClass = clsName;
+                    });
+                  },
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    width: 130,
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: isSelected ? Colors.blue[700]! : Colors.grey[200]!,
+                        width: isSelected ? 2 : 1,
+                      ),
+                      boxShadow: isSelected
+                          ? [BoxShadow(color: Colors.blue.withValues(alpha: 0.15), blurRadius: 8, offset: const Offset(0, 3))]
+                          : [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 4)],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              width: 32,
+                              height: 32,
+                              decoration: BoxDecoration(
+                                color: color.withValues(alpha: 0.12),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  clsName.split(' ').last,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 11,
+                                      color: color),
+                                ),
+                              ),
+                            ),
+                            const Spacer(),
+                            if (isSelected)
+                              Icon(Icons.check_circle, color: Colors.blue[700], size: 14),
+                          ],
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          clsName,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 11,
+                              color: Color(0xFF1B263B)),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          '$totalSts students',
+                          style: TextStyle(
+                              fontSize: 10,
+                              color: Colors.grey[600]),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          '${boysSts}B · ${girlsSts}G',
+                          style: TextStyle(
+                              fontSize: 10,
+                              color: color,
+                              fontWeight: FontWeight.w500),
+                        ),
+                        const Spacer(),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                teacherName,
+                                style: const TextStyle(
+                                    fontSize: 9, color: Colors.grey),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                              decoration: BoxDecoration(
+                                color: color.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                '$subjectCount sub',
+                                style: TextStyle(
+                                    fontSize: 8,
+                                    color: color,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
             ),
           ),
           

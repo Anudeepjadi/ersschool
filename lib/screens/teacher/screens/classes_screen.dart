@@ -622,43 +622,143 @@ class _ClassesScreenState extends State<ClassesScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 1. Class Overview Dropdown Header
+          // ── All Classes Overview Grid ────────────────────────────────────
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  "Class Overview",
+                  'Overview',
                   style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1B263B),
-                  ),
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1B263B)),
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey[300]!),
-                  ),
-                  child: DropdownButton<String>(
-                    value: _allClasses.any((c) => c.section == selectedOverviewClass) ? selectedOverviewClass : (_allClasses.isNotEmpty ? _allClasses.first.section : null),
-                    underline: const SizedBox(),
-                    icon: const Icon(Icons.keyboard_arrow_down, size: 18),
-                    style: const TextStyle(color: Colors.black87, fontSize: 13, fontWeight: FontWeight.bold),
-                    onChanged: (newValue) {
-                      if (newValue != null) {
-                        setState(() { selectedOverviewClass = newValue; });
-                      }
-                    },
-                    items: _allClasses.map((cls) {
-                      return DropdownMenuItem(value: cls.section, child: Text(cls.section));
-                    }).toList(),
-                  ),
+                const Spacer(),
+                Text(
+                  '${_allClasses.length} Classes',
+                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                 ),
               ],
+            ),
+          ),
+          SizedBox(
+            height: 148,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              itemCount: _allClasses.length,
+              separatorBuilder: (_, __) => const SizedBox(width: 10),
+              itemBuilder: (context, index) {
+                final cls = _allClasses[index];
+                final isSelected = cls.section == selectedOverviewClass;
+                final colors = [
+                  Colors.blue, Colors.green, Colors.purple, Colors.orange,
+                  Colors.teal, Colors.red, Colors.indigo,
+                ];
+                final color = colors[index % colors.length];
+                return GestureDetector(
+                  onTap: () => setState(() => selectedOverviewClass = cls.section),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    width: 130,
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: isSelected ? Colors.blue[700]! : Colors.grey[200]!,
+                        width: isSelected ? 2 : 1,
+                      ),
+                      boxShadow: isSelected
+                          ? [BoxShadow(color: Colors.blue.withValues(alpha: 0.15), blurRadius: 8, offset: const Offset(0, 3))]
+                          : [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 4)],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              width: 32,
+                              height: 32,
+                              decoration: BoxDecoration(
+                                color: color.withValues(alpha: 0.12),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  cls.section.split(' ').last,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 11,
+                                      color: color),
+                                ),
+                              ),
+                            ),
+                            const Spacer(),
+                            if (isSelected)
+                              Icon(Icons.check_circle, color: Colors.blue[700], size: 14),
+                          ],
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          cls.section,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 11,
+                              color: Color(0xFF1B263B)),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          '${cls.students} students',
+                          style: TextStyle(
+                              fontSize: 10,
+                              color: Colors.grey[600]),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          '${cls.boys}B · ${cls.girls}G',
+                          style: TextStyle(
+                              fontSize: 10,
+                              color: color,
+                              fontWeight: FontWeight.w500),
+                        ),
+                        const Spacer(),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                cls.teacher.split(' ').last,
+                                style: const TextStyle(
+                                    fontSize: 9, color: Colors.grey),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                              decoration: BoxDecoration(
+                                color: color.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                '${cls.subjects.length} sub',
+                                style: TextStyle(
+                                    fontSize: 8,
+                                    color: color,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
             ),
           ),
           // ── Selected Class Detail ────────────────────────────────────────
