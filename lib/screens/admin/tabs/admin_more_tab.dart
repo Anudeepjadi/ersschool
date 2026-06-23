@@ -17,6 +17,8 @@ import '../screens/admin_communications_screen.dart';
 import '../screens/admin_id_cards_screen.dart';
 import '../screens/admin_certificates_screen.dart';
 import '../screens/admin_reports_screen.dart';
+import '../screens/admin_invalid_info_screen.dart';
+import '../screens/admin_sms_screen.dart';
 import '../screens/admin_settings_screen.dart';
 class AdminMoreTab extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
@@ -44,6 +46,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
   @override
   void initState() {
     super.initState();
+    _adminName = ProfileManager().adminName.value;
     final path = ProfileManager().adminProfileImagePath.value;
     if (path != null) {
       _selectedLocalImage = File(path);
@@ -410,6 +413,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                     _adminPhone = phoneCtrl.text;
                     _adminLocation = locCtrl.text;
                   });
+                  ProfileManager().setAdminName(nameCtrl.text.trim());
                   Navigator.pop(context);
                   _showToast("Admin profile details saved!");
                 },
@@ -551,6 +555,12 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
             }),
             _buildGridItem(Icons.assessment, "Reports", Colors.red, () {
               Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminReportsScreen()));
+            }),
+            _buildGridItem(Icons.error_outline, "Invalid Info", Colors.deepOrange, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminInvalidInfoScreen()));
+            }),
+            _buildGridItem(Icons.sms_outlined, "SMS", Colors.blueAccent, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminSmsScreen()));
             }),
             _buildGridItem(Icons.settings, "Settings", Colors.grey, () {
               Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminSettingsScreen()));

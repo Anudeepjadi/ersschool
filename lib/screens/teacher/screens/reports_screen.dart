@@ -39,29 +39,19 @@ class ReportsScreen extends StatefulWidget {
 class _ReportsScreenState extends State<ReportsScreen> {
   String selectedPeriod = "This Term";
   final List<ReportItem> _recentReports = [
-    ReportItem(name: "Class 8 - A Performance Report", type: "Student Report", date: "20 May 2024", time: "10:30 AM", author: "Ms. Priya Sharma", avatarUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100"),
+    ReportItem(name: "Class 8 Performance Report", type: "Student Report", date: "20 May 2024", time: "10:30 AM", author: "Ms. Priya Sharma", avatarUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100"),
     ReportItem(name: "Monthly Attendance Report April 2024", type: "Attendance Report", date: "18 May 2024", time: "04:15 PM", author: "Mr. Ramesh Kumar", avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100"),
-    ReportItem(name: "Unit Test - I Result Analysis Class 9 - A", type: "Exam Report", date: "17 May 2024", time: "02:40 PM", author: "Mr. Amit Gupta", avatarUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100"),
-    ReportItem(name: "Class 10 - A Subject Summary", type: "Class Report", date: "15 May 2024", time: "11:20 AM", author: "Ms. Neha Verma", avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100"),
+    ReportItem(name: "Unit Test - I Result Analysis Class 9", type: "Exam Report", date: "17 May 2024", time: "02:40 PM", author: "Mr. Amit Gupta", avatarUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100"),
+    ReportItem(name: "Class 10 Subject Summary", type: "Class Report", date: "15 May 2024", time: "11:20 AM", author: "Ms. Neha Verma", avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100"),
     ReportItem(name: "Term 1 Overall Report (Classes 6 - 10)", type: "Custom Report", date: "10 May 2024", time: "09:00 AM", author: "Ms. Sneha Reddy", avatarUrl: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100"),
   ];
 
   int _totalReportsGenerated = 24;
-  String selectedOverviewClass = "Class 8 - A";
+  String selectedOverviewClass = "Class 8";
   final _store = AppDataStore.instance;
 
   List<String> get _availableClasses {
-    final classes = _store.studyClasses.map((c) => c['name'] as String).toList();
-    final sections = _store.classSections.map((s) => s['name'] as String).toList();
-    
-    List<String> list = [];
-    for (int i = 0; i < classes.length; i++) {
-      for (int j = 0; j < sections.length; j++) {
-        final secName = sections[j].split(' ').last;
-        list.add("${classes[i]} - $secName");
-      }
-    }
-    return list.toSet().toList();
+    return _store.studyClasses.map((c) => c['name'] as String).toList();
   }
 
   @override
@@ -95,7 +85,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
   DateTime? _startDate;
   DateTime? _endDate;
 
-  final List<String> _classes = ["All Classes", "Class 8 - A", "Class 9 - A", "Class 10 - A"];
+  final List<String> _classes = ["All Classes", "Class 8", "Class 9", "Class 10"];
   final List<String> _students = ["All Students", "Aarav Sharma", "Ananya Verma", "Vivaan Mehta"];
   final List<String> _subjects = ["All Subjects", "Mathematics", "Science", "English"];
   final List<String> _reportTypes = ["Attendance", "Examinations", "Assignments", "Class Participation"];
@@ -381,8 +371,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
                         Row(
                           children: [
                             Container(
-                              width: 32,
                               height: 32,
+                              padding: const EdgeInsets.symmetric(horizontal: 8),
                               decoration: BoxDecoration(
                                 color: color.withValues(alpha: 0.12),
                                 borderRadius: BorderRadius.circular(8),

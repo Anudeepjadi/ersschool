@@ -700,6 +700,30 @@ class AppDataStore {
     return null;
   }
 
+  String getNextAdmissionNo(String school) {
+    int maxNum = 0;
+    final regExp = RegExp(r'^ECS(\d+)$', caseSensitive: false);
+    for (final student in students) {
+      if (student['school'] == school) {
+        final admission = student['admission'];
+        if (admission is String) {
+          final match = regExp.firstMatch(admission);
+          if (match != null) {
+            final numStr = match.group(1);
+            if (numStr != null) {
+              final val = int.tryParse(numStr) ?? 0;
+              if (val > maxNum) {
+                maxNum = val;
+              }
+            }
+          }
+        }
+      }
+    }
+    final nextNum = maxNum + 1;
+    return "ECS${nextNum.toString().padLeft(5, '0')}";
+  }
+
   /// Central data mod functions called from Admin tabs
   void addStudent(Map<String, dynamic> student) {
     final admission = student['admission'];
@@ -969,12 +993,19 @@ class AppDataStore {
 
   // ─── Study Classes ───────────────────────────────────────────────────────────
   final List<Map<String, dynamic>> studyClasses = [
-    {'name': 'Grade 1', 'isActive': true},
-    {'name': 'Grade 2', 'isActive': true},
-    {'name': 'Grade 3', 'isActive': true},
-    {'name': 'Grade 4', 'isActive': true},
-    {'name': 'batch1', 'isActive': true},
-    {'name': 'Grade 5', 'isActive': true},
+    {'name': 'Nursery', 'isActive': true},
+    {'name': 'L.K.G', 'isActive': true},
+    {'name': 'U.K.G', 'isActive': true},
+    {'name': 'Class 1', 'isActive': true},
+    {'name': 'Class 2', 'isActive': true},
+    {'name': 'Class 3', 'isActive': true},
+    {'name': 'Class 4', 'isActive': true},
+    {'name': 'Class 5', 'isActive': true},
+    {'name': 'Class 6', 'isActive': true},
+    {'name': 'Class 7', 'isActive': true},
+    {'name': 'Class 8', 'isActive': true},
+    {'name': 'Class 9', 'isActive': true},
+    {'name': 'Class 10', 'isActive': true},
   ];
 
   // ─── Class Sections ──────────────────────────────────────────────────────────
@@ -1034,11 +1065,11 @@ class AppDataStore {
 
   // ─── Class Subjects Mapping ───────────────────────────────────────────────────
   final List<Map<String, String>> classSubjectsMapping = [
-    {'class': 'Grade 1', 'subject': 'Mathematics', 'teacher': 'Dr. Ramesh Kumar'},
-    {'class': 'Grade 1', 'subject': 'English', 'teacher': 'Mrs. Sunita Devi'},
-    {'class': 'Grade 2', 'subject': 'Science', 'teacher': 'Mr. Anil Mishra'},
-    {'class': 'Grade 3', 'subject': 'Hindi', 'teacher': 'Mrs. Latha Iyer'},
-    {'class': 'Grade 4', 'subject': 'Social Studies', 'teacher': 'Mr. Prakash Jha'},
+    {'class': 'Class 1', 'subject': 'Mathematics', 'teacher': 'Dr. Ramesh Kumar'},
+    {'class': 'Class 1', 'subject': 'English', 'teacher': 'Mrs. Sunita Devi'},
+    {'class': 'Class 2', 'subject': 'Science', 'teacher': 'Mr. Anil Mishra'},
+    {'class': 'Class 3', 'subject': 'Hindi', 'teacher': 'Mrs. Latha Iyer'},
+    {'class': 'Class 4', 'subject': 'Social Studies', 'teacher': 'Mr. Prakash Jha'},
   ];
 
   void addClassSubjectMapping(Map<String, String> m) { classSubjectsMapping.add(m); notifyConfigChange(); }
@@ -1047,11 +1078,11 @@ class AppDataStore {
 
   // ─── Fee Structure Items (per class) ─────────────────────────────────────────
   final List<Map<String, dynamic>> feeStructureItems = [
-    {'branch': 'Ecstasy School 1', 'year': '2025-26', 'class': 'Grade 1', 'feeType': 'Registration Fee', 'amount': 3000.0},
-    {'branch': 'Ecstasy School 1', 'year': '2025-26', 'class': 'Grade 1', 'feeType': 'Activity Fee', 'amount': 6000.0},
-    {'branch': 'Ecstasy School 1', 'year': '2025-26', 'class': 'Grade 1', 'feeType': 'Tuition Fee', 'amount': 38000.0},
-    {'branch': 'Ecstasy School 1', 'year': '2025-26', 'class': 'Grade 1', 'feeType': 'books fee', 'amount': 11000.0},
-    {'branch': 'Ecstasy School 1', 'year': '2025-26', 'class': 'Grade 1', 'feeType': 'cultural activity fee', 'amount': 4000.0},
+    {'branch': 'Ecstasy School 1', 'year': '2025-26', 'class': 'Class 1', 'feeType': 'Registration Fee', 'amount': 3000.0},
+    {'branch': 'Ecstasy School 1', 'year': '2025-26', 'class': 'Class 1', 'feeType': 'Activity Fee', 'amount': 6000.0},
+    {'branch': 'Ecstasy School 1', 'year': '2025-26', 'class': 'Class 1', 'feeType': 'Tuition Fee', 'amount': 38000.0},
+    {'branch': 'Ecstasy School 1', 'year': '2025-26', 'class': 'Class 1', 'feeType': 'books fee', 'amount': 11000.0},
+    {'branch': 'Ecstasy School 1', 'year': '2025-26', 'class': 'Class 1', 'feeType': 'cultural activity fee', 'amount': 4000.0},
   ];
 
   void addFeeStructureItem(Map<String, dynamic> item) { feeStructureItems.add(item); notifyConfigChange(); }

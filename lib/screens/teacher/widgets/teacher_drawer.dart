@@ -4,6 +4,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/profile_manager.dart';
 import '../../login/login_screen.dart';
 import '../screens/teacher_my_info_screen.dart';
+import '../../../core/data/app_data_store.dart';
 
 class TeacherDrawer extends StatelessWidget {
   final int? currentIndex;
@@ -18,10 +19,8 @@ class TeacherDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Determine the name and designation from ProfileManager or use defaults
-    // Since we don't have direct access to teacher_my_info_screen's variables here,
-    // we use default fallbacks for now, just like in dashboard.
-    const String name = "Teacher Name";
-    const String designation = "Senior Faculty";
+    final currentTeacher = AppDataStore.instance.currentUser;
+    final String designation = currentTeacher != null ? currentTeacher['subject'] as String : "Senior Faculty";
 
     return Drawer(
       backgroundColor: Colors.white,
@@ -85,26 +84,31 @@ class TeacherDrawer extends StatelessWidget {
                     ),
                     const SizedBox(width: 14),
                     Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            name,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            designation,
-                            style: TextStyle(
-                              color: Colors.white.withValues(alpha: 0.85),
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
+                      child: ValueListenableBuilder<String>(
+                        valueListenable: ProfileManager().teacherName,
+                        builder: (context, tName, _) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                tName,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                designation,
+                                style: TextStyle(
+                                  color: Colors.white.withValues(alpha: 0.85),
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          );
+                        }
                       ),
                     ),
                   ],

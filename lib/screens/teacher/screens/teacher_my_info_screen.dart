@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/profile_manager.dart';
 import '../widgets/teacher_app_bar.dart';
+import '../../../core/data/app_data_store.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Data model helpers
@@ -37,6 +38,46 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    
+    // Load from ProfileManager if set, otherwise from AppDataStore currentUser
+    final currentTeacher = AppDataStore.instance.currentUser;
+    final savedName = ProfileManager().teacherName.value;
+    
+    name = (savedName.isNotEmpty && savedName != 'Teacher Name') 
+        ? savedName 
+        : (currentTeacher != null ? currentTeacher['name'] as String : 'Dr. Ramesh Kumar');
+        
+    studentId = currentTeacher != null ? currentTeacher['employeeCode'] as String : 'ECS00E01';
+    rollNumber = currentTeacher != null ? currentTeacher['subject'] as String : 'Senior Faculty';
+    mobile = currentTeacher != null ? currentTeacher['phone'] as String : '9876543301';
+    email = currentTeacher != null ? "${(currentTeacher['name'] as String).toLowerCase().replaceAll(' ', '.')}@school.com" : 'ramesh.kumar@school.com';
+    gender = currentTeacher != null ? currentTeacher['gender'] as String : 'Male';
+    
+    // Fallback constants or fields
+    admissionNo = studentId;
+    classSection = currentTeacher != null ? currentTeacher['department'] as String : 'Science';
+    dateOfAdmission = currentTeacher != null ? currentTeacher['experience'] as String : '15 years';
+    academicYear = '10 Jun 2012';
+    house = 'Full Time';
+    firstLanguage = 'Morning';
+    secondLanguage = currentTeacher != null ? (currentTeacher['school'] as String) : 'Ecstasy School 1';
+    
+    // Emergency contact default
+    emergencyContact = 'Family Member';
+    relationship = 'Spouse';
+    emergencyPhone = '+91 9876543300';
+    
+    // Other defaults
+    nationality = 'Indian';
+    religion = 'Hindu';
+    casteCategory = 'General';
+    languagesKnown = 'English, Hindi, Telugu';
+    
+    // Also update ProfileManager's teacherName value if it was the default
+    if (ProfileManager().teacherName.value == 'Teacher Name') {
+      ProfileManager().setTeacherName(name);
+    }
+    
     final path = ProfileManager().teacherProfileImagePath.value;
     if (path != null) {
       _profileImage = File(path);
@@ -427,8 +468,9 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
 
             _saveBtn(() {
               if (formKey.currentState!.validate()) {
+                final newName = nameCtrl.text.trim();
                 setState(() {
-                  name = nameCtrl.text.trim();
+                  name = newName;
                   studentId = studentIdCtrl.text.trim();
                   aadhaar = aadhaarCtrl.text.trim();
                   mobile = mobileCtrl.text.trim();
@@ -439,6 +481,12 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
                   gender = selGender;
                   address = addressCtrl.text.trim();
                 });
+                ProfileManager().setTeacherName(newName);
+                if (AppDataStore.instance.currentUser != null) {
+                  AppDataStore.instance.currentUser!['name'] = newName;
+                  AppDataStore.instance.currentUser!['phone'] = mobile;
+                  AppDataStore.instance.currentUser!['gender'] = gender;
+                }
                 Navigator.pop(context);
               }
             }),
@@ -822,7 +870,12 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(name.isEmpty ? 'Employee Name' : name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: name.isEmpty ? Colors.white70 : Colors.white)),
+                ValueListenableBuilder<String>(
+                  valueListenable: ProfileManager().teacherName,
+                  builder: (context, tName, _) {
+                    return Text(tName.isEmpty ? 'Employee Name' : tName, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: tName.isEmpty ? Colors.white70 : Colors.white));
+                  }
+                ),
                 const SizedBox(height: 3),
                 Text(
                   rollNumber.isEmpty ? 'Designation' : rollNumber,
@@ -1201,26 +1254,31 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
                     ),
                     const SizedBox(width: 14),
                     Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            name.isEmpty ? "Employee Name" : name,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            rollNumber.isEmpty ? "Designation" : rollNumber,
-                            style: TextStyle(
-                              color: Colors.white.withValues(alpha: 0.85),
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
+                      child: ValueListenableBuilder<String>(
+                        valueListenable: ProfileManager().teacherName,
+                        builder: (context, tName, _) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                tName.isEmpty ? "Employee Name" : tName,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                rollNumber.isEmpty ? "Designation" : rollNumber,
+                                style: TextStyle(
+                                  color: Colors.white.withValues(alpha: 0.85),
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          );
+                        }
                       ),
                     ),
                   ],

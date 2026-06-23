@@ -74,12 +74,20 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AdminAppBar(
-        title: "Welcome Admin 👋",
-        subtitle: "Here's what's happening today.",
-        onOpenDrawer: widget.onOpenDrawer,
-        onProfileTap: widget.onOpenProfile,
-        showSchoolSelector: false,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(72),
+        child: ValueListenableBuilder<String>(
+          valueListenable: ProfileManager().adminName,
+          builder: (context, name, _) {
+            return AdminAppBar(
+              title: "Welcome $name 👋",
+              subtitle: "Here's what's happening today.",
+              onOpenDrawer: widget.onOpenDrawer,
+              onProfileTap: widget.onOpenProfile,
+              showSchoolSelector: false,
+            );
+          },
+        ),
       ),
       body: ValueListenableBuilder<String>(
         valueListenable: ProfileManager().selectedSchool,

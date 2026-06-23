@@ -55,21 +55,11 @@ class ExamsScreen extends StatefulWidget {
 }
 
 class _ExamsScreenState extends State<ExamsScreen> {
-  String selectedClass = "Class 8 - A";
+  String selectedClass = "Class 8";
   final _store = AppDataStore.instance;
 
   List<String> get _availableClasses {
-    final classes = _store.studyClasses.map((c) => c['name'] as String).toList();
-    final sections = _store.classSections.map((s) => s['name'] as String).toList();
-    
-    List<String> list = [];
-    for (int i = 0; i < classes.length; i++) {
-      for (int j = 0; j < sections.length; j++) {
-        final secName = sections[j].split(' ').last;
-        list.add("${classes[i]} - $secName");
-      }
-    }
-    return list.toSet().toList();
+    return _store.studyClasses.map((c) => c['name'] as String).toList();
   }
 
   @override
@@ -96,17 +86,17 @@ class _ExamsScreenState extends State<ExamsScreen> {
   }
 
   final List<ExamItem> _upcomingExams = [
-    ExamItem(name: "Unit Test - I", term: "Term 1", className: "Class 8 - A", subject: "Mathematics", date: "24 May 2024", time: "10:00 AM", duration: "1h 30m"),
-    ExamItem(name: "Unit Test - I", term: "Term 1", className: "Class 9 - A", subject: "Science", date: "25 May 2024", time: "10:00 AM", duration: "1h 30m"),
-    ExamItem(name: "Half Yearly Exam", term: "Term 1", className: "Class 10 - A", subject: "English", date: "27 May 2024", time: "09:00 AM", duration: "2h 30m"),
-    ExamItem(name: "Mid Term Exam", term: "Term 1", className: "Class 8 - A", subject: "Social Studies", date: "29 May 2024", time: "11:00 AM", duration: "1h 30m"),
-    ExamItem(name: "Half Yearly Exam", term: "Term 1", className: "Class 9 - A", subject: "Mathematics", date: "31 May 2024", time: "09:00 AM", duration: "2h 30m"),
+    ExamItem(name: "Unit Test - I", term: "Term 1", className: "Class 8", subject: "Mathematics", date: "24 May 2024", time: "10:00 AM", duration: "1h 30m"),
+    ExamItem(name: "Unit Test - I", term: "Term 1", className: "Class 9", subject: "Science", date: "25 May 2024", time: "10:00 AM", duration: "1h 30m"),
+    ExamItem(name: "Half Yearly Exam", term: "Term 1", className: "Class 10", subject: "English", date: "27 May 2024", time: "09:00 AM", duration: "2h 30m"),
+    ExamItem(name: "Mid Term Exam", term: "Term 1", className: "Class 8", subject: "Social Studies", date: "29 May 2024", time: "11:00 AM", duration: "1h 30m"),
+    ExamItem(name: "Half Yearly Exam", term: "Term 1", className: "Class 9", subject: "Mathematics", date: "31 May 2024", time: "09:00 AM", duration: "2h 30m"),
   ];
 
   final List<ExamResultItem> _recentResults = [
-    ExamResultItem(name: "Unit Test - I", term: "Term 1", className: "Class 8 - A", subject: "Mathematics", publishedDate: "18 May 2024"),
-    ExamResultItem(name: "Unit Test - I", term: "Term 1", className: "Class 7 - A", subject: "English", publishedDate: "17 May 2024"),
-    ExamResultItem(name: "Mid Term Exam", term: "Term 1", className: "Class 9 - A", subject: "Science", publishedDate: "15 May 2024"),
+    ExamResultItem(name: "Unit Test - I", term: "Term 1", className: "Class 8", subject: "Mathematics", publishedDate: "18 May 2024"),
+    ExamResultItem(name: "Unit Test - I", term: "Term 1", className: "Class 7", subject: "English", publishedDate: "17 May 2024"),
+    ExamResultItem(name: "Mid Term Exam", term: "Term 1", className: "Class 9", subject: "Science", publishedDate: "15 May 2024"),
   ];
 
   int _conductedExamsCount = 4;
@@ -140,7 +130,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
                 ),
                 TextField(
                   controller: classController,
-                  decoration: const InputDecoration(labelText: "Class Name (e.g. Class 8 - A)"),
+                  decoration: const InputDecoration(labelText: "Class Name (e.g. Class 8)"),
                 ),
                 TextField(
                   controller: subjectController,
@@ -175,7 +165,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
                       ExamItem(
                         name: nameController.text,
                         term: termController.text.isNotEmpty ? termController.text : "Term 1",
-                        className: classController.text.isNotEmpty ? classController.text : "Class 8 - A",
+                        className: classController.text.isNotEmpty ? classController.text : "Class 8",
                         subject: subjectController.text,
                         date: dateController.text.isNotEmpty ? dateController.text : "TBD",
                         time: timeController.text.isNotEmpty ? timeController.text : "10:00 AM",
@@ -371,8 +361,8 @@ class _ExamsScreenState extends State<ExamsScreen> {
                         Row(
                           children: [
                             Container(
-                              width: 32,
                               height: 32,
+                              padding: const EdgeInsets.symmetric(horizontal: 8),
                               decoration: BoxDecoration(
                                 color: color.withValues(alpha: 0.12),
                                 borderRadius: BorderRadius.circular(8),

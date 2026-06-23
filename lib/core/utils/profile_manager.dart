@@ -10,6 +10,8 @@ class ProfileManager {
   final ValueNotifier<String?> studentProfileImagePath = ValueNotifier<String?>(null);
   final ValueNotifier<String?> adminProfileImagePath = ValueNotifier<String?>(null);
   final ValueNotifier<String?> teacherProfileImagePath = ValueNotifier<String?>(null);
+  final ValueNotifier<String> adminName = ValueNotifier<String>('Admin User');
+  final ValueNotifier<String> teacherName = ValueNotifier<String>('Teacher Name');
   final ValueNotifier<String> selectedSchool = ValueNotifier<String>('Ecstasy School 1');
   final ValueNotifier<ThemeMode> themeMode = ValueNotifier<ThemeMode>(ThemeMode.system);
 
@@ -18,6 +20,8 @@ class ProfileManager {
     studentProfileImagePath.value = prefs.getString('student_profile_image');
     adminProfileImagePath.value = prefs.getString('admin_profile_image');
     teacherProfileImagePath.value = prefs.getString('teacher_profile_image');
+    adminName.value = prefs.getString('admin_name') ?? 'Admin User';
+    teacherName.value = prefs.getString('teacher_name') ?? 'Teacher Name';
     
     final themeString = prefs.getString('theme_mode');
     if (themeString == 'light') {
@@ -66,5 +70,17 @@ class ProfileManager {
       await prefs.setString('teacher_profile_image', path);
     }
     teacherProfileImagePath.value = path;
+  }
+
+  Future<void> setAdminName(String name) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('admin_name', name);
+    adminName.value = name;
+  }
+
+  Future<void> setTeacherName(String name) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('teacher_name', name);
+    teacherName.value = name;
   }
 }

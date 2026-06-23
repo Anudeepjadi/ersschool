@@ -3,6 +3,8 @@ import '../../../widgets/scrollable_table_wrapper.dart';
 import '../widgets/stat_card.dart';
 import '../widgets/quick_actions.dart';
 import '../../../core/data/app_data_store.dart';
+import '../../../core/utils/profile_manager.dart';
+import 'students_screen.dart';
 
 class ClassItem {
   String section;
@@ -52,27 +54,34 @@ class _ClassesScreenState extends State<ClassesScreen> {
   final TextEditingController _subjectController = TextEditingController();
 
   final _store = AppDataStore.instance;
+  List<Map<String, dynamic>>? _attendanceList;
 
   List<ClassItem> get _allClasses {
     final classes = _store.studyClasses.map((c) => c['name'] as String).toSet().toList();
-    final sections = _store.classSections.map((s) => s['name'] as String).toSet().toList();
     final subjects = _store.subjects.map((s) => s['name'] as String).toSet().toList();
+
+    // Get the unified list of students dynamically
+    final allStudents = StudentsScreen.getUnifiedStudents(_store, ProfileManager().selectedSchool.value);
 
     List<ClassItem> list = [];
     int roomCounter = 101;
     for (int i = 0; i < classes.length; i++) {
-      for (int j = 0; j < sections.length; j++) {
-        final secName = sections[j].split(' ').last; // e.g. "Section A" -> "A"
-        list.add(ClassItem(
-          section: "${classes[i]} - $secName",
-          students: 30 + ((i + j) % 15),
-          boys: 15 + ((i + j) % 8),
-          girls: 15 + ((i + j) % 7),
-          teacher: "Teacher ${i * sections.length + j + 1}",
-          room: "${roomCounter++}",
-          subjects: subjects.take(3).toList(),
-        ));
-      }
+      final className = classes[i];
+      // Filter students by className (ignoring section suffix e.g. Class 10 - A)
+      final classSts = allStudents.where((s) => s.className.split(' - ').first == className).toList();
+      final totalSts = classSts.length;
+      final boysSts = classSts.where((s) => s.gender == "Male").length;
+      final girlsSts = classSts.where((s) => s.gender == "Female").length;
+
+      list.add(ClassItem(
+        section: className,
+        students: totalSts,
+        boys: boysSts,
+        girls: girlsSts,
+        teacher: "Teacher ${i + 1}",
+        room: "${roomCounter++}",
+        subjects: subjects.take(3).toList(),
+      ));
     }
     return list;
   }
@@ -452,7 +461,7 @@ class _ClassesScreenState extends State<ClassesScreen> {
 
   // 2. Class Attendance UI
   Widget _buildAttendance() {
-    final List<Map<String, dynamic>> attendance = [
+    _attendanceList ??= [
       {"name": "Aarav Sharma", "roll": "01", "status": "Present", "color": Colors.green},
       {"name": "Ananya Verma", "roll": "02", "status": "Present", "color": Colors.green},
       {"name": "Vivaan Mehta", "roll": "03", "status": "Absent", "color": Colors.red},
@@ -476,17 +485,30 @@ class _ClassesScreenState extends State<ClassesScreen> {
         Expanded(
           child: ListView.builder(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            itemCount: attendance.length,
+            itemCount: _attendanceList!.length,
             itemBuilder: (context, index) {
-              final student = attendance[index];
+              final student = _attendanceList![index];
               return ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: CircleAvatar(child: Text(student['roll'])),
                 title: Text(student['name'], style: const TextStyle(fontWeight: FontWeight.w600)),
-                trailing: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                  decoration: BoxDecoration(color: student['color'].withValues(alpha: 0.1), borderRadius: BorderRadius.circular(20)),
-                  child: Text(student['status'], style: TextStyle(color: student['color'], fontWeight: FontWeight.bold, fontSize: 11)),
+                trailing: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      if (student['status'] == 'Present' || student['status'] == 'Late') {
+                        student['status'] = 'Absent';
+                        student['color'] = Colors.red;
+                      } else {
+                        student['status'] = 'Present';
+                        student['color'] = Colors.green;
+                      }
+                    });
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    decoration: BoxDecoration(color: student['color'].withValues(alpha: 0.1), borderRadius: BorderRadius.circular(20)),
+                    child: Text(student['status'], style: TextStyle(color: student['color'], fontWeight: FontWeight.bold, fontSize: 11)),
+                  ),
                 ),
               );
             },
@@ -658,7 +680,11 @@ class _ClassesScreenState extends State<ClassesScreen> {
                 ];
                 final color = colors[index % colors.length];
                 return GestureDetector(
-                  onTap: () => setState(() => selectedOverviewClass = cls.section),
+                  onTap: () {
+                    setState(() => selectedOverviewClass = cls.section);
+                    StudentsScreen.selectedClassOverride = cls.section;
+                    widget.onNavigateTab?.call(2);
+                  },
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
                     width: 130,
@@ -680,15 +706,15 @@ class _ClassesScreenState extends State<ClassesScreen> {
                         Row(
                           children: [
                             Container(
-                              width: 32,
                               height: 32,
+                              padding: const EdgeInsets.symmetric(horizontal: 8),
                               decoration: BoxDecoration(
                                 color: color.withValues(alpha: 0.12),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Center(
                                 child: Text(
-                                  cls.section.split(' ').last,
+                                  cls.section.startsWith("Class ") ? cls.section.substring(6) : cls.section,
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 11,
@@ -803,8 +829,12 @@ class _ClassesScreenState extends State<ClassesScreen> {
         underline: const SizedBox(),
         icon: const Icon(Icons.keyboard_arrow_down, size: 18),
         style: const TextStyle(color: Colors.black87, fontSize: 13, fontWeight: FontWeight.bold),
-        onChanged: (val) => setState(() => selectedOverviewClass = val!),
-        items: _allClasses.take(7).map((cls) => DropdownMenuItem(value: cls.section, child: Text(cls.section))).toList(),
+        onChanged: (val) {
+          setState(() => selectedOverviewClass = val!);
+          StudentsScreen.selectedClassOverride = val;
+          widget.onNavigateTab?.call(2);
+        },
+        items: _allClasses.map((cls) => DropdownMenuItem(value: cls.section, child: Text(cls.section))).toList(),
       ),
     );
   }
@@ -936,41 +966,46 @@ class _ClassesScreenState extends State<ClassesScreen> {
                 ],
               ),
             ),
-            const Divider(height: 1),
-            ...paginated.map((c) => Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey[100]!))),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(c.section, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-                        const Text("Section A", style: TextStyle(color: Colors.grey, fontSize: 10)),
-                      ],
+            ...paginated.map((c) => InkWell(
+              onTap: () {
+                StudentsScreen.selectedClassOverride = c.section;
+                widget.onNavigateTab?.call(2);
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey[100]!))),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(c.section, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                          const Text("All Sections", style: TextStyle(color: Colors.grey, fontSize: 10)),
+                        ],
+                      ),
                     ),
-                  ),
-                  Expanded(flex: 2, child: Text("${c.students}", style: const TextStyle(fontSize: 12), textAlign: TextAlign.center)),
-                  Expanded(flex: 4, child: Text(c.teacher, style: const TextStyle(fontSize: 12))),
-                  Expanded(flex: 2, child: Text(c.room, style: const TextStyle(fontSize: 12))),
-                  Expanded(
-                    flex: 1,
-                    child: PopupMenuButton<String>(
-                      icon: const Icon(Icons.more_vert, size: 18, color: Colors.grey),
-                      padding: EdgeInsets.zero,
-                      onSelected: (value) {
-                        if (value == 'view') {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Viewing details for ${c.section}")));
-                        }
-                      },
-                      itemBuilder: (context) => [
-                        const PopupMenuItem(value: 'view', child: Text('View Details')),
-                      ],
+                    Expanded(flex: 2, child: Text("${c.students}", style: const TextStyle(fontSize: 12), textAlign: TextAlign.center)),
+                    Expanded(flex: 4, child: Text(c.teacher, style: const TextStyle(fontSize: 12))),
+                    Expanded(flex: 2, child: Text(c.room, style: const TextStyle(fontSize: 12))),
+                    Expanded(
+                      flex: 1,
+                      child: PopupMenuButton<String>(
+                        icon: const Icon(Icons.more_vert, size: 18, color: Colors.grey),
+                        padding: EdgeInsets.zero,
+                        onSelected: (value) {
+                          if (value == 'view') {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Viewing details for ${c.section}")));
+                          }
+                        },
+                        itemBuilder: (context) => [
+                          const PopupMenuItem(value: 'view', child: Text('View Details')),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             )),
           ],

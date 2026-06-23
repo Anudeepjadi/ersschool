@@ -3,6 +3,7 @@ import '../../../widgets/scrollable_table_wrapper.dart';
 import '../widgets/stat_card.dart';
 import '../widgets/quick_actions.dart';
 import '../../../core/data/app_data_store.dart';
+import '../../../core/utils/profile_manager.dart';
 
 class StudentItem {
   final String name;
@@ -31,6 +32,8 @@ class StudentItem {
 }
 
 class StudentsScreen extends StatefulWidget {
+  static String? selectedClassOverride;
+
   final int activeTab;
   final Function(int) onSubTabSelected;
 
@@ -40,43 +43,34 @@ class StudentsScreen extends StatefulWidget {
     required this.onSubTabSelected,
   });
 
-  @override
-  State<StudentsScreen> createState() => _StudentsScreenState();
-}
+  static List<StudentItem> getUnifiedStudents(AppDataStore store, String school) {
+    // Load from AppDataStore
+    final schoolStudents = store.students
+        .where((s) => s['school'] == school)
+        .map((s) {
+          final className = s['class'] as String? ?? 'Class 10';
+          String normalizedClass = className;
+          if (className == 'LKG') normalizedClass = 'L.K.G';
+          if (className == 'UKG') normalizedClass = 'U.K.G';
+          
+          final rollRaw = s['roll'] as String? ?? '00';
+          final rollClean = rollRaw.replaceAll('Roll No: ', '').trim();
+          
+          return StudentItem(
+            name: s['name'] as String? ?? 'Unknown',
+            className: normalizedClass.contains(' - ') ? normalizedClass : '$normalizedClass - A',
+            rollNo: rollClean.isEmpty ? '00' : rollClean,
+            admissionNo: s['admission'] as String? ?? 'ECS000',
+            gender: s['gender'] as String? ?? 'Male',
+            parentName: s['phone'] as String? ?? 'Parent',
+            isActive: s['status'] == 'Active',
+            avatarUrl: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100",
+            siblings: [],
+            hasIdCard: true,
+          );
+        }).toList();
 
-class _StudentsScreenState extends State<StudentsScreen> {
-  String selectedClass = "Class 8 - A";
-  String searchQuery = "";
-  String statusFilter = "All"; // All, Active, Inactive
-  String statsFilter = "Total"; // Total, Boys, Girls, Present, Absent
-  int currentPage = 1;
-  final int itemsPerPage = 8;
-
-  final _store = AppDataStore.instance;
-
-  List<String> get _availableClasses {
-    final classes = _store.studyClasses.map((c) => c['name'] as String).toList();
-    final sections = _store.classSections.map((s) => s['name'] as String).toList();
-    
-    List<String> list = [];
-    for (int i = 0; i < classes.length; i++) {
-      for (int j = 0; j < sections.length; j++) {
-        final secName = sections[j].split(' ').last;
-        list.add("${classes[i]} - $secName");
-      }
-    }
-    return list.toSet().toList();
-  }
-
-  // Mock list of 42 students to make pagination work beautifully
-  late List<StudentItem> _students;
-
-  @override
-  void initState() {
-    super.initState();
-    _store.configVersion.addListener(_onStoreChanged);
-    
-    _students = [
+    final List<StudentItem> mockList = [
       StudentItem(
         name: "Aarav Sharma",
         className: "Class 8 - A",
@@ -149,7 +143,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
 
     // Generate padding items up to 42 students total for Class 8 - A
     for (int i = 7; i <= 42; i++) {
-      _students.add(StudentItem(
+      mockList.add(StudentItem(
         name: "Student $i",
         className: "Class 8 - A",
         rollNo: i.toString().padLeft(2, '0'),
@@ -164,10 +158,62 @@ class _StudentsScreenState extends State<StudentsScreen> {
     }
 
     // Additional classes
-    _students.add(StudentItem(name: "Rahul Dravid", className: "Class 9 - A", rollNo: "01", admissionNo: "ADMO0201", gender: "Male", parentName: "Sharad Dravid", isActive: true, avatarUrl: "https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?w=100"));
-    _students.add(StudentItem(name: "Sania Mirza", className: "Class 9 - A", rollNo: "02", admissionNo: "ADMO0202", gender: "Female", parentName: "Imran Mirza", isActive: true, avatarUrl: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100"));
+    mockList.add(StudentItem(name: "Rahul Dravid", className: "Class 9 - A", rollNo: "01", admissionNo: "ADMO0201", gender: "Male", parentName: "Sharad Dravid", isActive: true, avatarUrl: "https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?w=100"));
+    mockList.add(StudentItem(name: "Sania Mirza", className: "Class 9 - A", rollNo: "02", admissionNo: "ADMO0202", gender: "Female", parentName: "Imran Mirza", isActive: true, avatarUrl: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100"));
+
+    final list = <StudentItem>[];
+    list.addAll(schoolStudents);
+    for (var mock in mockList) {
+      if (!list.any((s) => s.admissionNo.toUpperCase() == mock.admissionNo.toUpperCase())) {
+        list.add(mock);
+      }
+    }
+    return list;
+  }
+
+  @override
+  State<StudentsScreen> createState() => _StudentsScreenState();
+}
+
+class _StudentsScreenState extends State<StudentsScreen> {
+  String selectedClass = "Class 8";
+  String searchQuery = "";
+  String statusFilter = "All"; // All, Active, Inactive
+  String statsFilter = "Total"; // Total, Boys, Girls, Present, Absent
+  int currentPage = 1;
+  final int itemsPerPage = 8;
+
+  final _store = AppDataStore.instance;
+
+  List<String> get _availableClasses {
+    return _store.studyClasses.map((c) => c['name'] as String).toList();
+  }
+
+  // Mock list of 42 students to make pagination work beautifully
+  late List<StudentItem> _students;
+
+  @override
+  void didUpdateWidget(covariant StudentsScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (StudentsScreen.selectedClassOverride != null) {
+      setState(() {
+        selectedClass = StudentsScreen.selectedClassOverride!;
+        StudentsScreen.selectedClassOverride = null;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _store.configVersion.addListener(_onStoreChanged);
     
-    if (_availableClasses.isNotEmpty) {
+    _students = StudentsScreen.getUnifiedStudents(_store, ProfileManager().selectedSchool.value);
+    
+    if (StudentsScreen.selectedClassOverride != null) {
+      selectedClass = StudentsScreen.selectedClassOverride!;
+      StudentsScreen.selectedClassOverride = null;
+    } else if (_availableClasses.isNotEmpty) {
       selectedClass = _availableClasses.first;
     }
   }
@@ -189,7 +235,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
   void _showAddStudentDialog() {
     final nameController = TextEditingController();
     final rollController = TextEditingController();
-    final admissionController = TextEditingController();
+    final admissionController = TextEditingController(text: _store.getNextAdmissionNo(ProfileManager().selectedSchool.value));
     final parentController = TextEditingController();
     String gender = "Male";
     bool isActive = true;
@@ -217,6 +263,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
                     TextField(
                       controller: admissionController,
                       decoration: const InputDecoration(labelText: "Admission No"),
+                      readOnly: true,
                     ),
                     TextField(
                       controller: parentController,
@@ -273,20 +320,29 @@ class _StudentsScreenState extends State<StudentsScreen> {
                 ElevatedButton(
                   onPressed: () {
                     if (nameController.text.isNotEmpty) {
+                      final newStudent = StudentItem(
+                        name: nameController.text,
+                        className: selectedClass,
+                        rollNo: rollController.text.isNotEmpty ? rollController.text : "99",
+                        admissionNo: admissionController.text.isNotEmpty ? admissionController.text : "ADMO0999",
+                        gender: gender,
+                        parentName: parentController.text.isNotEmpty ? parentController.text : "TBD",
+                        isActive: isActive,
+                        avatarUrl: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100",
+                      );
                       setState(() {
-                        _students.insert(
-                          0,
-                          StudentItem(
-                            name: nameController.text,
-                            className: selectedClass,
-                            rollNo: rollController.text.isNotEmpty ? rollController.text : "99",
-                            admissionNo: admissionController.text.isNotEmpty ? admissionController.text : "ADMO0999",
-                            gender: gender,
-                            parentName: parentController.text.isNotEmpty ? parentController.text : "TBD",
-                            isActive: isActive,
-                            avatarUrl: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100",
-                          ),
-                        );
+                        _students.insert(0, newStudent);
+                        // Sync to AppDataStore
+                        AppDataStore.instance.addStudent({
+                          'name': newStudent.name,
+                          'class': newStudent.className.split(' - ').first,
+                          'roll': 'Roll No: ${newStudent.rollNo}',
+                          'admission': newStudent.admissionNo,
+                          'status': newStudent.isActive ? 'Active' : 'Inactive',
+                          'gender': newStudent.gender,
+                          'phone': newStudent.parentName,
+                          'school': ProfileManager().selectedSchool.value,
+                        });
                         currentPage = 1;
                       });
                       Navigator.pop(context);
@@ -349,7 +405,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
   }
 
   Widget _buildSiblingsView() {
-    final siblingsList = _students.where((st) => st.siblings.isNotEmpty && st.className == selectedClass).toList();
+    final siblingsList = _students.where((st) => st.siblings.isNotEmpty && st.className.split(' - ').first == selectedClass).toList();
 
     return SingleChildScrollView(
       child: Column(
@@ -391,7 +447,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
   }
 
   Widget _buildIdCardsView() {
-    final classStudents = _students.where((st) => st.className == selectedClass).toList();
+    final classStudents = _students.where((st) => st.className.split(' - ').first == selectedClass).toList();
 
     return SingleChildScrollView(
       child: Column(
@@ -437,7 +493,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(st.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                    Text(st.className, style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                    Text(st.className.split(' - ').first, style: const TextStyle(fontSize: 11, color: Colors.grey)),
                     const SizedBox(height: 4),
                     Text("ID: ${st.admissionNo}", style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w500)),
                     const Spacer(),
@@ -684,7 +740,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
                     setState(() {
                       final index = _students.indexWhere((st) => st.admissionNo == student.admissionNo);
                       if (index != -1) {
-                        _students[index] = StudentItem(
+                        final updated = StudentItem(
                           name: nameController.text,
                           className: student.className,
                           rollNo: rollController.text,
@@ -696,6 +752,20 @@ class _StudentsScreenState extends State<StudentsScreen> {
                           siblings: student.siblings,
                           hasIdCard: student.hasIdCard,
                         );
+                        _students[index] = updated;
+
+                        // Sync edit back to AppDataStore
+                        final storeIndex = AppDataStore.instance.students.indexWhere((s) => s['admission'] == student.admissionNo);
+                        if (storeIndex != -1) {
+                          AppDataStore.instance.students[storeIndex] = {
+                            ...AppDataStore.instance.students[storeIndex],
+                            'name': updated.name,
+                            'roll': 'Roll No: ${updated.rollNo}',
+                            'status': updated.isActive ? 'Active' : 'Inactive',
+                            'gender': updated.gender,
+                            'phone': updated.parentName,
+                          };
+                        }
                       }
                     });
                     Navigator.pop(context);
@@ -723,6 +793,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
             onPressed: () {
               setState(() {
                 _students.removeWhere((st) => st.admissionNo == student.admissionNo);
+                AppDataStore.instance.students.removeWhere((s) => s['admission'] == student.admissionNo);
               });
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
@@ -741,7 +812,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
   Widget build(BuildContext context) {
     // 1. Filter students by selected class, search query, and status filter
     final filtered = _students.where((st) {
-      final matchesClass = st.className == selectedClass;
+      final matchesClass = st.className.split(' - ').first == selectedClass;
       final matchesQuery = st.name.toLowerCase().contains(searchQuery.toLowerCase()) ||
           st.admissionNo.toLowerCase().contains(searchQuery.toLowerCase()) ||
           st.parentName.toLowerCase().contains(searchQuery.toLowerCase());
@@ -769,7 +840,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
 
     // Stats calculations (always based on Class + Status + Search, but NOT statsFilter itself to show the numbers on cards)
     final baseFiltered = _students.where((st) {
-      final matchesClass = st.className == selectedClass;
+      final matchesClass = st.className.split(' - ').first == selectedClass;
       final matchesQuery = st.name.toLowerCase().contains(searchQuery.toLowerCase()) ||
           st.admissionNo.toLowerCase().contains(searchQuery.toLowerCase()) ||
           st.parentName.toLowerCase().contains(searchQuery.toLowerCase());
@@ -864,14 +935,13 @@ class _StudentsScreenState extends State<StudentsScreen> {
                 ];
                 final color = colors[index % colors.length];
                 
-                final classSts = _students.where((s) => s.className == clsName).toList();
+                final classSts = _students.where((s) => s.className.split(' - ').first == clsName).toList();
                 final totalSts = classSts.length;
                 final boysSts = classSts.where((s) => s.gender == "Male").length;
                 final girlsSts = classSts.where((s) => s.gender == "Female").length;
                 
                 final mapping = _store.classSubjectsMapping.where((m) {
-                  final baseClass = clsName.split(' - ').first;
-                  return m['class'] == baseClass;
+                  return m['class'] == clsName;
                 }).toList();
                 final teacherName = mapping.isNotEmpty ? mapping.first['teacher']?.split(' ').last ?? 'N/A' : 'TBD';
                 final subjectCount = mapping.length;
@@ -904,15 +974,15 @@ class _StudentsScreenState extends State<StudentsScreen> {
                         Row(
                           children: [
                             Container(
-                              width: 32,
                               height: 32,
+                              padding: const EdgeInsets.symmetric(horizontal: 8),
                               decoration: BoxDecoration(
                                 color: color.withValues(alpha: 0.12),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Center(
                                 child: Text(
-                                  clsName.split(' ').last,
+                                  clsName.startsWith("Class ") ? clsName.substring(6) : clsName,
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 11,
@@ -1220,7 +1290,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               Text(st.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12), overflow: TextOverflow.ellipsis),
-                                              Text(st.className, style: const TextStyle(color: Colors.grey, fontSize: 10)),
+                                              Text(st.className.split(' - ').first, style: const TextStyle(color: Colors.grey, fontSize: 10)),
                                             ],
                                           ),
                                         ),

@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/profile_manager.dart';
 import '../tabs/admin_more_tab.dart';
-import '../screens/admin_invalid_fee_data_screen.dart';
-import '../screens/admin_invalid_fee_totals_screen.dart';
-import '../screens/admin_fee_not_gen_students_screen.dart';
-import '../screens/admin_transaction_logs_screen.dart';
+
 
 class AdminAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -69,87 +66,6 @@ class AdminAppBar extends StatelessWidget implements PreferredSizeWidget {
         ],
       ),
       actions: actions ?? [
-        // Super Admin Settings Dropdown (Icon: Computer with Gear dropdown)
-        PopupMenuButton<String>(
-          icon: const Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.settings_suggest, color: Colors.white, size: 24),
-              Icon(Icons.arrow_drop_down, color: Colors.white, size: 16),
-            ],
-          ),
-          offset: const Offset(0, 45),
-          color: Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          onSelected: (value) {
-            if (value == 'invalid_data') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const AdminInvalidFeeDataScreen()),
-              );
-            } else if (value == 'invalid_totals') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const AdminInvalidFeeTotalsScreen()),
-              );
-            } else if (value == 'fee_not_gen') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const AdminFeeNotGenStudentsScreen()),
-              );
-            } else if (value == 'transaction_logs') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const AdminTransactionLogsScreen()),
-              );
-            }
-          },
-          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-            const PopupMenuItem<String>(
-              value: 'invalid_data',
-              child: Row(
-                children: [
-                  Icon(Icons.error_outline, color: Color(0xFFEF4444), size: 20),
-                  SizedBox(width: 12),
-                  Text("Invalid Fee Data", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875))),
-                ],
-              ),
-            ),
-            const PopupMenuDivider(),
-            const PopupMenuItem<String>(
-              value: 'invalid_totals',
-              child: Row(
-                children: [
-                  Icon(Icons.difference_outlined, color: Color(0xFFF59E0B), size: 20),
-                  SizedBox(width: 12),
-                  Text("Invalid Fee Totals", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875))),
-                ],
-              ),
-            ),
-            const PopupMenuDivider(),
-            const PopupMenuItem<String>(
-              value: 'fee_not_gen',
-              child: Row(
-                children: [
-                  Icon(Icons.person_search_outlined, color: Color(0xFF3B82F6), size: 20),
-                  SizedBox(width: 12),
-                  Text("Fee not Gen Students", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875))),
-                ],
-              ),
-            ),
-            const PopupMenuDivider(),
-            const PopupMenuItem<String>(
-              value: 'transaction_logs',
-              child: Row(
-                children: [
-                  Icon(Icons.receipt_long, color: Color(0xFF10B981), size: 20),
-                  SizedBox(width: 12),
-                  Text("Transaction logs", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875))),
-                ],
-              ),
-            ),
-          ],
-        ),
         // Notification bell with badge 5
         Stack(
           alignment: Alignment.center,

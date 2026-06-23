@@ -4,6 +4,8 @@ import '../../../core/data/app_data_store.dart';
 import '../../../core/utils/profile_manager.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/ai_bot_fab.dart';
+import '../../teacher/teacher_dashboard_screen.dart';
+import '../../teacher/screens/students_screen.dart';
 
 class AdminStudentsTab extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
@@ -19,7 +21,7 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
   String _searchQuery = '';
 
   final List<String> _classes = [
-    'Nursery', 'LKG', 'UKG', 'Class 1', 'Class 2', 'Class 3', 'Class 4',
+    'Nursery', 'L.K.G', 'U.K.G', 'Class 1', 'Class 2', 'Class 3', 'Class 4',
     'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'
   ];
 
@@ -29,6 +31,16 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
   // Use the shared store — any additions from admin are immediately reflected
   List<Map<String, dynamic>> get _students => AppDataStore.instance.students
       .where((s) => s['school'] == ProfileManager().selectedSchool.value)
+      .map((s) {
+        final classVal = s['class'] as String? ?? '';
+        String normClass = classVal;
+        if (classVal == 'LKG') normClass = 'L.K.G';
+        if (classVal == 'UKG') normClass = 'U.K.G';
+        return {
+          ...s,
+          'class': normClass,
+        };
+      })
       .toList();
 
   List<Map<String, dynamic>> get _filteredStudents {
@@ -420,7 +432,7 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
     final nameController = TextEditingController();
     final rollController = TextEditingController();
     final phoneController = TextEditingController();
-    final admissionController = TextEditingController();
+    final admissionController = TextEditingController(text: AppDataStore.instance.getNextAdmissionNo(ProfileManager().selectedSchool.value));
     String selectedClass = 'Class 10';
     String selectedGender = 'Male';
     String selectedStatus = 'Active';
@@ -508,8 +520,9 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
                     const SizedBox(height: 14),
                     TextField(
                       controller: admissionController,
+                      readOnly: true,
                       decoration: const InputDecoration(
-                        labelText: "Admission Number (e.g. ECS001)",
+                        labelText: "Admission Number",
                         prefixIcon: Icon(Icons.badge_outlined),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(12)),
@@ -622,16 +635,23 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
                         Navigator.pop(modalCtx);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text("Student ${newStudent['name']} added successfully!"),
+                            content: Text("Student ${newStudent['name']} added successfully! Redirecting to Teacher Portal..."),
                             behavior: SnackBarBehavior.floating,
                             backgroundColor: Colors.green,
                           ),
                         );
-                        
-                        // Scroll down to the expanded class
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          _scrollToClass(selectedClass);
-                        });
+
+                        // Automatically redirect to teachers portal students screen
+                        AppDataStore.instance.currentRole = 'teacher';
+                        AppDataStore.instance.currentUser = AppDataStore.instance.teachers.first;
+                        StudentsScreen.selectedClassOverride = selectedClass;
+
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const TeacherDashboardScreen(initialIndex: 2),
+                          ),
+                        );
                       },
                       child: const Text("Save Student", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
                     ),

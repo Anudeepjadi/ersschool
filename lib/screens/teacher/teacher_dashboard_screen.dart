@@ -18,20 +18,27 @@ import '../admin/widgets/ai_bot_fab.dart';
 import 'widgets/teacher_drawer.dart';
 import 'widgets/teacher_bottom_nav.dart';
 class TeacherDashboardScreen extends StatefulWidget {
-  const TeacherDashboardScreen({super.key});
+  final int initialIndex;
+  const TeacherDashboardScreen({super.key, this.initialIndex = 0});
 
   @override
   State<TeacherDashboardScreen> createState() => _TeacherDashboardScreenState();
 }
 
 class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
-  int currentIndex = 0;
+  late int currentIndex;
   int classesActiveTab = 0;
   int studentsActiveTab = 0;
   int examsActiveTab = 0;
   int reportsActiveTab = 0;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+    currentIndex = widget.initialIndex;
+  }
 
   void _onTabChanged(int index) {
     setState(() {
@@ -72,7 +79,11 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
       HomeScreen(
         onNavigateTab: _onNavigateTab,
       ),
-      ClassesScreen(key: ValueKey('classes_$classesActiveTab'), activeTab: classesActiveTab),
+      ClassesScreen(
+        key: ValueKey('classes_$classesActiveTab'),
+        activeTab: classesActiveTab,
+        onNavigateTab: _onNavigateTab,
+      ),
       StudentsScreen(key: ValueKey('students_$studentsActiveTab'), activeTab: studentsActiveTab, onSubTabSelected: (index) {}),
       ExamsScreen(key: ValueKey('exams_$examsActiveTab'), activeTab: examsActiveTab),
       ReportsScreen(key: ValueKey('reports_$reportsActiveTab'), activeTab: reportsActiveTab),
@@ -89,30 +100,35 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
       }),
     ];
 
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: TeacherAppBar(
-        title: "Welcome Teacher 👋",
-        subtitle: "Here's your schedule for today.",
-        onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer(),
-        onProfileTap: () async {
-          final result = await Navigator.push(context, MaterialPageRoute(builder: (_) => TeacherMyInfoScreen(
-            onTabSelected: (idx) {
-              _onTabChanged(idx);
+    return ValueListenableBuilder<String>(
+      valueListenable: ProfileManager().teacherName,
+      builder: (context, tName, _) {
+        return Scaffold(
+          key: _scaffoldKey,
+          appBar: TeacherAppBar(
+            title: "Welcome $tName 👋",
+            subtitle: "Here's your schedule for today.",
+            onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer(),
+            onProfileTap: () async {
+              final result = await Navigator.push(context, MaterialPageRoute(builder: (_) => TeacherMyInfoScreen(
+                onTabSelected: (idx) {
+                  _onTabChanged(idx);
+                },
+              )));
+              if (result == 'openDrawer') {
+                _scaffoldKey.currentState?.openDrawer();
+              }
             },
-          )));
-          if (result == 'openDrawer') {
-            _scaffoldKey.currentState?.openDrawer();
-          }
-        },
-      ),
-      drawer: TeacherDrawer(currentIndex: currentIndex, onTabSelected: _onTabChanged),
-      bottomNavigationBar: TeacherBottomNav(currentIndex: currentIndex, onTabSelected: _onTabChanged),
-      body: IndexedStack(
-        index: currentIndex,
-        children: tabs,
-      ),
-      floatingActionButton: const AiBotFab(),
+          ),
+          drawer: TeacherDrawer(currentIndex: currentIndex, onTabSelected: _onTabChanged),
+          bottomNavigationBar: TeacherBottomNav(currentIndex: currentIndex, onTabSelected: _onTabChanged),
+          body: IndexedStack(
+            index: currentIndex,
+            children: tabs,
+          ),
+          floatingActionButton: const AiBotFab(),
+        );
+      }
     );
   }
 }

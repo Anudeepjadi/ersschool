@@ -21,6 +21,8 @@ import 'screens/admin_communications_screen.dart';
 import 'screens/admin_id_cards_screen.dart';
 import 'screens/admin_certificates_screen.dart';
 import 'screens/admin_reports_screen.dart';
+import 'screens/admin_invalid_info_screen.dart';
+import 'screens/admin_sms_screen.dart';
 import 'screens/admin_settings_screen.dart';
 import 'screens/admin_help_center_screen.dart';
 import 'screens/admin_chat_support_screen.dart';
@@ -163,13 +165,18 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            "Admin User",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          ValueListenableBuilder<String>(
+                            valueListenable: ProfileManager().adminName,
+                            builder: (context, name, _) {
+                              return Text(
+                                name,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              );
+                            },
                           ),
                           const SizedBox(height: 2),
                           Text(
@@ -306,6 +313,14 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           _buildDrawerItem(Icons.assessment_outlined, "Reports", false, () {
             Navigator.pop(context);
             Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminReportsScreen()));
+          }),
+          _buildDrawerItem(Icons.error_outline, "Invalid Info", false, () {
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminInvalidInfoScreen()));
+          }),
+          _buildDrawerItem(Icons.sms_outlined, "SMS", false, () {
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminSmsScreen()));
           }),
           _buildDrawerItem(Icons.settings_outlined, "Settings", false, () {
             Navigator.pop(context);

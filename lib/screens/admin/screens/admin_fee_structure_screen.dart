@@ -15,7 +15,7 @@ class _AdminFeeStructureScreenState extends State<AdminFeeStructureScreen> {
 
   String _selectedBranch = 'Ecstasy School 1';
   String _selectedYear = '2025-26';
-  String _selectedClass = 'Grade 1';
+  String _selectedClass = 'Class 1';
 
   // These are pulled live from AppDataStore so adding a new class/year shows up here
   List<String> get _branches => _store.branches
@@ -197,7 +197,7 @@ class _AdminFeeStructureScreenState extends State<AdminFeeStructureScreen> {
     }
     final yearList = _years.isEmpty ? ['2025-26'] : _years;
     if (!yearList.contains(_selectedYear)) _selectedYear = yearList.first;
-    final classList = _classes.isEmpty ? ['Grade 1'] : _classes;
+    final classList = _classes.isEmpty ? ['Class 1'] : _classes;
     if (!classList.contains(_selectedClass)) {
       _selectedClass = classList.first;
     }
