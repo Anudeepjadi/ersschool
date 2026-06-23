@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/profile_manager.dart';
 import '../tabs/admin_more_tab.dart';
+import '../screens/admin_invalid_fee_data_screen.dart';
+import '../screens/admin_invalid_fee_totals_screen.dart';
+import '../screens/admin_fee_not_gen_students_screen.dart';
+import '../screens/admin_transaction_logs_screen.dart';
 
 class AdminAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -11,6 +15,7 @@ class AdminAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onOpenDrawer;
   final VoidCallback? onProfileTap;
   final List<Widget>? actions;
+  final bool showSchoolSelector;
 
   const AdminAppBar({
     super.key,
@@ -20,6 +25,7 @@ class AdminAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.onOpenDrawer,
     this.onProfileTap,
     this.actions,
+    this.showSchoolSelector = true,
   });
 
   @override
@@ -63,6 +69,87 @@ class AdminAppBar extends StatelessWidget implements PreferredSizeWidget {
         ],
       ),
       actions: actions ?? [
+        // Super Admin Settings Dropdown (Icon: Computer with Gear dropdown)
+        PopupMenuButton<String>(
+          icon: const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.settings_suggest, color: Colors.white, size: 24),
+              Icon(Icons.arrow_drop_down, color: Colors.white, size: 16),
+            ],
+          ),
+          offset: const Offset(0, 45),
+          color: Colors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          onSelected: (value) {
+            if (value == 'invalid_data') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const AdminInvalidFeeDataScreen()),
+              );
+            } else if (value == 'invalid_totals') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const AdminInvalidFeeTotalsScreen()),
+              );
+            } else if (value == 'fee_not_gen') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const AdminFeeNotGenStudentsScreen()),
+              );
+            } else if (value == 'transaction_logs') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const AdminTransactionLogsScreen()),
+              );
+            }
+          },
+          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+            const PopupMenuItem<String>(
+              value: 'invalid_data',
+              child: Row(
+                children: [
+                  Icon(Icons.error_outline, color: Color(0xFFEF4444), size: 20),
+                  SizedBox(width: 12),
+                  Text("Invalid Fee Data", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875))),
+                ],
+              ),
+            ),
+            const PopupMenuDivider(),
+            const PopupMenuItem<String>(
+              value: 'invalid_totals',
+              child: Row(
+                children: [
+                  Icon(Icons.difference_outlined, color: Color(0xFFF59E0B), size: 20),
+                  SizedBox(width: 12),
+                  Text("Invalid Fee Totals", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875))),
+                ],
+              ),
+            ),
+            const PopupMenuDivider(),
+            const PopupMenuItem<String>(
+              value: 'fee_not_gen',
+              child: Row(
+                children: [
+                  Icon(Icons.person_search_outlined, color: Color(0xFF3B82F6), size: 20),
+                  SizedBox(width: 12),
+                  Text("Fee not Gen Students", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875))),
+                ],
+              ),
+            ),
+            const PopupMenuDivider(),
+            const PopupMenuItem<String>(
+              value: 'transaction_logs',
+              child: Row(
+                children: [
+                  Icon(Icons.receipt_long, color: Color(0xFF10B981), size: 20),
+                  SizedBox(width: 12),
+                  Text("Transaction logs", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875))),
+                ],
+              ),
+            ),
+          ],
+        ),
         // Notification bell with badge 5
         Stack(
           alignment: Alignment.center,
@@ -164,76 +251,82 @@ class AdminAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
       ],
-      bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(24),
-        child: Padding(
-          padding: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const SizedBox(), // Empty space on left
-              // School Selector Pill moved below notifications
-              PopupMenuButton<String>(
-                onSelected: (String school) {
-                  ProfileManager().selectedSchool.value = school;
-                },
-                color: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                  const PopupMenuItem<String>(
-                    value: 'Ecstasy School 1',
-                    child: Text('Ecstasy School 1', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                  ),
-                  const PopupMenuItem<String>(
-                    value: 'Ecstasy School 2',
-                    child: Text('Ecstasy School 2', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                  ),
-                  const PopupMenuItem<String>(
-                    value: 'Ecstasy School 3',
-                    child: Text('Ecstasy School 3', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                  ),
-                ],
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: ValueListenableBuilder<String>(
-                    valueListenable: ProfileManager().selectedSchool,
-                    builder: (context, selectedSchool, _) {
-                      return Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.school, color: Colors.white, size: 14),
-                          const SizedBox(width: 6),
-                          Text(
-                            selectedSchool,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 11,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                          Icon(
-                            Icons.keyboard_arrow_down,
-                            color: Colors.white.withValues(alpha: 0.7),
-                            size: 14,
-                          ),
-                        ],
-                      );
-                    },
-                  ),
+      bottom: showSchoolSelector
+          ? PreferredSize(
+              preferredSize: const Size.fromHeight(24),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const SizedBox(), // Empty space on left
+                    // School Selector Pill moved below notifications
+                    PopupMenuButton<String>(
+                      onSelected: (String school) {
+                        debugPrint("AdminAppBar selected school: $school");
+                        ProfileManager().selectedSchool.value = school;
+                      },
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                        const PopupMenuItem<String>(
+                          value: 'Ecstasy School 1',
+                          child: Text('Ecstasy School 1', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                        ),
+                        const PopupMenuItem<String>(
+                          value: 'Ecstasy School 2',
+                          child: Text('Ecstasy School 2', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                        ),
+                        const PopupMenuItem<String>(
+                          value: 'Ecstasy School 3',
+                          child: Text('Ecstasy School 3', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                        ),
+                      ],
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: ValueListenableBuilder<String>(
+                          valueListenable: ProfileManager().selectedSchool,
+                          builder: (context, selectedSchool, _) {
+                            return Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.school, color: Colors.white, size: 14),
+                                const SizedBox(width: 6),
+                                Text(
+                                  selectedSchool,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: Colors.white.withValues(alpha: 0.7),
+                                  size: 14,
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
+            )
+          : const PreferredSize(
+              preferredSize: Size.fromHeight(24),
+              child: SizedBox(height: 24),
+            ),
     );
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(48 + 24); // Account for toolbar and bottom widget
+  Size get preferredSize => const Size.fromHeight(72);
 }

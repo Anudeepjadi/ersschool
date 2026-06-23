@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../widgets/scrollable_table_wrapper.dart';
 import '../widgets/stat_card.dart';
 import '../widgets/quick_actions.dart';
+import '../../../core/data/app_data_store.dart';
 
 class StudentItem {
   final String name;
@@ -51,12 +52,30 @@ class _StudentsScreenState extends State<StudentsScreen> {
   int currentPage = 1;
   final int itemsPerPage = 8;
 
+  final _store = AppDataStore.instance;
+
+  List<String> get _availableClasses {
+    final classes = _store.studyClasses.map((c) => c['name'] as String).toList();
+    final sections = _store.classSections.map((s) => s['name'] as String).toList();
+    
+    List<String> list = [];
+    for (int i = 0; i < classes.length; i++) {
+      for (int j = 0; j < sections.length; j++) {
+        final secName = sections[j].split(' ').last;
+        list.add("${classes[i]} - $secName");
+      }
+    }
+    return list.toSet().toList();
+  }
+
   // Mock list of 42 students to make pagination work beautifully
   late List<StudentItem> _students;
 
   @override
   void initState() {
     super.initState();
+    _store.configVersion.addListener(_onStoreChanged);
+    
     _students = [
       StudentItem(
         name: "Aarav Sharma",
@@ -147,6 +166,24 @@ class _StudentsScreenState extends State<StudentsScreen> {
     // Additional classes
     _students.add(StudentItem(name: "Rahul Dravid", className: "Class 9 - A", rollNo: "01", admissionNo: "ADMO0201", gender: "Male", parentName: "Sharad Dravid", isActive: true, avatarUrl: "https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?w=100"));
     _students.add(StudentItem(name: "Sania Mirza", className: "Class 9 - A", rollNo: "02", admissionNo: "ADMO0202", gender: "Female", parentName: "Imran Mirza", isActive: true, avatarUrl: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100"));
+    
+    if (_availableClasses.isNotEmpty) {
+      selectedClass = _availableClasses.first;
+    }
+  }
+
+  void _onStoreChanged() {
+    setState(() {
+      if (_availableClasses.isNotEmpty && !_availableClasses.contains(selectedClass)) {
+        selectedClass = _availableClasses.first;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _store.configVersion.removeListener(_onStoreChanged);
+    super.dispose();
   }
 
   void _showAddStudentDialog() {
@@ -791,6 +828,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+          // 1. Class Overview Dropdown Header
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
@@ -812,23 +850,34 @@ class _StudentsScreenState extends State<StudentsScreen> {
                     border: Border.all(color: Colors.grey[300]!),
                   ),
                   child: DropdownButton<String>(
-                    value: selectedClass,
+                    value: _availableClasses.contains(selectedClass) ? selectedClass : (_availableClasses.isNotEmpty ? _availableClasses.first : null),
                     underline: const SizedBox(),
                     icon: const Icon(Icons.keyboard_arrow_down, size: 18),
                     style: const TextStyle(color: Colors.black87, fontSize: 13, fontWeight: FontWeight.bold),
                     onChanged: (newValue) {
                       if (newValue != null) {
-                        setState(() {
-                          selectedClass = newValue;
-                          currentPage = 1;
-                        });
+                        setState(() { selectedClass = newValue; });
                       }
                     },
-                    items: const [
-                      DropdownMenuItem(value: "Class 8 - A", child: Text("Class 8 - A")),
-                      DropdownMenuItem(value: "Class 9 - A", child: Text("Class 9 - A")),
-                    ],
+                    items: _availableClasses.map((cls) {
+                      return DropdownMenuItem(value: cls, child: Text(cls));
+                    }).toList(),
                   ),
+                ),
+              ],
+            ),
+          ),
+          // ── Selected Class Detail ────────────────────────────────────────
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Row(
+              children: [
+                Text(
+                  '$selectedClass — Details',
+                  style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1B263B)),
                 ),
               ],
             ),

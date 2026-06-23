@@ -1,4 +1,4 @@
-import 'dart:io';
+﻿import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/profile_manager.dart';
@@ -534,7 +534,7 @@ class MoreTab extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   const Text(
-                    'Class 8-A  •  Roll No: 24',
+                    'Class 8-A  |  Roll No: 24',
                     style: TextStyle(color: Colors.grey, fontSize: 13),
                   ),
                   const SizedBox(height: 6),
@@ -571,3 +571,4 @@ class MoreTab extends StatelessWidget {
     );
   }
 }
+

@@ -153,76 +153,9 @@ class StudentAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
       ],
-      bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(24),
-        child: Padding(
-          padding: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const SizedBox(), // Empty space on left
-              // School Selector Pill moved below notifications
-              PopupMenuButton<String>(
-                onSelected: (String school) {
-                  ProfileManager().selectedSchool.value = school;
-                },
-                color: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                  const PopupMenuItem<String>(
-                    value: 'Ecstasy School 1',
-                    child: Text('Ecstasy School 1', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                  ),
-                  const PopupMenuItem<String>(
-                    value: 'Ecstasy School 2',
-                    child: Text('Ecstasy School 2', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                  ),
-                  const PopupMenuItem<String>(
-                    value: 'Ecstasy School 3',
-                    child: Text('Ecstasy School 3', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                  ),
-                ],
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: ValueListenableBuilder<String>(
-                    valueListenable: ProfileManager().selectedSchool,
-                    builder: (context, selectedSchool, _) {
-                      return Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.school, color: Colors.white, size: 14),
-                          const SizedBox(width: 6),
-                          Text(
-                            selectedSchool,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 11,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                          Icon(
-                            Icons.keyboard_arrow_down,
-                            color: Colors.white.withValues(alpha: 0.7),
-                            size: 14,
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(48 + 24); // Account for toolbar and bottom widget
+  Size get preferredSize => const Size.fromHeight(48); // Account for toolbar only
 }

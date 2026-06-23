@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/utils/profile_manager.dart';
+import '../../core/data/app_data_store.dart';
 import '../student/dashboard/dashboard_screen.dart';
 import '../admin/admin_dashboard_screen.dart';
 import '../teacher/teacher_dashboard_screen.dart';
@@ -24,42 +25,32 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _handleLogin() {
     if (_formKey.currentState!.validate()) {
-      final input = _idController.text.trim();
-      final password = _passwordController.text;
+      final id = _idController.text.trim();
+      final password = _passwordController.text.trim();
 
-      final upperInput = input.toUpperCase();
+      final role = AppDataStore.instance.authenticate(id, password);
 
-      // Admin Login Logic
-      if (input.toLowerCase() == 'admin') {
-        if (password == 'admin@123') {
-          _navigate(const AdminDashboardScreen(), 'Admin');
-        } else {
-          _showError('Invalid admin password. Try admin@123');
-        }
-        return;
+      if (role == 'admin') {
+        AppDataStore.instance.currentRole = 'admin';
+        _navigate(const AdminDashboardScreen(), 'Admin');
+      } else if (role == 'student') {
+        AppDataStore.instance.currentRole = 'student';
+        AppDataStore.instance.currentUser = AppDataStore.instance.students
+            .firstWhere((s) => (s['admission'] as String).toUpperCase() == id.toUpperCase());
+        _navigate(const DashboardScreen(), 'Student');
+      } else if (role == 'teacher') {
+        AppDataStore.instance.currentRole = 'teacher';
+        AppDataStore.instance.currentUser = AppDataStore.instance.teachers
+            .firstWhere((t) => (t['employeeCode'] as String).toUpperCase() == id.toUpperCase());
+        _navigate(const TeacherDashboardScreen(), 'Teacher');
+      } else {
+        _showError(
+          'Invalid credentials.\n'
+          '- Admin: ID = admin, Password = admin@123\n'
+          '- Student: ID = ECS00001, Password = ECS00001\n'
+          '- Teacher: ID = ECS00E01, Password = ECS00E01',
+        );
       }
-
-      // Teacher Login Logic (Employee code starts with ECS00E)
-      if (upperInput.startsWith('ECS00E')) {
-        if (password.isNotEmpty) {
-          _navigate(const TeacherDashboardScreen(), 'Teacher');
-        } else {
-          _showError('Please enter password');
-        }
-        return;
-      }
-
-      // Student Login Logic (Admission code starts with ECS000)
-      if (upperInput.startsWith('ECS000')) {
-        if (password.isNotEmpty) {
-          _navigate(const DashboardScreen(), 'Student');
-        } else {
-          _showError('Please enter password');
-        }
-        return;
-      }
-
-      _showError('Invalid User ID. Must be Admin, ECS00E... or ECS000...');
     }
   }
 
@@ -639,3 +630,5 @@ class _GoogleLogoPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
+
+

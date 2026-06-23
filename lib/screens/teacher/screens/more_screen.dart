@@ -237,8 +237,8 @@ class MoreScreen extends StatelessWidget {
             context: context,
             builder: (ctx) => AlertDialog(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-              title: const Text('Sign Out', style: TextStyle(fontWeight: FontWeight.bold)),
-              content: const Text('Are you sure you want to sign out?'),
+              title: const Text('Logout', style: TextStyle(fontWeight: FontWeight.bold)),
+              content: const Text('Are you sure you want to logout?'),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(ctx),
@@ -251,9 +251,9 @@ class MoreScreen extends StatelessWidget {
                   ),
                   onPressed: () {
                     Navigator.pop(ctx);
-                    onOptionSelected("SignOut");
+                    onOptionSelected("Logout");
                   },
-                  child: const Text('Sign Out', style: TextStyle(color: Colors.white)),
+                  child: const Text('Logout', style: TextStyle(color: Colors.white)),
                 ),
               ],
             ),
@@ -261,7 +261,7 @@ class MoreScreen extends StatelessWidget {
         },
         icon: const Icon(Icons.logout, color: Colors.white),
         label: const Text(
-          'Sign Out',
+          'Logout',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
         ),
         style: ElevatedButton.styleFrom(

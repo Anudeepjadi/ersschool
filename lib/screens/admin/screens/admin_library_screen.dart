@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -317,7 +317,7 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      "${log['rollNo']} • ${log['class']}",
+                      "${log['rollNo']} | ${log['class']}",
                       style: const TextStyle(fontSize: 11, color: Colors.grey),
                     ),
                     const Divider(height: 20),
@@ -620,3 +620,4 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
     );
   }
 }
+

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../widgets/scrollable_table_wrapper.dart';
 import '../widgets/stat_card.dart';
 import '../widgets/quick_actions.dart';
+import '../../../core/data/app_data_store.dart';
 
 class ReportItem {
   final String name;
@@ -46,6 +47,45 @@ class _ReportsScreenState extends State<ReportsScreen> {
   ];
 
   int _totalReportsGenerated = 24;
+  String selectedOverviewClass = "Class 8 - A";
+  final _store = AppDataStore.instance;
+
+  List<String> get _availableClasses {
+    final classes = _store.studyClasses.map((c) => c['name'] as String).toList();
+    final sections = _store.classSections.map((s) => s['name'] as String).toList();
+    
+    List<String> list = [];
+    for (int i = 0; i < classes.length; i++) {
+      for (int j = 0; j < sections.length; j++) {
+        final secName = sections[j].split(' ').last;
+        list.add("${classes[i]} - $secName");
+      }
+    }
+    return list.toSet().toList();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _store.configVersion.addListener(_onStoreChanged);
+    if (_availableClasses.isNotEmpty) {
+      selectedOverviewClass = _availableClasses.first;
+    }
+  }
+
+  void _onStoreChanged() {
+    setState(() {
+      if (_availableClasses.isNotEmpty && !_availableClasses.contains(selectedOverviewClass)) {
+        selectedOverviewClass = _availableClasses.first;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _store.configVersion.removeListener(_onStoreChanged);
+    super.dispose();
+  }
 
   // Custom Report State
   String _selectedClass = "All Classes";
@@ -289,15 +329,18 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     border: Border.all(color: Colors.grey[300]!),
                   ),
                   child: DropdownButton<String>(
-                    value: "Class 8 - A",
+                    value: _availableClasses.contains(selectedOverviewClass) ? selectedOverviewClass : (_availableClasses.isNotEmpty ? _availableClasses.first : null),
                     underline: const SizedBox(),
                     icon: const Icon(Icons.keyboard_arrow_down, size: 18),
                     style: const TextStyle(color: Colors.black87, fontSize: 13, fontWeight: FontWeight.bold),
-                    onChanged: (newValue) {},
-                    items: const [
-                      DropdownMenuItem(value: "Class 8 - A", child: Text("Class 8 - A")),
-                      DropdownMenuItem(value: "Class 9 - A", child: Text("Class 9 - A")),
-                    ],
+                    onChanged: (newValue) {
+                      if (newValue != null) {
+                        setState(() { selectedOverviewClass = newValue; });
+                      }
+                    },
+                    items: _availableClasses.map((cls) {
+                      return DropdownMenuItem(value: cls, child: Text(cls));
+                    }).toList(),
                   ),
                 ),
               ],

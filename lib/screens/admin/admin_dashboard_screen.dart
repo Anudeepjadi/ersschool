@@ -74,6 +74,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             _teachersTabKey.currentState?.showAddTeacherBottomSheet();
           });
         },
+        onTabSelected: _onTabChanged,
       ),
       AdminStudentsTab(
         key: _studentsTabKey,
@@ -184,33 +185,60 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Colors.white.withValues(alpha: 0.15)),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.school_outlined, color: Colors.white, size: 18),
-                      const SizedBox(width: 8),
-                      const Expanded(
-                        child: Text(
-                          "Ecstasy School 1",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      Icon(
-                        Icons.keyboard_arrow_down,
-                        color: Colors.white.withValues(alpha: 0.7),
-                        size: 18,
-                      ),
-                    ],
+                PopupMenuButton<String>(
+                  onSelected: (String school) {
+                    debugPrint("AdminDashboardScreen drawer selected school: $school");
+                    ProfileManager().selectedSchool.value = school;
+                  },
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                    const PopupMenuItem<String>(
+                      value: 'Ecstasy School 1',
+                      child: Text('Ecstasy School 1', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                    ),
+                    const PopupMenuItem<String>(
+                      value: 'Ecstasy School 2',
+                      child: Text('Ecstasy School 2', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                    ),
+                    const PopupMenuItem<String>(
+                      value: 'Ecstasy School 3',
+                      child: Text('Ecstasy School 3', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                    ),
+                  ],
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.white.withValues(alpha: 0.15)),
+                    ),
+                    child: ValueListenableBuilder<String>(
+                      valueListenable: ProfileManager().selectedSchool,
+                      builder: (context, selectedSchool, _) {
+                        return Row(
+                          children: [
+                            const Icon(Icons.school_outlined, color: Colors.white, size: 18),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                selectedSchool,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            Icon(
+                              Icons.keyboard_arrow_down,
+                              color: Colors.white.withValues(alpha: 0.7),
+                              size: 18,
+                            ),
+                          ],
+                        );
+                      },
+                    ),
                   ),
                 ),
               ],

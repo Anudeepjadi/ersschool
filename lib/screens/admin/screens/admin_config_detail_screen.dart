@@ -152,7 +152,7 @@ class _AdminConfigDetailScreenState extends State<AdminConfigDetailScreen> {
                         margin: const EdgeInsets.only(bottom: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.grey.shade200),
+                          side: BorderSide(color: Colors.grey.shade200),
                         ),
                         child: ListTile(
                           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

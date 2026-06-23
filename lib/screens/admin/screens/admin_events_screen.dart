@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
@@ -738,7 +738,7 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
                           ),
                           const SizedBox(height: 6),
                           Text(
-                            "${e['type']} • ${e['organizer']}",
+                            "${e['type']} | ${e['organizer']}",
                             style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
                           ),
                           const SizedBox(height: 6),
@@ -871,3 +871,4 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
     );
   }
 }
+

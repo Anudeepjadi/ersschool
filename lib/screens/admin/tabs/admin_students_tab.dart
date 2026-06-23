@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/data/app_data_store.dart';
+import '../../../core/utils/profile_manager.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/ai_bot_fab.dart';
 
@@ -24,118 +26,10 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
   final Map<String, GlobalKey> _classKeys = {};
   String? _expandedClass;
 
-  final List<Map<String, dynamic>> _students = [
-    {
-      'name': 'Aarav Sharma',
-      'class': 'Class 10',
-      'roll': 'Roll No: 01',
-      'admission': 'ECS00001',
-      'status': 'Active',
-      'avatar': 'AS',
-      'phone': '9876543210',
-      'gender': 'Male',
-    },
-    {
-      'name': 'Priya Patel',
-      'class': 'Class 10',
-      'roll': 'Roll No: 15',
-      'admission': 'ECS00002',
-      'status': 'Active',
-      'avatar': 'PP',
-      'phone': '9876543211',
-      'gender': 'Female',
-    },
-    {
-      'name': 'Rohan Gupta',
-      'class': 'Class 9',
-      'roll': 'Roll No: 08',
-      'admission': 'ECS00003',
-      'status': 'Active',
-      'avatar': 'RG',
-      'phone': '9876543212',
-      'gender': 'Male',
-    },
-    {
-      'name': 'Ananya Singh',
-      'class': 'Class 8',
-      'roll': 'Roll No: 22',
-      'admission': 'ECS00004',
-      'status': 'Active',
-      'avatar': 'AS',
-      'phone': '9876543213',
-      'gender': 'Female',
-    },
-    {
-      'name': 'Vikram Reddy',
-      'class': 'Class 10',
-      'roll': 'Roll No: 03',
-      'admission': 'ECS00005',
-      'status': 'Inactive',
-      'avatar': 'VR',
-      'phone': '9876543214',
-      'gender': 'Male',
-    },
-    {
-      'name': 'Sneha Joshi',
-      'class': 'Class 9',
-      'roll': 'Roll No: 11',
-      'admission': 'ECS00006',
-      'status': 'Active',
-      'avatar': 'SJ',
-      'phone': '9876543215',
-      'gender': 'Female',
-    },
-    {
-      'name': 'Arjun Nair',
-      'class': 'Class 8',
-      'roll': 'Roll No: 05',
-      'admission': 'ECS00007',
-      'status': 'Active',
-      'avatar': 'AN',
-      'phone': '9876543216',
-      'gender': 'Male',
-    },
-    {
-      'name': 'Kavya Menon',
-      'class': 'Class 7',
-      'roll': 'Roll No: 19',
-      'admission': 'ECS00008',
-      'status': 'Active',
-      'avatar': 'KM',
-      'phone': '9876543217',
-      'gender': 'Female',
-    },
-    {
-      'name': 'Rahul Verma',
-      'class': 'Class 7',
-      'roll': 'Roll No: 02',
-      'admission': 'ECS00009',
-      'status': 'Inactive',
-      'avatar': 'RV',
-      'phone': '9876543218',
-      'gender': 'Male',
-    },
-    {
-      'name': 'Meera Das',
-      'class': 'Class 6',
-      'roll': 'Roll No: 14',
-      'admission': 'ECS00010',
-      'status': 'Active',
-      'avatar': 'MD',
-      'phone': '9876543219',
-      'gender': 'Female',
-    },
-    {
-      'name': 'Little Timmy',
-      'class': 'LKG',
-      'roll': 'Roll No: 01',
-      'admission': 'ECS00011',
-      'status': 'Active',
-      'avatar': 'LT',
-      'phone': '9876543220',
-      'gender': 'Male',
-    },
-  ];
+  // Use the shared store — any additions from admin are immediately reflected
+  List<Map<String, dynamic>> get _students => AppDataStore.instance.students
+      .where((s) => s['school'] == ProfileManager().selectedSchool.value)
+      .toList();
 
   List<Map<String, dynamic>> get _filteredStudents {
     return _students.where((s) {
@@ -181,17 +75,20 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
 
   @override
   Widget build(BuildContext context) {
-    final inactiveCount = _students.where((s) => s['status'] == 'Inactive').length;
+    return ValueListenableBuilder<String>(
+      valueListenable: ProfileManager().selectedSchool,
+      builder: (context, school, _) {
+        final inactiveCount = _students.where((s) => s['status'] == 'Inactive').length;
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FF),
-      appBar: AdminAppBar(
-        title: "Students",
-        subtitle: "Manage 13 standard classes",
-        onOpenDrawer: widget.onOpenDrawer,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        return Scaffold(
+          backgroundColor: const Color(0xFFF5F7FF),
+          appBar: AdminAppBar(
+            title: "Students",
+            subtitle: "Manage 13 standard classes",
+            onOpenDrawer: widget.onOpenDrawer,
+          ),
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -298,6 +195,8 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
       ),
       floatingActionButton: const AiBotFab(),
     );
+      },
+    );
   }
 
   Widget _buildClassExpansionTile(String className, List<Map<String, dynamic>> students) {
@@ -317,6 +216,7 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
       child: Theme(
         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
+          key: ValueKey('${className}_$isExpanded'),
           initiallyExpanded: isExpanded,
           onExpansionChanged: (expanded) {
             setState(() {
@@ -534,12 +434,12 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
           topRight: Radius.circular(24),
         ),
       ),
-      builder: (context) {
+      builder: (ctx) {
         return StatefulBuilder(
-          builder: (context, setModalState) {
+          builder: (modalCtx, setModalState) {
             return Padding(
               padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+                bottom: MediaQuery.of(modalCtx).viewInsets.bottom + 20,
                 left: 20,
                 right: 20,
                 top: 24,
@@ -562,7 +462,7 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
                         ),
                         IconButton(
                           icon: const Icon(Icons.close),
-                          onPressed: () => Navigator.pop(context),
+                          onPressed: () => Navigator.pop(modalCtx),
                         ),
                       ],
                     ),
@@ -706,18 +606,20 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
                           'class': selectedClass,
                           'roll': 'Roll No: ${rollController.text.trim().isEmpty ? "00" : rollController.text.trim()}',
                           'admission': admissionController.text.trim().isEmpty ? "ECSNEW" : admissionController.text.trim(),
+                          'password': admissionController.text.trim().isEmpty ? 'ECSNEW' : admissionController.text.trim(),
                           'status': selectedStatus,
                           'avatar': avatarStr,
                           'phone': phoneController.text.trim().isEmpty ? "N/A" : phoneController.text.trim(),
                           'gender': selectedGender,
+                          'school': ProfileManager().selectedSchool.value,
                         };
 
                         setState(() {
-                          _students.insert(0, newStudent);
-                          _expandedClass = selectedClass; // Auto-expand this class
+                          AppDataStore.instance.addStudent(newStudent);
+                          _expandedClass = selectedClass;
                         });
 
-                        Navigator.pop(context);
+                        Navigator.pop(modalCtx);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text("Student ${newStudent['name']} added successfully!"),

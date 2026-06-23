@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/data/app_data_store.dart';
+import '../../../core/utils/profile_manager.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/ai_bot_fab.dart';
 class AdminTeachersTab extends StatefulWidget {
@@ -15,108 +17,10 @@ class AdminTeachersTabState extends State<AdminTeachersTab> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
 
-  final List<Map<String, dynamic>> _teachers = [
-    {
-      'name': 'Dr. Ramesh Kumar',
-      'subject': 'Mathematics',
-      'department': 'Science',
-      'status': 'Active',
-      'avatar': 'RK',
-      'phone': '9876543301',
-      'experience': '15 years',
-      'gender': 'Male',
-    },
-    {
-      'name': 'Mrs. Sunita Devi',
-      'subject': 'English',
-      'department': 'Languages',
-      'status': 'Active',
-      'avatar': 'SD',
-      'phone': '9876543302',
-      'experience': '12 years',
-      'gender': 'Female',
-    },
-    {
-      'name': 'Mr. Anil Mishra',
-      'subject': 'Physics',
-      'department': 'Science',
-      'status': 'Active',
-      'avatar': 'AM',
-      'phone': '9876543303',
-      'experience': '10 years',
-      'gender': 'Male',
-    },
-    {
-      'name': 'Ms. Deepa Nair',
-      'subject': 'Chemistry',
-      'department': 'Science',
-      'status': 'On Leave',
-      'avatar': 'DN',
-      'phone': '9876543304',
-      'experience': '8 years',
-      'gender': 'Female',
-    },
-    {
-      'name': 'Mr. Suresh Rao',
-      'subject': 'Computer Science',
-      'department': 'Technology',
-      'status': 'Active',
-      'avatar': 'SR',
-      'phone': '9876543305',
-      'experience': '6 years',
-      'gender': 'Male',
-    },
-    {
-      'name': 'Mrs. Latha Iyer',
-      'subject': 'Hindi',
-      'department': 'Languages',
-      'status': 'Active',
-      'avatar': 'LI',
-      'phone': '9876543306',
-      'experience': '14 years',
-      'gender': 'Female',
-    },
-    {
-      'name': 'Mr. Prakash Jha',
-      'subject': 'Social Studies',
-      'department': 'Humanities',
-      'status': 'Active',
-      'avatar': 'PJ',
-      'phone': '9876543307',
-      'experience': '9 years',
-      'gender': 'Male',
-    },
-    {
-      'name': 'Mrs. Geeta Sharma',
-      'subject': 'Biology',
-      'department': 'Science',
-      'status': 'On Leave',
-      'avatar': 'GS',
-      'phone': '9876543308',
-      'experience': '11 years',
-      'gender': 'Female',
-    },
-    {
-      'name': 'Mr. Vijay Patil',
-      'subject': 'Physical Education',
-      'department': 'Sports',
-      'status': 'Active',
-      'avatar': 'VP',
-      'phone': '9876543309',
-      'experience': '7 years',
-      'gender': 'Male',
-    },
-    {
-      'name': 'Ms. Anjali Chopra',
-      'subject': 'Art & Craft',
-      'department': 'Creative Arts',
-      'status': 'Active',
-      'avatar': 'AC',
-      'phone': '9876543310',
-      'experience': '5 years',
-      'gender': 'Female',
-    },
-  ];
+  // Use the shared store
+  List<Map<String, dynamic>> get _teachers => AppDataStore.instance.teachers
+      .where((t) => t['school'] == ProfileManager().selectedSchool.value)
+      .toList();
 
   List<Map<String, dynamic>> get _filteredTeachers {
     return _teachers.where((t) {
@@ -137,19 +41,22 @@ class AdminTeachersTabState extends State<AdminTeachersTab> {
 
   @override
   Widget build(BuildContext context) {
-    final activeCount = _teachers.where((t) => t['status'] == 'Active').length;
-    final onLeaveCount = _teachers.length - activeCount;
+    return ValueListenableBuilder<String>(
+      valueListenable: ProfileManager().selectedSchool,
+      builder: (context, school, _) {
+        final activeCount = _teachers.where((t) => t['status'] == 'Active').length;
+        final inactiveCount = _teachers.where((t) => t['status'] == 'Inactive').length;
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FF),
-      appBar: AdminAppBar(
-        title: "Teachers",
-        subtitle: "Manage all teaching staff",
-        onOpenDrawer: widget.onOpenDrawer,
-      ),
-      body: Column(
-        children: [
-          _buildHeader(activeCount, onLeaveCount),
+        return Scaffold(
+          backgroundColor: const Color(0xFFF5F7FF),
+          appBar: AdminAppBar(
+            title: "Teachers",
+            subtitle: "Manage all teaching staff",
+            onOpenDrawer: widget.onOpenDrawer,
+          ),
+          body: Column(
+            children: [
+          _buildHeader(activeCount, inactiveCount),
           _buildFilterRow(),
           Expanded(
             child: _filteredTeachers.isEmpty
@@ -173,9 +80,11 @@ class AdminTeachersTabState extends State<AdminTeachersTab> {
       ),
       floatingActionButton: const AiBotFab(),
     );
+      },
+    );
   }
 
-  Widget _buildHeader(int active, int onLeave) {
+  Widget _buildHeader(int active, int inactive) {
     return Container(
       width: double.infinity,
       color: Colors.white,
@@ -226,7 +135,7 @@ class AdminTeachersTabState extends State<AdminTeachersTab> {
               const SizedBox(width: 10),
               _buildMiniStat("Active", "$active", Icons.check_circle, const Color(0xFF10B981)),
               const SizedBox(width: 10),
-              _buildMiniStat("On Leave", "$onLeave", Icons.event_busy, const Color(0xFFF59E0B)),
+              _buildMiniStat("Inactive", "$inactive", Icons.event_busy, const Color(0xFFF59E0B)),
             ],
           ),
         ],
@@ -271,7 +180,7 @@ class AdminTeachersTabState extends State<AdminTeachersTab> {
           const SizedBox(width: 8),
           _buildFilterButton('Active'),
           const SizedBox(width: 8),
-          _buildFilterButton('On Leave'),
+          _buildFilterButton('Inactive'),
         ],
       ),
     );
@@ -336,94 +245,103 @@ class AdminTeachersTabState extends State<AdminTeachersTab> {
           ),
         ],
       ),
-      child: ListTile(
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-        leading: CircleAvatar(
-          backgroundColor: avatarColor.withValues(alpha: 0.1),
-          child: Text(
-            teacher['avatar'],
-            style: TextStyle(
-              color: avatarColor,
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-            ),
-          ),
-        ),
-        title: Text(
-          teacher['name'],
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 14,
-            color: Color(0xFF1E2875),
-          ),
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 4),
-            Row(
-              children: [
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: subjectColor.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(6),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: () => _showTeacherDetailsDialog(teacher),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          child: Row(
+            children: [
+              CircleAvatar(
+                backgroundColor: avatarColor.withValues(alpha: 0.1),
+                child: Text(
+                  teacher['avatar'],
+                  style: TextStyle(
+                    color: avatarColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
                   ),
-                  child: Text(
-                    teacher['subject'],
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
-                      color: subjectColor,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      teacher['name'],
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        color: Color(0xFF1E2875),
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: subjectColor.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              teacher['subject'],
+                              style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: subjectColor),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Flexible(
+                          child: Text(
+                            teacher['department'],
+                            style: TextStyle(fontSize: 10, color: Colors.grey.shade500),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      "${teacher['experience']}  |  ${teacher['phone']}",
+                      style: TextStyle(fontSize: 10, color: Colors.grey.shade400),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              GestureDetector(
+                onTap: () => setState(() => teacher['status'] = isActive ? 'Inactive' : 'Active'),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                  decoration: BoxDecoration(
+                    color: isActive ? const Color(0xFF10B981) : const Color(0xFFF59E0B),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        isActive ? 'Active' : 'Inactive',
+                        style: const TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      const Icon(Icons.swap_horiz, size: 12, color: Colors.white),
+                    ],
                   ),
                 ),
-                const SizedBox(width: 6),
-                Text(
-                  teacher['department'],
-                  style: TextStyle(fontSize: 10, color: Colors.grey.shade500),
-                ),
-              ],
-            ),
-            const SizedBox(height: 2),
-            Text(
-              "${teacher['experience']}  •  ${teacher['phone']}",
-              style: TextStyle(fontSize: 10, color: Colors.grey.shade400),
-            ),
-          ],
-        ),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-              decoration: BoxDecoration(
-                color: isActive
-                    ? const Color(0xFF10B981).withValues(alpha: 0.1)
-                    : const Color(0xFFF59E0B).withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
               ),
-              child: Text(
-                teacher['status'],
-                style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w600,
-                  color: isActive
-                      ? const Color(0xFF10B981)
-                      : const Color(0xFFF59E0B),
-                ),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Icon(Icons.arrow_forward_ios,
-                size: 12, color: Colors.grey.shade400),
-          ],
+            ],
+          ),
         ),
-        onTap: () {
-          _showTeacherDetailsDialog(teacher);
-        },
       ),
     );
   }
@@ -541,6 +459,7 @@ class AdminTeachersTabState extends State<AdminTeachersTab> {
 
   void showAddTeacherBottomSheet() {
     final nameController = TextEditingController();
+    final codeController = TextEditingController();
     final subjectController = TextEditingController();
     final experienceController = TextEditingController();
     final phoneController = TextEditingController();
@@ -557,12 +476,12 @@ class AdminTeachersTabState extends State<AdminTeachersTab> {
           topRight: Radius.circular(24),
         ),
       ),
-      builder: (context) {
+      builder: (ctx) {
         return StatefulBuilder(
-          builder: (context, setModalState) {
+          builder: (modalCtx, setModalState) {
             return Padding(
               padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+                bottom: MediaQuery.of(modalCtx).viewInsets.bottom + 20,
                 left: 20,
                 right: 20,
                 top: 24,
@@ -585,7 +504,7 @@ class AdminTeachersTabState extends State<AdminTeachersTab> {
                         ),
                         IconButton(
                           icon: const Icon(Icons.close),
-                          onPressed: () => Navigator.pop(context),
+                          onPressed: () => Navigator.pop(modalCtx),
                         ),
                       ],
                     ),
@@ -595,6 +514,17 @@ class AdminTeachersTabState extends State<AdminTeachersTab> {
                       decoration: const InputDecoration(
                         labelText: "Teacher Name",
                         prefixIcon: Icon(Icons.person_outline),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    TextField(
+                      controller: codeController,
+                      decoration: const InputDecoration(
+                        labelText: "Employee Code (e.g. ECS00E11)",
+                        prefixIcon: Icon(Icons.badge_outlined),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(12)),
                         ),
@@ -692,7 +622,7 @@ class AdminTeachersTabState extends State<AdminTeachersTab> {
                           borderRadius: BorderRadius.all(Radius.circular(12)),
                         ),
                       ),
-                      items: ['Active', 'On Leave']
+                      items: ['Active', 'Inactive']
                           .map((s) => DropdownMenuItem(value: s, child: Text(s)))
                           .toList(),
                       onChanged: (val) {
@@ -722,6 +652,7 @@ class AdminTeachersTabState extends State<AdminTeachersTab> {
                           );
                           return;
                         }
+                        
                         final nameWords = nameController.text.trim().split(' ');
                         String avatarStr = 'TR';
                         if (nameWords.isNotEmpty) {
@@ -731,6 +662,11 @@ class AdminTeachersTabState extends State<AdminTeachersTab> {
                             avatarStr = nameWords[0].substring(0, nameWords[0].length >= 2 ? 2 : 1).toUpperCase();
                           }
                         }
+
+                        final code = codeController.text.trim().isEmpty
+                            ? 'ECS00E${(AppDataStore.instance.teachers.length + 1).toString().padLeft(2, '0')}'
+                            : codeController.text.trim();
+
                         final newTeacher = {
                           'name': nameController.text.trim(),
                           'subject': subjectController.text.trim(),
@@ -740,16 +676,19 @@ class AdminTeachersTabState extends State<AdminTeachersTab> {
                           'phone': phoneController.text.trim().isEmpty ? "N/A" : phoneController.text.trim(),
                           'experience': experienceController.text.trim().isEmpty ? "1 year" : experienceController.text.trim(),
                           'gender': selectedGender,
+                          'employeeCode': code,
+                          'password': code,
+                          'school': ProfileManager().selectedSchool.value,
                         };
 
                         setState(() {
-                          _teachers.insert(0, newTeacher);
+                          AppDataStore.instance.addTeacher(newTeacher);
                         });
 
-                        Navigator.pop(context);
+                        Navigator.pop(modalCtx);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text("Teacher ${newTeacher['name']} added successfully!"),
+                            content: Text("Teacher ${newTeacher['name']} added! Login with: $code"),
                             behavior: SnackBarBehavior.floating,
                             backgroundColor: Colors.green,
                           ),
@@ -768,3 +707,4 @@ class AdminTeachersTabState extends State<AdminTeachersTab> {
     );
   }
 }
+

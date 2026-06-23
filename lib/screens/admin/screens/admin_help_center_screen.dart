@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
 import '../../../core/theme/app_colors.dart';
@@ -247,7 +247,7 @@ class _AdminHelpCenterScreenState extends State<AdminHelpCenterScreen> {
 
               return ListTile(
                 title: Text(tk['subject'], style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                subtitle: Text("ID: ${tk['id']} • Category: ${tk['category']}", style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                subtitle: Text("ID: ${tk['id']} | Category: ${tk['category']}", style: const TextStyle(fontSize: 11, color: Colors.grey)),
                 trailing: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -278,3 +278,4 @@ class _AdminHelpCenterScreenState extends State<AdminHelpCenterScreen> {
     );
   }
 }
+

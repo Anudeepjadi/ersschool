@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../widgets/stat_card.dart';
 import '../widgets/quick_actions.dart';
 import '../widgets/teacher_drawer.dart';
@@ -381,7 +381,7 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
                   runSpacing: 4,
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    Row(mainAxisSize: MainAxisSize.min, children: [const Icon(Icons.calendar_today, size: 10, color: Colors.grey), const SizedBox(width: 4), Text("${mt.date} • ${mt.time}", style: const TextStyle(fontSize: 10, color: Colors.grey))]),
+                    Row(mainAxisSize: MainAxisSize.min, children: [const Icon(Icons.calendar_today, size: 10, color: Colors.grey), const SizedBox(width: 4), Text("${mt.date} | ${mt.time}", style: const TextStyle(fontSize: 10, color: Colors.grey))]),
                     Row(mainAxisSize: MainAxisSize.min, children: [const Icon(Icons.group_outlined, size: 10, color: Colors.grey), const SizedBox(width: 4), Text("${mt.participants}", style: const TextStyle(fontSize: 10, color: Colors.grey))]),
                   ],
                 ),
@@ -466,7 +466,7 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
                         runSpacing: 4,
                         crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
-                          Row(mainAxisSize: MainAxisSize.min, children: [const Icon(Icons.calendar_today, size: 10, color: Colors.grey), const SizedBox(width: 4), Text("${mt.date} • ${mt.time}", style: const TextStyle(fontSize: 10, color: Colors.grey))]),
+                          Row(mainAxisSize: MainAxisSize.min, children: [const Icon(Icons.calendar_today, size: 10, color: Colors.grey), const SizedBox(width: 4), Text("${mt.date} | ${mt.time}", style: const TextStyle(fontSize: 10, color: Colors.grey))]),
                           Row(mainAxisSize: MainAxisSize.min, children: [const Icon(Icons.group_outlined, size: 10, color: Colors.grey), const SizedBox(width: 4), Text("${mt.participants}", style: const TextStyle(fontSize: 10, color: Colors.grey))]),
                         ],
                       ),

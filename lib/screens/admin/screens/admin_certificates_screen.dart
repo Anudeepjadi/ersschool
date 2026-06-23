@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../../core/theme/app_colors.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
@@ -104,7 +104,7 @@ class _AdminCertificatesScreenState extends State<AdminCertificatesScreen> {
           title: "CERTIFICATE OF MERIT",
           subtitle: "PROUDLY PRESENTED TO",
           name: "Rahul Kumar",
-          classDetails: "Class 8 - A • Roll No. 101",
+          classDetails: "Class 8 - A | Roll No. 101",
           reason: "for achieving Academic Excellence and outstanding performance with a GPA of 9.8 during the Academic Session 2026 - 27.",
           date: "20 Jun 2026",
           authority: "Dr. Sarah Jenkins\nPrincipal",
@@ -422,7 +422,7 @@ class _AdminCertificatesScreenState extends State<AdminCertificatesScreen> {
                           ),
                           const SizedBox(height: 6),
                           Text(
-                            "${cert['type']} • ${cert['student']}",
+                            "${cert['type']} | ${cert['student']}",
                             style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
                           ),
                           const SizedBox(height: 6),
@@ -472,3 +472,4 @@ class _RowItem extends StatelessWidget {
     );
   }
 }
+

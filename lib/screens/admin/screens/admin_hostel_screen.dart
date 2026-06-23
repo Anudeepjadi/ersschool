@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
@@ -210,7 +210,7 @@ class _AdminHostelScreenState extends State<AdminHostelScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(blk['name'], style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                            Text("${blk['block']} • ${blk['rooms']} Rooms", style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                            Text("${blk['block']} | ${blk['rooms']} Rooms", style: const TextStyle(fontSize: 11, color: Colors.grey)),
                           ],
                         ),
                         Text("${blk['pct']}% Occupancy", style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey)),
@@ -259,7 +259,7 @@ class _AdminHostelScreenState extends State<AdminHostelScreen> {
               final res = _residents[index];
               return ListTile(
                 title: Text(res['student'], style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                subtitle: Text("Room: ${res['room']} • Bed: ${res['bed']}", style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                subtitle: Text("Room: ${res['room']} | Bed: ${res['bed']}", style: const TextStyle(fontSize: 11, color: Colors.grey)),
                 trailing: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -279,3 +279,4 @@ class _AdminHostelScreenState extends State<AdminHostelScreen> {
     );
   }
 }
+

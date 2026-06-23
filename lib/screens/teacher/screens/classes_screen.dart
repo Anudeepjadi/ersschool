@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../widgets/scrollable_table_wrapper.dart';
 import '../widgets/stat_card.dart';
 import '../widgets/quick_actions.dart';
+import '../../../core/data/app_data_store.dart';
 
 class ClassItem {
   String section;
@@ -40,7 +41,7 @@ class ClassesScreen extends StatefulWidget {
 }
 
 class _ClassesScreenState extends State<ClassesScreen> {
-  String selectedOverviewClass = "Class 8 - A";
+  String selectedOverviewClass = "";
   String searchQuery = "";
   int _currentPage = 1;
   final int _itemsPerPage = 7;
@@ -50,34 +51,52 @@ class _ClassesScreenState extends State<ClassesScreen> {
   final TextEditingController _roomController = TextEditingController();
   final TextEditingController _subjectController = TextEditingController();
 
-  late List<ClassItem> _allClasses;
+  final _store = AppDataStore.instance;
+
+  List<ClassItem> get _allClasses {
+    final classes = _store.studyClasses.map((c) => c['name'] as String).toSet().toList();
+    final sections = _store.classSections.map((s) => s['name'] as String).toSet().toList();
+    final subjects = _store.subjects.map((s) => s['name'] as String).toSet().toList();
+
+    List<ClassItem> list = [];
+    int roomCounter = 101;
+    for (int i = 0; i < classes.length; i++) {
+      for (int j = 0; j < sections.length; j++) {
+        final secName = sections[j].split(' ').last; // e.g. "Section A" -> "A"
+        list.add(ClassItem(
+          section: "${classes[i]} - $secName",
+          students: 30 + ((i + j) % 15),
+          boys: 15 + ((i + j) % 8),
+          girls: 15 + ((i + j) % 7),
+          teacher: "Teacher ${i * sections.length + j + 1}",
+          room: "${roomCounter++}",
+          subjects: subjects.take(3).toList(),
+        ));
+      }
+    }
+    return list;
+  }
 
   @override
   void initState() {
     super.initState();
-    // Initialize with 49 classes to show 7 pages (7 classes per page)
-    _allClasses = [
-      ClassItem(section: "Class 6 - A", students: 38, boys: 20, girls: 18, teacher: "Ms. Neha Verma", room: "101", subjects: ["English", "Math", "Science"]),
-      ClassItem(section: "Class 7 - A", students: 40, boys: 22, girls: 18, teacher: "Mr. Ramesh Kumar", room: "102", subjects: ["History", "Geography", "Civics"]),
-      ClassItem(section: "Class 8 - A", students: 42, boys: 22, girls: 20, teacher: "Ms. Priya Sharma", room: "103", subjects: ["Physics", "Chemistry", "Math", "History", "Geography", "Civics"]),
-      ClassItem(section: "Class 9 - A", students: 41, boys: 21, girls: 20, teacher: "Mr. Amit Gupta", room: "104", subjects: ["Biology", "Chemistry", "English"]),
-      ClassItem(section: "Class 10 - A", students: 39, boys: 19, girls: 20, teacher: "Ms. Sneha Reddy", room: "105", subjects: ["Computer Science", "Economics"]),
-      ClassItem(section: "Class 11 - A", students: 37, boys: 18, girls: 19, teacher: "Mr. Vikas Sharma", room: "201", subjects: ["Accountancy", "Business Studies"]),
-      ClassItem(section: "Class 12 - A", students: 36, boys: 17, girls: 19, teacher: "Ms. Anjali Mehta", room: "202", subjects: ["Political Science", "Sociology"]),
-      ...List.generate(42, (index) => ClassItem(
-        section: "Class ${(index % 7) + 6} - ${String.fromCharCode(66 + (index ~/ 7))}",
-        students: 30 + (index % 10),
-        boys: 15 + (index % 5),
-        girls: 15 + (index % 4),
-        teacher: "Teacher ${index + 8}",
-        room: "${300 + index}",
-        subjects: ["General"],
-      )),
-    ];
+    _store.configVersion.addListener(_onStoreChanged);
+    if (_allClasses.isNotEmpty) {
+      selectedOverviewClass = _allClasses.first.section;
+    }
+  }
+
+  void _onStoreChanged() {
+    setState(() {
+      if (_allClasses.isNotEmpty && !_allClasses.any((c) => c.section == selectedOverviewClass)) {
+        selectedOverviewClass = _allClasses.first.section;
+      }
+    });
   }
 
   @override
   void dispose() {
+    _store.configVersion.removeListener(_onStoreChanged);
     _classNameController.dispose();
     _teacherController.dispose();
     _roomController.dispose();
@@ -86,44 +105,17 @@ class _ClassesScreenState extends State<ClassesScreen> {
   }
 
   void _showAddClassDialog() {
-    _classNameController.clear();
-    _teacherController.clear();
-    _roomController.clear();
+    // Currently Study Classes are added via Admin > Settings.
+    // For the demo, show a message directing them there.
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("Add New Class", style: TextStyle(fontWeight: FontWeight.bold)),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(controller: _classNameController, decoration: const InputDecoration(labelText: "Class Name")),
-              const SizedBox(height: 8),
-              TextField(controller: _teacherController, decoration: const InputDecoration(labelText: "Class Teacher")),
-              const SizedBox(height: 8),
-              TextField(controller: _roomController, decoration: const InputDecoration(labelText: "Room No.")),
-            ],
-          ),
-        ),
+        title: const Text("Notice"),
+        content: const Text("Please add new classes and sections from the Admin Settings > Study Classes / Sections menu."),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
-          ElevatedButton(
-            onPressed: () {
-              if (_classNameController.text.isNotEmpty) {
-                setState(() {
-                  _allClasses.insert(0, ClassItem(
-                    section: _classNameController.text,
-                    teacher: _teacherController.text,
-                    room: _roomController.text,
-                    students: 0, boys: 0, girls: 0,
-                    subjects: ["General"],
-                  ));
-                });
-                Navigator.pop(context);
-              }
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.blue[800]),
-            child: const Text("Add Class", style: TextStyle(color: Colors.white)),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("OK"),
           ),
         ],
       ),
@@ -162,47 +154,9 @@ class _ClassesScreenState extends State<ClassesScreen> {
   }
 
   void _showAssignTeacherDialog() {
-    String? selectedClass = _allClasses.isNotEmpty ? _allClasses[0].section : null;
-    _teacherController.clear();
-    showDialog(
-      context: context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setDialogState) => AlertDialog(
-          title: const Text("Assign Class Teacher", style: TextStyle(fontWeight: FontWeight.bold)),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              DropdownButtonFormField<String>(
-                value: selectedClass,
-                items: _allClasses.take(15).map((c) => DropdownMenuItem(value: c.section, child: Text(c.section))).toList(),
-                onChanged: (val) => setDialogState(() => selectedClass = val),
-                decoration: const InputDecoration(labelText: "Select Class"),
-              ),
-              const SizedBox(height: 12),
-              TextField(
-                controller: _teacherController,
-                decoration: const InputDecoration(labelText: "New Teacher Name"),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
-            ElevatedButton(
-              onPressed: () {
-                if (_teacherController.text.isNotEmpty && selectedClass != null) {
-                  setState(() {
-                    _allClasses.firstWhere((c) => c.section == selectedClass).teacher = _teacherController.text;
-                  });
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Teacher updated for $selectedClass")));
-                }
-              },
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.green[700]),
-              child: const Text("Assign", style: TextStyle(color: Colors.white)),
-            ),
-          ],
-        ),
-      ),
+    // Currently assigned through mapping in store
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Assign teacher through Admin > Settings > Subjects Mapping'))
     );
   }
 
@@ -668,11 +622,57 @@ class _ClassesScreenState extends State<ClassesScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // 1. Class Overview Dropdown Header
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "Class Overview",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF1B263B),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey[300]!),
+                  ),
+                  child: DropdownButton<String>(
+                    value: _allClasses.any((c) => c.section == selectedOverviewClass) ? selectedOverviewClass : (_allClasses.isNotEmpty ? _allClasses.first.section : null),
+                    underline: const SizedBox(),
+                    icon: const Icon(Icons.keyboard_arrow_down, size: 18),
+                    style: const TextStyle(color: Colors.black87, fontSize: 13, fontWeight: FontWeight.bold),
+                    onChanged: (newValue) {
+                      if (newValue != null) {
+                        setState(() { selectedOverviewClass = newValue; });
+                      }
+                    },
+                    items: _allClasses.map((cls) {
+                      return DropdownMenuItem(value: cls.section, child: Text(cls.section));
+                    }).toList(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // ── Selected Class Detail ────────────────────────────────────────
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
             child: Row(
               children: [
-                const Text("Class Overview", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1B263B))),
+                Text(
+                  '$selectedOverviewClass — Details',
+                  style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1B263B)),
+                ),
                 const Spacer(),
                 _buildClassSelector(),
               ],
@@ -861,19 +861,12 @@ class _ClassesScreenState extends State<ClassesScreen> {
                       icon: const Icon(Icons.more_vert, size: 18, color: Colors.grey),
                       padding: EdgeInsets.zero,
                       onSelected: (value) {
-                        if (value == 'delete') {
-                          setState(() => _allClasses.remove(c));
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${c.section} deleted")));
-                        } else if (value == 'edit') {
-                          _showEditClassDialog(c);
-                        } else if (value == 'view') {
+                        if (value == 'view') {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Viewing details for ${c.section}")));
                         }
                       },
                       itemBuilder: (context) => [
-                        const PopupMenuItem(value: 'edit', child: Text('Edit Class')),
                         const PopupMenuItem(value: 'view', child: Text('View Details')),
-                        const PopupMenuItem(value: 'delete', child: Text('Delete Class', style: TextStyle(color: Colors.red))),
                       ],
                     ),
                   ),

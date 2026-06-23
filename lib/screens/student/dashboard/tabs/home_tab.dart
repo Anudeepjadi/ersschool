@@ -1,4 +1,4 @@
-import 'dart:io';
+﻿import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/profile_manager.dart';
@@ -352,13 +352,13 @@ class HomeTab extends StatelessWidget {
                 // Event cards
                 _buildEventCard(
                   title: "Parents Teacher Meeting",
-                  datetime: "25 Jun 2026 • 09:00 AM - 11:00 AM",
+                  datetime: "25 Jun 2026 | 09:00 AM - 11:00 AM",
                   location: "Conference Hall",
                   color: Colors.green,
                 ),
                 _buildEventCard(
                   title: "Science Exhibition",
-                  datetime: "24 Jun 2026 • 10:00 AM - 02:00 PM",
+                  datetime: "24 Jun 2026 | 10:00 AM - 02:00 PM",
                   location: "School Auditorium",
                   color: Colors.purple,
                 ),
@@ -554,3 +554,4 @@ class HomeTab extends StatelessWidget {
     );
   }
 }
+

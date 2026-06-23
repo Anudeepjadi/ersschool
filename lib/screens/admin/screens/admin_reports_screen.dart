@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -223,7 +223,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
               final rep = _reportsList[index];
               return ListTile(
                 title: Text(rep['name'], style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                subtitle: Text("Format: ${rep['format']} • Dept: ${rep['dept']}", style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                subtitle: Text("Format: ${rep['format']} | Dept: ${rep['dept']}", style: const TextStyle(fontSize: 11, color: Colors.grey)),
                 trailing: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -266,3 +266,4 @@ class _RowItem extends StatelessWidget {
     );
   }
 }
+

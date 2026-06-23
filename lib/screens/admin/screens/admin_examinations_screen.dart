@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../../core/theme/app_colors.dart';
 import '../widgets/admin_app_bar.dart';
@@ -196,7 +196,7 @@ class _AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                           ),
                           const SizedBox(height: 6),
                           Text(
-                            "Class ${sched['class']} • ${sched['type']}",
+                            "Class ${sched['class']} | ${sched['type']}",
                             style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
                           ),
                           const SizedBox(height: 6),
@@ -422,7 +422,7 @@ class _AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                             children: [
                               Expanded(
                                 child: Text(
-                                  "Class ${res['class']} • ${res['exam']}",
+                                  "Class ${res['class']} | ${res['exam']}",
                                   style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
                                 ),
                               ),
@@ -457,3 +457,4 @@ class _AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
     );
   }
 }
+

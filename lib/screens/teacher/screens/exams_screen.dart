@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../widgets/scrollable_table_wrapper.dart';
 import '../widgets/stat_card.dart';
 import '../widgets/quick_actions.dart';
+import '../../../core/data/app_data_store.dart';
 
 class ExamItem {
   final String name;
@@ -54,6 +55,46 @@ class ExamsScreen extends StatefulWidget {
 }
 
 class _ExamsScreenState extends State<ExamsScreen> {
+  String selectedClass = "Class 8 - A";
+  final _store = AppDataStore.instance;
+
+  List<String> get _availableClasses {
+    final classes = _store.studyClasses.map((c) => c['name'] as String).toList();
+    final sections = _store.classSections.map((s) => s['name'] as String).toList();
+    
+    List<String> list = [];
+    for (int i = 0; i < classes.length; i++) {
+      for (int j = 0; j < sections.length; j++) {
+        final secName = sections[j].split(' ').last;
+        list.add("${classes[i]} - $secName");
+      }
+    }
+    return list.toSet().toList();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _store.configVersion.addListener(_onStoreChanged);
+    if (_availableClasses.isNotEmpty) {
+      selectedClass = _availableClasses.first;
+    }
+  }
+
+  void _onStoreChanged() {
+    setState(() {
+      if (_availableClasses.isNotEmpty && !_availableClasses.contains(selectedClass)) {
+        selectedClass = _availableClasses.first;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _store.configVersion.removeListener(_onStoreChanged);
+    super.dispose();
+  }
+
   final List<ExamItem> _upcomingExams = [
     ExamItem(name: "Unit Test - I", term: "Term 1", className: "Class 8 - A", subject: "Mathematics", date: "24 May 2024", time: "10:00 AM", duration: "1h 30m"),
     ExamItem(name: "Unit Test - I", term: "Term 1", className: "Class 9 - A", subject: "Science", date: "25 May 2024", time: "10:00 AM", duration: "1h 30m"),
@@ -278,16 +319,34 @@ class _ExamsScreenState extends State<ExamsScreen> {
                     border: Border.all(color: Colors.grey[300]!),
                   ),
                   child: DropdownButton<String>(
-                    value: "Class 8 - A",
+                    value: _availableClasses.contains(selectedClass) ? selectedClass : (_availableClasses.isNotEmpty ? _availableClasses.first : null),
                     underline: const SizedBox(),
                     icon: const Icon(Icons.keyboard_arrow_down, size: 18),
                     style: const TextStyle(color: Colors.black87, fontSize: 13, fontWeight: FontWeight.bold),
-                    onChanged: (newValue) {},
-                    items: const [
-                      DropdownMenuItem(value: "Class 8 - A", child: Text("Class 8 - A")),
-                      DropdownMenuItem(value: "Class 9 - A", child: Text("Class 9 - A")),
-                    ],
+                    onChanged: (newValue) {
+                      if (newValue != null) {
+                        setState(() { selectedClass = newValue; });
+                      }
+                    },
+                    items: _availableClasses.map((cls) {
+                      return DropdownMenuItem(value: cls, child: Text(cls));
+                    }).toList(),
                   ),
+                ),
+              ],
+            ),
+          ),
+          
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Row(
+              children: [
+                Text(
+                  '$selectedClass — Overview',
+                  style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1B263B)),
                 ),
               ],
             ),

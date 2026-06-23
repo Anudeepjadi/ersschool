@@ -81,6 +81,10 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
           Navigator.push(context, MaterialPageRoute(builder: (_) => MeetingsScreen(onSubTabSelected: _onTabChanged)));
         } else if (title == "Employees") {
           Navigator.push(context, MaterialPageRoute(builder: (_) => EmployeesScreen(onSubTabSelected: _onTabChanged)));
+        } else if (title == "Calendar") {
+          Navigator.push(context, MaterialPageRoute(builder: (_) => const CalendarScreen()));
+        } else if (title == "SignOut" || title == "Logout") {
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const LoginScreen()));
         }
       }),
     ];

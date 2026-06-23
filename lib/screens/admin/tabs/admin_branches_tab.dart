@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/ai_bot_fab.dart';
+import '../../../core/data/app_data_store.dart';
+import '../../../core/utils/profile_manager.dart';
+
 class AdminBranchesTab extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
   const AdminBranchesTab({super.key, this.onOpenDrawer});
@@ -14,63 +17,9 @@ class _AdminBranchesTabState extends State<AdminBranchesTab> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
 
-  final List<Map<String, dynamic>> _branches = [
-    {
-      'name': 'Ecstasy School - Main Campus',
-      'address': '123 Education Lane, Hyderabad',
-      'students': 450,
-      'teachers': 32,
-      'status': 'Active',
-      'established': '2010',
-      'principal': 'Dr. Ravi Shankar',
-      'color': const Color(0xFF0038FF),
-      'icon': Icons.apartment,
-    },
-    {
-      'name': 'Ecstasy School - City Center',
-      'address': '456 Knowledge Rd, Hyderabad',
-      'students': 380,
-      'teachers': 28,
-      'status': 'Active',
-      'established': '2013',
-      'principal': 'Mrs. Lakshmi Devi',
-      'color': const Color(0xFF10B981),
-      'icon': Icons.location_city,
-    },
-    {
-      'name': 'Ecstasy School - Tech Park',
-      'address': '789 Innovation Blvd, Hyderabad',
-      'students': 290,
-      'teachers': 20,
-      'status': 'Active',
-      'established': '2016',
-      'principal': 'Mr. Arun Mehta',
-      'color': const Color(0xFFF59E0B),
-      'icon': Icons.computer,
-    },
-    {
-      'name': 'Ecstasy School - Lake View',
-      'address': '321 Serene Ave, Hyderabad',
-      'students': 125,
-      'teachers': 6,
-      'status': 'Active',
-      'established': '2020',
-      'principal': 'Ms. Priya Reddy',
-      'color': const Color(0xFF8B5CF6),
-      'icon': Icons.water,
-    },
-    {
-      'name': 'Ecstasy School - North Campus',
-      'address': '654 Scholar St, Secunderabad',
-      'students': 0,
-      'teachers': 0,
-      'status': 'Coming Soon',
-      'established': '2026',
-      'principal': 'TBD',
-      'color': const Color(0xFFEC4899),
-      'icon': Icons.account_balance,
-    },
-  ];
+  List<Map<String, dynamic>> get _branches => AppDataStore.instance.branches
+      .where((b) => b['school'] == ProfileManager().selectedSchool.value)
+      .toList();
 
   List<Map<String, dynamic>> get _filteredBranches {
     if (_searchQuery.isEmpty) return _branches;
@@ -88,43 +37,48 @@ class _AdminBranchesTabState extends State<AdminBranchesTab> {
 
   @override
   Widget build(BuildContext context) {
-    final totalStudents =
-        _branches.fold<int>(0, (sum, b) => sum + (b['students'] as int));
-    final totalTeachers =
-        _branches.fold<int>(0, (sum, b) => sum + (b['teachers'] as int));
-    final activeBranches =
-        _branches.where((b) => b['status'] == 'Active').length;
+    return ValueListenableBuilder<String>(
+      valueListenable: ProfileManager().selectedSchool,
+      builder: (context, school, _) {
+        final totalStudents =
+            _branches.fold<int>(0, (sum, b) => sum + (b['students'] as int));
+        final totalTeachers =
+            _branches.fold<int>(0, (sum, b) => sum + (b['teachers'] as int));
+        final activeBranches =
+            _branches.where((b) => b['status'] == 'Active').length;
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FF),
-      appBar: AdminAppBar(
-        title: "Branches",
-        subtitle: "Manage school branches and locations",
-        onOpenDrawer: widget.onOpenDrawer,
-      ),
-      body: Column(
-        children: [
-          _buildHeader(activeBranches, totalStudents, totalTeachers),
-          Expanded(
-            child: _filteredBranches.isEmpty
-                ? const Center(
-                    child: Text(
-                      "No branches found",
-                      style: TextStyle(color: Colors.grey, fontSize: 14),
-                    ),
-                  )
-                : ListView.builder(
-                    padding: const EdgeInsets.all(16),
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: _filteredBranches.length,
-                    itemBuilder: (context, index) {
-                      return _buildBranchCard(_filteredBranches[index]);
-                    },
-                  ),
+        return Scaffold(
+          backgroundColor: const Color(0xFFF5F7FF),
+          appBar: AdminAppBar(
+            title: "Branches",
+            subtitle: "Manage school branches and locations",
+            onOpenDrawer: widget.onOpenDrawer,
           ),
-        ],
-      ),
-      floatingActionButton: const AiBotFab(),
+          body: Column(
+            children: [
+              _buildHeader(activeBranches, totalStudents, totalTeachers),
+              Expanded(
+                child: _filteredBranches.isEmpty
+                    ? const Center(
+                        child: Text(
+                          "No branches found",
+                          style: TextStyle(color: Colors.grey, fontSize: 14),
+                        ),
+                      )
+                    : ListView.builder(
+                        padding: const EdgeInsets.all(16),
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: _filteredBranches.length,
+                        itemBuilder: (context, index) {
+                          return _buildBranchCard(_filteredBranches[index]);
+                        },
+                      ),
+              ),
+            ],
+          ),
+          floatingActionButton: const AiBotFab(),
+        );
+      },
     );
   }
 
@@ -216,6 +170,10 @@ class _AdminBranchesTabState extends State<AdminBranchesTab> {
   }
 
   void _showAddBranchSheet(BuildContext context) {
+    final nameController = TextEditingController();
+    final principalController = TextEditingController();
+    final addressController = TextEditingController();
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -240,23 +198,54 @@ class _AdminBranchesTabState extends State<AdminBranchesTab> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
-              const TextField(
-                decoration: InputDecoration(labelText: 'Branch Name', border: OutlineInputBorder()),
+              TextField(
+                controller: nameController,
+                decoration: const InputDecoration(labelText: 'Branch Name', border: OutlineInputBorder()),
               ),
               const SizedBox(height: 12),
-              const TextField(
-                decoration: InputDecoration(labelText: 'Principal Name', border: OutlineInputBorder()),
+              TextField(
+                controller: principalController,
+                decoration: const InputDecoration(labelText: 'Principal Name', border: OutlineInputBorder()),
               ),
               const SizedBox(height: 12),
-              const TextField(
-                decoration: InputDecoration(labelText: 'Location/Address', border: OutlineInputBorder()),
+              TextField(
+                controller: addressController,
+                decoration: const InputDecoration(labelText: 'Location/Address', border: OutlineInputBorder()),
               ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
+                  final name = nameController.text.trim();
+                  final principal = principalController.text.trim();
+                  final address = addressController.text.trim();
+                  if (name.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Please enter branch name')),
+                    );
+                    return;
+                  }
+                  final newBranch = {
+                    'name': name,
+                    'address': address.isEmpty ? 'N/A' : address,
+                    'students': 0,
+                    'teachers': 0,
+                    'status': 'Active',
+                    'established': DateTime.now().year.toString(),
+                    'principal': principal.isEmpty ? 'TBD' : principal,
+                    'color': const Color(0xFF0038FF),
+                    'icon': Icons.apartment,
+                    'school': ProfileManager().selectedSchool.value,
+                  };
+                  setState(() {
+                    AppDataStore.instance.addBranch(newBranch);
+                  });
                   Navigator.pop(ctx);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Branch added successfully!')),
+                    SnackBar(
+                      content: Text('$name added successfully!'),
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    ),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -292,7 +281,6 @@ class _AdminBranchesTabState extends State<AdminBranchesTab> {
       ),
       child: Column(
         children: [
-          // Top accent bar
           Container(
             height: 4,
             decoration: BoxDecoration(
@@ -334,15 +322,12 @@ class _AdminBranchesTabState extends State<AdminBranchesTab> {
                           const SizedBox(height: 2),
                           Row(
                             children: [
-                              Icon(Icons.location_on,
-                                  size: 12, color: Colors.grey.shade500),
+                              Icon(Icons.location_on, size: 12, color: Colors.grey.shade500),
                               const SizedBox(width: 2),
                               Expanded(
                                 child: Text(
                                   branch['address'],
-                                  style: TextStyle(
-                                      fontSize: 11,
-                                      color: Colors.grey.shade500),
+                                  style: TextStyle(fontSize: 11, color: Colors.grey.shade500),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
@@ -351,58 +336,111 @@ class _AdminBranchesTabState extends State<AdminBranchesTab> {
                         ],
                       ),
                     ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: isActive
-                            ? const Color(0xFF10B981).withValues(alpha: 0.1)
-                            : const Color(0xFFF59E0B).withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        branch['status'],
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w600,
-                          color: isActive
-                              ? const Color(0xFF10B981)
-                              : const Color(0xFFF59E0B),
+                    GestureDetector(
+                      onTap: () => setState(() {
+                        branch['status'] = isActive ? 'Inactive' : 'Active';
+                      }),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                          color: isActive ? const Color(0xFF10B981) : const Color(0xFFF59E0B),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              branch['status'],
+                              style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white),
+                            ),
+                            const SizedBox(width: 3),
+                            const Icon(Icons.swap_horiz, size: 11, color: Colors.white),
+                          ],
                         ),
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 14),
-                // Stats row
                 Column(
                   children: [
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                            child: _buildBranchStat(Icons.people,
-                                "${branch['students']}", "Students")),
-                        Expanded(
-                            child: _buildBranchStat(Icons.school,
-                                "${branch['teachers']}", "Teachers")),
-                        Expanded(
-                            child: _buildBranchStat(Icons.calendar_today,
-                                "Est. ${branch['established']}", "")),
+                        Expanded(child: _buildBranchStat(Icons.people, "${branch['students']}", 'Students')),
+                        Expanded(child: _buildBranchStat(Icons.school, "${branch['teachers']}", 'Teachers')),
+                        Expanded(child: _buildBranchStat(Icons.calendar_today, 'Est. ${branch['established']}', '')),
                       ],
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 10),
                     Row(
                       children: [
-                        Expanded(
-                            child: _buildBranchStat(Icons.person,
-                                branch['principal'], "Principal")),
+                        Expanded(child: _buildBranchStat(Icons.person, branch['principal'], 'Principal')),
+                        GestureDetector(
+                          onTap: () => _confirmDelete(branch),
+                          child: Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFEF4444).withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Icon(Icons.delete_outline, size: 18, color: Color(0xFFEF4444)),
+                          ),
+                        ),
                       ],
                     ),
                   ],
                 ),
               ],
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _confirmDelete(Map<String, dynamic> branch) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Row(
+          children: [
+            Icon(Icons.warning_amber_rounded, color: Color(0xFFEF4444)),
+            SizedBox(width: 8),
+            Text('Delete Branch', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          ],
+        ),
+        content: Text(
+          'Are you sure you want to delete "${branch['name']}"? This cannot be undone.',
+          style: const TextStyle(fontSize: 13),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel', style: TextStyle(color: Colors.grey)),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                AppDataStore.instance.deleteBranch(branch);
+              });
+              Navigator.pop(ctx);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('${branch['name']} deleted'),
+                  backgroundColor: const Color(0xFFEF4444),
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFEF4444),
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            ),
+            child: const Text('Delete'),
           ),
         ],
       ),

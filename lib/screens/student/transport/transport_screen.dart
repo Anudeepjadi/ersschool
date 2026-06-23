@@ -1,8 +1,5 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/utils/profile_manager.dart';
-import '../my_info/my_info_screen.dart';
 import '../dashboard/widgets/student_app_bar.dart';
 import '../../admin/widgets/ai_bot_fab.dart';
 import '../../../widgets/scrollable_table_wrapper.dart';
@@ -19,9 +16,6 @@ class TransportScreen extends StatefulWidget {
 
 class _TransportScreenState extends State<TransportScreen> {
   int _activeTab = 0; // 0: Transport, 1: Tracking, 2: Route Details
-  String _selectedSchool = "Ecstasy School 1";
-
-  final List<String> _schools = ["Ecstasy School 1", "Ecstasy School 2", "Ecstasy School 3"];
 
   @override
   Widget build(BuildContext context) {

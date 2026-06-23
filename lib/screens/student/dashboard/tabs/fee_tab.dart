@@ -1,10 +1,6 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/utils/profile_manager.dart';
-import '../../my_info/my_info_screen.dart';
 import '../widgets/student_app_bar.dart';
-import 'package:fl_chart/fl_chart.dart';
 import '../../../../widgets/scrollable_table_wrapper.dart';
 
 class FeeTab extends StatefulWidget {
@@ -20,11 +16,9 @@ class FeeTab extends StatefulWidget {
 class _FeeTabState extends State<FeeTab> {
   int _activeSubTab = 0; // 0: Overview, 1: Fees Structure, 2: Transactions, 3: Receipts
   String _selectedAcademicYear = "2026 - 2027";
-  String _selectedSchool = "Ecstasy School 1";
 
   // Dropdown options
   final List<String> _academicYears = ["2026 - 2027", "2025 - 2026", "2024 - 2025"];
-  final List<String> _schools = ["Ecstasy School 1", "Ecstasy School 2", "Ecstasy School 3"];
 
   @override
   Widget build(BuildContext context) {
