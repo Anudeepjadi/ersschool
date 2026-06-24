@@ -2,9 +2,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/profile_manager.dart';
-import '../../../core/utils/profile_manager.dart';
+import '../../../core/data/app_data_store.dart';
 import '../dashboard/widgets/student_app_bar.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -30,16 +31,89 @@ class MyInfoScreen extends StatefulWidget {
   State<MyInfoScreen> createState() => _MyInfoScreenState();
 }
 
-class _MyInfoScreenState extends State<MyInfoScreen> with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+class _MyInfoScreenState extends State<MyInfoScreen> {
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _loadStudentData();
+  }
+
+  Future<void> _loadStudentData() async {
+    final currentStudent = AppDataStore.instance.currentUser;
+    final savedName = ProfileManager().studentName.value;
+    final savedEmail = ProfileManager().studentEmail.value;
+
+    final String admission = currentStudent != null ? currentStudent['admission'] as String : 'guest';
+    final prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      name = prefs.getString('${admission}_name') ?? 
+          ((savedName.isNotEmpty && savedName != 'Student Name' && savedName != 'Anudeep Jaadi') 
+              ? savedName 
+              : (currentStudent != null ? currentStudent['name'] as String : 'Anudeep Jaadi'));
+
+      email = prefs.getString('${admission}_email') ?? 
+          ((savedEmail.isNotEmpty && savedEmail != 'student@school.com' && savedEmail != 'anudeepjaadi@ecstasyschool.com') 
+              ? savedEmail 
+              : (currentStudent != null && currentStudent.containsKey('email') 
+                  ? currentStudent['email'] as String 
+                  : (currentStudent != null ? "${(currentStudent['name'] as String).toLowerCase().replaceAll(' ', '')}@ecstasyschool.com" : 'anudeepjaadi@ecstasyschool.com')));
+
+      classSection = currentStudent != null ? currentStudent['class'] ?? 'Class 8-A' : 'Class 8-A';
+      studentId = currentStudent != null ? currentStudent['admission'] ?? 'ECS00001' : 'ECS00001';
+      mobile = prefs.getString('${admission}_mobile') ?? (currentStudent != null ? currentStudent['phone'] ?? '' : '');
+      gender = prefs.getString('${admission}_gender') ?? (currentStudent != null ? currentStudent['gender'] ?? 'Male' : 'Male');
+      rollNumber = currentStudent != null ? currentStudent['roll'] ?? 'Roll No: 24' : 'Roll No: 24';
+      admissionNo = studentId;
+
+      dob = prefs.getString('${admission}_dob') ?? '';
+      bloodGroup = prefs.getString('${admission}_bloodGroup') ?? '';
+      address = prefs.getString('${admission}_address') ?? '';
+      aadhaar = prefs.getString('${admission}_aadhaar') ?? '';
+      
+      fatherName = prefs.getString('${admission}_fatherName') ?? '';
+      fatherPhone = prefs.getString('${admission}_fatherPhone') ?? '';
+      fatherEmail = prefs.getString('${admission}_fatherEmail') ?? '';
+      fatherOccupation = prefs.getString('${admission}_fatherOccupation') ?? '';
+      
+      motherName = prefs.getString('${admission}_motherName') ?? '';
+      motherPhone = prefs.getString('${admission}_motherPhone') ?? '';
+      motherEmail = prefs.getString('${admission}_motherEmail') ?? '';
+      motherOccupation = prefs.getString('${admission}_motherOccupation') ?? '';
+      
+      emergencyContact = prefs.getString('${admission}_emergencyContact') ?? '';
+      relationship = prefs.getString('${admission}_relationship') ?? '';
+      emergencyPhone = prefs.getString('${admission}_emergencyPhone') ?? '';
+      
+      allergies = prefs.getString('${admission}_allergies') ?? '';
+      medicalConditions = prefs.getString('${admission}_medicalConditions') ?? '';
+      regularMedication = prefs.getString('${admission}_regularMedication') ?? '';
+      
+      nationality = prefs.getString('${admission}_nationality') ?? '';
+      religion = prefs.getString('${admission}_religion') ?? '';
+      casteCategory = prefs.getString('${admission}_casteCategory') ?? '';
+      languagesKnown = prefs.getString('${admission}_languagesKnown') ?? '';
+      
+      academicYear = prefs.getString('${admission}_academicYear') ?? '';
+      dateOfAdmission = prefs.getString('${admission}_dateOfAdmission') ?? '';
+      house = prefs.getString('${admission}_house') ?? '';
+      firstLanguage = prefs.getString('${admission}_firstLanguage') ?? '';
+      secondLanguage = prefs.getString('${admission}_secondLanguage') ?? '';
+    });
+
+    if (ProfileManager().studentName.value == 'Student Name' || ProfileManager().studentName.value == 'Anudeep Jaadi') {
+      ProfileManager().setStudentName(name);
+    }
+    if (ProfileManager().studentEmail.value == 'student@school.com' || ProfileManager().studentEmail.value == 'anudeepjaadi@ecstasyschool.com') {
+      ProfileManager().setStudentEmail(email);
+    }
+
     final path = ProfileManager().studentProfileImagePath.value;
     if (path != null) {
-      _profileImage = File(path);
+      setState(() {
+        _profileImage = File(path);
+      });
     }
   }
 
@@ -427,18 +501,29 @@ class _MyInfoScreenState extends State<MyInfoScreen> with SingleTickerProviderSt
 
             _saveBtn(() {
               if (formKey.currentState!.validate()) {
+                final newName = nameCtrl.text.trim();
+                final newEmail = emailCtrl.text.trim();
                 setState(() {
-                  name = nameCtrl.text.trim();
+                  name = newName;
                   studentId = studentIdCtrl.text.trim();
                   aadhaar = aadhaarCtrl.text.trim();
                   mobile = mobileCtrl.text.trim();
                   countryCode = selCode;
-                  email = emailCtrl.text.trim();
+                  email = newEmail;
                   bloodGroup = selBlood;
                   dob = selDob != null ? _formatDate(selDob!) : dob;
                   gender = selGender;
                   address = addressCtrl.text.trim();
                 });
+                ProfileManager().setStudentName(newName);
+                ProfileManager().setStudentEmail(newEmail);
+                if (AppDataStore.instance.currentUser != null) {
+                  AppDataStore.instance.currentUser!['name'] = newName;
+                  AppDataStore.instance.currentUser!['email'] = newEmail;
+                  AppDataStore.instance.currentUser!['phone'] = mobile;
+                  AppDataStore.instance.currentUser!['gender'] = gender;
+                }
+                _saveProfileData();
                 Navigator.pop(context);
               }
             }),
@@ -470,7 +555,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> with SingleTickerProviderSt
       'First Language': Icons.language,
       'Second Language': Icons.language_outlined,
     };
-    _openSimpleEdit('Edit Academic Information', ctrls, icons, () {
+    _openSimpleEdit('Edit Academic Information', ctrls, icons, () async {
       setState(() {
         admissionNo = ctrls['Admission No.']!.text;
         rollNumber = ctrls['Roll Number']!.text;
@@ -480,6 +565,14 @@ class _MyInfoScreenState extends State<MyInfoScreen> with SingleTickerProviderSt
         firstLanguage = ctrls['First Language']!.text;
         secondLanguage = ctrls['Second Language']!.text;
       });
+      final currentStudent = AppDataStore.instance.currentUser;
+      final String admission = currentStudent != null ? currentStudent['admission'] as String : 'guest';
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('${admission}_academicYear', academicYear);
+      await prefs.setString('${admission}_dateOfAdmission', dateOfAdmission);
+      await prefs.setString('${admission}_house', house);
+      await prefs.setString('${admission}_firstLanguage', firstLanguage);
+      await prefs.setString('${admission}_secondLanguage', secondLanguage);
     });
   }
 
@@ -577,6 +670,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> with SingleTickerProviderSt
                   motherEmail = mEmailCtrl.text.trim();
                   motherOccupation = mOccCtrl.text.trim();
                 });
+                _saveParentData();
                 Navigator.pop(context);
               }
             }),
@@ -642,6 +736,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> with SingleTickerProviderSt
                   relationship = relCtrl.text.trim();
                   emergencyPhone = phoneCtrl.text.isEmpty ? '' : '$selCode ${phoneCtrl.text.trim()}';
                 });
+                _saveEmergencyData();
                 Navigator.pop(context);
               }
             }),
@@ -661,12 +756,18 @@ class _MyInfoScreenState extends State<MyInfoScreen> with SingleTickerProviderSt
       'Regular Medication': TextEditingController(text: regularMedication),
     };
     final icons = {'Allergies': Icons.warning_amber, 'Medical Conditions': Icons.medical_services, 'Regular Medication': Icons.medication};
-    _openSimpleEdit('Edit Medical Information', ctrls, icons, () {
+    _openSimpleEdit('Edit Medical Information', ctrls, icons, () async {
       setState(() {
         allergies = ctrls['Allergies']!.text;
         medicalConditions = ctrls['Medical Conditions']!.text;
         regularMedication = ctrls['Regular Medication']!.text;
       });
+      final currentStudent = AppDataStore.instance.currentUser;
+      final String admission = currentStudent != null ? currentStudent['admission'] as String : 'guest';
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('${admission}_allergies', allergies);
+      await prefs.setString('${admission}_medicalConditions', medicalConditions);
+      await prefs.setString('${admission}_regularMedication', regularMedication);
     });
   }
 
@@ -1020,24 +1121,46 @@ class _MyInfoScreenState extends State<MyInfoScreen> with SingleTickerProviderSt
     );
   }
 
+  void _openOtherEdit() {
+    final ctrls = {
+      'Nationality': TextEditingController(text: nationality),
+      'Religion': TextEditingController(text: religion),
+      'Caste Category': TextEditingController(text: casteCategory),
+      'Languages Known': TextEditingController(text: languagesKnown),
+    };
+    final icons = {
+      'Nationality': Icons.flag,
+      'Religion': Icons.church,
+      'Caste Category': Icons.category,
+      'Languages Known': Icons.translate,
+    };
+    _openSimpleEdit('Edit Other Information', ctrls, icons, () async {
+      setState(() {
+        nationality = ctrls['Nationality']!.text;
+        religion = ctrls['Religion']!.text;
+        casteCategory = ctrls['Caste Category']!.text;
+        languagesKnown = ctrls['Languages Known']!.text;
+      });
+      final currentStudent = AppDataStore.instance.currentUser;
+      final String admission = currentStudent != null ? currentStudent['admission'] as String : 'guest';
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('${admission}_nationality', nationality);
+      await prefs.setString('${admission}_religion', religion);
+      await prefs.setString('${admission}_casteCategory', casteCategory);
+      await prefs.setString('${admission}_languagesKnown', languagesKnown);
+    });
+  }
+
   // ────────────────────────────────────────────────────────────────────────────
   //  5. OTHER INFORMATION
   // ────────────────────────────────────────────────────────────────────────────
   Widget _buildOtherCard() {
-    return _card(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Row(children: [
-        Container(
-          padding: const EdgeInsets.all(6),
-          decoration: BoxDecoration(color: Colors.orange.withValues(alpha: 0.12), shape: BoxShape.circle),
-          child: const Icon(Icons.info_outline, color: Colors.orange, size: 18),
-        ),
-        const SizedBox(width: 8),
-        const Text('Other Information', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-      ]),
-      const SizedBox(height: 12),
-      const Divider(height: 1),
-      const SizedBox(height: 12),
-      LayoutBuilder(builder: (_, constraints) {
+    return _sectionCard(
+      icon: Icons.info_outline,
+      iconColor: Colors.orange,
+      title: 'Other Information',
+      onEdit: _openOtherEdit,
+      child: LayoutBuilder(builder: (_, constraints) {
         final wide = constraints.maxWidth > 420;
         if (wide) {
           return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -1060,7 +1183,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> with SingleTickerProviderSt
           ]);
         }
       }),
-    ]));
+    );
   }
 
   // ────────────────────────────────────────────────────────────────────────────
@@ -1129,5 +1252,45 @@ class _MyInfoScreenState extends State<MyInfoScreen> with SingleTickerProviderSt
         child,
       ]),
     );
+  }
+
+  Future<void> _saveProfileData() async {
+    final currentStudent = AppDataStore.instance.currentUser;
+    final String admission = currentStudent != null ? currentStudent['admission'] as String : 'guest';
+    final prefs = await SharedPreferences.getInstance();
+    
+    await prefs.setString('${admission}_name', name);
+    await prefs.setString('${admission}_email', email);
+    await prefs.setString('${admission}_mobile', mobile);
+    await prefs.setString('${admission}_gender', gender);
+    await prefs.setString('${admission}_dob', dob);
+    await prefs.setString('${admission}_bloodGroup', bloodGroup);
+    await prefs.setString('${admission}_address', address);
+    await prefs.setString('${admission}_aadhaar', aadhaar);
+  }
+
+  Future<void> _saveParentData() async {
+    final currentStudent = AppDataStore.instance.currentUser;
+    final String admission = currentStudent != null ? currentStudent['admission'] as String : 'guest';
+    final prefs = await SharedPreferences.getInstance();
+    
+    await prefs.setString('${admission}_fatherName', fatherName);
+    await prefs.setString('${admission}_fatherPhone', fatherPhone);
+    await prefs.setString('${admission}_fatherEmail', fatherEmail);
+    await prefs.setString('${admission}_fatherOccupation', fatherOccupation);
+    await prefs.setString('${admission}_motherName', motherName);
+    await prefs.setString('${admission}_motherPhone', motherPhone);
+    await prefs.setString('${admission}_motherEmail', motherEmail);
+    await prefs.setString('${admission}_motherOccupation', motherOccupation);
+  }
+
+  Future<void> _saveEmergencyData() async {
+    final currentStudent = AppDataStore.instance.currentUser;
+    final String admission = currentStudent != null ? currentStudent['admission'] as String : 'guest';
+    final prefs = await SharedPreferences.getInstance();
+    
+    await prefs.setString('${admission}_emergencyContact', emergencyContact);
+    await prefs.setString('${admission}_relationship', relationship);
+    await prefs.setString('${admission}_emergencyPhone', emergencyPhone);
   }
 }

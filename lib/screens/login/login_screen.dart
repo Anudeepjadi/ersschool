@@ -35,8 +35,15 @@ class _LoginScreenState extends State<LoginScreen> {
         _navigate(const AdminDashboardScreen(), 'Admin');
       } else if (role == 'student') {
         AppDataStore.instance.currentRole = 'student';
-        AppDataStore.instance.currentUser = AppDataStore.instance.students
+        final loggedInStudent = AppDataStore.instance.students
             .firstWhere((s) => (s['admission'] as String).toUpperCase() == id.toUpperCase());
+        AppDataStore.instance.currentUser = loggedInStudent;
+        
+        final name = loggedInStudent['name'] ?? 'Student';
+        final email = loggedInStudent['email'] ?? "${name.toLowerCase().replaceAll(' ', '')}@ecstasyschool.com";
+        ProfileManager().setStudentName(name);
+        ProfileManager().setStudentEmail(email);
+        
         _navigate(const DashboardScreen(), 'Student');
       } else if (role == 'teacher') {
         AppDataStore.instance.currentRole = 'teacher';

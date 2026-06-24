@@ -135,23 +135,33 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            "Anudeep Jaadi",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          ValueListenableBuilder<String>(
+                            valueListenable: ProfileManager().studentName,
+                            builder: (context, studentName, _) {
+                              return Text(
+                                studentName,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              );
+                            },
                           ),
                           const SizedBox(height: 2),
-                          Text(
-                            "anudeepjaadi@ecstasyschool.com",
-                            style: TextStyle(
-                              color: Colors.white.withValues(alpha: 0.85),
-                              fontSize: 12,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                          ValueListenableBuilder<String>(
+                            valueListenable: ProfileManager().studentEmail,
+                            builder: (context, studentEmail, _) {
+                              return Text(
+                                studentEmail,
+                                style: TextStyle(
+                                  color: Colors.white.withValues(alpha: 0.85),
+                                  fontSize: 12,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              );
+                            },
                           ),
                         ],
                       ),

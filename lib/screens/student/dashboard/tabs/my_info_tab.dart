@@ -35,7 +35,7 @@ class MyInfoTab extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             const Text(
-              "Anudeep Jaadi",
+              "Student",
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,

@@ -1,8 +1,6 @@
-﻿import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/profile_manager.dart';
-import '../../my_info/my_info_screen.dart';
 import '../../../../widgets/calendar_popup.dart';
 import '../widgets/student_app_bar.dart';
 import '../../transport/transport_screen.dart';
@@ -21,11 +19,19 @@ class HomeTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: StudentAppBar(
-        title: "Welcome Student 👋",
-        subtitle: "Here's what's happening today.",
-        onOpenDrawer: onOpenDrawer,
-        onProfileTap: () => onTabSelected(1),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(48),
+        child: ValueListenableBuilder<String>(
+          valueListenable: ProfileManager().studentName,
+          builder: (context, studentName, _) {
+            return StudentAppBar(
+              title: "Welcome $studentName 👋",
+              subtitle: "Here's what's happening today.",
+              onOpenDrawer: onOpenDrawer,
+              onProfileTap: () => onTabSelected(1),
+            );
+          },
+        ),
       ),
       body: RefreshIndicator(
         onRefresh: () async {

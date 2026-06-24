@@ -3,6 +3,8 @@ import '../../../core/theme/app_colors.dart';
 import '../dashboard/widgets/student_app_bar.dart';
 import '../../admin/widgets/ai_bot_fab.dart';
 import '../../../widgets/scrollable_table_wrapper.dart';
+import '../../../core/utils/profile_manager.dart';
+import '../../../core/data/app_data_store.dart';
 
 class TransportScreen extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
@@ -188,15 +190,26 @@ class _TransportScreenState extends State<TransportScreen> {
             ),
           );
 
+          final currentStudent = AppDataStore.instance.currentUser;
+          final String sName = currentStudent != null
+              ? currentStudent['name'] as String
+              : ProfileManager().studentName.value;
+          final String sClass = currentStudent != null
+              ? currentStudent['class'] as String
+              : "Class 8 - A";
+          final String sPhone = currentStudent != null
+              ? "+91 ${currentStudent['phone']}"
+              : "+91 98765 12345";
+
           Widget detailsWidget = Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Text(
-                    "Anudeep Jaadi",
-                    style: TextStyle(
+                  Text(
+                    sName,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF1E2875),
@@ -209,9 +222,9 @@ class _TransportScreenState extends State<TransportScreen> {
                       color: const Color(0xFFEEF2FF),
                       borderRadius: BorderRadius.circular(6),
                     ),
-                    child: const Text(
-                      "Class 8 - A",
-                      style: TextStyle(
+                    child: Text(
+                      sClass,
+                      style: const TextStyle(
                         color: AppColors.primary,
                         fontSize: 9,
                         fontWeight: FontWeight.bold,
@@ -228,7 +241,7 @@ class _TransportScreenState extends State<TransportScreen> {
                       children: [
                         _buildDetailItem(Icons.directions_bus, "Route / Stop", "Route 12 / Green Park Stop"),
                         _buildDetailItem(Icons.badge, "Transport ID", "TRP20260001"),
-                        _buildDetailItem(Icons.phone, "Mobile Number", "+91 98765 12345"),
+                        _buildDetailItem(Icons.phone, "Mobile Number", sPhone),
                       ],
                     ),
                   ),

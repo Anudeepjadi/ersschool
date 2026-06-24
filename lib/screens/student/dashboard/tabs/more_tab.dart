@@ -1,7 +1,8 @@
-﻿import 'dart:io';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/profile_manager.dart';
+import '../../../../core/data/app_data_store.dart';
 import '../../my_info/my_info_screen.dart';
 import '../widgets/student_app_bar.dart';
 import '../../../login/login_screen.dart';
@@ -519,41 +520,50 @@ class MoreTab extends StatelessWidget {
             ),
             const SizedBox(width: 16),
             // Name & class
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Anudeep Jaadi',
-                    style: TextStyle(
-                      color: Color(0xFF1E2875),
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  const Text(
-                    'Class 8-A  |  Roll No: 24',
-                    style: TextStyle(color: Colors.grey, fontSize: 13),
-                  ),
-                  const SizedBox(height: 6),
-                  Row(
+            ValueListenableBuilder<String>(
+              valueListenable: ProfileManager().studentName,
+              builder: (context, studentName, _) {
+                final currentStudent = AppDataStore.instance.currentUser;
+                final String classRoll = currentStudent != null
+                    ? "${currentStudent['class'] ?? 'Class 8-A'}  |  ${currentStudent['roll'] ?? 'Roll No: 24'}"
+                    : 'Class 8-A  |  Roll No: 24';
+                return Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Icon(Icons.verified_rounded,
-                          color: Colors.green, size: 14),
-                      const SizedBox(width: 4),
                       Text(
-                        'Active Student',
-                        style: TextStyle(
-                          color: Colors.grey.shade700,
-                          fontSize: 11,
+                        studentName,
+                        style: const TextStyle(
+                          color: Color(0xFF1E2875),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
                         ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        classRoll,
+                        style: const TextStyle(color: Colors.grey, fontSize: 13),
+                      ),
+                      const SizedBox(height: 6),
+                      Row(
+                        children: [
+                          const Icon(Icons.verified_rounded,
+                              color: Colors.green, size: 14),
+                          const SizedBox(width: 4),
+                          Text(
+                            'Active Student',
+                            style: TextStyle(
+                              color: Colors.grey.shade700,
+                              fontSize: 11,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
+                );
+              },
             ),
             // Edit icon
             IconButton(
