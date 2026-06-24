@@ -5,7 +5,6 @@ import '../widgets/quick_actions.dart';
 import '../widgets/teacher_app_bar.dart';
 import '../widgets/teacher_drawer.dart';
 import '../widgets/teacher_bottom_nav.dart';
-import 'teacher_my_info_screen.dart';
 
 class EmployeeItem {
   final String name;
@@ -179,82 +178,6 @@ class EmployeesScreenState extends State<EmployeesScreen> {
           },
         );
       },
-    );
-  }
-
-  void _showImportDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text("Import Employees"),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text("Select a file to import employee records (CSV or Excel)."),
-            const SizedBox(height: 20),
-            ElevatedButton.icon(
-              onPressed: () {
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Selecting file from device...")),
-                );
-              },
-              icon: const Icon(Icons.file_open),
-              label: const Text("Choose File"),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
-        ],
-      ),
-    );
-  }
-
-  void _showDownloadDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text("Download List"),
-        content: const Text("Are you sure you want to download the current employee list?"),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Downloading employee_list.pdf...")),
-              );
-            },
-            child: const Text("Download"),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showGenerateIDCardsDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text("Generate ID Cards"),
-        content: const Text("Generate and bulk download ID cards for all filtered employees?"),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Generating ID Cards...")),
-              );
-            },
-            child: const Text("Generate"),
-          ),
-        ],
-      ),
     );
   }
 

@@ -67,18 +67,6 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
     super.dispose();
   }
 
-  void _scrollToClass(String className) {
-    final key = _classKeys[className];
-    if (key != null && key.currentContext != null) {
-      Scrollable.ensureVisible(
-        key.currentContext!,
-        duration: const Duration(milliseconds: 600),
-        curve: Curves.easeInOut,
-        alignment: 0.1,
-      );
-    }
-  }
-
   void _toggleStatus(Map<String, dynamic> student) {
     setState(() {
       student['status'] = student['status'] == 'Active' ? 'Inactive' : 'Active';

@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import '../../core/theme/app_colors.dart';
 import '../../core/utils/profile_manager.dart';
 import '../login/login_screen.dart';
 import 'screens/home_screen.dart';

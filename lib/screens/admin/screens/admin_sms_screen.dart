@@ -138,15 +138,18 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
             return AlertDialog(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    "Select Students",
-                    style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+                  const Expanded(
+                    child: Text(
+                      "Select Students",
+                      style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
+                  const SizedBox(width: 8),
                   Text(
                     "Selected: ${selectedStudentIds.values.where((v) => v).length}/${students.length}",
-                    style: const TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -325,6 +328,7 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
     );
 
     Future.delayed(const Duration(seconds: 2), () {
+      if (!mounted) return;
       Navigator.pop(context); // Close loading dialog
       showDialog(
         context: context,
@@ -428,6 +432,8 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
 
               // 4. Fee pending controls
               _buildRightControlsPanel(),
+
+              const SizedBox(height: 80), // Added spacing to allow scrolling up
             ],
           ),
         ),
@@ -465,7 +471,7 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
         ),
         const SizedBox(height: 10),
         Container(
-          height: 350,
+          height: 300, // Reduced height to bring content below it higher
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
@@ -536,7 +542,7 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
           child: Text(
             activeGrades.isEmpty 
                 ? "Select Students" 
-                : "Select Students (${selectedStudentsCount}/${targetStudents.length})",
+                : "Select Students ($selectedStudentsCount/${targetStudents.length})",
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
           ),
         ),

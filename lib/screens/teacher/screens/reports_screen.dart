@@ -46,7 +46,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
     ReportItem(name: "Term 1 Overall Report (Classes 6 - 10)", type: "Custom Report", date: "10 May 2024", time: "09:00 AM", author: "Ms. Sneha Reddy", avatarUrl: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100"),
   ];
 
-  int _totalReportsGenerated = 24;
   String selectedOverviewClass = "Class 8";
   final _store = AppDataStore.instance;
 
@@ -169,7 +168,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
                         avatarUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100",
                       ),
                     );
-                    _totalReportsGenerated++;
                   });
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -246,7 +244,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
             child: TabBar(
               isScrollable: true,
               tabAlignment: TabAlignment.start,
-              labelPadding: const EdgeInsets.symmetric(horizontal: 12),
+              labelPadding: EdgeInsets.symmetric(horizontal: 12),
               dividerColor: Colors.transparent,
               labelColor: Colors.blue,
               unselectedLabelColor: Colors.grey,
@@ -278,19 +276,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
   }
 
   Widget _buildOverview() {
-    // Determine dynamic counts based on dropdown period filter
-    int reportsTotal = _totalReportsGenerated;
-    int studentsIncluded = 538;
-    int termReports = 18;
-    int downloads = 56;
-    int pending = 6;
-
     if (selectedPeriod == "This Month") {
-      reportsTotal = 8;
-      studentsIncluded = 240;
-      termReports = 6;
-      downloads = 15;
-      pending = 2;
     }
 
     return SingleChildScrollView(
@@ -1280,56 +1266,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-
-
-  Widget _buildCategoryCard(IconData icon, String title, String count, Color color, int tabIndex) {
-    return InkWell(
-      onTap: () => widget.onSubTabSelected?.call(tabIndex),
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey[200]!),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 4,
-              offset: const Offset(0, 1),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: color, size: 24),
-            const SizedBox(height: 6),
-            Text(
-              title,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 10, color: Color(0xFF1B263B)),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 4),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  count,
-                  style: TextStyle(color: color, fontSize: 9, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(width: 2),
-                Icon(Icons.arrow_right_alt, color: color, size: 10),
-              ],
-            ),
-          ],
-        ),
       ),
     );
   }

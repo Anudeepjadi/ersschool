@@ -1,12 +1,9 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:ersschool/screens/student/class/tabs/timetable_screen.dart';
 import '../../../widgets/scrollable_table_wrapper.dart';
 import 'package:ersschool/screens/student/class/tabs/diary_screen.dart';
 import 'package:ersschool/screens/student/class/tabs/assignments_screen.dart';
 import 'package:ersschool/screens/student/class/tabs/attendance_screen.dart';
-import '../../../core/utils/profile_manager.dart';
-import '../my_info/my_info_screen.dart';
 import '../dashboard/widgets/student_app_bar.dart';
 
 class ClassScreen extends StatefulWidget {

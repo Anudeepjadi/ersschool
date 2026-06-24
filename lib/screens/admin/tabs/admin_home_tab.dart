@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../../core/theme/app_colors.dart';
@@ -10,7 +9,6 @@ import '../../../widgets/calendar_popup.dart';
 import '../screens/admin_attendance_screen.dart';
 import '../screens/admin_fees_screen.dart';
 import '../screens/admin_communications_screen.dart';
-import '../screens/admin_chat_support_screen.dart';
 import '../screens/admin_events_screen.dart';
 import '../../ai_assistant/ai_assistant_screen.dart';
 import '../widgets/admin_app_bar.dart';
@@ -37,8 +35,6 @@ class AdminHomeTab extends StatefulWidget {
 }
 
 class _AdminHomeTabState extends State<AdminHomeTab> {
-  String _selectedSchool = 'Ecstasy School 1';
-  String _feeFilter = 'This Month';
   String _attendanceFilter = 'Today';
   String _chartFilter = 'This Year';
   
@@ -973,7 +969,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
                     Padding(padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0), child: Text("₹ ${fee['total']}", style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)))),
                   ],
                 );
-              }).toList(),
+              }),
             ],
           ),
         ],
@@ -981,14 +977,8 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
     );
   }
 
-  Widget _buildAttendanceOverviewCard_old() {
-    return Container();
-  }
-
   Widget _buildAttendanceOverviewCardForSchool(String school, Map<String, dynamic> metrics) {
     final int presentPercent = metrics['presentPercent'] as int;
-    final int absentPercent = (100 - presentPercent) * 78 ~/ 100;
-    final int leavePercent = 100 - presentPercent - absentPercent;
 
     return Container(
       width: double.infinity,

@@ -395,25 +395,6 @@ class MoreScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHolidayItem(String date, String title) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            decoration: BoxDecoration(
-              color: Colors.grey[100],
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Text(date, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-          ),
-          const SizedBox(width: 12),
-          Text(title, style: const TextStyle(fontSize: 13)),
-        ],
-      ),
-    );
-  }
 
   Widget _buildMenuCard(
     BuildContext context,

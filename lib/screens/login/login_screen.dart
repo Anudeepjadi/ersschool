@@ -19,10 +19,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
 
-  bool _isValidInput(String value) {
-    return value.trim().isNotEmpty;
-  }
-
   void _handleLogin() {
     if (_formKey.currentState!.validate()) {
       final id = _idController.text.trim();

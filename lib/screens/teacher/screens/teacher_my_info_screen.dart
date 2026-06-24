@@ -31,13 +31,11 @@ class TeacherMyInfoScreen extends StatefulWidget {
 }
 
 class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTickerProviderStateMixin {
-  late TabController _tabController;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
     
     // Load from ProfileManager if set, otherwise from AppDataStore currentUser
     final currentTeacher = AppDataStore.instance.currentUser;
@@ -547,11 +545,6 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
 
     final formKey = GlobalKey<FormState>();
 
-    String? emailVal(String? v) {
-      if (v != null && v.isNotEmpty && !RegExp(r'^[\w\.\-\+]+@[\w\.\-]+\.[a-zA-Z]{2,}$').hasMatch(v.trim())) return 'Enter a valid email';
-      return null;
-    }
-
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -928,25 +921,6 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
     return d;
   }
 
-  Widget _detailLine(IconData icon, String label, String value) {
-    final bool isEmpty = value.trim().isEmpty;
-    final displayValue = isEmpty ? label : value;
-    final color = isEmpty ? Colors.grey.shade400 : const Color(0xFF1A1A1A);
-    final fw = isEmpty ? FontWeight.normal : FontWeight.w600;
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 5),
-      child: Row(children: [
-        Icon(icon, size: 14, color: Colors.grey.shade400),
-        const SizedBox(width: 6),
-        SizedBox(
-          width: 90,
-          child: Text(label, style: const TextStyle(fontSize: 11, color: Color(0xFF1A1A1A))),
-        ),
-        Expanded(child: Text(displayValue, style: TextStyle(fontSize: 12, fontWeight: fw, color: color), overflow: TextOverflow.ellipsis)),
-      ]),
-    );
-  }
 
   // ────────────────────────────────────────────────────────────────────────────
   //  2. QUICK STATS ROW

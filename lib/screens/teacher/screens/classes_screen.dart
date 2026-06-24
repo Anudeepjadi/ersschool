@@ -32,11 +32,11 @@ class ClassesScreen extends StatefulWidget {
   final Function(int, {int? subTab, String? moreSubScreen})? onNavigateTab;
 
   const ClassesScreen({
-    Key? key,
+    super.key,
     this.activeTab = 0,
     this.onSubTabSelected,
     this.onNavigateTab,
-  }) : super(key: key);
+  });
 
   @override
   State<ClassesScreen> createState() => _ClassesScreenState();
@@ -131,37 +131,6 @@ class _ClassesScreenState extends State<ClassesScreen> {
     );
   }
 
-  void _showEditClassDialog(ClassItem item) {
-    _classNameController.text = item.section;
-    _teacherController.text = item.teacher;
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Edit Class"),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(controller: _classNameController, decoration: const InputDecoration(labelText: "Class Name")),
-            TextField(controller: _teacherController, decoration: const InputDecoration(labelText: "Teacher")),
-          ],
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                item.section = _classNameController.text;
-                item.teacher = _teacherController.text;
-              });
-              Navigator.pop(context);
-            },
-            child: const Text("Update"),
-          ),
-        ],
-      ),
-    );
-  }
-
   void _showAssignTeacherDialog() {
     // Currently assigned through mapping in store
     ScaffoldMessenger.of(context).showSnackBar(
@@ -186,7 +155,7 @@ class _ClassesScreenState extends State<ClassesScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   DropdownButtonFormField<String>(
-                    value: selectedClass,
+                    initialValue: selectedClass,
                     items: _allClasses.take(15).map((c) => DropdownMenuItem(value: c.section, child: Text(c.section))).toList(),
                     onChanged: (val) => setDialogState(() => selectedClass = val),
                     decoration: const InputDecoration(labelText: "Select Class"),
@@ -256,7 +225,7 @@ class _ClassesScreenState extends State<ClassesScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   DropdownButtonFormField<String>(
-                    value: selectedClass,
+                    initialValue: selectedClass,
                     items: _allClasses.take(15).map((c) => DropdownMenuItem(value: c.section, child: Text(c.section))).toList(),
                     onChanged: (val) => setDialogState(() => selectedClass = val),
                     decoration: const InputDecoration(labelText: "Select Class"),
