@@ -1,12 +1,13 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../../core/theme/app_colors.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminExaminationsScreen extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
-  const AdminExaminationsScreen({super.key, this.onOpenDrawer});
+  AdminExaminationsScreen({super.key, this.onOpenDrawer});
 
   @override
   State<AdminExaminationsScreen> createState() => _AdminExaminationsScreenState();
@@ -31,16 +32,16 @@ class _AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FF),
-      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
+      backgroundColor: Color(0xFFF5F7FF),
+      bottomNavigationBar: AdminBottomNavBar(currentIndex: 4),
       appBar: AdminAppBar(
         title: "Examinations",
         subtitle: "Manage exams, schedules and results",
         onOpenDrawer: widget.onOpenDrawer,
       ),
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(16),
+        physics: BouncingScrollPhysics(),
+        padding: EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -56,15 +57,15 @@ class _AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Exam Schedule list
             _buildExamSchedule(),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Performance overview row (Donut + top performing classes bar chart)
             _buildPerformanceSection(),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Student results log
             _buildResultsSection(),
@@ -77,8 +78,8 @@ class _AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
   Widget _buildStatCard(String label, String value, String subtext, Color color) {
     return Container(
       width: 120,
-      margin: const EdgeInsets.only(right: 12),
-      padding: const EdgeInsets.all(12),
+      margin: EdgeInsets.only(right: 12),
+      padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -87,10 +88,10 @@ class _AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
-          Text(value, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-          const SizedBox(height: 4),
+          Text(label, style: TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
+          SizedBox(height: 8),
+          Text(value, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+          SizedBox(height: 4),
           Text(subtext, style: TextStyle(fontSize: 10, color: color, fontWeight: FontWeight.bold)),
         ],
       ),
@@ -99,7 +100,7 @@ class _AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
 
   Widget _buildExamSchedule() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -110,38 +111,36 @@ class _AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                "Exam Schedule",
+              Text("Exam Schedule".tr,
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
               ),
-              Text(
-                "View Calendar",
+              Text("View Calendar".tr,
                 style: TextStyle(fontSize: 11, color: AppColors.primary, fontWeight: FontWeight.bold),
               ),
             ],
           ),
-          const SizedBox(height: 14),
+          SizedBox(height: 14),
           ListView.builder(
             shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
+            physics: NeverScrollableScrollPhysics(),
             itemCount: _schedules.length,
             itemBuilder: (context, index) {
               final sched = _schedules[index];
               Color statusColor;
               switch (sched['status']) {
                 case 'Ongoing':
-                  statusColor = const Color(0xFFF59E0B);
+                  statusColor = Color(0xFFF59E0B);
                   break;
                 case 'Completed':
-                  statusColor = const Color(0xFF10B981);
+                  statusColor = Color(0xFF10B981);
                   break;
                 default:
                   statusColor = Colors.blue;
               }
 
               return Container(
-                margin: const EdgeInsets.only(bottom: 12),
-                padding: const EdgeInsets.all(16),
+                margin: EdgeInsets.only(bottom: 12),
+                padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
@@ -151,14 +150,14 @@ class _AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(10),
+                      padding: EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         color: statusColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(Icons.event_available_outlined, color: statusColor, size: 20),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -170,7 +169,7 @@ class _AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                               Expanded(
                                 child: Text(
                                   sched['name'],
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                     color: Color(0xFF1E2875),
@@ -178,7 +177,7 @@ class _AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                                 ),
                               ),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
                                   color: statusColor.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(12),
@@ -194,16 +193,16 @@ class _AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 6),
+                          SizedBox(height: 6),
                           Text(
                             "Class ${sched['class']} | ${sched['type']}",
                             style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
                           ),
-                          const SizedBox(height: 6),
+                          SizedBox(height: 6),
                           Row(
                             children: [
                               Icon(Icons.calendar_month_outlined, size: 14, color: Colors.grey.shade500),
-                              const SizedBox(width: 4),
+                              SizedBox(width: 4),
                               Text(
                                 "${sched['start']} - ${sched['end']}",
                                 style: TextStyle(fontSize: 11, color: Colors.grey.shade500),
@@ -225,7 +224,7 @@ class _AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
 
   Widget _buildPerformanceSection() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -233,11 +232,10 @@ class _AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Performance Overview",
+          Text("Performance Overview".tr,
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Row(
             children: [
               Expanded(
@@ -252,24 +250,24 @@ class _AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                           sectionsSpace: 0,
                           centerSpaceRadius: 35,
                           sections: [
-                            PieChartSectionData(value: 75, color: const Color(0xFF10B981), radius: 12, showTitle: false),
-                            PieChartSectionData(value: 15, color: const Color(0xFFF59E0B), radius: 12, showTitle: false),
-                            PieChartSectionData(value: 10, color: const Color(0xFFEF4444), radius: 12, showTitle: false),
+                            PieChartSectionData(value: 75, color: Color(0xFF10B981), radius: 12, showTitle: false),
+                            PieChartSectionData(value: 15, color: Color(0xFFF59E0B), radius: 12, showTitle: false),
+                            PieChartSectionData(value: 10, color: Color(0xFFEF4444), radius: 12, showTitle: false),
                           ],
                         ),
                       ),
-                      const Column(
+                      Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text("75%", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                          Text("Avg Pass", style: TextStyle(fontSize: 8, color: Colors.grey)),
+                          Text("75%".tr, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                          Text("Avg Pass".tr, style: TextStyle(fontSize: 8, color: Colors.grey)),
                         ],
                       )
                     ],
                   ),
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Expanded(
                 flex: 6,
                 child: SizedBox(
@@ -277,21 +275,21 @@ class _AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                   child: BarChart(
                     BarChartData(
                       borderData: FlBorderData(show: false),
-                      gridData: const FlGridData(show: false),
+                      gridData: FlGridData(show: false),
                       titlesData: FlTitlesData(
                         show: true,
-                        topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                        rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                        leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                        topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                        rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                        leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
                         bottomTitles: AxisTitles(
                           sideTitles: SideTitles(
                             showTitles: true,
                             getTitlesWidget: (value, meta) {
                               const classes = ['C10', 'C9', 'C8', 'C7', 'C6'];
                               if (value.toInt() >= 0 && value.toInt() < classes.length) {
-                                return Text(classes[value.toInt()], style: const TextStyle(fontSize: 8, color: Colors.grey));
+                                return Text(classes[value.toInt()], style: TextStyle(fontSize: 8, color: Colors.grey));
                               }
-                              return const SizedBox();
+                              return SizedBox();
                             },
                           ),
                         ),
@@ -342,34 +340,33 @@ class _AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Padding(
+          Padding(
             padding: EdgeInsets.all(16.0),
-            child: Text(
-              "Student Exam Performance Logs",
+            child: Text("Student Exam Performance Logs".tr,
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
             ),
           ),
           ListView.builder(
             shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
+            physics: NeverScrollableScrollPhysics(),
             itemCount: _results.length,
             itemBuilder: (context, index) {
               final res = _results[index];
               Color resColor;
               switch (res['result']) {
                 case 'Pass':
-                  resColor = const Color(0xFF10B981);
+                  resColor = Color(0xFF10B981);
                   break;
                 case 'Fail':
-                  resColor = const Color(0xFFEF4444);
+                  resColor = Color(0xFFEF4444);
                   break;
                 default:
-                  resColor = const Color(0xFFF59E0B);
+                  resColor = Color(0xFFF59E0B);
               }
 
               return Container(
-                margin: const EdgeInsets.only(bottom: 12),
-                padding: const EdgeInsets.all(16),
+                margin: EdgeInsets.only(bottom: 12),
+                padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
@@ -379,14 +376,14 @@ class _AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(10),
+                      padding: EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         color: resColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(Icons.person_outline, color: resColor, size: 20),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -398,7 +395,7 @@ class _AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                               Expanded(
                                 child: Text(
                                   res['student'],
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                     color: Color(0xFF1E2875),
@@ -407,7 +404,7 @@ class _AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                               ),
                               Text(
                                 "${res['obtained']}/${res['total']}",
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                   color: Color(0xFF1E2875),
@@ -415,7 +412,7 @@ class _AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 6),
+                          SizedBox(height: 6),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -426,9 +423,9 @@ class _AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                                   style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
                                 ),
                               ),
-                              const SizedBox(width: 8),
+                              SizedBox(width: 8),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
                                   color: resColor.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(12),

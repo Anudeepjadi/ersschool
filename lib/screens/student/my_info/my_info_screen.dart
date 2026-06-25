@@ -7,6 +7,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/profile_manager.dart';
 import '../../../core/data/app_data_store.dart';
 import '../dashboard/widgets/student_app_bar.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Data model helpers
@@ -25,7 +26,7 @@ class _CountryCode {
 // ─────────────────────────────────────────────────────────────────────────────
 class MyInfoScreen extends StatefulWidget {
   final Function(int)? onTabSelected;
-  const MyInfoScreen({super.key, this.onTabSelected});
+  MyInfoScreen({super.key, this.onTabSelected});
 
   @override
   State<MyInfoScreen> createState() => _MyInfoScreenState();
@@ -49,16 +50,16 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
 
     setState(() {
       name = prefs.getString('${admission}_name') ?? 
-          ((savedName.isNotEmpty && savedName != 'Student Name' && savedName != 'Anudeep Jaadi') 
+          ((savedName.isNotEmpty && savedName != 'Student Name' && savedName != '')
               ? savedName 
-              : (currentStudent != null ? currentStudent['name'] as String : 'Anudeep Jaadi'));
+              : (currentStudent != null ? currentStudent['name'] as String : ''));
 
       email = prefs.getString('${admission}_email') ?? 
-          ((savedEmail.isNotEmpty && savedEmail != 'student@school.com' && savedEmail != 'anudeepjaadi@ecstasyschool.com') 
+          ((savedEmail.isNotEmpty && savedEmail != 'student@school.com' && savedEmail != '')
               ? savedEmail 
               : (currentStudent != null && currentStudent.containsKey('email') 
                   ? currentStudent['email'] as String 
-                  : (currentStudent != null ? "${(currentStudent['name'] as String).toLowerCase().replaceAll(' ', '')}@ecstasyschool.com" : 'anudeepjaadi@ecstasyschool.com')));
+                  : (currentStudent != null ? "${(currentStudent['name'] as String).toLowerCase().replaceAll(' ', '')}@ecstasyschool.com" : '')));
 
       classSection = currentStudent != null ? currentStudent['class'] ?? 'Class 8-A' : 'Class 8-A';
       studentId = currentStudent != null ? currentStudent['admission'] ?? 'ECS00001' : 'ECS00001';
@@ -102,10 +103,10 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
       secondLanguage = prefs.getString('${admission}_secondLanguage') ?? '';
     });
 
-    if (ProfileManager().studentName.value == 'Student Name' || ProfileManager().studentName.value == 'Anudeep Jaadi') {
+    if (ProfileManager().studentName.value == 'Student Name') {
       ProfileManager().setStudentName(name);
     }
-    if (ProfileManager().studentEmail.value == 'student@school.com' || ProfileManager().studentEmail.value == 'anudeepjaadi@ecstasyschool.com') {
+    if (ProfileManager().studentEmail.value == 'student@school.com') {
       ProfileManager().setStudentEmail(email);
     }
 
@@ -170,7 +171,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
   final ImagePicker _picker = ImagePicker();
 
   // ── Country codes ──────────────────────────────────────────────────────────
-  static const List<_CountryCode> _countryCodes = [
+  static List<_CountryCode> _countryCodes = [
     _CountryCode('+91', '🇮🇳', 'India'),
     _CountryCode('+1', '🇺🇸', 'USA'),
     _CountryCode('+44', '🇬🇧', 'UK'),
@@ -226,12 +227,12 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
             Row(
               children: [
                 Expanded(child: _photoBtn(Icons.camera_alt_rounded, 'Camera', 'Take a photo', () { Navigator.pop(ctx); _pickImage(ImageSource.camera); })),
-                const SizedBox(width: 16),
+                SizedBox(width: 16),
                 Expanded(child: _photoBtn(Icons.photo_library_rounded, 'Gallery', 'Choose existing', () { Navigator.pop(ctx); _pickImage(ImageSource.gallery); })),
               ],
             ),
             if (_profileImage != null) ...[
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton.icon(
@@ -240,11 +241,11 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
                     ProfileManager().setStudentProfileImage(null);
                     Navigator.pop(ctx); 
                   },
-                  icon: const Icon(Icons.delete_outline, color: Colors.red),
-                  label: const Text('Remove Photo', style: TextStyle(color: Colors.red)),
+                  icon: Icon(Icons.delete_outline, color: Colors.red),
+                  label: Text('Remove Photo'.tr, style: TextStyle(color: Colors.red)),
                   style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Colors.red),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    side: BorderSide(color: Colors.red),
+                    padding: EdgeInsets.symmetric(vertical: 12),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
                 ),
@@ -261,7 +262,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 12),
         decoration: BoxDecoration(
           color: AppColors.primary.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(16),
@@ -269,12 +270,12 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
         ),
         child: Column(children: [
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: EdgeInsets.all(10),
             decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.1), shape: BoxShape.circle),
             child: Icon(icon, color: AppColors.primary, size: 26),
           ),
-          const SizedBox(height: 8),
-          Text(label, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+          SizedBox(height: 8),
+          Text(label, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
           Text(sub, style: TextStyle(fontSize: 11, color: Colors.grey.shade500)),
         ]),
       ),
@@ -296,7 +297,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
 
   void _showSnack(String msg, Color bg, IconData icon) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Row(children: [Icon(icon, color: Colors.white, size: 18), const SizedBox(width: 8), Expanded(child: Text(msg))]),
+      content: Row(children: [Icon(icon, color: Colors.white, size: 18), SizedBox(width: 8), Expanded(child: Text(msg))]),
       backgroundColor: bg,
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -306,7 +307,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
   // ── Shared bottom-sheet wrapper ────────────────────────────────────────────
   Widget _sheetWrapper(BuildContext ctx, {required String title, required Widget child}) {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -320,9 +321,9 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Center(child: Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(2)))),
-            const SizedBox(height: 16),
-            Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primary)),
-            const SizedBox(height: 20),
+            SizedBox(height: 16),
+            Text(title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primary)),
+            SizedBox(height: 20),
             child,
           ],
         ),
@@ -355,9 +356,9 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
     prefixIcon: Icon(icon, color: AppColors.primary, size: 20),
     border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
     enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Colors.grey.shade300)),
-    focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.primary, width: 2)),
-    errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Colors.red, width: 1.5)),
-    focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Colors.red, width: 2)),
+    focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: AppColors.primary, width: 2)),
+    errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Colors.red, width: 1.5)),
+    focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Colors.red, width: 2)),
   );
 
   // ── Dropdown form field ────────────────────────────────────────────────────
@@ -403,11 +404,11 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
             // Full Name
             _formField(ctrl: nameCtrl, label: 'Full Name', icon: Icons.person,
               validator: (v) => (v == null || v.trim().length < 2) ? 'Enter a valid name' : null),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
 
             // Student ID
             _formField(ctrl: studentIdCtrl, label: 'Student ID', icon: Icons.badge_outlined),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
 
             // Phone + country code
             Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -417,17 +418,17 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
                   border: Border.all(color: Colors.grey.shade300),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 8),
+                padding: EdgeInsets.symmetric(horizontal: 8),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
                     value: selCode,
                     menuMaxHeight: 300,
-                    items: _countryCodes.map((c) => DropdownMenuItem(value: c.code, child: Text('${c.flag} ${c.code}', style: const TextStyle(fontSize: 13)))).toList(),
+                    items: _countryCodes.map((c) => DropdownMenuItem(value: c.code, child: Text('${c.flag} ${c.code}', style: TextStyle(fontSize: 13)))).toList(),
                     onChanged: (v) { if (v != null) setSS(() => selCode = v); },
                   ),
                 ),
               ),
-              const SizedBox(width: 10),
+              SizedBox(width: 10),
               Expanded(child: TextFormField(
                 controller: mobileCtrl,
                 keyboardType: TextInputType.phone,
@@ -436,7 +437,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
                 validator: (v) => (v == null || v.length != 10) ? 'Enter 10-digit number' : null,
               )),
             ]),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
 
             // Email
             _formField(ctrl: emailCtrl, label: 'Email Address', icon: Icons.email, keyboardType: TextInputType.emailAddress,
@@ -445,13 +446,13 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
                 if (!RegExp(r'^[\w\.\-\+]+@[\w\.\-]+\.[a-zA-Z]{2,}$').hasMatch(v.trim())) return 'Enter a valid email';
                 return null;
               }),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
 
             // Blood Group
             _dropField(label: 'Blood Group', icon: Icons.bloodtype, value: selBlood,
-              items: const ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+              items: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
               onChanged: (v) { if (v != null) setSS(() => selBlood = v); }),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
 
             // Date of Birth
             GestureDetector(
@@ -463,7 +464,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
                   firstDate: DateTime(1990),
                   lastDate: now,
                   builder: (c, w) => Theme(
-                    data: Theme.of(c).copyWith(colorScheme: const ColorScheme.light(primary: AppColors.primary, onPrimary: Colors.white)),
+                    data: Theme.of(c).copyWith(colorScheme: ColorScheme.light(primary: AppColors.primary, onPrimary: Colors.white)),
                     child: w!,
                   ),
                 );
@@ -473,21 +474,21 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
                 controller: TextEditingController(text: selDob != null ? _formatDate(selDob!) : ''),
                 decoration: _inputDeco('Date of Birth', Icons.cake).copyWith(
                   hintText: 'Tap to select date',
-                  suffixIcon: const Icon(Icons.calendar_today, color: AppColors.primary, size: 18),
+                  suffixIcon: Icon(Icons.calendar_today, color: AppColors.primary, size: 18),
                 ),
               )),
             ),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
 
             // Gender
             _dropField(label: 'Gender', icon: Icons.wc, value: selGender,
-              items: const ['Male', 'Female'],
+              items: ['Male', 'Female'],
               onChanged: (v) { if (v != null) setSS(() => selGender = v); }),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
 
             // Address
             _formField(ctrl: addressCtrl, label: 'Address', icon: Icons.home, maxLines: 2),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
 
             // Aadhaar Number
             TextFormField(
@@ -497,7 +498,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
               decoration: _inputDeco('Aadhaar Number (12 digits)', Icons.shield_outlined).copyWith(counterText: ''),
               validator: (v) => (v != null && v.isNotEmpty && v.length != 12) ? 'Aadhaar must be 12 digits' : null,
             ),
-            const SizedBox(height: 22),
+            SizedBox(height: 22),
 
             _saveBtn(() {
               if (formKey.currentState!.validate()) {
@@ -602,17 +603,17 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
         Container(
           height: 56,
           decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(12)),
-          padding: const EdgeInsets.symmetric(horizontal: 8),
+          padding: EdgeInsets.symmetric(horizontal: 8),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
               value: code,
               menuMaxHeight: 300,
-              items: _countryCodes.map((c) => DropdownMenuItem(value: c.code, child: Text('${c.flag} ${c.code}', style: const TextStyle(fontSize: 13)))).toList(),
+              items: _countryCodes.map((c) => DropdownMenuItem(value: c.code, child: Text('${c.flag} ${c.code}', style: TextStyle(fontSize: 13)))).toList(),
               onChanged: (v) { if (v != null) onCodeChange(v); },
             ),
           ),
         ),
-        const SizedBox(width: 10),
+        SizedBox(width: 10),
         Expanded(child: TextFormField(
           controller: ctrl,
           keyboardType: TextInputType.phone,
@@ -636,27 +637,27 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
         return _sheetWrapper(ctx, title: 'Edit Parent Details', child: Form(
           key: formKey,
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            const Text('Father Details', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange)),
-            const SizedBox(height: 10),
+            Text('Father Details'.tr, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange)),
+            SizedBox(height: 10),
             _formField(ctrl: fNameCtrl, label: 'Father Name', icon: Icons.person),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
             phoneRow(selFCode, fPhoneCtrl, (c) => setSS(() => selFCode = c)),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
             _formField(ctrl: fEmailCtrl, label: 'Father Email', icon: Icons.email, keyboardType: TextInputType.emailAddress, validator: emailVal),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
             _formField(ctrl: fOccCtrl, label: 'Father Occupation', icon: Icons.work),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
 
-            const Text('Mother Details', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFE91E8C))),
-            const SizedBox(height: 10),
+            Text('Mother Details'.tr, style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFE91E8C))),
+            SizedBox(height: 10),
             _formField(ctrl: mNameCtrl, label: 'Mother Name', icon: Icons.person),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
             phoneRow(selMCode, mPhoneCtrl, (c) => setSS(() => selMCode = c)),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
             _formField(ctrl: mEmailCtrl, label: 'Mother Email', icon: Icons.email, keyboardType: TextInputType.emailAddress, validator: emailVal),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
             _formField(ctrl: mOccCtrl, label: 'Mother Occupation', icon: Icons.work),
-            const SizedBox(height: 22),
+            SizedBox(height: 22),
 
             _saveBtn(() {
               if (formKey.currentState!.validate()) {
@@ -702,24 +703,24 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
           key: formKey,
           child: Column(children: [
             _formField(ctrl: nameCtrl, label: 'Contact Name', icon: Icons.person),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
             _formField(ctrl: relCtrl, label: 'Relationship', icon: Icons.people),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
             Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Container(
                 height: 56,
                 decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(12)),
-                padding: const EdgeInsets.symmetric(horizontal: 8),
+                padding: EdgeInsets.symmetric(horizontal: 8),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
                     value: selCode,
                     menuMaxHeight: 300,
-                    items: _countryCodes.map((c) => DropdownMenuItem(value: c.code, child: Text('${c.flag} ${c.code}', style: const TextStyle(fontSize: 13)))).toList(),
+                    items: _countryCodes.map((c) => DropdownMenuItem(value: c.code, child: Text('${c.flag} ${c.code}', style: TextStyle(fontSize: 13)))).toList(),
                     onChanged: (v) { if (v != null) setSS(() => selCode = v); },
                   ),
                 ),
               ),
-              const SizedBox(width: 10),
+              SizedBox(width: 10),
               Expanded(child: TextFormField(
                 controller: phoneCtrl,
                 keyboardType: TextInputType.phone,
@@ -728,7 +729,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
                 validator: (v) => (v != null && v.isNotEmpty && v.length != 10) ? 'Enter 10-digit number' : null,
               )),
             ]),
-            const SizedBox(height: 22),
+            SizedBox(height: 22),
             _saveBtn(() {
               if (formKey.currentState!.validate()) {
                 setState(() {
@@ -784,7 +785,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
       backgroundColor: Colors.transparent,
       builder: (ctx) => _sheetWrapper(ctx, title: title, child: Column(children: [
         ...ctrls.entries.map((e) => Padding(
-          padding: const EdgeInsets.only(bottom: 14),
+          padding: EdgeInsets.only(bottom: 14),
           child: _formField(ctrl: e.value, label: e.key, icon: icons[e.key] ?? Icons.edit),
         )),
         _saveBtn(() { onSaveData(); Navigator.pop(context); }),
@@ -799,10 +800,10 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(vertical: 14),
+        padding: EdgeInsets.symmetric(vertical: 14),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
-      child: const Text('Save Changes', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+      child: Text('Save Changes'.tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
     ),
   );
 
@@ -817,7 +818,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
     final hPad = isWide ? 24.0 : 16.0;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F4F8),
+      backgroundColor: Color(0xFFF2F4F8),
       appBar: StudentAppBar(
         title: "My Info",
         subtitle: "View and edit your profile",
@@ -829,55 +830,55 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
         },
       ),
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
+        physics: BouncingScrollPhysics(),
         child: Column(
           children: [
             Center(
               child: ConstrainedBox(
                 // cap max width for desktop
-                constraints: const BoxConstraints(maxWidth: 960),
+                constraints: BoxConstraints(maxWidth: 960),
                 child: Padding(
                   padding: EdgeInsets.only(left: hPad, right: hPad, top: 4, bottom: 16),
                   child: Column(children: [
                     // ── 1. Profile header ────────────────────────────────────────
                 _buildProfileCard(),
-                const SizedBox(height: 14),
+                SizedBox(height: 14),
 
                 // ── 2. Quick stats ────────────────────────────────────────────
                 _buildQuickStats(),
-                const SizedBox(height: 14),
+                SizedBox(height: 14),
 
                 // ── 3. Academic + Parent (side-by-side on wide, stacked on narrow) ──
                 isWide
                   ? Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       Expanded(child: _buildAcademicCard()),
-                      const SizedBox(width: 14),
+                      SizedBox(width: 14),
                       Expanded(child: _buildParentCard()),
                     ])
                   : Column(children: [
                       _buildAcademicCard(),
-                      const SizedBox(height: 14),
+                      SizedBox(height: 14),
                       _buildParentCard(),
                     ]),
-                const SizedBox(height: 14),
+                SizedBox(height: 14),
 
                 // ── 4. Emergency + Medical ────────────────────────────────────
                 isWide
                   ? Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       Expanded(child: _buildEmergencyCard()),
-                      const SizedBox(width: 14),
+                      SizedBox(width: 14),
                       Expanded(child: _buildMedicalCard()),
                     ])
                   : Column(children: [
                       _buildEmergencyCard(),
-                      const SizedBox(height: 14),
+                      SizedBox(height: 14),
                       _buildMedicalCard(),
                     ]),
-                const SizedBox(height: 14),
+                SizedBox(height: 14),
 
                 // ── 5. Other Information ─────────────────────────────────────
                 _buildOtherCard(),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
               ]),
             ),
           ),
@@ -901,7 +902,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
             backgroundColor: AppColors.primary.withValues(alpha: 0.1),
             backgroundImage: _profileImage != null ? FileImage(_profileImage!) : null,
             child: _profileImage == null
-                ? const Icon(Icons.person, size: 46, color: AppColors.primary)
+                ? Icon(Icons.person, size: 46, color: AppColors.primary)
                 : null,
           ),
           Positioned(
@@ -909,21 +910,21 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
             child: GestureDetector(
               onTap: _showPhotoOptions,
               child: Container(
-                padding: const EdgeInsets.all(5),
-                decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
-                child: const Icon(Icons.camera_alt, color: Colors.white, size: 14),
+                padding: EdgeInsets.all(5),
+                decoration: BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
+                child: Icon(Icons.camera_alt, color: Colors.white, size: 14),
               ),
             ),
           ),
         ]),
-        const SizedBox(width: 14),
+        SizedBox(width: 14),
 
         // Name + class + details
         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(name.isEmpty ? 'Student Name' : name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: name.isEmpty ? Colors.grey.shade400 : const Color(0xFF1A1A1A))),
-              const SizedBox(height: 3),
+              Text(name.isEmpty ? 'Student Name' : name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: name.isEmpty ? Colors.grey.shade400 : Color(0xFF1A1A1A))),
+              SizedBox(height: 3),
               Text(
                 classSection.isEmpty ? 'Class & Section' : classSection,
                 style: TextStyle(fontSize: 13, color: classSection.isEmpty ? Colors.grey.shade400 : AppColors.primary, fontWeight: FontWeight.w600),
@@ -931,15 +932,15 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
             ])),
             TextButton.icon(
               onPressed: _openEditProfile,
-              icon: const Icon(Icons.edit, size: 14),
-              label: const Text('Edit Profile', style: TextStyle(fontSize: 12)),
+              icon: Icon(Icons.edit, size: 14),
+              label: Text('Edit Profile'.tr, style: TextStyle(fontSize: 12)),
               style: TextButton.styleFrom(
                 foregroundColor: AppColors.primary,
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                padding: EdgeInsets.symmetric(horizontal: 6, vertical: 4),
               ),
             ),
           ]),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           _detailLine(Icons.badge_outlined, 'Student ID', studentId),
           _detailLine(Icons.phone_outlined, 'Mobile Number', mobile.isEmpty ? '' : '$countryCode ${_formatMobile(mobile)}'),
           _detailLine(Icons.email_outlined, 'Email Address', email),
@@ -958,17 +959,17 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
   Widget _detailLine(IconData icon, String label, String value) {
     final bool isEmpty = value.trim().isEmpty;
     final displayValue = isEmpty ? label : value;
-    final color = isEmpty ? Colors.grey.shade400 : const Color(0xFF1A1A1A);
+    final color = isEmpty ? Colors.grey.shade400 : Color(0xFF1A1A1A);
     final fw = isEmpty ? FontWeight.normal : FontWeight.w600;
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 5),
+      padding: EdgeInsets.only(bottom: 5),
       child: Row(children: [
         Icon(icon, size: 14, color: Colors.grey.shade400),
-        const SizedBox(width: 6),
+        SizedBox(width: 6),
         SizedBox(
           width: 90,
-          child: Text(label, style: const TextStyle(fontSize: 11, color: Color(0xFF1A1A1A))),
+          child: Text(label, style: TextStyle(fontSize: 11, color: Color(0xFF1A1A1A))),
         ),
         Expanded(child: Text(displayValue, style: TextStyle(fontSize: 12, fontWeight: fw, color: color), overflow: TextOverflow.ellipsis)),
       ]),
@@ -993,14 +994,14 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
   Widget _statCell(IconData icon, String label, String val, {bool small = false}) {
     final bool isEmpty = val.trim().isEmpty;
     final displayValue = isEmpty ? label : val;
-    final color = isEmpty ? Colors.grey.shade400 : const Color(0xFF1A1A1A);
+    final color = isEmpty ? Colors.grey.shade400 : Color(0xFF1A1A1A);
     final fw = isEmpty ? FontWeight.normal : FontWeight.bold;
 
     return Expanded(child: Column(children: [
       Icon(icon, color: AppColors.primary, size: 20),
-      const SizedBox(height: 4),
+      SizedBox(height: 4),
       Text(label, style: TextStyle(fontSize: 9, color: Colors.grey.shade500), textAlign: TextAlign.center),
-      const SizedBox(height: 2),
+      SizedBox(height: 2),
       Text(displayValue, style: TextStyle(fontSize: small ? 9 : 11, fontWeight: fw, color: color), textAlign: TextAlign.center, maxLines: 2, overflow: TextOverflow.ellipsis),
     ]));
   }
@@ -1040,19 +1041,19 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
       onEdit: _openParentEdit,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         // Father
-        const Text('Father', style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold, fontSize: 12)),
-        const SizedBox(height: 4),
-        Text(fatherName.isEmpty ? 'Father Name' : fatherName, style: TextStyle(fontWeight: fatherName.isEmpty ? FontWeight.normal : FontWeight.bold, fontSize: 13, color: fatherName.isEmpty ? Colors.grey.shade400 : const Color(0xFF1A1A1A))),
-        const SizedBox(height: 4),
+        Text('Father'.tr, style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold, fontSize: 12)),
+        SizedBox(height: 4),
+        Text(fatherName.isEmpty ? 'Father Name' : fatherName, style: TextStyle(fontWeight: fatherName.isEmpty ? FontWeight.normal : FontWeight.bold, fontSize: 13, color: fatherName.isEmpty ? Colors.grey.shade400 : Color(0xFF1A1A1A))),
+        SizedBox(height: 4),
         _contactLine(Icons.phone, fatherPhone),
         _contactLine(Icons.email, fatherEmail),
         _occupationRow('Occupation', fatherOccupation),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         // Mother
-        const Text('Mother', style: TextStyle(color: Color(0xFFE91E8C), fontWeight: FontWeight.bold, fontSize: 12)),
-        const SizedBox(height: 4),
-        Text(motherName.isEmpty ? 'Mother Name' : motherName, style: TextStyle(fontWeight: motherName.isEmpty ? FontWeight.normal : FontWeight.bold, fontSize: 13, color: motherName.isEmpty ? Colors.grey.shade400 : const Color(0xFF1A1A1A))),
-        const SizedBox(height: 4),
+        Text('Mother'.tr, style: TextStyle(color: Color(0xFFE91E8C), fontWeight: FontWeight.bold, fontSize: 12)),
+        SizedBox(height: 4),
+        Text(motherName.isEmpty ? 'Mother Name' : motherName, style: TextStyle(fontWeight: motherName.isEmpty ? FontWeight.normal : FontWeight.bold, fontSize: 13, color: motherName.isEmpty ? Colors.grey.shade400 : Color(0xFF1A1A1A))),
+        SizedBox(height: 4),
         _contactLine(Icons.phone, motherPhone),
         _contactLine(Icons.email, motherEmail),
         _occupationRow('Occupation', motherOccupation),
@@ -1063,13 +1064,13 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
   Widget _contactLine(IconData icon, String val) {
     final bool isEmpty = val.trim().isEmpty;
     final displayValue = isEmpty ? 'Not provided' : val;
-    final color = isEmpty ? Colors.grey.shade400 : const Color(0xFF1A1A1A);
+    final color = isEmpty ? Colors.grey.shade400 : Color(0xFF1A1A1A);
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 3),
+      padding: EdgeInsets.only(bottom: 3),
       child: Row(children: [
         Icon(icon, size: 12, color: Colors.grey.shade500),
-        const SizedBox(width: 6),
+        SizedBox(width: 6),
         Expanded(child: Text(displayValue, style: TextStyle(fontSize: 11, color: color), overflow: TextOverflow.ellipsis)),
       ]),
     );
@@ -1078,11 +1079,11 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
   Widget _occupationRow(String label, String val) {
     final bool isEmpty = val.trim().isEmpty;
     final displayValue = isEmpty ? label : val;
-    final color = isEmpty ? Colors.grey.shade400 : const Color(0xFF1A1A1A);
+    final color = isEmpty ? Colors.grey.shade400 : Color(0xFF1A1A1A);
     final fw = isEmpty ? FontWeight.normal : FontWeight.w600;
 
     return Row(children: [
-      Text('$label  ', style: const TextStyle(fontSize: 11, color: Color(0xFF1A1A1A))),
+      Text('$label  ', style: TextStyle(fontSize: 11, color: Color(0xFF1A1A1A))),
       Expanded(child: Text(displayValue, style: TextStyle(fontSize: 11, fontWeight: fw, color: color), overflow: TextOverflow.ellipsis)),
     ]);
   }
@@ -1168,7 +1169,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
               _row2('Nationality', nationality),
               _row2('Caste Category', casteCategory),
             ])),
-            const SizedBox(width: 16),
+            SizedBox(width: 16),
             Expanded(child: Column(children: [
               _row2('Religion', religion),
               _row2('Languages Known', languagesKnown),
@@ -1194,13 +1195,13 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
   Widget _row2(String label, String value) {
     final bool isEmpty = value.trim().isEmpty;
     final displayValue = isEmpty ? label : value;
-    final color = isEmpty ? Colors.grey.shade400 : const Color(0xFF1A1A1A);
+    final color = isEmpty ? Colors.grey.shade400 : Color(0xFF1A1A1A);
     final fw = isEmpty ? FontWeight.normal : FontWeight.w600;
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+      padding: EdgeInsets.only(bottom: 8),
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Expanded(flex: 5, child: Text(label, style: const TextStyle(fontSize: 11, color: Color(0xFF1A1A1A)))),
+        Expanded(flex: 5, child: Text(label, style: TextStyle(fontSize: 11, color: Color(0xFF1A1A1A)))),
         Expanded(flex: 5, child: Text(displayValue, style: TextStyle(fontSize: 11, fontWeight: fw, color: color), textAlign: TextAlign.right)),
       ]),
     );
@@ -1214,7 +1215,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 3))],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: Offset(0, 3))],
       ),
       child: child,
     );
@@ -1229,26 +1230,26 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
     VoidCallback? onEdit,
   }) {
     return _card(
-      padding: const EdgeInsets.all(14),
+      padding: EdgeInsets.all(14),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         // Header
         Row(children: [
           Container(
-            padding: const EdgeInsets.all(6),
+            padding: EdgeInsets.all(6),
             decoration: BoxDecoration(color: iconColor.withValues(alpha: 0.12), shape: BoxShape.circle),
             child: Icon(icon, color: iconColor, size: 16),
           ),
-          const SizedBox(width: 8),
-          Expanded(child: Text(title, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold))),
+          SizedBox(width: 8),
+          Expanded(child: Text(title, style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold))),
           if (onEdit != null)
             GestureDetector(
               onTap: onEdit,
               child: Icon(Icons.chevron_right, color: Colors.grey.shade400, size: 22),
             ),
         ]),
-        const SizedBox(height: 10),
-        const Divider(height: 1),
-        const SizedBox(height: 10),
+        SizedBox(height: 10),
+        Divider(height: 1),
+        SizedBox(height: 10),
         child,
       ]),
     );

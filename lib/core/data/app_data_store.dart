@@ -21,6 +21,7 @@ class AppDataStore {
       'phone': '9876543210',
       'gender': 'Male',
       'school': 'Ecstasy School 1',
+      'hasIdCard': true,
     },
     {
       'name': 'Priya Patel',
@@ -33,6 +34,7 @@ class AppDataStore {
       'phone': '9876543211',
       'gender': 'Female',
       'school': 'Ecstasy School 1',
+      'hasIdCard': false,
     },
     {
       'name': 'Rohan Gupta',
@@ -45,6 +47,7 @@ class AppDataStore {
       'phone': '9876543212',
       'gender': 'Male',
       'school': 'Ecstasy School 1',
+      'hasIdCard': true,
     },
     {
       'name': 'Ananya Singh',
@@ -57,6 +60,7 @@ class AppDataStore {
       'phone': '9876543213',
       'gender': 'Female',
       'school': 'Ecstasy School 1',
+      'hasIdCard': true,
     },
     {
       'name': 'Vikram Reddy',
@@ -69,6 +73,7 @@ class AppDataStore {
       'phone': '9876543214',
       'gender': 'Male',
       'school': 'Ecstasy School 1',
+      'hasIdCard': false,
     },
     {
       'name': 'Sneha Joshi',
@@ -81,6 +86,7 @@ class AppDataStore {
       'phone': '9876543215',
       'gender': 'Female',
       'school': 'Ecstasy School 1',
+      'hasIdCard': true,
     },
     {
       'name': 'Arjun Nair',
@@ -729,6 +735,12 @@ class AppDataStore {
     final admission = student['admission'];
     student['password'] ??= (admission is String ? admission : 'ECS00000');
     students.insert(0, student);
+    notifyConfigChange();
+  }
+
+  void updateStudent(int index, Map<String, dynamic> student) {
+    students[index] = student;
+    notifyConfigChange();
   }
 
   void addTeacher(Map<String, dynamic> teacher) {
@@ -935,7 +947,14 @@ class AppDataStore {
 
   // ─── Config Change Notifier ─────────────────────────────────────────────────
   /// Increment this whenever ANY config data changes.
-  /// Screens can listen via ValueListenableBuilder to stay reactive.
+  // ─── Settings ───────────────────────────────────────────────────────────
+  bool showIdCardPhoto = true;
+  void toggleIdCardPhoto(bool value) {
+    showIdCardPhoto = value;
+    notifyConfigChange();
+  }
+
+  // ─── Utilities ────────────────────────────────────────────────────────────
   final ValueNotifier<int> configVersion = ValueNotifier<int>(0);
   void notifyConfigChange() => configVersion.value++;
 

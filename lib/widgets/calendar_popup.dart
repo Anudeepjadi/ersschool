@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 // Mock events shared across the popup
 final Map<String, List<Map<String, String>>> schoolEvents = {
@@ -89,12 +90,12 @@ class _CalendarPopupState extends State<_CalendarPopup> {
     DateTime temp = firstToDisplay;
     while (!temp.isAfter(lastToDisplay)) {
       list.add(temp);
-      temp = temp.add(const Duration(days: 1));
+      temp = temp.add(Duration(days: 1));
     }
     return list;
   }
 
-  String _monthName(int m) => const [
+  String _monthName(int m) => [
         "", "Jan", "Feb", "Mar", "Apr", "May", "Jun",
         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
       ][m];
@@ -125,7 +126,7 @@ class _CalendarPopupState extends State<_CalendarPopup> {
 
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 40),
+      insetPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 40),
       clipBehavior: Clip.hardEdge,
       child: SizedBox(
         width: double.infinity,
@@ -134,8 +135,8 @@ class _CalendarPopupState extends State<_CalendarPopup> {
           children: [
             // ─── Header ──────────────────────────────────────────────
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              decoration: const BoxDecoration(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [AppColors.primary, AppColors.secondary],
                   begin: Alignment.topLeft,
@@ -144,20 +145,19 @@ class _CalendarPopupState extends State<_CalendarPopup> {
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.calendar_month, color: Colors.white, size: 22),
-                  const SizedBox(width: 8),
-                  const Text(
-                    "School Calendar",
+                  Icon(Icons.calendar_month, color: Colors.white, size: 22),
+                  SizedBox(width: 8),
+                  Text("School Calendar".tr,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const Spacer(),
+                  Spacer(),
                   GestureDetector(
                     onTap: () => Navigator.pop(context),
-                    child: const Icon(Icons.close, color: Colors.white, size: 22),
+                    child: Icon(Icons.close, color: Colors.white, size: 22),
                   ),
                 ],
               ),
@@ -165,18 +165,18 @@ class _CalendarPopupState extends State<_CalendarPopup> {
 
             Flexible(
               child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
+                physics: BouncingScrollPhysics(),
                 child: Column(
                   children: [
                     // ─── Month navigator ───────────────────────────────
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 16, 20, 4),
+                      padding: EdgeInsets.fromLTRB(20, 16, 20, 4),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             "${_monthName(_currentMonth.month)} ${_currentMonth.year}",
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                               color: Color(0xFF1E2875),
@@ -188,7 +188,7 @@ class _CalendarPopupState extends State<_CalendarPopup> {
                                 icon: Icons.chevron_left,
                                 onTap: _prevMonth,
                               ),
-                              const SizedBox(width: 4),
+                              SizedBox(width: 4),
                               _NavBtn(
                                 icon: Icons.chevron_right,
                                 onTap: _nextMonth,
@@ -201,7 +201,7 @@ class _CalendarPopupState extends State<_CalendarPopup> {
 
                     // ─── Weekday labels ────────────────────────────────
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      padding: EdgeInsets.symmetric(horizontal: 12),
                       child: Row(
                         children: ["M", "T", "W", "T", "F", "S", "S"]
                             .map((d) => Expanded(
@@ -219,17 +219,17 @@ class _CalendarPopupState extends State<_CalendarPopup> {
                             .toList(),
                       ),
                     ),
-                    const SizedBox(height: 6),
+                    SizedBox(height: 6),
 
                     // ─── Calendar Grid ────────────────────────────────
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      padding: EdgeInsets.symmetric(horizontal: 12),
                       child: GridView.builder(
                         shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
+                        physics: NeverScrollableScrollPhysics(),
                         itemCount: days.length,
                         gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
+                            SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 7,
                           mainAxisSpacing: 6,
                           crossAxisSpacing: 4,
@@ -254,12 +254,12 @@ class _CalendarPopupState extends State<_CalendarPopup> {
                               });
                             },
                             child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 180),
+                              duration: Duration(milliseconds: 180),
                               decoration: BoxDecoration(
                                 color: isSelected
                                     ? AppColors.primary
                                     : hasEvents
-                                        ? const Color(0xFFE8ECFF)
+                                        ? Color(0xFFE8ECFF)
                                         : Colors.transparent,
                                 borderRadius: BorderRadius.circular(10),
                               ),
@@ -276,7 +276,7 @@ class _CalendarPopupState extends State<_CalendarPopup> {
                                       color: isSelected
                                           ? Colors.white
                                           : isCurrentMonth
-                                              ? const Color(0xFF1E2875)
+                                              ? Color(0xFF1E2875)
                                               : Colors.grey.shade400,
                                     ),
                                   ),
@@ -286,7 +286,7 @@ class _CalendarPopupState extends State<_CalendarPopup> {
                                       child: Container(
                                         width: 5,
                                         height: 5,
-                                        decoration: const BoxDecoration(
+                                        decoration: BoxDecoration(
                                           color: AppColors.primary,
                                           shape: BoxShape.circle,
                                         ),
@@ -300,24 +300,24 @@ class _CalendarPopupState extends State<_CalendarPopup> {
                       ),
                     ),
 
-                    const Divider(height: 24, indent: 20, endIndent: 20),
+                    Divider(height: 24, indent: 20, endIndent: 20),
 
                     // ─── Events for selected day ──────────────────────
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      padding: EdgeInsets.symmetric(horizontal: 20),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             "${_monthName(_selectedDate.month)} ${_selectedDate.day} Events",
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
                               color: Color(0xFF1E2875),
                             ),
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(
+                            padding: EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 4),
                             decoration: BoxDecoration(
                               color: AppColors.primary.withValues(alpha: 0.1),
@@ -325,7 +325,7 @@ class _CalendarPopupState extends State<_CalendarPopup> {
                             ),
                             child: Text(
                               "${selectedEvents.length} event(s)",
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 11,
                                 color: AppColors.primary,
                                 fontWeight: FontWeight.bold,
@@ -335,18 +335,17 @@ class _CalendarPopupState extends State<_CalendarPopup> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
 
                     if (selectedEvents.isEmpty)
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+                        padding: EdgeInsets.fromLTRB(20, 0, 20, 24),
                         child: Row(
                           children: [
                             Icon(Icons.event_busy,
                                 color: Colors.grey.shade400, size: 18),
-                            const SizedBox(width: 8),
-                            Text(
-                              "No events scheduled for this day.",
+                            SizedBox(width: 8),
+                            Text("No events scheduled for this day.".tr,
                               style: TextStyle(
                                   color: Colors.grey.shade500, fontSize: 13),
                             ),
@@ -357,21 +356,21 @@ class _CalendarPopupState extends State<_CalendarPopup> {
                       ...selectedEvents.map((ev) {
                         final tc = _typeColor(ev["type"] ?? "");
                         return Container(
-                          margin: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+                          margin: EdgeInsets.fromLTRB(20, 0, 20, 12),
                           decoration: BoxDecoration(
                             color: tc.withValues(alpha: 0.05),
                             borderRadius: BorderRadius.circular(14),
                             border: Border.all(
                                 color: tc.withValues(alpha: 0.25), width: 1),
                           ),
-                          padding: const EdgeInsets.all(14),
+                          padding: EdgeInsets.all(14),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
                                 children: [
                                   Container(
-                                    padding: const EdgeInsets.symmetric(
+                                    padding: EdgeInsets.symmetric(
                                         horizontal: 8, vertical: 3),
                                     decoration: BoxDecoration(
                                       color: tc.withValues(alpha: 0.12),
@@ -385,10 +384,10 @@ class _CalendarPopupState extends State<_CalendarPopup> {
                                           fontWeight: FontWeight.bold),
                                     ),
                                   ),
-                                  const Spacer(),
+                                  Spacer(),
                                   Icon(Icons.access_time,
                                       size: 12, color: Colors.grey.shade500),
-                                  const SizedBox(width: 3),
+                                  SizedBox(width: 3),
                                   Text(
                                     ev["time"] ?? "",
                                     style: TextStyle(
@@ -398,17 +397,17 @@ class _CalendarPopupState extends State<_CalendarPopup> {
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 8),
+                              SizedBox(height: 8),
                               Text(
                                 ev["title"] ?? "",
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold,
                                   color: Color(0xFF1E2875),
                                 ),
                               ),
                               if ((ev["desc"] ?? "").isNotEmpty) ...[
-                                const SizedBox(height: 4),
+                                SizedBox(height: 4),
                                 Text(
                                   ev["desc"]!,
                                   style: TextStyle(
@@ -418,13 +417,13 @@ class _CalendarPopupState extends State<_CalendarPopup> {
                                 ),
                               ],
                               if ((ev["location"] ?? "").isNotEmpty) ...[
-                                const SizedBox(height: 8),
+                                SizedBox(height: 8),
                                 Row(
                                   children: [
                                     Icon(Icons.location_on_outlined,
                                         size: 13,
                                         color: Colors.grey.shade500),
-                                    const SizedBox(width: 4),
+                                    SizedBox(width: 4),
                                     Text(
                                       ev["location"]!,
                                       style: TextStyle(
@@ -440,7 +439,7 @@ class _CalendarPopupState extends State<_CalendarPopup> {
                         );
                       }),
 
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                   ],
                 ),
               ),
@@ -462,7 +461,7 @@ class _NavBtn extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(6),
+        padding: EdgeInsets.all(6),
         decoration: BoxDecoration(
           color: AppColors.primary.withValues(alpha: 0.08),
           borderRadius: BorderRadius.circular(8),

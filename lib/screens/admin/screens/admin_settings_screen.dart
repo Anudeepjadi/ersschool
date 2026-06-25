@@ -9,9 +9,10 @@ import 'admin_fee_types_screen.dart';
 import 'admin_fee_structure_screen.dart';
 import 'admin_active_list_screen.dart';
 import 'admin_class_subjects_mapping_screen.dart';
+import '../../../core/localization/language_manager.dart';
 
 class AdminSettingsScreen extends StatefulWidget {
-  const AdminSettingsScreen({super.key});
+  AdminSettingsScreen({super.key});
 
   @override
   State<AdminSettingsScreen> createState() => _AdminSettingsScreenState();
@@ -19,90 +20,95 @@ class AdminSettingsScreen extends StatefulWidget {
 
 class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
   final _store = AppDataStore.instance;
+  bool _notificationsEnabled = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FF),
-      appBar: const AdminAppBar(
+      backgroundColor: Color(0xFFF5F7FF),
+      appBar: AdminAppBar(
           title: "Settings", subtitle: "Configure your school system"),
-      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
+      bottomNavigationBar: AdminBottomNavBar(currentIndex: 4),
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(16),
+        physics: BouncingScrollPhysics(),
+        padding: EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _section("GENERAL SETTINGS", [
-              _item("Holidays", Icons.beach_access_outlined, Colors.red,
-                  () => _push(const AdminHolidaysScreen())),
-              _item("Branch", Icons.apartment_outlined, Colors.blue,
-                  () => _push(const AdminBranchListScreen())),
-              _item("Academic Year", Icons.calendar_today_outlined, Colors.green,
-                  () => _push(const AdminAcademicYearsScreen())),
+            _section("GENERAL SETTINGS".tr, [
+              _item("Language".tr, Icons.language_outlined, Colors.purple, () => _showLanguageDialog()),
+              _switchItem("Notifications".tr, Icons.notifications_outlined, Colors.amber, _notificationsEnabled, (v) {
+                setState(() => _notificationsEnabled = v);
+              }),
+              _item("Holidays".tr, Icons.beach_access_outlined, Colors.red,
+                  () => _push(AdminHolidaysScreen())),
+              _item("Branch".tr, Icons.apartment_outlined, Colors.blue,
+                  () => _push(AdminBranchListScreen())),
+              _item("Academic Year".tr, Icons.calendar_today_outlined, Colors.green,
+                  () => _push(AdminAcademicYearsScreen())),
             ]),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             _section("FEE CONFIGURATION", [
               _item("Fee Types", Icons.payments_outlined, Colors.orange,
-                  () => _push(const AdminFeeTypesScreen())),
+                  () => _push(AdminFeeTypesScreen())),
               _item("Fee Structure for Class", Icons.table_chart_outlined, Colors.purple,
-                  () => _push(const AdminFeeStructureScreen())),
+                  () => _push(AdminFeeStructureScreen())),
               _item("Payment Types", Icons.account_balance_wallet_outlined, Colors.teal,
                   () => _push(AdminActiveListScreen(
                     title: 'Payment Types',
                     columnLabel: 'Payment Type',
-                    accentColor: const Color(0xFF0D9488),
+                    accentColor: Color(0xFF0D9488),
                     dataSource: _store.paymentTypes,
                   ))),
             ]),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             _section("ACADEMIC CONFIGURATION", [
               _item("Study Class", Icons.school_outlined, Colors.indigo,
                   () => _push(AdminActiveListScreen(
                     title: 'Study Classes',
                     columnLabel: 'Student Class',
-                    accentColor: const Color(0xFF4F46E5),
+                    accentColor: Color(0xFF4F46E5),
                     dataSource: _store.studyClasses,
                   ))),
               _item("Class Section", Icons.grid_view_outlined, Colors.blueGrey,
                   () => _push(AdminActiveListScreen(
                     title: 'Class Sections',
                     columnLabel: 'Section Name',
-                    accentColor: const Color(0xFF475569),
+                    accentColor: Color(0xFF475569),
                     dataSource: _store.classSections,
                   ))),
               _item("Subjects", Icons.book_outlined, Colors.brown,
                   () => _push(AdminActiveListScreen(
                     title: 'Subjects',
                     columnLabel: 'Subject Name',
-                    accentColor: const Color(0xFF92400E),
+                    accentColor: Color(0xFF92400E),
                     dataSource: _store.subjects,
                   ))),
               _item("Class Subjects Mapping", Icons.assignment_ind_outlined, Colors.cyan,
-                  () => _push(const AdminClassSubjectsMappingScreen())),
+                  () => _push(AdminClassSubjectsMappingScreen())),
               _item("Exam Type", Icons.quiz_outlined, Colors.deepOrange,
                   () => _push(AdminActiveListScreen(
                     title: 'Exam Types',
                     columnLabel: 'Exam Type',
-                    accentColor: const Color(0xFFEA580C),
+                    accentColor: Color(0xFFEA580C),
                     dataSource: _store.examTypes,
                   ))),
               _item("Grade System", Icons.grading_outlined, Colors.deepPurple,
                   () => _push(AdminActiveListScreen(
                     title: 'Grade System',
                     columnLabel: 'Grade',
-                    accentColor: const Color(0xFF7C3AED),
+                    accentColor: Color(0xFF7C3AED),
                     dataSource: _store.gradeSystem,
                   ))),
               _item("Grade Report Design", Icons.design_services_outlined, Colors.pink,
                   () => _push(AdminActiveListScreen(
                     title: 'Grade Report Design',
                     columnLabel: 'Report Template',
-                    accentColor: const Color(0xFFDB2777),
+                    accentColor: Color(0xFFDB2777),
                     dataSource: _store.gradeReportDesigns,
                   ))),
             ]),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             _section("DATA & USERS", [
               _item("Export Data", Icons.file_download_outlined, Colors.green,
                   () => _showExportDialog()),
@@ -110,13 +116,13 @@ class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
                   () => _push(AdminActiveListScreen(
                     title: 'Student/Parent Users',
                     columnLabel: 'User Type',
-                    accentColor: const Color(0xFF2563EB),
+                    accentColor: Color(0xFF2563EB),
                     dataSource: _store.studentParentUsers,
                   ))),
               _item("Super Admin Settings", Icons.admin_panel_settings_outlined, Colors.redAccent,
                   () => _showSuperAdminDialog()),
             ]),
-            const SizedBox(height: 30),
+            SizedBox(height: 30),
           ],
         ),
       ),
@@ -131,7 +137,7 @@ class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Export Data',
+        title: Text('Export Data'.tr,
             style: TextStyle(
                 fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
         content: Column(mainAxisSize: MainAxisSize.min, children: [
@@ -144,7 +150,7 @@ class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Close')),
+              child: Text('Close'.tr)),
         ],
       ),
     );
@@ -153,14 +159,14 @@ class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
   Widget _exportOption(String label, IconData icon, Color color) {
     return ListTile(
       leading: Container(
-        padding: const EdgeInsets.all(6),
+        padding: EdgeInsets.all(6),
         decoration: BoxDecoration(
             color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8)),
         child: Icon(icon, color: color, size: 20),
       ),
-      title: Text(label, style: const TextStyle(fontSize: 13)),
-      trailing: const Icon(Icons.download, color: Colors.grey, size: 18),
+      title: Text(label, style: TextStyle(fontSize: 13)),
+      trailing: Icon(Icons.download, color: Colors.grey, size: 18),
       onTap: () {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
@@ -174,7 +180,7 @@ class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Super Admin Settings',
+        title: Text('Super Admin Settings'.tr,
             style: TextStyle(
                 fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
         content: Column(mainAxisSize: MainAxisSize.min, children: [
@@ -187,7 +193,7 @@ class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Close')),
+              child: Text('Close'.tr)),
         ],
       ),
     );
@@ -196,21 +202,29 @@ class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
   Widget _adminOption(String label, IconData icon) {
     return ListTile(
       leading: Icon(icon, color: Colors.redAccent, size: 22),
-      title: Text(label, style: const TextStyle(fontSize: 13)),
+      title: Text(label, style: TextStyle(fontSize: 13)),
       trailing:
-          const Icon(Icons.chevron_right, size: 16, color: Colors.grey),
+          Icon(Icons.chevron_right, size: 16, color: Colors.grey),
       onTap: () {},
     );
   }
 
-  Widget _section(String title, List<_SettingItem> items) {
+  Widget _section(String title, List<Widget> items) {
+    List<Widget> childrenWithDividers = [];
+    for (int i = 0; i < items.length; i++) {
+      childrenWithDividers.add(items[i]);
+      if (i < items.length - 1) {
+        childrenWithDividers.add(Divider(height: 1, color: Colors.grey.shade100, indent: 56));
+      }
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 8, bottom: 12),
+          padding: EdgeInsets.only(left: 8, bottom: 12),
           child: Text(title,
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.bold,
                   color: Colors.grey,
@@ -221,47 +235,67 @@ class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
               color: Colors.white,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(color: Colors.grey.shade100)),
-          child: ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: items.length,
-            separatorBuilder: (_, index) =>
-                Divider(height: 1, color: Colors.grey.shade100, indent: 56),
-            itemBuilder: (context, index) {
-              final item = items[index];
-              return ListTile(
-                leading: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                      color: item.color.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Icon(item.icon, color: item.color, size: 20),
-                ),
-                title: Text(item.title,
-                    style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF1E2875))),
-                trailing: const Icon(Icons.chevron_right,
-                    size: 18, color: Colors.grey),
-                onTap: item.onTap,
-              );
-            },
+          child: Column(
+            children: childrenWithDividers,
           ),
         ),
       ],
     );
   }
 
-  _SettingItem _item(
-          String title, IconData icon, Color color, VoidCallback onTap) =>
-      _SettingItem(title, icon, color, onTap);
-}
+  Widget _item(String title, IconData icon, Color color, VoidCallback onTap) {
+    return ListTile(
+      leading: Container(
+        padding: EdgeInsets.all(8),
+        decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(10)),
+        child: Icon(icon, color: color, size: 20),
+      ),
+      title: Text(title, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+      trailing: Icon(Icons.chevron_right, size: 18, color: Colors.grey),
+      onTap: onTap,
+    );
+  }
 
-class _SettingItem {
-  final String title;
-  final IconData icon;
-  final Color color;
-  final VoidCallback onTap;
-  _SettingItem(this.title, this.icon, this.color, this.onTap);
+  Widget _switchItem(String title, IconData icon, Color color, bool value, ValueChanged<bool> onChanged) {
+    return ListTile(
+      leading: Container(
+        padding: EdgeInsets.all(8),
+        decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(10)),
+        child: Icon(icon, color: color, size: 20),
+      ),
+      title: Text(title, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+      trailing: Switch(
+        value: value,
+        onChanged: onChanged,
+        activeColor: Color(0xFF1E2875),
+      ),
+    );
+  }
+
+  void _showLanguageDialog() {
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          title: Text('Language'.tr),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: ['English', 'Hindi', 'Telugu'].map((lang) {
+              return ListTile(
+                title: Text(lang.tr),
+                trailing: LanguageManager.instance.currentLanguage == lang
+                    ? Icon(Icons.check, color: Colors.green)
+                    : null,
+                onTap: () {
+                  LanguageManager.instance.changeLanguage(lang);
+                  Navigator.pop(ctx);
+                  setState(() {});
+                },
+              );
+            }).toList(),
+          ),
+        );
+      },
+    );
+  }
 }

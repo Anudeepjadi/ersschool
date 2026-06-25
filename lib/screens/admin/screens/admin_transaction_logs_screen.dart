@@ -1,9 +1,9 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../widgets/admin_app_bar.dart';
 
 class AdminTransactionLogsScreen extends StatefulWidget {
-  const AdminTransactionLogsScreen({super.key});
+  AdminTransactionLogsScreen({super.key});
 
   @override
   State<AdminTransactionLogsScreen> createState() => _AdminTransactionLogsScreenState();
@@ -81,8 +81,8 @@ class _AdminTransactionLogsScreenState extends State<AdminTransactionLogsScreen>
     }).toList();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FF),
-      appBar: const AdminAppBar(
+      backgroundColor: Color(0xFFF5F7FF),
+      appBar: AdminAppBar(
         title: "Transaction Logs",
         subtitle: "Audit log of UPI, cash, card, and net banking fee receipts",
         showSchoolSelector: false,
@@ -91,15 +91,15 @@ class _AdminTransactionLogsScreenState extends State<AdminTransactionLogsScreen>
         children: [
           // Search & Filters Header
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(16.0),
             child: TextField(
               onChanged: (v) => setState(() => _searchQuery = v),
               decoration: InputDecoration(
                 hintText: "Search by Student Name, Txn ID, Method...",
-                prefixIcon: const Icon(Icons.search, color: Color(0xFF757897)),
+                prefixIcon: Icon(Icons.search, color: Color(0xFF757897)),
                 fillColor: Colors.white,
                 filled: true,
-                contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                contentPadding: EdgeInsets.symmetric(vertical: 0),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
@@ -110,32 +110,32 @@ class _AdminTransactionLogsScreenState extends State<AdminTransactionLogsScreen>
 
           // Log entries count label
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   "All Transactions (${filteredLogs.length})",
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875)),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875)),
                 ),
-                const Icon(Icons.filter_list, color: AppColors.primary),
+                Icon(Icons.filter_list, color: AppColors.primary),
               ],
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
 
           // Scrollable log lists
           Expanded(
             child: ListView.separated(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(16),
               itemCount: filteredLogs.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 12),
+              separatorBuilder: (context, index) => SizedBox(height: 12),
               itemBuilder: (context, index) {
                 final log = filteredLogs[index];
                 final isSuccess = log['status'] == 'Success';
 
                 return Container(
-                  padding: const EdgeInsets.all(14),
+                  padding: EdgeInsets.all(14),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(16),
@@ -144,7 +144,7 @@ class _AdminTransactionLogsScreenState extends State<AdminTransactionLogsScreen>
                       BoxShadow(
                         color: Colors.grey.shade50,
                         blurRadius: 4,
-                        offset: const Offset(0, 2),
+                        offset: Offset(0, 2),
                       ),
                     ],
                   ),
@@ -158,17 +158,17 @@ class _AdminTransactionLogsScreenState extends State<AdminTransactionLogsScreen>
                             children: [
                               Text(
                                 log['txId'],
-                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875)),
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875)),
                               ),
-                              const SizedBox(height: 2),
+                              SizedBox(height: 2),
                               Text(
                                 "${log['date']} | ${log['time']}",
-                                style: const TextStyle(fontSize: 10, color: Colors.grey),
+                                style: TextStyle(fontSize: 10, color: Colors.grey),
                               ),
                             ],
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
                               color: isSuccess ? Colors.green.shade50 : Colors.red.shade50,
                               borderRadius: BorderRadius.circular(8),
@@ -184,9 +184,9 @@ class _AdminTransactionLogsScreenState extends State<AdminTransactionLogsScreen>
                           ),
                         ],
                       ),
-                      const SizedBox(height: 12),
-                      const Divider(height: 1),
-                      const SizedBox(height: 12),
+                      SizedBox(height: 12),
+                      Divider(height: 1),
+                      SizedBox(height: 12),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -195,11 +195,11 @@ class _AdminTransactionLogsScreenState extends State<AdminTransactionLogsScreen>
                             children: [
                               Text(
                                 log['name'],
-                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Color(0xFF1E2875)),
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Color(0xFF1E2875)),
                               ),
                               Text(
                                 log['school'],
-                                style: const TextStyle(fontSize: 10, color: Colors.grey),
+                                style: TextStyle(fontSize: 10, color: Colors.grey),
                               ),
                             ],
                           ),
@@ -208,11 +208,11 @@ class _AdminTransactionLogsScreenState extends State<AdminTransactionLogsScreen>
                             children: [
                               Text(
                                 log['amount'],
-                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF1E2875)),
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF1E2875)),
                               ),
                               Text(
                                 "${log['method']} | ${log['operator']}",
-                                style: const TextStyle(fontSize: 10, color: Colors.grey),
+                                style: TextStyle(fontSize: 10, color: Colors.grey),
                               ),
                             ],
                           ),

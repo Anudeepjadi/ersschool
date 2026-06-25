@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ersschool/core/theme/app_theme.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class DiaryScreen extends StatefulWidget {
   final bool showAppBar;
-  const DiaryScreen({super.key, this.showAppBar = true});
+  DiaryScreen({super.key, this.showAppBar = true});
 
   @override
   State<DiaryScreen> createState() => _DiaryScreenState();
@@ -148,17 +149,17 @@ class _DiaryScreenState extends State<DiaryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: widget.showAppBar ? AppBar(
-        title: const Text('Diary'),
+        title: Text('Diary'.tr),
         backgroundColor: AppColors.primaryDark,
         foregroundColor: Colors.white,
         actions: [
           IconButton(
             onPressed: () {},
-            icon: const Icon(Icons.calendar_month_outlined),
+            icon: Icon(Icons.calendar_month_outlined),
           ),
           IconButton(
             onPressed: () {},
-            icon: const Icon(Icons.filter_list_outlined),
+            icon: Icon(Icons.filter_list_outlined),
           ),
         ],
       ) : null,
@@ -170,7 +171,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
           // Diary entries
           Expanded(
             child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               itemCount: diaryEntries.length,
               itemBuilder: (context, index) {
                 final dayEntry = diaryEntries[index];
@@ -185,7 +186,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
 
   Widget _buildDateSelector() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       color: Colors.white,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -194,22 +195,21 @@ class _DiaryScreenState extends State<DiaryScreen> {
             onPressed: () {},
             icon: Icon(Icons.chevron_left, color: AppColors.textSecondary),
             padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(),
+            constraints: BoxConstraints(),
           ),
           Row(
             children: [
               Icon(Icons.calendar_today_outlined,
                   size: 16, color: AppColors.primary),
-              const SizedBox(width: 8),
-              Text(
-                'Wednesday, 17 Jun 2026',
+              SizedBox(width: 8),
+              Text('Wednesday, 17 Jun 2026'.tr,
                 style: GoogleFonts.poppins(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: AppColors.textPrimary,
                 ),
               ),
-              const SizedBox(width: 4),
+              SizedBox(width: 4),
               Icon(Icons.keyboard_arrow_down,
                   size: 20, color: AppColors.textSecondary),
             ],
@@ -218,7 +218,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
             onPressed: () {},
             icon: Icon(Icons.chevron_right, color: AppColors.textSecondary),
             padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(),
+            constraints: BoxConstraints(),
           ),
         ],
       ),
@@ -232,8 +232,8 @@ class _DiaryScreenState extends State<DiaryScreen> {
       children: [
         // Date header
         Container(
-          margin: const EdgeInsets.only(top: 12, bottom: 10),
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          margin: EdgeInsets.only(top: 12, bottom: 10),
+          padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
@@ -246,7 +246,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
           child: Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(6),
+                padding: EdgeInsets.all(6),
                 decoration: BoxDecoration(
                   color: AppColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(6),
@@ -254,7 +254,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
                 child: Icon(Icons.calendar_today_outlined,
                     size: 14, color: AppColors.primary),
               ),
-              const SizedBox(width: 10),
+              SizedBox(width: 10),
               Text(
                 '${dayEntry['day']}, ${dayEntry['date']}',
                 style: GoogleFonts.poppins(
@@ -263,9 +263,9 @@ class _DiaryScreenState extends State<DiaryScreen> {
                   color: AppColors.primary,
                 ),
               ),
-              const Spacer(),
+              Spacer(),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   color: AppColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),
@@ -286,7 +286,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
         ...List.generate(entries.length, (i) {
           return _buildDiaryCard(entries[i], isLast: i == entries.length - 1);
         }),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
       ],
     );
   }
@@ -330,8 +330,8 @@ class _DiaryScreenState extends State<DiaryScreen> {
           // Card
           Expanded(
             child: Container(
-              margin: const EdgeInsets.only(bottom: 12),
-              padding: const EdgeInsets.all(14),
+              margin: EdgeInsets.only(bottom: 12),
+              padding: EdgeInsets.all(14),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(14),
@@ -339,7 +339,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.04),
                     blurRadius: 8,
-                    offset: const Offset(0, 2),
+                    offset: Offset(0, 2),
                   ),
                 ],
                 border: Border(
@@ -361,7 +361,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
                         ),
                         child: Icon(entry['icon'], size: 18, color: color),
                       ),
-                      const SizedBox(width: 10),
+                      SizedBox(width: 10),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -378,7 +378,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
                               children: [
                                 Icon(Icons.person_outline,
                                     size: 12, color: AppColors.textSecondary),
-                                const SizedBox(width: 3),
+                                SizedBox(width: 3),
                                 Expanded(
                                   child: Text(
                                     entry['teacher'],
@@ -389,10 +389,10 @@ class _DiaryScreenState extends State<DiaryScreen> {
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
-                                const SizedBox(width: 8),
+                                SizedBox(width: 8),
                                 Icon(Icons.access_time_outlined,
                                     size: 12, color: AppColors.textSecondary),
-                                const SizedBox(width: 3),
+                                SizedBox(width: 3),
                                 Text(
                                   entry['period'],
                                   style: GoogleFonts.poppins(
@@ -407,7 +407,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
                       ),
                       // Type badge
                       Container(
-                        padding: const EdgeInsets.symmetric(
+                        padding: EdgeInsets.symmetric(
                             horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: color.withValues(alpha: 0.1),
@@ -417,7 +417,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(entry['typeIcon'], size: 12, color: color),
-                            const SizedBox(width: 4),
+                            SizedBox(width: 4),
                             Text(
                               entry['type'],
                               style: GoogleFonts.poppins(
@@ -431,12 +431,12 @@ class _DiaryScreenState extends State<DiaryScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10),
                   // Title
                   Row(
                     children: [
                       Icon(Icons.bookmark_outline, size: 14, color: color),
-                      const SizedBox(width: 6),
+                      SizedBox(width: 6),
                       Expanded(
                         child: Text(
                           entry['title'],
@@ -449,10 +449,10 @@ class _DiaryScreenState extends State<DiaryScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 6),
+                  SizedBox(height: 6),
                   // Description
                   Padding(
-                    padding: const EdgeInsets.only(left: 20),
+                    padding: EdgeInsets.only(left: 20),
                     child: Text(
                       entry['description'],
                       style: GoogleFonts.poppins(

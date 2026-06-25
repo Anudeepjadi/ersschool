@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
 import '../../../core/data/app_data_store.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminFeeStructureScreen extends StatefulWidget {
-  const AdminFeeStructureScreen({super.key});
+  AdminFeeStructureScreen({super.key});
   @override
   State<AdminFeeStructureScreen> createState() =>
       _AdminFeeStructureScreenState();
@@ -92,7 +93,7 @@ class _AdminFeeStructureScreenState extends State<AdminFeeStructureScreen> {
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Text(
           editIndex != null ? 'Edit Fee Structure' : 'Add Fee Structure',
-          style: const TextStyle(
+          style: TextStyle(
               fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
         ),
         content: Column(mainAxisSize: MainAxisSize.min, children: [
@@ -105,7 +106,7 @@ class _AdminFeeStructureScreenState extends State<AdminFeeStructureScreen> {
                   borderRadius: BorderRadius.circular(10)),
             ),
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           TextField(
             controller: amtCtrl,
             keyboardType: TextInputType.number,
@@ -119,10 +120,10 @@ class _AdminFeeStructureScreenState extends State<AdminFeeStructureScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Cancel')),
+              child: Text('Cancel'.tr)),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF16A34A),
+                backgroundColor: Color(0xFF16A34A),
                 foregroundColor: Colors.white),
             onPressed: () {
               final amt = double.tryParse(amtCtrl.text) ?? 0;
@@ -144,7 +145,7 @@ class _AdminFeeStructureScreenState extends State<AdminFeeStructureScreen> {
                 content: Text(editIndex != null
                     ? 'Fee structure updated'
                     : 'Fee structure added'),
-                backgroundColor: const Color(0xFF16A34A),
+                backgroundColor: Color(0xFF16A34A),
                 behavior: SnackBarBehavior.floating,
               ));
             },
@@ -162,14 +163,14 @@ class _AdminFeeStructureScreenState extends State<AdminFeeStructureScreen> {
       builder: (ctx) => AlertDialog(
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Delete Entry',
+        title: Text('Delete Entry'.tr,
             style:
                 TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
-        content: const Text('Are you sure?'),
+        content: Text('Are you sure?'.tr),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Cancel')),
+              child: Text('Cancel'.tr)),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red, foregroundColor: Colors.white),
@@ -180,7 +181,7 @@ class _AdminFeeStructureScreenState extends State<AdminFeeStructureScreen> {
               _loadFees();
               Navigator.pop(ctx);
             },
-            child: const Text('Delete'),
+            child: Text('Delete'.tr),
           ),
         ],
       ),
@@ -203,52 +204,52 @@ class _AdminFeeStructureScreenState extends State<AdminFeeStructureScreen> {
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FF),
-      appBar: const AdminAppBar(
+      backgroundColor: Color(0xFFF5F7FF),
+      appBar: AdminAppBar(
           title: 'Fee Structure', subtitle: 'Fee structure for each class'),
-      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
+      bottomNavigationBar: AdminBottomNavBar(currentIndex: 4),
       body: Column(children: [
         // Filter bar
         Container(
           color: Colors.white,
-          padding: const EdgeInsets.all(12),
+          padding: EdgeInsets.all(12),
           child: Column(children: [
             Row(children: [
               Expanded(child: _dd('Branch', _selectedBranch, branchList,
                   (v) => setState(() => _selectedBranch = v!))),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Expanded(child: _dd('Year', _selectedYear, yearList,
                   (v) => setState(() => _selectedYear = v!))),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Expanded(child: _dd('Class', _selectedClass, classList,
                   (v) => setState(() => _selectedClass = v!))),
             ]),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Row(mainAxisAlignment: MainAxisAlignment.end, children: [
               ElevatedButton(
                 onPressed: _loadFees,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFB45309),
+                  backgroundColor: Color(0xFFB45309),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8)),
-                  padding: const EdgeInsets.symmetric(
+                  padding: EdgeInsets.symmetric(
                       horizontal: 14, vertical: 10),
                 ),
-                child: const Text('Get Fee Details',
+                child: Text('Get Fee Details'.tr,
                     style: TextStyle(fontSize: 12)),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               ElevatedButton.icon(
                 onPressed: () => _showAddDialog(),
-                icon: const Icon(Icons.add, size: 14),
-                label: const Text('Add New', style: TextStyle(fontSize: 12)),
+                icon: Icon(Icons.add, size: 14),
+                label: Text('Add New'.tr, style: TextStyle(fontSize: 12)),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF16A34A),
+                  backgroundColor: Color(0xFF16A34A),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8)),
-                  padding: const EdgeInsets.symmetric(
+                  padding: EdgeInsets.symmetric(
                       horizontal: 14, vertical: 10),
                 ),
               ),
@@ -258,21 +259,21 @@ class _AdminFeeStructureScreenState extends State<AdminFeeStructureScreen> {
         // Table header
         Container(
           padding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          color: const Color(0xFF2D3748),
-          child: const Row(children: [
-            Expanded(flex: 2, child: Text('Branch', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
-            SizedBox(width: 56, child: Text('Year', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
-            SizedBox(width: 56, child: Text('Class', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
-            Expanded(flex: 2, child: Text('Fee Type', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
-            SizedBox(width: 60, child: Text('Amount', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
+              EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          color: Color(0xFF2D3748),
+          child: Row(children: [
+            Expanded(flex: 2, child: Text('Branch'.tr, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
+            SizedBox(width: 56, child: Text('Year'.tr, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
+            SizedBox(width: 56, child: Text('Class'.tr, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
+            Expanded(flex: 2, child: Text('Fee Type'.tr, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
+            SizedBox(width: 60, child: Text('Amount'.tr, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
             SizedBox(width: 68),
           ]),
         ),
         // Rows
         Expanded(
           child: !_loaded
-              ? const Center(child: CircularProgressIndicator())
+              ? Center(child: CircularProgressIndicator())
               : _feeRows.isEmpty
                   ? Center(
                       child: Column(
@@ -280,8 +281,8 @@ class _AdminFeeStructureScreenState extends State<AdminFeeStructureScreen> {
                         children: [
                           Icon(Icons.table_chart_outlined,
                               size: 48, color: Colors.grey.shade300),
-                          const SizedBox(height: 12),
-                          const Text(
+                          SizedBox(height: 12),
+                          Text(
                               'No fee structure for this selection.\nTap "Add New" to add one.',
                               textAlign: TextAlign.center,
                               style: TextStyle(color: Colors.grey)),
@@ -297,7 +298,7 @@ class _AdminFeeStructureScreenState extends State<AdminFeeStructureScreen> {
                         final row = _feeRows[i];
                         return Container(
                           color: Colors.white,
-                          padding: const EdgeInsets.symmetric(
+                          padding: EdgeInsets.symmetric(
                               horizontal: 16, vertical: 10),
                           child: Row(children: [
                             Expanded(
@@ -311,11 +312,11 @@ class _AdminFeeStructureScreenState extends State<AdminFeeStructureScreen> {
                             SizedBox(
                                 width: 56,
                                 child: Text(row['year'],
-                                    style: const TextStyle(fontSize: 11))),
+                                    style: TextStyle(fontSize: 11))),
                             SizedBox(
                               width: 56,
                               child: Text(row['class'],
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       fontSize: 11,
                                       color: Color(0xFFB45309),
                                       fontWeight: FontWeight.w600)),
@@ -323,14 +324,14 @@ class _AdminFeeStructureScreenState extends State<AdminFeeStructureScreen> {
                             Expanded(
                                 flex: 2,
                                 child: Text(row['feeType'],
-                                    style: const TextStyle(fontSize: 11),
+                                    style: TextStyle(fontSize: 11),
                                     maxLines: 2)),
                             SizedBox(
                               width: 60,
                               child: Text(
                                 (row['amount'] as double)
                                     .toStringAsFixed(0),
-                                style: const TextStyle(
+                                style: TextStyle(
                                     fontSize: 11,
                                     fontWeight: FontWeight.w500),
                               ),
@@ -341,14 +342,14 @@ class _AdminFeeStructureScreenState extends State<AdminFeeStructureScreen> {
                                 child: Container(
                                   width: 28,
                                   height: 28,
-                                  decoration: const BoxDecoration(
+                                  decoration: BoxDecoration(
                                       color: Color(0xFF2563EB),
                                       shape: BoxShape.circle),
-                                  child: const Icon(Icons.edit,
+                                  child: Icon(Icons.edit,
                                       color: Colors.white, size: 14),
                                 ),
                               ),
-                              const SizedBox(width: 4),
+                              SizedBox(width: 4),
                               InkWell(
                                 onTap: () => _delete(i),
                                 child: Container(
@@ -370,25 +371,25 @@ class _AdminFeeStructureScreenState extends State<AdminFeeStructureScreen> {
         ),
         // Footer
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          color: const Color(0xFFFEF3C7),
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          color: Color(0xFFFEF3C7),
           child: Row(children: [
-            const Text('Items per page:',
+            Text('Items per page:'.tr,
                 style: TextStyle(fontSize: 12, color: Colors.black54)),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Container(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey.shade400),
                   borderRadius: BorderRadius.circular(4),
                   color: Colors.white),
-              child: const Text('10', style: TextStyle(fontSize: 12)),
+              child: Text('10'.tr, style: TextStyle(fontSize: 12)),
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: 16),
             Text('1 - ${_feeRows.length} of ${_feeRows.length}',
                 style:
-                    const TextStyle(fontSize: 12, color: Colors.black54)),
+                    TextStyle(fontSize: 12, color: Colors.black54)),
           ]),
         ),
       ]),
@@ -399,23 +400,23 @@ class _AdminFeeStructureScreenState extends State<AdminFeeStructureScreen> {
       void Function(String?) onChanged) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(label,
-          style: const TextStyle(
+          style: TextStyle(
               fontSize: 10, color: Colors.grey, fontWeight: FontWeight.w600)),
-      const SizedBox(height: 3),
+      SizedBox(height: 3),
       DropdownButtonFormField<String>(
         value: items.contains(value) ? value : items.first,
         isExpanded: true,
         decoration: InputDecoration(
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
           contentPadding:
-              const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+              EdgeInsets.symmetric(horizontal: 8, vertical: 8),
           isDense: true,
         ),
         items: items
             .map((s) => DropdownMenuItem(
                 value: s,
                 child: Text(s,
-                    style: const TextStyle(fontSize: 11),
+                    style: TextStyle(fontSize: 11),
                     overflow: TextOverflow.ellipsis)))
             .toList(),
         onChanged: onChanged,

@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
 import '../../../core/theme/app_colors.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminVideoTutorialsScreen extends StatefulWidget {
-  const AdminVideoTutorialsScreen({super.key});
+  AdminVideoTutorialsScreen({super.key});
 
   @override
   State<AdminVideoTutorialsScreen> createState() => _AdminVideoTutorialsScreenState();
@@ -49,12 +50,12 @@ class _AdminVideoTutorialsScreenState extends State<AdminVideoTutorialsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FF),
-      appBar: const AdminAppBar(title: "Video Tutorials", subtitle: "Manage your account details"),
-      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
+      backgroundColor: Color(0xFFF5F7FF),
+      appBar: AdminAppBar(title: "Video Tutorials", subtitle: "Manage your account details"),
+      bottomNavigationBar: AdminBottomNavBar(currentIndex: 4),
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(16),
+        physics: BouncingScrollPhysics(),
+        padding: EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -62,17 +63,17 @@ class _AdminVideoTutorialsScreenState extends State<AdminVideoTutorialsScreen> {
             TextField(
               decoration: InputDecoration(
                 hintText: "Search tutorials by feature, topic...",
-                prefixIcon: const Icon(Icons.search, color: Color(0xFF757897)),
+                prefixIcon: Icon(Icons.search, color: Color(0xFF757897)),
                 fillColor: Colors.white,
                 filled: true,
-                contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                contentPadding: EdgeInsets.symmetric(vertical: 0),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
                 ),
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Stats row
             SingleChildScrollView(
@@ -86,14 +87,13 @@ class _AdminVideoTutorialsScreenState extends State<AdminVideoTutorialsScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Video list grid representation
-            const Text(
-              "Featured Tutorials",
+            Text("Featured Tutorials".tr,
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             _buildVideoGrid(),
           ],
         ),
@@ -104,8 +104,8 @@ class _AdminVideoTutorialsScreenState extends State<AdminVideoTutorialsScreen> {
   Widget _buildStatCard(String label, String value, String subtext, Color color) {
     return Container(
       width: 125,
-      margin: const EdgeInsets.only(right: 12),
-      padding: const EdgeInsets.all(12),
+      margin: EdgeInsets.only(right: 12),
+      padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -114,10 +114,10 @@ class _AdminVideoTutorialsScreenState extends State<AdminVideoTutorialsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
-          Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-          const SizedBox(height: 4),
+          Text(label, style: TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
+          SizedBox(height: 8),
+          Text(value, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+          SizedBox(height: 4),
           Text(subtext, style: TextStyle(fontSize: 9, color: color, fontWeight: FontWeight.w500)),
         ],
       ),
@@ -127,14 +127,14 @@ class _AdminVideoTutorialsScreenState extends State<AdminVideoTutorialsScreen> {
   Widget _buildVideoGrid() {
     return ListView.builder(
       shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
+      physics: NeverScrollableScrollPhysics(),
       itemCount: _videos.length,
       itemBuilder: (context, index) {
         final v = _videos[index];
         return Card(
           elevation: 0,
           color: Colors.white,
-          margin: const EdgeInsets.only(bottom: 14),
+          margin: EdgeInsets.only(bottom: 14),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -144,13 +144,13 @@ class _AdminVideoTutorialsScreenState extends State<AdminVideoTutorialsScreen> {
                 height: 140,
                 decoration: BoxDecoration(
                   color: v['color'].withValues(alpha: 0.1),
-                  borderRadius: const BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
                 ),
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
                     Icon(v['icon'], size: 50, color: v['color']),
-                    const CircleAvatar(
+                    CircleAvatar(
                       backgroundColor: Colors.white70,
                       radius: 20,
                       child: Icon(Icons.play_arrow, color: AppColors.primary),
@@ -159,9 +159,9 @@ class _AdminVideoTutorialsScreenState extends State<AdminVideoTutorialsScreen> {
                       bottom: 8,
                       right: 8,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(color: Colors.black87, borderRadius: BorderRadius.circular(4)),
-                        child: Text(v['duration'], style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
+                        child: Text(v['duration'], style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
                       ),
                     ),
                   ],
@@ -169,7 +169,7 @@ class _AdminVideoTutorialsScreenState extends State<AdminVideoTutorialsScreen> {
               ),
               // Video details text
               Padding(
-                padding: const EdgeInsets.all(14.0),
+                padding: EdgeInsets.all(14.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -177,13 +177,13 @@ class _AdminVideoTutorialsScreenState extends State<AdminVideoTutorialsScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(v['level'], style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: v['color'])),
-                        const Icon(Icons.bookmark_border, size: 16, color: Colors.grey),
+                        Icon(Icons.bookmark_border, size: 16, color: Colors.grey),
                       ],
                     ),
-                    const SizedBox(height: 6),
-                    Text(v['title'], style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                    const SizedBox(height: 4),
-                    Text(v['desc'], style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                    SizedBox(height: 6),
+                    Text(v['title'], style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                    SizedBox(height: 4),
+                    Text(v['desc'], style: TextStyle(fontSize: 11, color: Colors.grey)),
                   ],
                 ),
               )

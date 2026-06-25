@@ -17,7 +17,7 @@ import 'widgets/teacher_drawer.dart';
 import 'widgets/teacher_bottom_nav.dart';
 class TeacherDashboardScreen extends StatefulWidget {
   final int initialIndex;
-  const TeacherDashboardScreen({super.key, this.initialIndex = 0});
+  TeacherDashboardScreen({super.key, this.initialIndex = 0});
 
   @override
   State<TeacherDashboardScreen> createState() => _TeacherDashboardScreenState();
@@ -63,7 +63,7 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
           Navigator.push(context, MaterialPageRoute(builder: (_) => EmployeesScreen(activeTab: subTab ?? 0, onSubTabSelected: _onTabChanged)));
           return;
         } else if (moreSubScreen == "Calendar") {
-          Navigator.push(context, MaterialPageRoute(builder: (_) => const CalendarScreen()));
+          Navigator.push(context, MaterialPageRoute(builder: (_) => CalendarScreen()));
           return;
         }
       }
@@ -91,9 +91,9 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
         } else if (title == "Employees") {
           Navigator.push(context, MaterialPageRoute(builder: (_) => EmployeesScreen(onSubTabSelected: _onTabChanged)));
         } else if (title == "Calendar") {
-          Navigator.push(context, MaterialPageRoute(builder: (_) => const CalendarScreen()));
+          Navigator.push(context, MaterialPageRoute(builder: (_) => CalendarScreen()));
         } else if (title == "SignOut" || title == "Logout") {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const LoginScreen()));
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => LoginScreen()));
         }
       }),
     ];
@@ -124,7 +124,7 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
             index: currentIndex,
             children: tabs,
           ),
-          floatingActionButton: const AiBotFab(),
+          floatingActionButton: AiBotFab(),
         );
       }
     );

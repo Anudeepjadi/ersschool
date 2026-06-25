@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import '../widgets/stat_card.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class HomeScreen extends StatelessWidget {
   final Function(int, {int? subTab, String? moreSubScreen}) onNavigateTab;
 
-  const HomeScreen({Key? key, required this.onNavigateTab}) : super(key: key);
+  HomeScreen({Key? key, required this.onNavigateTab}) : super(key: key);
 
   void _showStatDetail(
     BuildContext context,
@@ -17,7 +18,7 @@ class HomeScreen extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.bold,
             color: Color(0xFF1B263B),
           ),
@@ -27,26 +28,26 @@ class HomeScreen extends StatelessWidget {
           child: ListView.separated(
             shrinkWrap: true,
             itemCount: data.length,
-            separatorBuilder: (context, index) => const Divider(),
+            separatorBuilder: (context, index) => Divider(),
             itemBuilder: (context, index) {
               final item = data[index];
               return ListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Text(
                   item['title'] ?? "",
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
                   ),
                 ),
                 subtitle: Text(
                   item['subtitle'] ?? "",
-                  style: const TextStyle(fontSize: 12),
+                  style: TextStyle(fontSize: 12),
                 ),
                 trailing: item['trailing'] != null
                     ? Text(
                         item['trailing']!,
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.blue,
                           fontWeight: FontWeight.bold,
                           fontSize: 12,
@@ -60,7 +61,7 @@ class HomeScreen extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text("Close"),
+            child: Text("Close".tr),
           ),
         ],
       ),
@@ -108,13 +109,13 @@ class HomeScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
 
           // 1. Top Quick Action Grid
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16),
@@ -122,7 +123,7 @@ class HomeScreen extends StatelessWidget {
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.1),
                     blurRadius: 10,
-                    offset: const Offset(0, 2),
+                    offset: Offset(0, 2),
                   ),
                 ],
                 border: Border.all(color: Colors.grey[200]!),
@@ -191,16 +192,15 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // 2. Overview Stats
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "Overview",
+                Text("Overview".tr,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -209,7 +209,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 Container(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                      EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(8),
@@ -217,30 +217,30 @@ class HomeScreen extends StatelessWidget {
                   ),
                   child: DropdownButton<String>(
                     value: "This Week",
-                    underline: const SizedBox(),
-                    icon: const Icon(Icons.keyboard_arrow_down, size: 18),
-                    style: const TextStyle(
+                    underline: SizedBox(),
+                    icon: Icon(Icons.keyboard_arrow_down, size: 18),
+                    style: TextStyle(
                         color: Colors.black87,
                         fontSize: 13,
                         fontWeight: FontWeight.bold),
                     onChanged: (newValue) {},
-                    items: const [
+                    items: [
                       DropdownMenuItem(
-                          value: "This Week", child: Text("This Week")),
+                          value: "This Week", child: Text("This Week".tr)),
                       DropdownMenuItem(
-                          value: "This Month", child: Text("This Month")),
+                          value: "This Month", child: Text("This Month".tr)),
                     ],
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           SizedBox(
             height: 140, // Increased for new StatCard design
             child: ListView(
               scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
               children: [
                 StatCard(
                   title: "Classes Assigned",
@@ -385,15 +385,15 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
 
           // 3. Today's Schedule
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   "Today's Schedule",
                   style: TextStyle(
                     fontSize: 16,
@@ -405,8 +405,7 @@ class HomeScreen extends StatelessWidget {
                   onPressed: () {
                     onNavigateTab(1, subTab: 1);
                   },
-                  child: const Text(
-                    "View Timetable >",
+                  child: Text("View Timetable >".tr,
                     style: TextStyle(
                       color: Colors.blue,
                       fontWeight: FontWeight.bold,
@@ -418,8 +417,8 @@ class HomeScreen extends StatelessWidget {
           ),
           ListView(
             shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            physics: NeverScrollableScrollPhysics(),
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
             children: [
               _buildScheduleCard(
                 context,
@@ -463,11 +462,11 @@ class HomeScreen extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // 4. Pending Tasks & Upcoming Events
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -478,8 +477,7 @@ class HomeScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
-                          child: Text(
-                            "Pending Tasks",
+                          child: Text("Pending Tasks".tr,
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.bold,
@@ -490,8 +488,7 @@ class HomeScreen extends StatelessWidget {
                         ),
                         InkWell(
                           onTap: () => _showPendingTasksDialog(context),
-                          child: const Text(
-                            "View All",
+                          child: Text("View All".tr,
                             style: TextStyle(
                               color: Colors.blue,
                               fontSize: 11,
@@ -501,7 +498,7 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     _buildPendingTaskCard(
                       Icons.checklist,
                       "Check Assignments",
@@ -566,7 +563,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -574,8 +571,7 @@ class HomeScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
-                          child: Text(
-                            "Upcoming Events",
+                          child: Text("Upcoming Events".tr,
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.bold,
@@ -591,8 +587,7 @@ class HomeScreen extends StatelessWidget {
                               moreSubScreen: "Calendar",
                             ); // Go to Calendar
                           },
-                          child: const Text(
-                            "View Calendar",
+                          child: Text("View Calendar".tr,
                             style: TextStyle(
                               color: Colors.blue,
                               fontSize: 11,
@@ -602,7 +597,7 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     _buildUpcomingEventCard(
                       context,
                       "MAY\n25",
@@ -681,11 +676,11 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
 
           // 5. Staff Meeting Announcement
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: InkWell(
               onTap: () {
                 _showStatDetail(context, "Available Staff Meetings", [
@@ -713,7 +708,7 @@ class HomeScreen extends StatelessWidget {
               },
               borderRadius: BorderRadius.circular(12),
               child: Container(
-                padding: const EdgeInsets.all(16),
+                padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
@@ -721,7 +716,7 @@ class HomeScreen extends StatelessWidget {
                     BoxShadow(
                       color: Colors.black.withValues(alpha: 0.1),
                       blurRadius: 8,
-                      offset: const Offset(0, 2),
+                      offset: Offset(0, 2),
                     ),
                   ],
                   border: Border.all(color: Colors.grey[200]!),
@@ -732,42 +727,39 @@ class HomeScreen extends StatelessWidget {
                     Row(
                       children: [
                         Container(
-                          padding: const EdgeInsets.all(6),
+                          padding: EdgeInsets.all(6),
                           decoration: BoxDecoration(
                             color: Colors.green.withValues(alpha: 0.1),
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.volume_up,
                             color: Colors.green,
                             size: 18,
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        const Text(
-                          "Staff Meeting",
+                        SizedBox(width: 8),
+                        Text("Staff Meeting".tr,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF1B263B),
                           ),
                         ),
-                        const Spacer(),
-                        const Text(
-                          "20 May 2024",
+                        Spacer(),
+                        Text("20 May 2024".tr,
                           style: TextStyle(color: Colors.grey, fontSize: 11),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      "Monthly staff meeting will be held on 22 May 2024 at 3:00 PM in the conference room. All teachers are requested to attend.",
+                    SizedBox(height: 8),
+                    Text("Monthly staff meeting will be held on 22 May 2024 at 3:00 PM in the conference room. All teachers are requested to attend.".tr,
                       style: TextStyle(
                         color: Colors.black87,
                         fontSize: 12,
                         height: 1.4,
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
                     Align(
                       alignment: Alignment.centerRight,
                       child: InkWell(
@@ -779,7 +771,7 @@ class HomeScreen extends StatelessWidget {
                           ); // Redirect to Schedule Meeting
                         },
                         child: Container(
-                          padding: const EdgeInsets.symmetric(
+                          padding: EdgeInsets.symmetric(
                             horizontal: 8,
                             vertical: 2,
                           ),
@@ -787,8 +779,7 @@ class HomeScreen extends StatelessWidget {
                             color: Colors.blue.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(4),
                           ),
-                          child: const Text(
-                            "New",
+                          child: Text("New".tr,
                             style: TextStyle(
                               color: Colors.blue,
                               fontSize: 10,
@@ -803,7 +794,7 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 30),
+          SizedBox(height: 30),
         ],
       ),
     );
@@ -820,21 +811,21 @@ class HomeScreen extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: 85,
-        margin: const EdgeInsets.symmetric(horizontal: 4),
+        margin: EdgeInsets.symmetric(horizontal: 4),
         child: Column(
           children: [
             Container(
-              padding: const EdgeInsets.all(10),
+              padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(icon, color: color, size: 22),
             ),
-            const SizedBox(height: 6),
+            SizedBox(height: 6),
             Text(
               label,
-              style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
+              style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
@@ -854,8 +845,8 @@ class HomeScreen extends StatelessWidget {
     bool isBreak,
   ) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(12),
+      margin: EdgeInsets.only(bottom: 10),
+      padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         color:
             isBreak ? Colors.purple[50]?.withValues(alpha: 0.1) : Colors.white,
@@ -864,7 +855,7 @@ class HomeScreen extends StatelessWidget {
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 5,
-            offset: const Offset(0, 1),
+            offset: Offset(0, 1),
           ),
         ],
         border: Border.all(
@@ -885,13 +876,13 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           Container(height: 24, width: 1, color: Colors.grey[300]),
-          const SizedBox(width: 16),
+          SizedBox(width: 16),
           Icon(
             isBreak ? Icons.local_cafe : Icons.menu_book,
             color: isBreak ? Colors.purple : Colors.blue,
             size: 20,
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -902,11 +893,11 @@ class HomeScreen extends StatelessWidget {
                     fontSize: 13,
                     fontWeight: FontWeight.bold,
                     color:
-                        isBreak ? Colors.purple[900] : const Color(0xFF1B263B),
+                        isBreak ? Colors.purple[900] : Color(0xFF1B263B),
                   ),
                 ),
                 if (!isBreak) ...[
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   FittedBox(
                     fit: BoxFit.scaleDown,
                     alignment: Alignment.centerLeft,
@@ -916,14 +907,14 @@ class HomeScreen extends StatelessWidget {
                           className,
                           style: TextStyle(fontSize: 11, color: Colors.grey[600]),
                         ),
-                        const SizedBox(width: 8),
-                        const Icon(Icons.location_on,
+                        SizedBox(width: 8),
+                        Icon(Icons.location_on,
                             size: 12, color: Colors.grey),
-                        const SizedBox(width: 2),
+                        SizedBox(width: 2),
                         Text(
                           room,
                           style:
-                              const TextStyle(fontSize: 11, color: Colors.grey),
+                              TextStyle(fontSize: 11, color: Colors.grey),
                         ),
                       ],
                     ),
@@ -937,34 +928,34 @@ class HomeScreen extends StatelessWidget {
               onSelected: (value) {
                 if (value == 'edit') {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Edit schedule clicked")),
+                    SnackBar(content: Text("Edit schedule clicked".tr)),
                   );
                 } else if (value == 'remove') {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Remove schedule clicked")),
+                    SnackBar(content: Text("Remove schedule clicked".tr)),
                   );
                 }
               },
               padding: EdgeInsets.zero,
-              icon: const Icon(Icons.more_vert, color: Colors.grey, size: 20),
+              icon: Icon(Icons.more_vert, color: Colors.grey, size: 20),
               itemBuilder: (BuildContext context) => [
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: 'edit',
                   child: Row(
                     children: [
                       Icon(Icons.edit, size: 18, color: Colors.blue),
                       SizedBox(width: 8),
-                      Text('Edit', style: TextStyle(fontSize: 13)),
+                      Text('Edit'.tr, style: TextStyle(fontSize: 13)),
                     ],
                   ),
                 ),
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: 'remove',
                   child: Row(
                     children: [
                       Icon(Icons.delete_outline, size: 18, color: Colors.red),
                       SizedBox(width: 8),
-                      Text('Remove', style: TextStyle(fontSize: 13)),
+                      Text('Remove'.tr, style: TextStyle(fontSize: 13)),
                     ],
                   ),
                 ),
@@ -986,8 +977,8 @@ class HomeScreen extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 8),
-        padding: const EdgeInsets.all(8),
+        margin: EdgeInsets.only(bottom: 8),
+        padding: EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8),
@@ -996,11 +987,11 @@ class HomeScreen extends StatelessWidget {
         child: Row(
           children: [
             Icon(icon, color: color, size: 16),
-            const SizedBox(width: 6),
+            SizedBox(width: 6),
             Expanded(
               child: Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,
@@ -1016,7 +1007,7 @@ class HomeScreen extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(width: 4),
+            SizedBox(width: 4),
             Icon(Icons.arrow_forward_ios, color: color, size: 10),
           ],
         ),
@@ -1034,8 +1025,8 @@ class HomeScreen extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 8),
-        padding: const EdgeInsets.all(8),
+        margin: EdgeInsets.only(bottom: 8),
+        padding: EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8),
@@ -1044,7 +1035,7 @@ class HomeScreen extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+              padding: EdgeInsets.symmetric(horizontal: 6, vertical: 4),
               decoration: BoxDecoration(
                 color: Colors.blue[50],
                 borderRadius: BorderRadius.circular(4),
@@ -1060,14 +1051,14 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
@@ -1075,10 +1066,10 @@ class HomeScreen extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 2),
+                  SizedBox(height: 2),
                   Text(
                     details,
-                    style: const TextStyle(color: Colors.grey, fontSize: 9),
+                    style: TextStyle(color: Colors.grey, fontSize: 9),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),

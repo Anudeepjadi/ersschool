@@ -1,9 +1,10 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../widgets/admin_app_bar.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminFeeNotGenStudentsScreen extends StatefulWidget {
-  const AdminFeeNotGenStudentsScreen({super.key});
+  AdminFeeNotGenStudentsScreen({super.key});
 
   @override
   State<AdminFeeNotGenStudentsScreen> createState() => _AdminFeeNotGenStudentsScreenState();
@@ -63,8 +64,8 @@ class _AdminFeeNotGenStudentsScreenState extends State<AdminFeeNotGenStudentsScr
     final selectedCount = _studentsList.where((s) => s['selected']).length;
     if (selectedCount == 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please select at least one student to generate invoices.'),
+        SnackBar(
+          content: Text('Please select at least one student to generate invoices.'.tr),
           backgroundColor: AppColors.error,
           behavior: SnackBarBehavior.floating,
         ),
@@ -80,7 +81,7 @@ class _AdminFeeNotGenStudentsScreenState extends State<AdminFeeNotGenStudentsScr
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Invoices generated successfully for $selectedCount students!'),
-        backgroundColor: const Color(0xFF10B981),
+        backgroundColor: Color(0xFF10B981),
         behavior: SnackBarBehavior.floating,
       ),
     );
@@ -89,19 +90,19 @@ class _AdminFeeNotGenStudentsScreenState extends State<AdminFeeNotGenStudentsScr
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FF),
-      appBar: const AdminAppBar(
+      backgroundColor: Color(0xFFF5F7FF),
+      appBar: AdminAppBar(
         title: "Fee Invoices Pending",
         subtitle: "Audit students missing invoices for the active billing cycle",
         showSchoolSelector: false,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0),
         child: Column(
           children: [
             // Batch generation action card
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16),
@@ -109,7 +110,7 @@ class _AdminFeeNotGenStudentsScreenState extends State<AdminFeeNotGenStudentsScr
                   BoxShadow(
                     color: Colors.grey.shade50,
                     blurRadius: 4,
-                    offset: const Offset(0, 2),
+                    offset: Offset(0, 2),
                   ),
                 ],
               ),
@@ -119,34 +120,33 @@ class _AdminFeeNotGenStudentsScreenState extends State<AdminFeeNotGenStudentsScr
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          "Term 1 Invoice Batch",
+                        Text("Term 1 Invoice Batch".tr,
                           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875)),
                         ),
-                        const SizedBox(height: 2),
+                        SizedBox(height: 2),
                         Text(
                           "${_studentsList.length} students have no active invoices.",
-                          style: const TextStyle(fontSize: 11, color: Colors.grey),
+                          style: TextStyle(fontSize: 11, color: Colors.grey),
                         ),
                       ],
                     ),
                   ),
                   ElevatedButton.icon(
                     onPressed: _generateInvoices,
-                    icon: const Icon(Icons.rocket_launch_outlined, size: 14),
-                    label: const Text("Generate Selected", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                    icon: Icon(Icons.rocket_launch_outlined, size: 14),
+                    label: Text("Generate Selected".tr, style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF10B981),
+                      backgroundColor: Color(0xFF10B981),
                       foregroundColor: Colors.white,
                       elevation: 0,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                      padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Select all row
             Row(
@@ -156,13 +156,12 @@ class _AdminFeeNotGenStudentsScreenState extends State<AdminFeeNotGenStudentsScr
                   onChanged: (v) => _toggleSelectAll(),
                   activeColor: AppColors.primary,
                 ),
-                const Text(
-                  "Select All Students",
+                Text("Select All Students".tr,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Color(0xFF1E2875)),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
 
             // Students table list
             Expanded(
@@ -170,11 +169,10 @@ class _AdminFeeNotGenStudentsScreenState extends State<AdminFeeNotGenStudentsScr
                   ? Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
+                        children: [
                           Icon(Icons.check_circle_outline_rounded, size: 48, color: Colors.green),
                           SizedBox(height: 12),
-                          Text(
-                            "All students have generated invoices!",
+                          Text("All students have generated invoices!".tr,
                             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF1E2875)),
                           ),
                         ],
@@ -182,7 +180,7 @@ class _AdminFeeNotGenStudentsScreenState extends State<AdminFeeNotGenStudentsScr
                     )
                   : ListView.separated(
                       itemCount: _studentsList.length,
-                      separatorBuilder: (context, index) => const SizedBox(height: 10),
+                      separatorBuilder: (context, index) => SizedBox(height: 10),
                       itemBuilder: (context, index) {
                         final student = _studentsList[index];
                         return Container(
@@ -204,15 +202,15 @@ class _AdminFeeNotGenStudentsScreenState extends State<AdminFeeNotGenStudentsScr
                             ),
                             title: Text(
                               student['name'],
-                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875)),
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875)),
                             ),
                             subtitle: Text(
                               "${student['class']} | ${student['school']}",
-                              style: const TextStyle(fontSize: 11, color: Colors.grey),
+                              style: TextStyle(fontSize: 11, color: Colors.grey),
                             ),
                             trailing: Text(
                               student['admission'],
-                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: Color(0xFF757897)),
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: Color(0xFF757897)),
                             ),
                           ),
                         );

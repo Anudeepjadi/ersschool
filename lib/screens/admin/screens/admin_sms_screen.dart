@@ -3,9 +3,10 @@ import '../widgets/admin_app_bar.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/data/app_data_store.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminSmsScreen extends StatefulWidget {
-  const AdminSmsScreen({super.key});
+  AdminSmsScreen({super.key});
 
   @override
   State<AdminSmsScreen> createState() => _AdminSmsScreenState();
@@ -113,8 +114,8 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
     final students = _getTargetStudents();
     if (students.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Please select at least one class first."),
+        SnackBar(
+          content: Text("Please select at least one class first.".tr),
           backgroundColor: AppColors.error,
         ),
       );
@@ -139,17 +140,15 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               title: Row(
                 children: [
-                  const Expanded(
-                    child: Text(
-                      "Select Students",
+                  Expanded(child: Text("Select Students".tr,
                       style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Text(
                     "Selected: ${selectedStudentIds.values.where((v) => v).length}/${students.length}",
-                    style: const TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -168,7 +167,7 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
                               }
                             });
                           },
-                          child: const Text("Select All"),
+                          child: Text("Select All".tr),
                         ),
                         TextButton(
                           onPressed: () {
@@ -178,11 +177,11 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
                               }
                             });
                           },
-                          child: const Text("Clear All"),
+                          child: Text("Clear All".tr),
                         ),
                       ],
                     ),
-                    const Divider(),
+                    Divider(),
                     Expanded(
                       child: ListView.builder(
                         itemCount: students.length,
@@ -192,7 +191,7 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
                           final isSelected = selectedStudentIds[id] ?? true;
 
                           return CheckboxListTile(
-                            title: Text(student['name']!, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                            title: Text(student['name']!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
                             subtitle: Text("Class: ${student['class']} | Adm: $id"),
                             value: isSelected,
                             activeColor: AppColors.primary,
@@ -211,7 +210,7 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text("Cancel"),
+                  child: Text("Cancel".tr),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -223,7 +222,7 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
-                  child: const Text("Apply Selection"),
+                  child: Text("Apply Selection".tr),
                 ),
               ],
             );
@@ -237,14 +236,14 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
     final activeGrades = selectedClasses.entries.where((e) => e.value).map((e) => e.key).toList();
     if (activeGrades.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please select at least one class.")),
+        SnackBar(content: Text("Please select at least one class.".tr)),
       );
       return;
     }
 
     if (!term1Selected && !term2Selected && !term3Selected) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please select at least one pending term.")),
+        SnackBar(content: Text("Please select at least one pending term.".tr)),
       );
       return;
     }
@@ -254,7 +253,7 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
 
     if (selectedStudents.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("No students are currently selected to receive SMS.")),
+        SnackBar(content: Text("No students are currently selected to receive SMS.".tr)),
       );
       return;
     }
@@ -268,20 +267,19 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text("Confirm Send SMS", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+        title: Text("Confirm Send SMS".tr, style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("You are about to send fee due SMS alerts to:"),
-            const SizedBox(height: 8),
+            Text("You are about to send fee due SMS alerts to:".tr),
+            SizedBox(height: 8),
             Text("• School: $selectedSchool"),
             Text("• Classes: ${activeGrades.join(', ')}"),
             Text("• Terms: ${selectedTerms.join(', ')}"),
             Text("• Total Recipients: ${selectedStudents.length} students"),
-            const SizedBox(height: 12),
-            const Text(
-              "This action will dispatch automated SMS alerts to the parents of all selected students.",
+            SizedBox(height: 12),
+            Text("This action will dispatch automated SMS alerts to the parents of all selected students.".tr,
               style: TextStyle(fontSize: 12, color: Colors.grey),
             ),
           ],
@@ -289,7 +287,7 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text("Cancel"),
+            child: Text("Cancel".tr),
           ),
           ElevatedButton(
             onPressed: () {
@@ -297,11 +295,11 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
               _showSendingProgress(selectedStudents.length);
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF0F5A35),
+              backgroundColor: Color(0xFF0F5A35),
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
-            child: const Text("Send SMS"),
+            child: Text("Send SMS".tr),
           ),
         ],
       ),
@@ -313,13 +311,13 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
       context: context,
       barrierDismissible: false,
       builder: (context) {
-        return const AlertDialog(
+        return AlertDialog(
           content: Row(
             children: [
               CircularProgressIndicator(),
               SizedBox(width: 20),
               Expanded(
-                child: Text("Sending SMS notifications...", style: TextStyle(fontWeight: FontWeight.bold)),
+                child: Text("Sending SMS notifications...".tr, style: TextStyle(fontWeight: FontWeight.bold)),
               ),
             ],
           ),
@@ -327,25 +325,24 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
       },
     );
 
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(Duration(seconds: 2), () {
       if (!mounted) return;
       Navigator.pop(context); // Close loading dialog
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          title: const Row(
-            children: [
+          title: Row(children: [
               Icon(Icons.check_circle, color: Colors.green),
               SizedBox(width: 8),
-              Text("Success", style: TextStyle(fontWeight: FontWeight.bold)),
+              Text("Success".tr, style: TextStyle(fontWeight: FontWeight.bold)),
             ],
           ),
           content: Text("$count SMS notifications have been sent successfully to parents!"),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text("OK"),
+              child: Text("OK".tr),
             ),
           ],
         ),
@@ -356,43 +353,41 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FF),
-      appBar: const AdminAppBar(
+      backgroundColor: Color(0xFFF5F7FF),
+      appBar: AdminAppBar(
         title: "SMS panel",
         subtitle: "Send fee notifications",
       ),
-      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
+      bottomNavigationBar: AdminBottomNavBar(currentIndex: 4),
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
+        physics: BouncingScrollPhysics(),
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: EdgeInsets.all(20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // 1. Send Fee Due title with reduced font size (18)
-              const Text(
-                "Send Fee Due SMS to Selected Students",
+              Text("Send Fee Due SMS to Selected Students".tr,
                 style: TextStyle(
                   color: Color(0xFFC2410C), // deep rust/brown/orange
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
 
               // 2. Branch selector
-              const Text(
-                "Branch",
+              Text("Branch".tr,
                 style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.bold,
                   color: Colors.grey,
                 ),
               ),
-              const SizedBox(height: 6),
+              SizedBox(height: 6),
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 12),
+                padding: EdgeInsets.symmetric(horizontal: 12),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8),
@@ -402,16 +397,16 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
                   child: DropdownButton<String>(
                     value: selectedSchool,
                     isExpanded: true,
-                    icon: const Icon(Icons.keyboard_arrow_down, color: Colors.grey, size: 18),
-                    style: const TextStyle(
+                    icon: Icon(Icons.keyboard_arrow_down, color: Colors.grey, size: 18),
+                    style: TextStyle(
                       fontSize: 13,
                       color: Color(0xFF1E2875),
                       fontWeight: FontWeight.bold,
                     ),
-                    items: const [
-                      DropdownMenuItem(value: 'Ecstasy School 1', child: Text("Ecstasy School 1 (ECS001)")),
-                      DropdownMenuItem(value: 'Ecstasy School 2', child: Text("Ecstasy School 2 (ECS002)")),
-                      DropdownMenuItem(value: 'Ecstasy School 3', child: Text("Ecstasy School 3 (ECS003)")),
+                    items: [
+                      DropdownMenuItem(value: 'Ecstasy School 1', child: Text("Ecstasy School 1 (ECS001)".tr)),
+                      DropdownMenuItem(value: 'Ecstasy School 2', child: Text("Ecstasy School 2 (ECS002)".tr)),
+                      DropdownMenuItem(value: 'Ecstasy School 3', child: Text("Ecstasy School 3 (ECS003)".tr)),
                     ],
                     onChanged: (v) {
                       if (v != null) {
@@ -424,16 +419,16 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
 
               // 3. Select Classes option
               _buildClassesSelectionList(),
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
 
               // 4. Fee pending controls
               _buildRightControlsPanel(),
 
-              const SizedBox(height: 80), // Added spacing to allow scrolling up
+              SizedBox(height: 80), // Added spacing to allow scrolling up
             ],
           ),
         ),
@@ -458,9 +453,8 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
                 onChanged: _updateSelectAll,
               ),
             ),
-            const SizedBox(width: 8),
-            const Text(
-              "Select All",
+            SizedBox(width: 8),
+            Text("Select All".tr,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF1E2875),
@@ -469,7 +463,7 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
             ),
           ],
         ),
-        const SizedBox(height: 10),
+        SizedBox(height: 10),
         Container(
           height: 300, // Reduced height to bring content below it higher
           decoration: BoxDecoration(
@@ -480,14 +474,14 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
               BoxShadow(
                 color: Colors.grey.shade100,
                 blurRadius: 4,
-                offset: const Offset(0, 2),
+                offset: Offset(0, 2),
               ),
             ],
           ),
           child: Scrollbar(
             thumbVisibility: true,
             child: ListView.separated(
-              padding: const EdgeInsets.symmetric(vertical: 8),
+              padding: EdgeInsets.symmetric(vertical: 8),
               itemCount: classes.length,
               separatorBuilder: (context, index) => Divider(height: 1, color: Colors.grey.shade100),
               itemBuilder: (context, index) {
@@ -500,7 +494,7 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
                   activeColor: AppColors.primary,
                   title: Text(
                     cls,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: Color(0xFF1E2875),
@@ -532,10 +526,10 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
         ElevatedButton(
           onPressed: activeGrades.isEmpty ? null : _showSelectStudentsDialog,
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFFC2410C), // brown / orange accent
+            backgroundColor: Color(0xFFC2410C), // brown / orange accent
             disabledBackgroundColor: Colors.grey.shade300,
             foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             elevation: 1,
           ),
@@ -543,21 +537,20 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
             activeGrades.isEmpty 
                 ? "Select Students" 
                 : "Select Students ($selectedStudentsCount/${targetStudents.length})",
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
           ),
         ),
-        const SizedBox(height: 20),
+        SizedBox(height: 20),
 
         // Title: Fee pending from
-        const Text(
-          "Fee pending from",
+        Text("Fee pending from".tr,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
             color: Color(0xFF1E2875),
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
 
         // Checklist of Terms card
         Container(
@@ -569,7 +562,7 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
               BoxShadow(
                 color: Colors.grey.shade100,
                 blurRadius: 4,
-                offset: const Offset(0, 2),
+                offset: Offset(0, 2),
               ),
             ],
           ),
@@ -577,7 +570,7 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
             children: [
               CheckboxListTile(
                 value: term1Selected,
-                title: const Text("Term 1", style: TextStyle(fontWeight: FontWeight.w500, color: Color(0xFF1E2875), fontSize: 14)),
+                title: Text("Term 1".tr, style: TextStyle(fontWeight: FontWeight.w500, color: Color(0xFF1E2875), fontSize: 14)),
                 activeColor: AppColors.primary,
                 controlAffinity: ListTileControlAffinity.leading,
                 onChanged: (v) => setState(() => term1Selected = v ?? false),
@@ -585,7 +578,7 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
               Divider(height: 1, color: Colors.grey.shade100),
               CheckboxListTile(
                 value: term2Selected,
-                title: const Text("Term 2", style: TextStyle(fontWeight: FontWeight.w500, color: Color(0xFF1E2875), fontSize: 14)),
+                title: Text("Term 2".tr, style: TextStyle(fontWeight: FontWeight.w500, color: Color(0xFF1E2875), fontSize: 14)),
                 activeColor: AppColors.primary,
                 controlAffinity: ListTileControlAffinity.leading,
                 onChanged: (v) => setState(() => term2Selected = v ?? false),
@@ -593,7 +586,7 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
               Divider(height: 1, color: Colors.grey.shade100),
               CheckboxListTile(
                 value: term3Selected,
-                title: const Text("Term 3", style: TextStyle(fontWeight: FontWeight.w500, color: Color(0xFF1E2875), fontSize: 14)),
+                title: Text("Term 3".tr, style: TextStyle(fontWeight: FontWeight.w500, color: Color(0xFF1E2875), fontSize: 14)),
                 activeColor: AppColors.primary,
                 controlAffinity: ListTileControlAffinity.leading,
                 onChanged: (v) => setState(() => term3Selected = v ?? false),
@@ -601,7 +594,7 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
             ],
           ),
         ),
-        const SizedBox(height: 24),
+        SizedBox(height: 24),
 
         // "Send to All Students" Green button
         SizedBox(
@@ -609,15 +602,14 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
           child: ElevatedButton(
             onPressed: activeGrades.isEmpty ? null : _sendSmsNotification,
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF0F766E), // teal / green
+              backgroundColor: Color(0xFF0F766E), // teal / green
               disabledBackgroundColor: Colors.grey.shade300,
               foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 14),
+              padding: EdgeInsets.symmetric(vertical: 14),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               elevation: 2,
             ),
-            child: const Text(
-              "Send to All Students",
+            child: Text("Send to All Students".tr,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 15,

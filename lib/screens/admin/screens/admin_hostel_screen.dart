@@ -1,11 +1,12 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminHostelScreen extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
-  const AdminHostelScreen({super.key, this.onOpenDrawer});
+  AdminHostelScreen({super.key, this.onOpenDrawer});
 
   @override
   State<AdminHostelScreen> createState() => _AdminHostelScreenState();
@@ -30,16 +31,16 @@ class _AdminHostelScreenState extends State<AdminHostelScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FF),
+      backgroundColor: Color(0xFFF5F7FF),
       appBar: AdminAppBar(
         title: "Hostel Management",
         subtitle: "Manage hostel, rooms and residents",
         onOpenDrawer: widget.onOpenDrawer,
       ),
-      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
+      bottomNavigationBar: AdminBottomNavBar(currentIndex: 4),
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(16),
+        physics: BouncingScrollPhysics(),
+        padding: EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -56,15 +57,15 @@ class _AdminHostelScreenState extends State<AdminHostelScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Room Occupancy Chart
             _buildOccupancyChartSection(),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Hostel Block Progress lists
             _buildHostelBlocksSection(),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Residents registry list
             _buildResidentsSection(),
@@ -77,8 +78,8 @@ class _AdminHostelScreenState extends State<AdminHostelScreen> {
   Widget _buildStatCard(String label, String value, String subtext, Color color) {
     return Container(
       width: 120,
-      margin: const EdgeInsets.only(right: 12),
-      padding: const EdgeInsets.all(12),
+      margin: EdgeInsets.only(right: 12),
+      padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -87,10 +88,10 @@ class _AdminHostelScreenState extends State<AdminHostelScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
-          Text(value, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-          const SizedBox(height: 4),
+          Text(label, style: TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
+          SizedBox(height: 8),
+          Text(value, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+          SizedBox(height: 4),
           Text(subtext, style: TextStyle(fontSize: 10, color: color, fontWeight: FontWeight.bold)),
         ],
       ),
@@ -99,7 +100,7 @@ class _AdminHostelScreenState extends State<AdminHostelScreen> {
 
   Widget _buildOccupancyChartSection() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -107,11 +108,10 @@ class _AdminHostelScreenState extends State<AdminHostelScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Room Status Overview",
+          Text("Room Status Overview".tr,
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Row(
             children: [
               Expanded(
@@ -126,30 +126,30 @@ class _AdminHostelScreenState extends State<AdminHostelScreen> {
                           sectionsSpace: 0,
                           centerSpaceRadius: 35,
                           sections: [
-                            PieChartSectionData(value: 85, color: const Color(0xFF10B981), radius: 12, showTitle: false),
-                            PieChartSectionData(value: 15, color: const Color(0xFFEF4444), radius: 12, showTitle: false),
+                            PieChartSectionData(value: 85, color: Color(0xFF10B981), radius: 12, showTitle: false),
+                            PieChartSectionData(value: 15, color: Color(0xFFEF4444), radius: 12, showTitle: false),
                           ],
                         ),
                       ),
-                      const Column(
+                      Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text("120", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                          Text("Total Rooms", style: TextStyle(fontSize: 8, color: Colors.grey)),
+                          Text("120".tr, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                          Text("Total Rooms".tr, style: TextStyle(fontSize: 8, color: Colors.grey)),
                         ],
                       )
                     ],
                   ),
                 ),
               ),
-              const SizedBox(width: 20),
+              SizedBox(width: 20),
               Expanded(
                 flex: 6,
                 child: Column(
                   children: [
-                    _buildLegendRow(const Color(0xFF10B981), "Occupied Rooms", "102 (85%)"),
-                    const SizedBox(height: 12),
-                    _buildLegendRow(const Color(0xFFEF4444), "Vacant Rooms", "18 (15%)"),
+                    _buildLegendRow(Color(0xFF10B981), "Occupied Rooms", "102 (85%)"),
+                    SizedBox(height: 12),
+                    _buildLegendRow(Color(0xFFEF4444), "Vacant Rooms", "18 (15%)"),
                   ],
                 ),
               )
@@ -164,20 +164,20 @@ class _AdminHostelScreenState extends State<AdminHostelScreen> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(margin: const EdgeInsets.only(top: 4), width: 10, height: 10, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(3))),
-        const SizedBox(width: 8),
+        Container(margin: EdgeInsets.only(top: 4), width: 10, height: 10, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(3))),
+        SizedBox(width: 8),
         Expanded(
-          child: Text(label, style: const TextStyle(fontSize: 12, color: Color(0xFF757897), fontWeight: FontWeight.w500)),
+          child: Text(label, style: TextStyle(fontSize: 12, color: Color(0xFF757897), fontWeight: FontWeight.w500)),
         ),
-        const SizedBox(width: 4),
-        Text(value, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+        SizedBox(width: 4),
+        Text(value, style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
       ],
     );
   }
 
   Widget _buildHostelBlocksSection() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -185,22 +185,21 @@ class _AdminHostelScreenState extends State<AdminHostelScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Hostel Blocks Breakdown",
+          Text("Hostel Blocks Breakdown".tr,
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
           ),
-          const SizedBox(height: 14),
+          SizedBox(height: 14),
           ListView.separated(
             shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
+            physics: NeverScrollableScrollPhysics(),
             itemCount: _blocks.length,
-            separatorBuilder: (context, index) => const Divider(),
+            separatorBuilder: (context, index) => Divider(),
             itemBuilder: (context, index) {
               final blk = _blocks[index];
               final isBoys = blk['name'].toString().contains('Boys');
               final blockColor = isBoys ? Colors.blue : Colors.pinkAccent;
               return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
+                padding: EdgeInsets.symmetric(vertical: 4),
                 child: Column(
                   children: [
                     Row(
@@ -209,14 +208,14 @@ class _AdminHostelScreenState extends State<AdminHostelScreen> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(blk['name'], style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                            Text("${blk['block']} | ${blk['rooms']} Rooms", style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                            Text(blk['name'], style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                            Text("${blk['block']} | ${blk['rooms']} Rooms", style: TextStyle(fontSize: 11, color: Colors.grey)),
                           ],
                         ),
-                        Text("${blk['pct']}% Occupancy", style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey)),
+                        Text("${blk['pct']}% Occupancy", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey)),
                       ],
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     LinearProgressIndicator(
                       value: blk['pct'] / 100,
                       color: blockColor,
@@ -243,31 +242,30 @@ class _AdminHostelScreenState extends State<AdminHostelScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Padding(
+          Padding(
             padding: EdgeInsets.all(16.0),
-            child: Text(
-              "Hostel Residents Log",
+            child: Text("Hostel Residents Log".tr,
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
             ),
           ),
           ListView.separated(
             shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
+            physics: NeverScrollableScrollPhysics(),
             itemCount: _residents.length,
-            separatorBuilder: (context, index) => const Divider(height: 1),
+            separatorBuilder: (context, index) => Divider(height: 1),
             itemBuilder: (context, index) {
               final res = _residents[index];
               return ListTile(
-                title: Text(res['student'], style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                subtitle: Text("Room: ${res['room']} | Bed: ${res['bed']}", style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                title: Text(res['student'], style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                subtitle: Text("Room: ${res['room']} | Bed: ${res['bed']}", style: TextStyle(fontSize: 11, color: Colors.grey)),
                 trailing: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text(res['hostel'], style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                    Text(res['hostel'], style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
                     Text(
                       "Joined: ${res['date']}",
-                      style: const TextStyle(fontSize: 10, color: Colors.grey),
+                      style: TextStyle(fontSize: 10, color: Colors.grey),
                     ),
                   ],
                 ),

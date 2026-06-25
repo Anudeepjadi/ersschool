@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/localization/language_manager.dart';
 import '../admin_dashboard_screen.dart';
 
 class AdminBottomNavBar extends StatelessWidget {
   final int currentIndex;
   final Function(int)? onTabSelected;
 
-  const AdminBottomNavBar({
+  AdminBottomNavBar({
     super.key,
     required this.currentIndex,
     this.onTabSelected,
@@ -34,30 +36,30 @@ class AdminBottomNavBar extends StatelessWidget {
       type: BottomNavigationBarType.fixed,
       currentIndex: currentIndex,
       selectedItemColor: AppColors.primary,
-      unselectedItemColor: const Color(0xFF757897),
-      selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
-      unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
+      unselectedItemColor: Color(0xFF757897),
+      selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
+      unselectedLabelStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
       onTap: (index) => _handleTap(context, index),
-      items: const [
+      items: [
         BottomNavigationBarItem(
           icon: Icon(Icons.grid_view_outlined),
-          label: "Dashboard",
+          label: "Dashboard".tr,
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.people_alt_outlined),
-          label: "Students",
+          label: "Students".tr,
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.person_outline),
-          label: "Teachers",
+          label: "Teachers".tr,
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.business_outlined),
-          label: "Branches",
+          label: "Branches".tr,
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.more_horiz),
-          label: "More",
+          label: "More".tr,
         ),
       ],
     );

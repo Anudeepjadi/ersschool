@@ -4,7 +4,7 @@ import 'package:video_player/video_player.dart';
 import '../login/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  SplashScreen({super.key});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -41,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
     } catch (e) {
       debugPrint('Video init failed: $e');
       if (mounted) {
-        Future.delayed(const Duration(seconds: 3), () => _navigateToLogin());
+        Future.delayed(Duration(seconds: 3), () => _navigateToLogin());
       }
     }
   }
@@ -53,7 +53,7 @@ class _SplashScreenState extends State<SplashScreen> {
     final duration = _videoController.value.duration;
 
     if (duration > Duration.zero &&
-        position >= duration - const Duration(milliseconds: 100)) {
+        position >= duration - Duration(milliseconds: 100)) {
       _navigateToLogin();
     }
   }
@@ -62,16 +62,16 @@ class _SplashScreenState extends State<SplashScreen> {
     if (_hasNavigated || !mounted) return;
     _hasNavigated = true;
 
-    Future.delayed(const Duration(milliseconds: 300), () {
+    Future.delayed(Duration(milliseconds: 300), () {
       if (!mounted) return;
       Navigator.pushReplacement(
         context,
         PageRouteBuilder(
-          transitionDuration: const Duration(milliseconds: 500),
+          transitionDuration: Duration(milliseconds: 500),
           pageBuilder: (context, animation, secondaryAnimation) =>
               FadeTransition(
             opacity: animation,
-            child: const LoginScreen(),
+            child: LoginScreen(),
           ),
         ),
       );
@@ -98,7 +98,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   child: VideoPlayer(_videoController),
                 ),
               )
-            : const SizedBox.shrink(),
+            : SizedBox.shrink(),
       ),
     );
   }

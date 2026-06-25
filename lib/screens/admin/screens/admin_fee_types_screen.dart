@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
 import '../../../core/data/app_data_store.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminFeeTypesScreen extends StatefulWidget {
-  const AdminFeeTypesScreen({super.key});
+  AdminFeeTypesScreen({super.key});
   @override
   State<AdminFeeTypesScreen> createState() => _AdminFeeTypesScreenState();
 }
@@ -40,7 +41,7 @@ class _AdminFeeTypesScreenState extends State<AdminFeeTypesScreen> {
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Text(
           editIndex != null ? 'Edit Fee Type' : 'Add Fee Type',
-          style: const TextStyle(
+          style: TextStyle(
               fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
         ),
         content: TextField(
@@ -55,10 +56,10 @@ class _AdminFeeTypesScreenState extends State<AdminFeeTypesScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Cancel')),
+              child: Text('Cancel'.tr)),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFB45309),
+                backgroundColor: Color(0xFFB45309),
                 foregroundColor: Colors.white),
             onPressed: () {
               final val = _typeCtrl.text.trim();
@@ -74,7 +75,7 @@ class _AdminFeeTypesScreenState extends State<AdminFeeTypesScreen> {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text(
                     editIndex != null ? 'Fee type updated' : 'Fee type added'),
-                backgroundColor: const Color(0xFFB45309),
+                backgroundColor: Color(0xFFB45309),
                 behavior: SnackBarBehavior.floating,
               ));
             },
@@ -92,14 +93,14 @@ class _AdminFeeTypesScreenState extends State<AdminFeeTypesScreen> {
       builder: (ctx) => AlertDialog(
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Delete Fee Type',
+        title: Text('Delete Fee Type'.tr,
             style:
                 TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
         content: Text('Delete "$name"?'),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Cancel')),
+              child: Text('Cancel'.tr)),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red, foregroundColor: Colors.white),
@@ -107,13 +108,13 @@ class _AdminFeeTypesScreenState extends State<AdminFeeTypesScreen> {
               _store.deleteFeeType(index);
               setState(() {});
               Navigator.pop(ctx);
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text('Fee type deleted'),
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('Fee type deleted'.tr),
                 backgroundColor: Colors.red,
                 behavior: SnackBarBehavior.floating,
               ));
             },
-            child: const Text('Delete'),
+            child: Text('Delete'.tr),
           ),
         ],
       ),
@@ -123,28 +124,28 @@ class _AdminFeeTypesScreenState extends State<AdminFeeTypesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FF),
-      appBar: const AdminAppBar(
+      backgroundColor: Color(0xFFF5F7FF),
+      appBar: AdminAppBar(
           title: 'Fee Types', subtitle: 'Manage student fee types'),
-      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
+      bottomNavigationBar: AdminBottomNavBar(currentIndex: 4),
       body: Column(children: [
         Container(
           color: Colors.white,
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          padding: EdgeInsets.symmetric(vertical: 16),
           child: Center(
             child: Column(children: [
-              const Text('Student Fee Types',
+              Text('Student Fee Types'.tr,
                   style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFFB45309))),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               ElevatedButton.icon(
                 onPressed: () => _showAddDialog(),
-                icon: const Icon(Icons.add, size: 16),
-                label: const Text('Add New'),
+                icon: Icon(Icons.add, size: 16),
+                label: Text('Add New'.tr),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFB45309),
+                  backgroundColor: Color(0xFFB45309),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8)),
@@ -154,19 +155,19 @@ class _AdminFeeTypesScreenState extends State<AdminFeeTypesScreen> {
           ),
         ),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          color: const Color(0xFF2D3748),
-          child: const Row(children: [
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          color: Color(0xFF2D3748),
+          child: Row(children: [
             Expanded(
                 flex: 3,
-                child: Text('Fee Type',
+                child: Text('Fee Type'.tr,
                     style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 13))),
             Expanded(
                 flex: 2,
-                child: Text('Is Active',
+                child: Text('Is Active'.tr,
                     style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -176,8 +177,7 @@ class _AdminFeeTypesScreenState extends State<AdminFeeTypesScreen> {
         ),
         Expanded(
           child: _feeTypes.isEmpty
-              ? const Center(
-                  child: Text('No fee types added yet.',
+              ? Center(child: Text('No fee types added yet.'.tr,
                       style: TextStyle(color: Colors.grey)))
               : ListView.separated(
                   padding: EdgeInsets.zero,
@@ -188,20 +188,20 @@ class _AdminFeeTypesScreenState extends State<AdminFeeTypesScreen> {
                     final f = _feeTypes[i];
                     return Container(
                       color: Colors.white,
-                      padding: const EdgeInsets.symmetric(
+                      padding: EdgeInsets.symmetric(
                           horizontal: 16, vertical: 13),
                       child: Row(children: [
                         Expanded(
                             flex: 3,
                             child: Text(f['type'] ?? '',
-                                style: const TextStyle(fontSize: 13))),
+                                style: TextStyle(fontSize: 13))),
                         Expanded(
                           flex: 2,
                           child: Icon(
                             (f['isActive'] as bool? ?? true)
                                 ? Icons.check_box
                                 : Icons.check_box_outline_blank,
-                            color: const Color(0xFF2563EB),
+                            color: Color(0xFF2563EB),
                             size: 20,
                           ),
                         ),
@@ -211,14 +211,14 @@ class _AdminFeeTypesScreenState extends State<AdminFeeTypesScreen> {
                             child: Container(
                               width: 32,
                               height: 32,
-                              decoration: const BoxDecoration(
+                              decoration: BoxDecoration(
                                   color: Color(0xFF2563EB),
                                   shape: BoxShape.circle),
-                              child: const Icon(Icons.edit,
+                              child: Icon(Icons.edit,
                                   color: Colors.white, size: 16),
                             ),
                           ),
-                          const SizedBox(width: 8),
+                          SizedBox(width: 8),
                           InkWell(
                             onTap: () => _delete(i),
                             child: Container(
@@ -238,25 +238,25 @@ class _AdminFeeTypesScreenState extends State<AdminFeeTypesScreen> {
                 ),
         ),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          color: const Color(0xFFFEF3C7),
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          color: Color(0xFFFEF3C7),
           child: Row(children: [
-            const Text('Items per page:',
+            Text('Items per page:'.tr,
                 style: TextStyle(fontSize: 12, color: Colors.black54)),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Container(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey.shade400),
                   borderRadius: BorderRadius.circular(4),
                   color: Colors.white),
-              child: const Text('10', style: TextStyle(fontSize: 12)),
+              child: Text('10'.tr, style: TextStyle(fontSize: 12)),
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: 16),
             Text('1 - ${_feeTypes.length} of ${_feeTypes.length}',
                 style:
-                    const TextStyle(fontSize: 12, color: Colors.black54)),
+                    TextStyle(fontSize: 12, color: Colors.black54)),
           ]),
         ),
       ]),

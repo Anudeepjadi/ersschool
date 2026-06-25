@@ -4,12 +4,13 @@ import '../../../../core/utils/profile_manager.dart';
 import '../../../../widgets/calendar_popup.dart';
 import '../widgets/student_app_bar.dart';
 import '../../transport/transport_screen.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class HomeTab extends StatelessWidget {
   final VoidCallback onOpenDrawer;
   final Function(int) onTabSelected;
 
-  const HomeTab({
+  HomeTab({
     super.key,
     required this.onOpenDrawer,
     required this.onTabSelected,
@@ -20,7 +21,7 @@ class HomeTab extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(48),
+        preferredSize: Size.fromHeight(48),
         child: ValueListenableBuilder<String>(
           valueListenable: ProfileManager().studentName,
           builder: (context, studentName, _) {
@@ -36,15 +37,15 @@ class HomeTab extends StatelessWidget {
       body: RefreshIndicator(
         onRefresh: () async {
           // Simulate a network request
-          await Future.delayed(const Duration(seconds: 1));
+          await Future.delayed(Duration(seconds: 1));
         },
         child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+          physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 16, right: 16, top: 4, bottom: 16),
+                padding: EdgeInsets.only(left: 16, right: 16, top: 4, bottom: 16),
                 child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -52,18 +53,17 @@ class HomeTab extends StatelessWidget {
                 Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFEBF3FF),
+                    color: Color(0xFFEBF3FF),
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  padding: const EdgeInsets.all(20),
+                  padding: EdgeInsets.all(20),
                   child: Row(
                     children: [
-                      const Expanded(
+                      Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              "Welcome Back!",
+                            Text("Welcome Back!".tr,
                               style: TextStyle(
                                 fontSize: 22,
                                 fontWeight: FontWeight.bold,
@@ -71,8 +71,7 @@ class HomeTab extends StatelessWidget {
                               ),
                             ),
                             SizedBox(height: 8),
-                            Text(
-                              "Stay focused and\nkeep learning every day.",
+                            Text("Stay focused and\nkeep learning every day.".tr,
                               style: TextStyle(
                                 fontSize: 13,
                                 color: Color(0xFF5A629B),
@@ -87,7 +86,7 @@ class HomeTab extends StatelessWidget {
                         "assets/images/student_welcome.png",
                         height: 120,
                         errorBuilder: (context, error, stackTrace) {
-                          return const Icon(
+                          return Icon(
                             Icons.school,
                             size: 80,
                             color: AppColors.primary,
@@ -98,14 +97,13 @@ class HomeTab extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 25),
+                SizedBox(height: 25),
 
                 // 3. Quick Access Section
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      "Quick Access",
+                    Text("Quick Access".tr,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -116,8 +114,7 @@ class HomeTab extends StatelessWidget {
                       onPressed: () {
                         onTabSelected(5); // Switch to More tab
                       },
-                      child: const Text(
-                        "View All",
+                      child: Text("View All".tr,
                         style: TextStyle(
                           color: AppColors.primary,
                           fontWeight: FontWeight.bold,
@@ -126,12 +123,12 @@ class HomeTab extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
 
                 // Row of quick access items
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
-                  physics: const BouncingScrollPhysics(),
+                  physics: BouncingScrollPhysics(),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -175,7 +172,7 @@ class HomeTab extends StatelessWidget {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const TransportScreen()),
+                            MaterialPageRoute(builder: (context) => TransportScreen()),
                           );
                         },
                       ),
@@ -183,13 +180,13 @@ class HomeTab extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 25),
+                SizedBox(height: 25),
 
                 // 4. Today's Schedule Section
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       "Today's Schedule",
                       style: TextStyle(
                         fontSize: 18,
@@ -201,8 +198,7 @@ class HomeTab extends StatelessWidget {
                       onPressed: () {
                         onTabSelected(5); // Switch to More tab for now
                       },
-                      child: const Text(
-                        "View All",
+                      child: Text("View All".tr,
                         style: TextStyle(
                           color: AppColors.primary,
                           fontWeight: FontWeight.bold,
@@ -211,7 +207,7 @@ class HomeTab extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
 
                 // Vertical List of Schedule Cards
                 _buildScheduleCard(
@@ -250,42 +246,41 @@ class HomeTab extends StatelessWidget {
                   iconColor: Colors.red,
                 ),
 
-                const SizedBox(height: 25),
+                SizedBox(height: 25),
 
                 // 5. Important Notice Section
                 Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF4F7FF),
+                    color: Color(0xFFF4F7FF),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: const Color(0xFFE0E7FF),
+                      color: Color(0xFFE0E7FF),
                       width: 1,
                     ),
                   ),
-                  padding: const EdgeInsets.all(12),
+                  padding: EdgeInsets.all(12),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(8),
+                        padding: EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           color: AppColors.primary.withValues(alpha: 0.1),
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Icons.campaign_outlined,
                           color: AppColors.primary,
                           size: 20,
                         ),
                       ),
-                      const SizedBox(width: 12),
-                      const Expanded(
+                      SizedBox(width: 12),
+                      Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              "Important Notice",
+                            Text("Important Notice".tr,
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
@@ -293,8 +288,7 @@ class HomeTab extends StatelessWidget {
                               ),
                             ),
                             SizedBox(height: 4),
-                            Text(
-                              "Science Exhibition is scheduled on 24 Jun 2026 at School Auditorium.",
+                            Text("Science Exhibition is scheduled on 24 Jun 2026 at School Auditorium.".tr,
                               style: TextStyle(
                                 fontSize: 10,
                                 color: Colors.black87,
@@ -304,7 +298,7 @@ class HomeTab extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       TextButton(
                         onPressed: () {
                           onTabSelected(5); // Switch to More tab
@@ -314,8 +308,7 @@ class HomeTab extends StatelessWidget {
                           padding: EdgeInsets.zero,
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
-                        child: const Text(
-                          "View All",
+                        child: Text("View All".tr,
                           style: TextStyle(
                             fontSize: 12,
                             color: AppColors.primary,
@@ -327,14 +320,13 @@ class HomeTab extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 25),
+                SizedBox(height: 25),
 
                 // 6. Upcoming Events Section
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      "Upcoming Events",
+                    Text("Upcoming Events".tr,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -343,8 +335,7 @@ class HomeTab extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () => showCalendarPopup(context),
-                      child: const Text(
-                        "View Calendar",
+                      child: Text("View Calendar".tr,
                         style: TextStyle(
                           color: AppColors.primary,
                           fontWeight: FontWeight.bold,
@@ -353,7 +344,7 @@ class HomeTab extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
 
                 // Event cards
                 _buildEventCard(
@@ -386,23 +377,23 @@ class HomeTab extends StatelessWidget {
   }) {
     return Container(
       width: 65,
-      margin: const EdgeInsets.only(right: 0),
+      margin: EdgeInsets.only(right: 0),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(12),
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4.0),
+            padding: EdgeInsets.symmetric(vertical: 4.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(icon, color: color, size: 28),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 Text(
                   label,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
                     color: Color(0xFF1E2875),
@@ -425,8 +416,8 @@ class HomeTab extends StatelessWidget {
     required Color iconColor,
   }) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(10),
+      margin: EdgeInsets.only(bottom: 12),
+      padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -435,28 +426,28 @@ class HomeTab extends StatelessWidget {
           BoxShadow(
             color: Colors.grey.shade50,
             blurRadius: 4,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
       ),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: iconColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(icon, color: iconColor, size: 16),
           ),
-          const SizedBox(width: 14),
+          SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF1E2875),
@@ -464,7 +455,7 @@ class HomeTab extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Text(
                   subtitle,
                   style: TextStyle(fontSize: 10, color: Colors.grey.shade600),
@@ -494,8 +485,8 @@ class HomeTab extends StatelessWidget {
     required Color color,
   }) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(10),
+      margin: EdgeInsets.only(bottom: 12),
+      padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -504,7 +495,7 @@ class HomeTab extends StatelessWidget {
           BoxShadow(
             color: Colors.grey.shade50,
             blurRadius: 4,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
       ),
@@ -512,21 +503,21 @@ class HomeTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(Icons.event, color: color, size: 16),
           ),
-          const SizedBox(width: 14),
+          SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF1E2875),
@@ -534,7 +525,7 @@ class HomeTab extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Text(
                   datetime,
                   style: TextStyle(
@@ -545,7 +536,7 @@ class HomeTab extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 2),
+                SizedBox(height: 2),
                 Text(
                   location,
                   style: TextStyle(fontSize: 10, color: Colors.grey.shade500),

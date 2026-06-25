@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
 import '../../../core/theme/app_colors.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminTransportScreen extends StatefulWidget {
-  const AdminTransportScreen({super.key});
+  AdminTransportScreen({super.key});
 
   @override
   State<AdminTransportScreen> createState() => _AdminTransportScreenState();
@@ -115,9 +116,9 @@ class _AdminTransportScreenState extends State<AdminTransportScreen> with Single
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FF),
-      appBar: const AdminAppBar(title: "Transport Management", subtitle: "Manage your account details"),
-      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
+      backgroundColor: Color(0xFFF5F7FF),
+      appBar: AdminAppBar(title: "Transport Management", subtitle: "Manage your account details"),
+      bottomNavigationBar: AdminBottomNavBar(currentIndex: 4),
       body: TabBarView(
         controller: _tabController,
         children: [
@@ -129,8 +130,8 @@ class _AdminTransportScreenState extends State<AdminTransportScreen> with Single
         heroTag: null,
         onPressed: () {},
         backgroundColor: AppColors.primaryDark,
-        icon: const Icon(Icons.add_road, color: Colors.white),
-        label: const Text("New Route", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        icon: Icon(Icons.add_road, color: Colors.white),
+        label: Text("New Route".tr, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
       ),
     );
   }
@@ -143,8 +144,8 @@ class _AdminTransportScreenState extends State<AdminTransportScreen> with Single
     }).toList();
 
     return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.all(16),
+      physics: BouncingScrollPhysics(),
+      padding: EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -162,14 +163,14 @@ class _AdminTransportScreenState extends State<AdminTransportScreen> with Single
                 Expanded(
                   flex: 3,
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: EdgeInsets.all(16.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text("Manage Fleet", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                        const SizedBox(height: 8),
-                        Text("Track and manage your school buses in real time.", style: TextStyle(fontSize: 12, color: Colors.grey)),
+                        Text("Manage Fleet".tr, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                        SizedBox(height: 8),
+                        Text("Track and manage your school buses in real time.".tr, style: TextStyle(fontSize: 12, color: Colors.grey)),
                       ],
                     ),
                   ),
@@ -177,14 +178,14 @@ class _AdminTransportScreenState extends State<AdminTransportScreen> with Single
                 Expanded(
                   flex: 2,
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(8.0),
                     child: Image.asset("assets/images/school_bus.png", fit: BoxFit.contain),
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // Stats Row
           SingleChildScrollView(
@@ -198,7 +199,7 @@ class _AdminTransportScreenState extends State<AdminTransportScreen> with Single
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // Search Bar
           TextField(
@@ -209,30 +210,29 @@ class _AdminTransportScreenState extends State<AdminTransportScreen> with Single
             },
             decoration: InputDecoration(
               hintText: "Search routes by number, name, or vehicle...",
-              hintStyle: const TextStyle(fontSize: 13, color: Colors.grey),
-              prefixIcon: const Icon(Icons.search, color: Colors.grey, size: 20),
+              hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
+              prefixIcon: Icon(Icons.search, color: Colors.grey, size: 20),
               filled: true,
               fillColor: Colors.white,
-              contentPadding: const EdgeInsets.symmetric(vertical: 10),
+              contentPadding: EdgeInsets.symmetric(vertical: 10),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide.none,
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // Title
-          const Text(
-            "Active Fleet & Route Status",
+          Text("Active Fleet & Route Status".tr,
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
 
           // Routes List
           ListView.builder(
             shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
+            physics: NeverScrollableScrollPhysics(),
             itemCount: filteredRoutes.length,
             itemBuilder: (context, index) {
               final r = filteredRoutes[index];
@@ -240,8 +240,8 @@ class _AdminTransportScreenState extends State<AdminTransportScreen> with Single
               final occupancyRate = r['occupancy'] / r['capacity'];
 
               return Container(
-                margin: const EdgeInsets.only(bottom: 12),
-                padding: const EdgeInsets.all(16),
+                margin: EdgeInsets.only(bottom: 12),
+                padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
@@ -256,27 +256,27 @@ class _AdminTransportScreenState extends State<AdminTransportScreen> with Single
                         Row(
                           children: [
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                               decoration: BoxDecoration(
                                 color: AppColors.primary.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Text(
                                 r['routeNo'],
-                                style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.primary),
+                                style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.primary),
                               ),
                             ),
-                            const SizedBox(width: 8),
-                            const Icon(Icons.directions_bus, size: 16, color: Colors.orange),
-                            const SizedBox(width: 4),
+                            SizedBox(width: 8),
+                            Icon(Icons.directions_bus, size: 16, color: Colors.orange),
+                            SizedBox(width: 4),
                             Text(
                               r['busNo'],
-                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF757897)),
+                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF757897)),
                             ),
                           ],
                         ),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
                             color: (isDelayed ? Colors.red : Colors.green).withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(8),
@@ -292,46 +292,46 @@ class _AdminTransportScreenState extends State<AdminTransportScreen> with Single
                         ),
                       ],
                     ),
-                    const SizedBox(height: 10),
+                    SizedBox(height: 10),
                     Text(
                       r['routeName'],
-                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
                     ),
-                    const Divider(height: 20),
+                    Divider(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text("Assigned Driver", style: TextStyle(fontSize: 9, color: Colors.grey)),
-                            const SizedBox(height: 2),
-                            Text(r['driver'], style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                            Text("Assigned Driver".tr, style: TextStyle(fontSize: 9, color: Colors.grey)),
+                            SizedBox(height: 2),
+                            Text(r['driver'], style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
                           ],
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            const Text("Stops Covered", style: TextStyle(fontSize: 9, color: Colors.grey)),
-                            const SizedBox(height: 2),
-                            Text("${r['stops']} Stops", style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF757897))),
+                            Text("Stops Covered".tr, style: TextStyle(fontSize: 9, color: Colors.grey)),
+                            SizedBox(height: 2),
+                            Text("${r['stops']} Stops", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF757897))),
                           ],
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
                     // Occupancy Progress Bar
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Seat Occupancy", style: TextStyle(fontSize: 10, color: Colors.grey.shade500, fontWeight: FontWeight.w500)),
+                        Text("Seat Occupancy".tr, style: TextStyle(fontSize: 10, color: Colors.grey.shade500, fontWeight: FontWeight.w500)),
                         Text(
                           "${r['occupancy']} / ${r['capacity']} seats (${(occupancyRate * 100).toInt()}%)",
-                          style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+                          style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 6),
+                    SizedBox(height: 6),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(4),
                       child: LinearProgressIndicator(
@@ -346,7 +346,7 @@ class _AdminTransportScreenState extends State<AdminTransportScreen> with Single
               );
             },
           ),
-          const SizedBox(height: 60),
+          SizedBox(height: 60),
         ],
       ),
     );
@@ -354,15 +354,15 @@ class _AdminTransportScreenState extends State<AdminTransportScreen> with Single
 
   Widget _buildDriversTab() {
     return ListView.builder(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       itemCount: _drivers.length,
       itemBuilder: (context, index) {
         final d = _drivers[index];
         final isActive = d['status'] == 'Active';
 
         return Container(
-          margin: const EdgeInsets.only(bottom: 12),
-          padding: const EdgeInsets.all(16),
+          margin: EdgeInsets.only(bottom: 12),
+          padding: EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
@@ -374,9 +374,9 @@ class _AdminTransportScreenState extends State<AdminTransportScreen> with Single
               CircleAvatar(
                 radius: 22,
                 backgroundColor: AppColors.primary.withValues(alpha: 0.1),
-                child: const Icon(Icons.person, color: AppColors.primary, size: 24),
+                child: Icon(Icons.person, color: AppColors.primary, size: 24),
               ),
-              const SizedBox(width: 14),
+              SizedBox(width: 14),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -386,10 +386,10 @@ class _AdminTransportScreenState extends State<AdminTransportScreen> with Single
                       children: [
                         Text(
                           d['name'],
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF1E2875)),
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF1E2875)),
                         ),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
                             color: (isActive ? Colors.green : Colors.red).withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(8),
@@ -405,43 +405,43 @@ class _AdminTransportScreenState extends State<AdminTransportScreen> with Single
                         ),
                       ],
                     ),
-                    const SizedBox(height: 2),
+                    SizedBox(height: 2),
                     Text(
                       "Lic: ${d['license']}",
-                      style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold),
                     ),
-                    const Divider(height: 20),
+                    Divider(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text("Experience", style: TextStyle(fontSize: 9, color: Colors.grey)),
-                            const SizedBox(height: 2),
-                            Text(d['experience'], style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                            Text("Experience".tr, style: TextStyle(fontSize: 9, color: Colors.grey)),
+                            SizedBox(height: 2),
+                            Text(d['experience'], style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
                           ],
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const Text("Assigned", style: TextStyle(fontSize: 9, color: Colors.grey)),
-                            const SizedBox(height: 2),
-                            Text(d['route'], style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF757897))),
+                            Text("Assigned".tr, style: TextStyle(fontSize: 9, color: Colors.grey)),
+                            SizedBox(height: 2),
+                            Text(d['route'], style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF757897))),
                           ],
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            const Text("Safety Rating", style: TextStyle(fontSize: 9, color: Colors.grey)),
-                            const SizedBox(height: 2),
+                            Text("Safety Rating".tr, style: TextStyle(fontSize: 9, color: Colors.grey)),
+                            SizedBox(height: 2),
                             Row(
                               children: [
-                                const Icon(Icons.star, color: Colors.amber, size: 12),
-                                const SizedBox(width: 2),
+                                Icon(Icons.star, color: Colors.amber, size: 12),
+                                SizedBox(width: 2),
                                 Text(
                                   d['rating'].toString(),
-                                  style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+                                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
                                 ),
                               ],
                             ),
@@ -462,8 +462,8 @@ class _AdminTransportScreenState extends State<AdminTransportScreen> with Single
   Widget _buildStatCard(String label, String value, String subtext, Color color) {
     return Container(
       width: 130,
-      margin: const EdgeInsets.only(right: 12),
-      padding: const EdgeInsets.all(12),
+      margin: EdgeInsets.only(right: 12),
+      padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -472,10 +472,10 @@ class _AdminTransportScreenState extends State<AdminTransportScreen> with Single
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
-          Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-          const SizedBox(height: 4),
+          Text(label, style: TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
+          SizedBox(height: 8),
+          Text(value, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+          SizedBox(height: 4),
           Text(subtext, style: TextStyle(fontSize: 9, color: color, fontWeight: FontWeight.w500)),
         ],
       ),

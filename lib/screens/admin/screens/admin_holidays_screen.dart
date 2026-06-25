@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
 import '../../../core/data/app_data_store.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminHolidaysScreen extends StatefulWidget {
-  const AdminHolidaysScreen({super.key});
+  AdminHolidaysScreen({super.key});
   @override
   State<AdminHolidaysScreen> createState() => _AdminHolidaysScreenState();
 }
@@ -48,7 +49,7 @@ class _AdminHolidaysScreenState extends State<AdminHolidaysScreen> {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           title: Text(
             editIndex != null ? 'Edit Holiday' : 'Add New Holiday',
-            style: const TextStyle(
+            style: TextStyle(
                 fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
           ),
           content: Column(mainAxisSize: MainAxisSize.min, children: [
@@ -63,15 +64,15 @@ class _AdminHolidaysScreenState extends State<AdminHolidaysScreen> {
                 if (picked != null) setS(() => _selectedDate = picked);
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(
+                padding: EdgeInsets.symmetric(
                     horizontal: 12, vertical: 14),
                 decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey.shade300),
                     borderRadius: BorderRadius.circular(10)),
                 child: Row(children: [
-                  const Icon(Icons.calendar_today,
+                  Icon(Icons.calendar_today,
                       size: 16, color: Colors.grey),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Text(
                     _selectedDate != null
                         ? '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}'
@@ -86,7 +87,7 @@ class _AdminHolidaysScreenState extends State<AdminHolidaysScreen> {
                 ]),
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             TextField(
               controller: _descCtrl,
               autofocus: true,
@@ -100,10 +101,10 @@ class _AdminHolidaysScreenState extends State<AdminHolidaysScreen> {
           actions: [
             TextButton(
                 onPressed: () => Navigator.pop(ctx),
-                child: const Text('Cancel')),
+                child: Text('Cancel'.tr)),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFB45309),
+                  backgroundColor: Color(0xFFB45309),
                   foregroundColor: Colors.white),
               onPressed: () {
                 final desc = _descCtrl.text.trim();
@@ -125,7 +126,7 @@ class _AdminHolidaysScreenState extends State<AdminHolidaysScreen> {
                   content: Text(editIndex != null
                       ? 'Holiday updated'
                       : 'Holiday added'),
-                  backgroundColor: const Color(0xFFB45309),
+                  backgroundColor: Color(0xFFB45309),
                   behavior: SnackBarBehavior.floating,
                 ));
               },
@@ -144,14 +145,14 @@ class _AdminHolidaysScreenState extends State<AdminHolidaysScreen> {
       builder: (ctx) => AlertDialog(
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Delete Holiday',
+        title: Text('Delete Holiday'.tr,
             style:
                 TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
         content: Text('Delete "$desc"?'),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Cancel')),
+              child: Text('Cancel'.tr)),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red, foregroundColor: Colors.white),
@@ -159,13 +160,13 @@ class _AdminHolidaysScreenState extends State<AdminHolidaysScreen> {
               _store.deleteHoliday(index);
               setState(() {});
               Navigator.pop(ctx);
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text('Holiday deleted'),
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('Holiday deleted'.tr),
                 backgroundColor: Colors.red,
                 behavior: SnackBarBehavior.floating,
               ));
             },
-            child: const Text('Delete'),
+            child: Text('Delete'.tr),
           ),
         ],
       ),
@@ -175,28 +176,28 @@ class _AdminHolidaysScreenState extends State<AdminHolidaysScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FF),
-      appBar: const AdminAppBar(
+      backgroundColor: Color(0xFFF5F7FF),
+      appBar: AdminAppBar(
           title: 'Holidays', subtitle: 'Manage school holidays'),
-      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
+      bottomNavigationBar: AdminBottomNavBar(currentIndex: 4),
       body: Column(children: [
         Container(
           color: Colors.white,
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          padding: EdgeInsets.symmetric(vertical: 16),
           child: Center(
             child: Column(children: [
-              const Text('Holidays List',
+              Text('Holidays List'.tr,
                   style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFFB45309))),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               ElevatedButton.icon(
                 onPressed: () => _showAddDialog(),
-                icon: const Icon(Icons.add, size: 16),
-                label: const Text('Add New'),
+                icon: Icon(Icons.add, size: 16),
+                label: Text('Add New'.tr),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFB45309),
+                  backgroundColor: Color(0xFFB45309),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8)),
@@ -206,19 +207,19 @@ class _AdminHolidaysScreenState extends State<AdminHolidaysScreen> {
           ),
         ),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          color: const Color(0xFF2D3748),
-          child: const Row(children: [
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          color: Color(0xFF2D3748),
+          child: Row(children: [
             Expanded(
                 flex: 2,
-                child: Text('Date',
+                child: Text('Date'.tr,
                     style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 13))),
             Expanded(
                 flex: 3,
-                child: Text('Description',
+                child: Text('Description'.tr,
                     style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -228,8 +229,7 @@ class _AdminHolidaysScreenState extends State<AdminHolidaysScreen> {
         ),
         Expanded(
           child: _holidays.isEmpty
-              ? const Center(
-                  child: Text('No holidays added yet.',
+              ? Center(child: Text('No holidays added yet.'.tr,
                       style: TextStyle(color: Colors.grey)))
               : ListView.separated(
                   padding: EdgeInsets.zero,
@@ -240,13 +240,13 @@ class _AdminHolidaysScreenState extends State<AdminHolidaysScreen> {
                     final h = _holidays[i];
                     return Container(
                       color: Colors.white,
-                      padding: const EdgeInsets.symmetric(
+                      padding: EdgeInsets.symmetric(
                           horizontal: 16, vertical: 12),
                       child: Row(children: [
                         Expanded(
                             flex: 2,
                             child: Text(h['date'],
-                                style: const TextStyle(fontSize: 13))),
+                                style: TextStyle(fontSize: 13))),
                         Expanded(
                           flex: 3,
                           child: Text(h['description'],
@@ -254,7 +254,7 @@ class _AdminHolidaysScreenState extends State<AdminHolidaysScreen> {
                                   fontSize: 13,
                                   color: i < 2
                                       ? Colors.black87
-                                      : const Color(0xFFB45309))),
+                                      : Color(0xFFB45309))),
                         ),
                         Row(children: [
                           InkWell(
@@ -262,14 +262,14 @@ class _AdminHolidaysScreenState extends State<AdminHolidaysScreen> {
                             child: Container(
                               width: 32,
                               height: 32,
-                              decoration: const BoxDecoration(
+                              decoration: BoxDecoration(
                                   color: Color(0xFF2563EB),
                                   shape: BoxShape.circle),
-                              child: const Icon(Icons.edit,
+                              child: Icon(Icons.edit,
                                   color: Colors.white, size: 16),
                             ),
                           ),
-                          const SizedBox(width: 8),
+                          SizedBox(width: 8),
                           InkWell(
                             onTap: () => _delete(i),
                             child: Container(
@@ -289,25 +289,25 @@ class _AdminHolidaysScreenState extends State<AdminHolidaysScreen> {
                 ),
         ),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          color: const Color(0xFFFEF3C7),
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          color: Color(0xFFFEF3C7),
           child: Row(children: [
-            const Text('Items per page:',
+            Text('Items per page:'.tr,
                 style: TextStyle(fontSize: 12, color: Colors.black54)),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Container(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey.shade400),
                   borderRadius: BorderRadius.circular(4),
                   color: Colors.white),
-              child: const Text('10', style: TextStyle(fontSize: 12)),
+              child: Text('10'.tr, style: TextStyle(fontSize: 12)),
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: 16),
             Text('1 - ${_holidays.length} of ${_holidays.length}',
                 style:
-                    const TextStyle(fontSize: 12, color: Colors.black54)),
+                    TextStyle(fontSize: 12, color: Colors.black54)),
           ]),
         ),
       ]),

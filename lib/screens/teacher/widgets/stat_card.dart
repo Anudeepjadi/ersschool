@@ -9,7 +9,7 @@ class StatCard extends StatelessWidget {
   final VoidCallback? onTap;
   final bool isSelected;
 
-  const StatCard({
+  StatCard({
     super.key,
     required this.title,
     required this.value,
@@ -26,8 +26,8 @@ class StatCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
       width: 140,
-      margin: const EdgeInsets.only(right: 12),
-      padding: const EdgeInsets.all(12),
+      margin: EdgeInsets.only(right: 12),
+      padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: isSelected ? iconColor.withValues(alpha: 0.1) : Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -39,7 +39,7 @@ class StatCard extends StatelessWidget {
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.02),
             blurRadius: 4,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
       ),
@@ -48,23 +48,23 @@ class StatCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: iconBackgroundColor,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(icon, color: iconColor, size: 20),
           ),
-          const Expanded(child: SizedBox(height: 8)),
+          Expanded(child: SizedBox(height: 8)),
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
               color: Color(0xFF1B263B),
             ),
           ),
-          const SizedBox(height: 2),
+          SizedBox(height: 2),
           Text(
             title,
             style: TextStyle(

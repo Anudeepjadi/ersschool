@@ -5,13 +5,14 @@ import 'package:ersschool/screens/student/class/tabs/diary_screen.dart';
 import 'package:ersschool/screens/student/class/tabs/assignments_screen.dart';
 import 'package:ersschool/screens/student/class/tabs/attendance_screen.dart';
 import '../dashboard/widgets/student_app_bar.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class ClassScreen extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
   final bool showAppBar;
   final Function(int)? onTabSelected;
 
-  const ClassScreen({
+  ClassScreen({
     super.key,
     this.onOpenDrawer,
     this.showAppBar = true,
@@ -56,9 +57,9 @@ class _ClassScreenState extends State<ClassScreen> with SingleTickerProviderStat
       ) : null,
       body: Column(
         children: [
-          if (!widget.showAppBar) const SizedBox(height: 20),
+          if (!widget.showAppBar) SizedBox(height: 20),
           _buildTabBar(),
-          const Divider(height: 1, thickness: 1),
+          Divider(height: 1, thickness: 1),
           Expanded(
             child: _buildContent(),
           ),
@@ -71,15 +72,15 @@ class _ClassScreenState extends State<ClassScreen> with SingleTickerProviderStat
   Widget _buildTabBar() {
     return Container(
       color: Colors.white,
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: EdgeInsets.symmetric(vertical: 4),
       child: TabBar(
         controller: _tabController,
-        indicatorColor: const Color(0xFF0038FF),
+        indicatorColor: Color(0xFF0038FF),
         indicatorWeight: 3,
-        labelColor: const Color(0xFF0038FF),
-        unselectedLabelColor: const Color(0xFF666666),
-        labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
-        unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
+        labelColor: Color(0xFF0038FF),
+        unselectedLabelColor: Color(0xFF666666),
+        labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
+        unselectedLabelStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
         tabs: _tabs.map((tab) => Tab(
           icon: Icon(tab['icon'] as IconData, size: 24),
           text: tab['title'] as String,
@@ -93,43 +94,41 @@ class _ClassScreenState extends State<ClassScreen> with SingleTickerProviderStat
       controller: _tabController,
       children: [
         SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
+          physics: BouncingScrollPhysics(),
           child: _buildTimetable(),
         ),
-        const DiaryScreen(showAppBar: false),
-        const AssignmentsScreen(showAppBar: false),
-        const AttendanceScreen(showAppBar: false),
+        DiaryScreen(showAppBar: false),
+        AssignmentsScreen(showAppBar: false),
+        AttendanceScreen(showAppBar: false),
       ],
     );
   }
 
   Widget _buildTimetable() {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
+            children: [
               Icon(Icons.chevron_left, color: Colors.grey),
               SizedBox(width: 16),
               Icon(Icons.calendar_month, size: 18, color: Colors.grey),
               SizedBox(width: 8),
-              Text(
-                "Wednesday, 17 Jun 2026",
+              Text("Wednesday, 17 Jun 2026".tr,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
               SizedBox(width: 16),
               Icon(Icons.chevron_right, color: Colors.grey),
             ],
           ),
-          const SizedBox(height: 32),
+          SizedBox(height: 32),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                "Timetable",
+              Text("Timetable".tr,
                 style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -137,9 +136,8 @@ class _ClassScreenState extends State<ClassScreen> with SingleTickerProviderStat
               ),
               GestureDetector(
                 onTap: () => Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => const TimetableScreen())),
-                child: Text(
-                  "View Full Timetable",
+                    MaterialPageRoute(builder: (_) => TimetableScreen())),
+                child: Text("View Full Timetable".tr,
                   style: TextStyle(
                       color: Color(0xFF0038FF),
                       fontSize: 13,
@@ -148,7 +146,7 @@ class _ClassScreenState extends State<ClassScreen> with SingleTickerProviderStat
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
           // Timetable Header
           ScrollableTableWrapper(
             child: SizedBox(
@@ -156,46 +154,46 @@ class _ClassScreenState extends State<ClassScreen> with SingleTickerProviderStat
               child: Column(
                 children: [
                   Row(
-                    children: const [
+                    children: [
                       Expanded(
                           flex: 10,
-                          child: Text("Period",
+                          child: Text("Period".tr,
                               style: TextStyle(
                                   color: Colors.grey,
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500))),
                       Expanded(
                           flex: 20,
-                          child: Text("Time",
+                          child: Text("Time".tr,
                               style: TextStyle(
                                   color: Colors.grey,
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500))),
                       Expanded(
                           flex: 30,
-                          child: Text("Subject",
+                          child: Text("Subject".tr,
                               style: TextStyle(
                                   color: Colors.grey,
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500))),
                       Expanded(
                           flex: 30,
-                          child: Text("Teacher",
+                          child: Text("Teacher".tr,
                               style: TextStyle(
                                   color: Colors.grey,
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500))),
                       Expanded(
                           flex: 10,
-                          child: Text("Room",
+                          child: Text("Room".tr,
                               style: TextStyle(
                                   color: Colors.grey,
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500))),
                     ],
                   ),
-                  const SizedBox(height: 12),
-                  const Divider(height: 1),
+                  SizedBox(height: 12),
+                  Divider(height: 1),
                   _buildTimetableItem(
                     period: "1",
                     time: "08:00 AM\n- 08:45 AM",
@@ -262,12 +260,12 @@ class _ClassScreenState extends State<ClassScreen> with SingleTickerProviderStat
             ),
           ),
 
-          const SizedBox(height: 32),
+          SizedBox(height: 32),
           _buildSectionHeader("Today's Assignments", "View All", () {
             Navigator.push(context,
-                MaterialPageRoute(builder: (_) => const AssignmentsScreen()));
+                MaterialPageRoute(builder: (_) => AssignmentsScreen()));
           }),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           _buildAssignmentItem(
             title: "Maths - Chapter 5 Exercise",
             type: "Homework",
@@ -287,12 +285,12 @@ class _ClassScreenState extends State<ClassScreen> with SingleTickerProviderStat
             iconColor: Colors.green,
           ),
 
-          const SizedBox(height: 32),
+          SizedBox(height: 32),
           _buildSectionHeader("Attendance Summary", "View Details", () {
             Navigator.push(context,
-                MaterialPageRoute(builder: (_) => const AttendanceScreen()));
+                MaterialPageRoute(builder: (_) => AttendanceScreen()));
           }),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           _buildAttendanceSummary(),
         ],
       ),
@@ -306,7 +304,7 @@ class _ClassScreenState extends State<ClassScreen> with SingleTickerProviderStat
       children: [
         Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: Color(0xFF1E1E1E)),
@@ -315,7 +313,7 @@ class _ClassScreenState extends State<ClassScreen> with SingleTickerProviderStat
           onTap: onTap,
           child: Text(
             action,
-            style: const TextStyle(
+            style: TextStyle(
                 color: Color(0xFF0038FF),
                 fontSize: 13,
                 fontWeight: FontWeight.bold),
@@ -336,7 +334,7 @@ class _ClassScreenState extends State<ClassScreen> with SingleTickerProviderStat
     required IconData icon,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16.0),
+      padding: EdgeInsets.symmetric(vertical: 16.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -352,7 +350,7 @@ class _ClassScreenState extends State<ClassScreen> with SingleTickerProviderStat
             flex: 20,
             child: Text(
               time,
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 11,
                   color: Color(0xFF333333),
                   fontWeight: FontWeight.w500),
@@ -363,13 +361,13 @@ class _ClassScreenState extends State<ClassScreen> with SingleTickerProviderStat
             child: Row(
               children: [
                 Icon(icon, size: 20, color: color),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(subject,
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 11, fontWeight: FontWeight.bold)),
                       Text(subjectCode,
                           style: TextStyle(
@@ -387,7 +385,7 @@ class _ClassScreenState extends State<ClassScreen> with SingleTickerProviderStat
                 Expanded(
                   child: Text(
                     teacher,
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontSize: 11, fontWeight: FontWeight.w500),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -411,8 +409,8 @@ class _ClassScreenState extends State<ClassScreen> with SingleTickerProviderStat
 
   Widget _buildBreakTime(String title, String time) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+      margin: EdgeInsets.symmetric(vertical: 8),
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
       decoration: BoxDecoration(
         color: Colors.grey.shade50,
         borderRadius: BorderRadius.circular(8),
@@ -420,16 +418,16 @@ class _ClassScreenState extends State<ClassScreen> with SingleTickerProviderStat
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.coffee_outlined, size: 18, color: Colors.grey),
-          const SizedBox(width: 8),
+          Icon(Icons.coffee_outlined, size: 18, color: Colors.grey),
+          SizedBox(width: 8),
           Text(
             title,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Text(
             time,
-            style: const TextStyle(fontSize: 11, color: Colors.grey),
+            style: TextStyle(fontSize: 11, color: Colors.grey),
           ),
         ],
       ),
@@ -446,8 +444,8 @@ class _ClassScreenState extends State<ClassScreen> with SingleTickerProviderStat
     required Color iconColor,
   }) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(12),
+      margin: EdgeInsets.only(bottom: 12),
+      padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -456,14 +454,14 @@ class _ClassScreenState extends State<ClassScreen> with SingleTickerProviderStat
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: iconColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(icon, color: iconColor, size: 20),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -472,12 +470,12 @@ class _ClassScreenState extends State<ClassScreen> with SingleTickerProviderStat
                   children: [
                     Expanded(
                         child: Text(title,
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 13),
                             overflow: TextOverflow.ellipsis)),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(
+                      padding: EdgeInsets.symmetric(
                           horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
                         color: typeColor.withValues(alpha: 0.1),
@@ -493,8 +491,8 @@ class _ClassScreenState extends State<ClassScreen> with SingleTickerProviderStat
                     ),
                   ],
                 ),
-                const SizedBox(height: 4),
-                const Text("Solve exercise questions from chapter 5.",
+                SizedBox(height: 4),
+                Text("Solve exercise questions from chapter 5.".tr,
                     style: TextStyle(color: Colors.grey, fontSize: 11)),
               ],
             ),
@@ -503,16 +501,16 @@ class _ClassScreenState extends State<ClassScreen> with SingleTickerProviderStat
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(dueText,
-                  style: const TextStyle(
+                  style: TextStyle(
                       color: Colors.red,
                       fontSize: 11,
                       fontWeight: FontWeight.bold)),
               Text(dueTime,
-                  style: const TextStyle(color: Colors.grey, fontSize: 11)),
+                  style: TextStyle(color: Colors.grey, fontSize: 11)),
             ],
           ),
-          const SizedBox(width: 8),
-          const Icon(Icons.chevron_right, color: Colors.grey, size: 20),
+          SizedBox(width: 8),
+          Icon(Icons.chevron_right, color: Colors.grey, size: 20),
         ],
       ),
     );
@@ -537,11 +535,11 @@ class _ClassScreenState extends State<ClassScreen> with SingleTickerProviderStat
     return Column(
       children: [
         Icon(icon, color: color, size: 24),
-        const SizedBox(height: 8),
-        Text(label, style: const TextStyle(color: Colors.grey, fontSize: 10)),
-        const SizedBox(height: 4),
+        SizedBox(height: 8),
+        Text(label, style: TextStyle(color: Colors.grey, fontSize: 10)),
+        SizedBox(height: 4),
         Text(value,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
       ],
     );
   }

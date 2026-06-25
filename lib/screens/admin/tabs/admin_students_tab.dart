@@ -6,10 +6,11 @@ import '../widgets/admin_app_bar.dart';
 import '../widgets/ai_bot_fab.dart';
 import '../../teacher/teacher_dashboard_screen.dart';
 import '../../teacher/screens/students_screen.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminStudentsTab extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
-  const AdminStudentsTab({super.key, this.onOpenDrawer});
+  AdminStudentsTab({super.key, this.onOpenDrawer});
 
   @override
   State<AdminStudentsTab> createState() => AdminStudentsTabState();
@@ -81,14 +82,14 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
         final inactiveCount = _students.where((s) => s['status'] == 'Inactive').length;
 
         return Scaffold(
-          backgroundColor: const Color(0xFFF5F7FF),
+          backgroundColor: Color(0xFFF5F7FF),
           appBar: AdminAppBar(
             title: "Students",
             subtitle: "Manage 13 standard classes",
             onOpenDrawer: widget.onOpenDrawer,
           ),
           body: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -110,78 +111,77 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
                       hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 13),
                       prefixIcon: Icon(Icons.search, color: Colors.grey.shade400, size: 20),
                       border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                      contentPadding: EdgeInsets.symmetric(vertical: 12),
                     ),
                   ),
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 ElevatedButton.icon(
                   onPressed: showAddStudentBottomSheet,
-                  icon: const Icon(Icons.add, size: 18),
-                  label: const Text("Add Student", style: TextStyle(fontWeight: FontWeight.bold)),
+                  icon: Icon(Icons.add, size: 18),
+                  label: Text("Add Student".tr, style: TextStyle(fontWeight: FontWeight.bold)),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF0038FF),
+                    backgroundColor: Color(0xFF0038FF),
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    padding: EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
 
             // Filter Chips Row
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              physics: const BouncingScrollPhysics(),
+              physics: BouncingScrollPhysics(),
               child: Row(
                 children: [
                   _buildFilterChip('All', _selectedFilter == 'All'),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   _buildFilterChip('Active', _selectedFilter == 'Active'),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   _buildFilterChip('Inactive', _selectedFilter == 'Inactive'),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   _buildFilterChip('Passed Out', _selectedFilter == 'Passed Out'),
-                  const SizedBox(width: 16),
+                  SizedBox(width: 16),
                   TextButton.icon(
                     onPressed: () {},
-                    icon: const Icon(Icons.filter_list, size: 16, color: Colors.grey),
-                    label: const Text("More Filters", style: TextStyle(color: Colors.grey, fontSize: 13)),
+                    icon: Icon(Icons.filter_list, size: 16, color: Colors.grey),
+                    label: Text("More Filters".tr, style: TextStyle(color: Colors.grey, fontSize: 13)),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
 
             // Stats Row
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              physics: const BouncingScrollPhysics(),
+              physics: BouncingScrollPhysics(),
               child: Row(
                 children: [
-                  SizedBox(width: 140, child: _buildStatCard("Total Students", "${_students.length}", Icons.people, const Color(0xFF0038FF), true, "12 this month")),
-                  const SizedBox(width: 12),
-                  SizedBox(width: 140, child: _buildStatCard("Boys", "642", Icons.boy, const Color(0xFF10B981), true, "8 this month")),
-                  const SizedBox(width: 12),
-                  SizedBox(width: 140, child: _buildStatCard("Girls", "603", Icons.girl, const Color(0xFFEC4899), true, "4 this month")),
-                  const SizedBox(width: 12),
-                  SizedBox(width: 140, child: _buildStatCard("Absent/Inactive", "$inactiveCount", Icons.person_off, const Color(0xFFF59E0B), false, "2 this month")),
+                  SizedBox(width: 140, child: _buildStatCard("Total Students", "${_students.length}", Icons.people, Color(0xFF0038FF), true, "12 this month")),
+                  SizedBox(width: 12),
+                  SizedBox(width: 140, child: _buildStatCard("Boys", "642", Icons.boy, Color(0xFF10B981), true, "8 this month")),
+                  SizedBox(width: 12),
+                  SizedBox(width: 140, child: _buildStatCard("Girls", "603", Icons.girl, Color(0xFFEC4899), true, "4 this month")),
+                  SizedBox(width: 12),
+                  SizedBox(width: 140, child: _buildStatCard("Absent/Inactive", "$inactiveCount", Icons.person_off, Color(0xFFF59E0B), false, "2 this month")),
                 ],
               ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
 
             // Classes Expansion List
-            Text(
-              "Classes Overview (13)",
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+            Text("Classes Overview (13)".tr,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
 
             ListView.builder(
               shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
+              physics: NeverScrollableScrollPhysics(),
               itemCount: _classes.length,
               itemBuilder: (context, index) {
                 final className = _classes[index];
@@ -193,7 +193,7 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
           ],
         ),
       ),
-      floatingActionButton: const AiBotFab(),
+      floatingActionButton: AiBotFab(),
     );
       },
     );
@@ -204,13 +204,13 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
 
     return Container(
       key: _classKeys[className],
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.grey.shade200),
         boxShadow: [
-          BoxShadow(color: Colors.grey.shade50, blurRadius: 4, offset: const Offset(0, 2)),
+          BoxShadow(color: Colors.grey.shade50, blurRadius: 4, offset: Offset(0, 2)),
         ],
       ),
       child: Theme(
@@ -230,54 +230,54 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
           title: Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF0038FF).withValues(alpha: 0.1),
+                  color: Color(0xFF0038FF).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Icon(Icons.class_, color: Color(0xFF0038FF), size: 20),
+                child: Icon(Icons.class_, color: Color(0xFF0038FF), size: 20),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Text(
                 className,
-                style: const TextStyle(
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 15,
                   color: Color(0xFF1E2875),
                 ),
               ),
-              const Spacer(),
+              Spacer(),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   color: Colors.grey.shade100,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
                   "${students.length} Students",
-                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey),
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey),
                 ),
               ),
             ],
           ),
-          trailing: const Icon(Icons.keyboard_arrow_down, color: Colors.grey),
+          trailing: Icon(Icons.keyboard_arrow_down, color: Colors.grey),
           children: [
             if (students.isEmpty)
-              const Padding(
+              Padding(
                 padding: EdgeInsets.all(24.0),
                 child: Center(
-                  child: Text("No students found in this class.", style: TextStyle(color: Colors.grey)),
+                  child: Text("No students found in this class.".tr, style: TextStyle(color: Colors.grey)),
                 ),
               )
             else
               Column(
                 children: [
-                  const Divider(height: 1),
+                  Divider(height: 1),
                   ListView.separated(
                     shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
+                    physics: NeverScrollableScrollPhysics(),
                     itemCount: students.length,
-                    separatorBuilder: (context, index) => const Divider(height: 1),
+                    separatorBuilder: (context, index) => Divider(height: 1),
                     itemBuilder: (context, index) {
                       return _buildStudentRow(students[index]);
                     },
@@ -292,10 +292,10 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
 
   Widget _buildStudentRow(Map<String, dynamic> student) {
     final isActive = student['status'] == 'Active';
-    final avatarColor = student['gender'] == 'Male' ? const Color(0xFF0038FF) : const Color(0xFFEC4899);
+    final avatarColor = student['gender'] == 'Male' ? Color(0xFF0038FF) : Color(0xFFEC4899);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -304,45 +304,45 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
             backgroundColor: avatarColor.withValues(alpha: 0.1),
             child: Text(student['avatar'], style: TextStyle(color: avatarColor, fontWeight: FontWeight.bold, fontSize: 13)),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(student['name'], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF1E2875)), overflow: TextOverflow.ellipsis),
-                const SizedBox(height: 4),
+                Text(student['name'], style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF1E2875)), overflow: TextOverflow.ellipsis),
+                SizedBox(height: 4),
                 Row(
                   children: [
                     Icon(Icons.phone, size: 10, color: Colors.grey.shade500),
-                    const SizedBox(width: 4),
+                    SizedBox(width: 4),
                     Text(student['phone'], style: TextStyle(fontSize: 10, color: Colors.grey.shade600)),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     Icon(Icons.tag, size: 10, color: Colors.grey.shade500),
-                    const SizedBox(width: 4),
+                    SizedBox(width: 4),
                     Text(student['roll'].replaceAll("Roll No: ", ""), style: TextStyle(fontSize: 10, color: Colors.grey.shade600)),
                   ],
                 ),
-                const SizedBox(height: 2),
+                SizedBox(height: 2),
                 Row(
                   children: [
                     Icon(Icons.badge_outlined, size: 10, color: Colors.grey.shade500),
-                    const SizedBox(width: 4),
+                    SizedBox(width: 4),
                     Text(student['admission'] ?? "ECS000", style: TextStyle(fontSize: 10, color: Colors.grey.shade600)),
                   ],
                 ),
               ],
             ),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           InkWell(
             onTap: () => _toggleStatus(student),
             borderRadius: BorderRadius.circular(6),
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: isActive ? const Color(0xFF10B981).withValues(alpha: 0.1) : const Color(0xFFEF4444).withValues(alpha: 0.1),
+                color: isActive ? Color(0xFF10B981).withValues(alpha: 0.1) : Color(0xFFEF4444).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(6),
-                border: Border.all(color: isActive ? const Color(0xFF10B981).withValues(alpha: 0.3) : const Color(0xFFEF4444).withValues(alpha: 0.3)),
+                border: Border.all(color: isActive ? Color(0xFF10B981).withValues(alpha: 0.3) : Color(0xFFEF4444).withValues(alpha: 0.3)),
               ),
               child: Text(
                 isActive ? "Present" : "Absent",
@@ -350,13 +350,13 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
-                  color: isActive ? const Color(0xFF10B981) : const Color(0xFFEF4444),
+                  color: isActive ? Color(0xFF10B981) : Color(0xFFEF4444),
                 ),
               ),
             ),
           ),
-          const SizedBox(width: 4),
-          const Icon(Icons.chevron_right, size: 18, color: Colors.grey),
+          SizedBox(width: 4),
+          Icon(Icons.chevron_right, size: 18, color: Colors.grey),
         ],
       ),
     );
@@ -366,18 +366,18 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
     return GestureDetector(
       onTap: () => setState(() => _selectedFilter = label),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF0038FF) : Colors.white,
+          color: isSelected ? Color(0xFF0038FF) : Colors.white,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: isSelected ? const Color(0xFF0038FF) : Colors.grey.shade300),
+          border: Border.all(color: isSelected ? Color(0xFF0038FF) : Colors.grey.shade300),
         ),
         child: Text(
           label,
           style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.bold,
-            color: isSelected ? Colors.white : const Color(0xFF1E2875),
+            color: isSelected ? Colors.white : Color(0xFF1E2875),
           ),
         ),
       ),
@@ -386,28 +386,28 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
 
   Widget _buildStatCard(String title, String value, IconData icon, Color color, bool isPositiveTrend, String trendText) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.grey.shade100),
         boxShadow: [
-          BoxShadow(color: Colors.grey.shade50, blurRadius: 4, offset: const Offset(0, 2)),
+          BoxShadow(color: Colors.grey.shade50, blurRadius: 4, offset: Offset(0, 2)),
         ],
       ),
       child: Column(
         children: [
           Icon(icon, color: color, size: 28),
-          const SizedBox(height: 8),
-          Text(title, style: const TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
-          const SizedBox(height: 4),
-          Text(value, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-          const SizedBox(height: 6),
+          SizedBox(height: 8),
+          Text(title, style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+          SizedBox(height: 4),
+          Text(value, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+          SizedBox(height: 6),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(isPositiveTrend ? Icons.arrow_upward : Icons.arrow_downward, size: 10, color: isPositiveTrend ? Colors.green : Colors.red),
-              const SizedBox(width: 2),
+              SizedBox(width: 2),
               Text(trendText, style: TextStyle(fontSize: 10, color: isPositiveTrend ? Colors.green : Colors.red, fontWeight: FontWeight.bold)),
             ],
           ),
@@ -428,7 +428,7 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24),
           topRight: Radius.circular(24),
@@ -452,8 +452,7 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          "Add New Student",
+                        Text("Add New Student".tr,
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -461,15 +460,15 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
                           ),
                         ),
                         IconButton(
-                          icon: const Icon(Icons.close),
+                          icon: Icon(Icons.close),
                           onPressed: () => Navigator.pop(modalCtx),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
                     TextField(
                       controller: nameController,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: "Student Name",
                         prefixIcon: Icon(Icons.person_outline),
                         border: OutlineInputBorder(
@@ -477,10 +476,10 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 14),
+                    SizedBox(height: 14),
                     DropdownButtonFormField<String>(
                       initialValue: selectedClass,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: "Class",
                         prefixIcon: Icon(Icons.class_outlined),
                         border: OutlineInputBorder(
@@ -494,10 +493,10 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
                         }
                       },
                     ),
-                    const SizedBox(height: 14),
+                    SizedBox(height: 14),
                     TextField(
                       controller: rollController,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: "Roll Number (e.g. 05)",
                         prefixIcon: Icon(Icons.tag),
                         border: OutlineInputBorder(
@@ -505,11 +504,11 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 14),
+                    SizedBox(height: 14),
                     TextField(
                       controller: admissionController,
                       readOnly: true,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: "Admission Number",
                         prefixIcon: Icon(Icons.badge_outlined),
                         border: OutlineInputBorder(
@@ -517,11 +516,11 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 14),
+                    SizedBox(height: 14),
                     TextField(
                       controller: phoneController,
                       keyboardType: TextInputType.phone,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: "Parent Mobile Number",
                         prefixIcon: Icon(Icons.phone_outlined),
                         border: OutlineInputBorder(
@@ -529,27 +528,26 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    const Text(
-                      "Gender",
+                    SizedBox(height: 16),
+                    Text("Gender".tr,
                       style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     Row(
                       children: [
                         Expanded(
                           child: ChoiceChip(
-                            label: const Center(child: Text("Male")),
+                            label: Center(child: Text("Male".tr)),
                             selected: selectedGender == 'Male',
                             onSelected: (val) {
                               if (val) setModalState(() => selectedGender = 'Male');
                             },
                           ),
                         ),
-                        const SizedBox(width: 12),
+                        SizedBox(width: 12),
                         Expanded(
                           child: ChoiceChip(
-                            label: const Center(child: Text("Female")),
+                            label: Center(child: Text("Female".tr)),
                             selected: selectedGender == 'Female',
                             onSelected: (val) {
                               if (val) setModalState(() => selectedGender = 'Female');
@@ -558,10 +556,10 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
                     DropdownButtonFormField<String>(
                       initialValue: selectedStatus,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: "Status",
                         prefixIcon: Icon(Icons.info_outline),
                         border: OutlineInputBorder(
@@ -577,18 +575,18 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
                         }
                       },
                     ),
-                    const SizedBox(height: 24),
+                    SizedBox(height: 24),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
                         foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        padding: EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       ),
                       onPressed: () {
                         if (nameController.text.trim().isEmpty) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Please enter student name")),
+                            SnackBar(content: Text("Please enter student name".tr)),
                           );
                           return;
                         }
@@ -637,13 +635,13 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const TeacherDashboardScreen(initialIndex: 2),
+                            builder: (context) => TeacherDashboardScreen(initialIndex: 2),
                           ),
                         );
                       },
-                      child: const Text("Save Student", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                      child: Text("Save Student".tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
                     ),
-                    const SizedBox(height: 10),
+                    SizedBox(height: 10),
                   ],
                 ),
               ),

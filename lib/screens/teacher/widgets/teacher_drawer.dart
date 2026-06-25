@@ -5,12 +5,13 @@ import '../../../core/utils/profile_manager.dart';
 import '../../login/login_screen.dart';
 import '../screens/teacher_my_info_screen.dart';
 import '../../../core/data/app_data_store.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class TeacherDrawer extends StatelessWidget {
   final int? currentIndex;
   final Function(int)? onTabSelected;
 
-  const TeacherDrawer({
+  TeacherDrawer({
     super.key,
     this.currentIndex,
     this.onTabSelected,
@@ -26,7 +27,7 @@ class TeacherDrawer extends StatelessWidget {
       backgroundColor: Colors.white,
       child: ListView(
         padding: EdgeInsets.zero,
-        physics: const BouncingScrollPhysics(),
+        physics: BouncingScrollPhysics(),
         children: [
           Container(
             padding: EdgeInsets.only(
@@ -35,7 +36,7 @@ class TeacherDrawer extends StatelessWidget {
               right: 16,
               bottom: 18,
             ),
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [AppColors.primaryDark, AppColors.primaryDark],
                 begin: Alignment.topLeft,
@@ -48,7 +49,7 @@ class TeacherDrawer extends StatelessWidget {
                 Align(
                   alignment: Alignment.topRight,
                   child: IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white, size: 22),
+                    icon: Icon(Icons.close, color: Colors.white, size: 22),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ),
@@ -76,13 +77,13 @@ class TeacherDrawer extends StatelessWidget {
                               radius: 28,
                               backgroundColor: Colors.white,
                               backgroundImage: path != null ? FileImage(File(path)) : null,
-                              child: path == null ? const Icon(Icons.person, color: AppColors.primary, size: 36) : null,
+                              child: path == null ? Icon(Icons.person, color: AppColors.primary, size: 36) : null,
                             );
                           },
                         ),
                       ),
                     ),
-                    const SizedBox(width: 14),
+                    SizedBox(width: 14),
                     Expanded(
                       child: ValueListenableBuilder<String>(
                         valueListenable: ProfileManager().teacherName,
@@ -92,13 +93,13 @@ class TeacherDrawer extends StatelessWidget {
                             children: [
                               Text(
                                 tName,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              const SizedBox(height: 2),
+                              SizedBox(height: 2),
                               Text(
                                 designation,
                                 style: TextStyle(
@@ -118,10 +119,9 @@ class TeacherDrawer extends StatelessWidget {
           ),
           
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Text(
-              "MAIN",
-              style: const TextStyle(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Text("MAIN".tr,
+              style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.bold,
                 color: Colors.grey,
@@ -161,20 +161,20 @@ class TeacherDrawer extends StatelessWidget {
             index: 4,
           ),
           
-          const Divider(height: 20),
+          Divider(height: 20),
           
           ListTile(
-            leading: const Icon(Icons.logout, color: Colors.red),
-            title: const Text("Logout", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+            leading: Icon(Icons.logout, color: Colors.red),
+            title: Text("Logout".tr, style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
             onTap: () {
               Navigator.of(context).popUntil((route) => route.isFirst);
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (_) => const LoginScreen()),
+                MaterialPageRoute(builder: (_) => LoginScreen()),
               );
             },
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
         ],
       ),
     );
@@ -183,16 +183,16 @@ class TeacherDrawer extends StatelessWidget {
   Widget _buildDrawerItem(BuildContext context, {required IconData icon, required String title, required int index}) {
     final isSelected = currentIndex == index;
     return ListTile(
-      leading: Icon(icon, color: isSelected ? AppColors.primary : const Color(0xFF757897)),
+      leading: Icon(icon, color: isSelected ? AppColors.primary : Color(0xFF757897)),
       title: Text(
         title,
         style: TextStyle(
-          color: isSelected ? AppColors.primary : const Color(0xFF1E2875),
+          color: isSelected ? AppColors.primary : Color(0xFF1E2875),
           fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
           fontSize: 13,
         ),
       ),
-      trailing: const Icon(Icons.chevron_right, size: 16, color: Colors.grey),
+      trailing: Icon(Icons.chevron_right, size: 16, color: Colors.grey),
       selected: isSelected,
       onTap: () {
         Navigator.pop(context); // Close drawer

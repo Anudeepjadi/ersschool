@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
 import '../widgets/admin_app_bar.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminCertificatesScreen extends StatefulWidget {
-  const AdminCertificatesScreen({super.key});
+  AdminCertificatesScreen({super.key});
 
   @override
   State<AdminCertificatesScreen> createState() => _AdminCertificatesScreenState();
@@ -23,15 +24,15 @@ class _AdminCertificatesScreenState extends State<AdminCertificatesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FF),
-      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
-      appBar: const AdminAppBar(
+      backgroundColor: Color(0xFFF5F7FF),
+      bottomNavigationBar: AdminBottomNavBar(currentIndex: 4),
+      appBar: AdminAppBar(
         title: "Certificates",
         subtitle: "Manage student and staff certificates",
       ),
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(16),
+        physics: BouncingScrollPhysics(),
+        padding: EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -48,20 +49,19 @@ class _AdminCertificatesScreenState extends State<AdminCertificatesScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Certificate Previews Section
-            const Text(
-              "Certificate Previews",
+            Text("Certificate Previews".tr,
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             _buildCertificatePreviews(),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Performance overview donut + breakdown list
             _buildChartSection(),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Logs of Issued Certificates
             _buildLogsTable(),
@@ -74,8 +74,8 @@ class _AdminCertificatesScreenState extends State<AdminCertificatesScreen> {
   Widget _buildStatCard(String label, String value, String subtext, Color color) {
     return Container(
       width: 125,
-      margin: const EdgeInsets.only(right: 12),
-      padding: const EdgeInsets.all(12),
+      margin: EdgeInsets.only(right: 12),
+      padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -84,10 +84,10 @@ class _AdminCertificatesScreenState extends State<AdminCertificatesScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
-          Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-          const SizedBox(height: 4),
+          Text(label, style: TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
+          SizedBox(height: 8),
+          Text(value, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+          SizedBox(height: 4),
           Text(subtext, style: TextStyle(fontSize: 10, color: color, fontWeight: FontWeight.bold)),
         ],
       ),
@@ -99,7 +99,7 @@ class _AdminCertificatesScreenState extends State<AdminCertificatesScreen> {
       children: [
         // 1. Student Merit Certificate
         _buildCertLayout(
-          primaryColor: const Color(0xFFD4AF37), // Gold Color
+          primaryColor: Color(0xFFD4AF37), // Gold Color
           title: "CERTIFICATE OF MERIT",
           subtitle: "PROUDLY PRESENTED TO",
           name: "Rahul Kumar",
@@ -108,10 +108,10 @@ class _AdminCertificatesScreenState extends State<AdminCertificatesScreen> {
           date: "20 Jun 2026",
           authority: "Dr. Sarah Jenkins\nPrincipal",
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         // 2. Teacher Appreciation Certificate
         _buildCertLayout(
-          primaryColor: const Color(0xFF0038FF), // Blue Color
+          primaryColor: Color(0xFF0038FF), // Blue Color
           title: "CERTIFICATE OF APPRECIATION",
           subtitle: "GRATEFULLY PRESENTED TO",
           name: "Mrs. Ananya Sharma",
@@ -141,12 +141,12 @@ class _AdminCertificatesScreenState extends State<AdminCertificatesScreen> {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: primaryColor, width: 2),
         boxShadow: [
-          BoxShadow(color: Colors.grey.shade100, blurRadius: 6, offset: const Offset(0, 2)),
+          BoxShadow(color: Colors.grey.shade100, blurRadius: 6, offset: Offset(0, 2)),
         ],
       ),
       child: Container(
-        margin: const EdgeInsets.all(4),
-        padding: const EdgeInsets.all(14),
+        margin: EdgeInsets.all(4),
+        padding: EdgeInsets.all(14),
         decoration: BoxDecoration(
           border: Border.all(color: primaryColor.withValues(alpha: 0.2), width: 1),
           borderRadius: BorderRadius.circular(12),
@@ -158,8 +158,7 @@ class _AdminCertificatesScreenState extends State<AdminCertificatesScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Icon(Icons.school, color: primaryColor, size: 20),
-                const Text(
-                  "ECSTASY INTERNATIONAL SCHOOL",
+                Text("ECSTASY INTERNATIONAL SCHOOL".tr,
                   style: TextStyle(
                     fontSize: 9,
                     fontWeight: FontWeight.bold,
@@ -170,7 +169,7 @@ class _AdminCertificatesScreenState extends State<AdminCertificatesScreen> {
                 Icon(Icons.verified_outlined, color: primaryColor, size: 18),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             // Certificate Title
             Text(
               title,
@@ -181,7 +180,7 @@ class _AdminCertificatesScreenState extends State<AdminCertificatesScreen> {
                 letterSpacing: 0.8,
               ),
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Text(
               subtitle,
               style: TextStyle(
@@ -191,11 +190,11 @@ class _AdminCertificatesScreenState extends State<AdminCertificatesScreen> {
                 letterSpacing: 0.5,
               ),
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
             // Candidate Name
             Text(
               name,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF1E2875),
@@ -209,10 +208,10 @@ class _AdminCertificatesScreenState extends State<AdminCertificatesScreen> {
                 color: Colors.grey.shade500,
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             // Certificate Citation Body
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              padding: EdgeInsets.symmetric(horizontal: 12.0),
               child: Text(
                 reason,
                 textAlign: TextAlign.center,
@@ -224,9 +223,9 @@ class _AdminCertificatesScreenState extends State<AdminCertificatesScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 16),
-            const Divider(),
-            const SizedBox(height: 8),
+            SizedBox(height: 16),
+            Divider(),
+            SizedBox(height: 8),
             // Signature footer
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -234,9 +233,9 @@ class _AdminCertificatesScreenState extends State<AdminCertificatesScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("DATE OF ISSUE", style: TextStyle(fontSize: 8, color: Colors.grey, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 2),
-                    Text(date, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                    Text("DATE OF ISSUE".tr, style: TextStyle(fontSize: 8, color: Colors.grey, fontWeight: FontWeight.bold)),
+                    SizedBox(height: 2),
+                    Text(date, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
                   ],
                 ),
                 Column(
@@ -248,7 +247,7 @@ class _AdminCertificatesScreenState extends State<AdminCertificatesScreen> {
                     ),
                     Text(
                       authority.split('\n')[1],
-                      style: const TextStyle(fontSize: 8, color: Colors.grey, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 8, color: Colors.grey, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -262,7 +261,7 @@ class _AdminCertificatesScreenState extends State<AdminCertificatesScreen> {
 
   Widget _buildChartSection() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -270,11 +269,10 @@ class _AdminCertificatesScreenState extends State<AdminCertificatesScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Certificates Overview",
+          Text("Certificates Overview".tr,
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Row(
             children: [
               Expanded(
@@ -289,27 +287,27 @@ class _AdminCertificatesScreenState extends State<AdminCertificatesScreen> {
                           sectionsSpace: 0,
                           centerSpaceRadius: 30,
                           sections: [
-                            PieChartSectionData(value: 48.9, color: const Color(0xFF3B82F6), radius: 10, showTitle: false),
-                            PieChartSectionData(value: 24.3, color: const Color(0xFF10B981), radius: 10, showTitle: false),
-                            PieChartSectionData(value: 13.9, color: const Color(0xFF8B5CF6), radius: 10, showTitle: false),
-                            PieChartSectionData(value: 8.3, color: const Color(0xFFF59E0B), radius: 10, showTitle: false),
-                            PieChartSectionData(value: 4.6, color: const Color(0xFF9CA3AF), radius: 10, showTitle: false),
+                            PieChartSectionData(value: 48.9, color: Color(0xFF3B82F6), radius: 10, showTitle: false),
+                            PieChartSectionData(value: 24.3, color: Color(0xFF10B981), radius: 10, showTitle: false),
+                            PieChartSectionData(value: 13.9, color: Color(0xFF8B5CF6), radius: 10, showTitle: false),
+                            PieChartSectionData(value: 8.3, color: Color(0xFFF59E0B), radius: 10, showTitle: false),
+                            PieChartSectionData(value: 4.6, color: Color(0xFF9CA3AF), radius: 10, showTitle: false),
                           ],
                         ),
                       ),
-                      const Column(
+                      Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text("2,568", style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                          Text("Total", style: TextStyle(fontSize: 8, color: Colors.grey)),
+                          Text("2,568".tr, style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                          Text("Total".tr, style: TextStyle(fontSize: 8, color: Colors.grey)),
                         ],
                       )
                     ],
                   ),
                 ),
               ),
-              const SizedBox(width: 16),
-              const Expanded(
+              SizedBox(width: 16),
+              Expanded(
                 flex: 6,
                 child: Column(
                   children: [
@@ -339,34 +337,33 @@ class _AdminCertificatesScreenState extends State<AdminCertificatesScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Padding(
+          Padding(
             padding: EdgeInsets.all(16.0),
-            child: Text(
-              "Issued Certificates Log",
+            child: Text("Issued Certificates Log".tr,
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
             ),
           ),
           ListView.builder(
             shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
+            physics: NeverScrollableScrollPhysics(),
             itemCount: _certs.length,
             itemBuilder: (context, index) {
               final cert = _certs[index];
               Color statusColor;
               switch (cert['status']) {
                 case 'Issued':
-                  statusColor = const Color(0xFF10B981);
+                  statusColor = Color(0xFF10B981);
                   break;
                 case 'Expired':
-                  statusColor = const Color(0xFFEF4444);
+                  statusColor = Color(0xFFEF4444);
                   break;
                 default:
-                  statusColor = const Color(0xFFF59E0B);
+                  statusColor = Color(0xFFF59E0B);
               }
 
               return Container(
-                margin: const EdgeInsets.only(bottom: 12),
-                padding: const EdgeInsets.all(16),
+                margin: EdgeInsets.only(bottom: 12),
+                padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
@@ -376,14 +373,14 @@ class _AdminCertificatesScreenState extends State<AdminCertificatesScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(10),
+                      padding: EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         color: statusColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(Icons.workspace_premium_outlined, color: statusColor, size: 20),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -395,7 +392,7 @@ class _AdminCertificatesScreenState extends State<AdminCertificatesScreen> {
                               Expanded(
                                 child: Text(
                                   cert['name'],
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                     color: Color(0xFF1E2875),
@@ -403,7 +400,7 @@ class _AdminCertificatesScreenState extends State<AdminCertificatesScreen> {
                                 ),
                               ),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
                                   color: statusColor.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(12),
@@ -419,16 +416,16 @@ class _AdminCertificatesScreenState extends State<AdminCertificatesScreen> {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 6),
+                          SizedBox(height: 6),
                           Text(
                             "${cert['type']} | ${cert['student']}",
                             style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
                           ),
-                          const SizedBox(height: 6),
+                          SizedBox(height: 6),
                           Row(
                             children: [
                               Icon(Icons.badge_outlined, size: 14, color: Colors.grey.shade500),
-                              const SizedBox(width: 4),
+                              SizedBox(width: 4),
                               Text(
                                 "ID: ${cert['id']}",
                                 style: TextStyle(fontSize: 11, color: Colors.grey.shade500),
@@ -460,13 +457,13 @@ class _RowItem extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(margin: const EdgeInsets.only(top: 4), width: 8, height: 8, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
-        const SizedBox(width: 8),
+        Container(margin: EdgeInsets.only(top: 4), width: 8, height: 8, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
+        SizedBox(width: 8),
         Expanded(
-          child: Text(label, style: const TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.bold)),
+          child: Text(label, style: TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.bold)),
         ),
-        const SizedBox(width: 4),
-        Text(val, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+        SizedBox(width: 4),
+        Text(val, style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
       ],
     );
   }

@@ -5,7 +5,7 @@ class TeacherBottomNav extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTabSelected;
 
-  const TeacherBottomNav({
+  TeacherBottomNav({
     super.key,
     required this.currentIndex,
     required this.onTabSelected,
@@ -17,11 +17,11 @@ class TeacherBottomNav extends StatelessWidget {
       type: BottomNavigationBarType.fixed,
       currentIndex: currentIndex > 5 ? 5 : currentIndex,
       selectedItemColor: AppColors.primary,
-      unselectedItemColor: const Color(0xFF757897),
-      selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
-      unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
+      unselectedItemColor: Color(0xFF757897),
+      selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
+      unselectedLabelStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
       onTap: onTabSelected,
-      items: const [
+      items: [
         BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home), label: "Home"),
         BottomNavigationBarItem(icon: Icon(Icons.class_outlined), activeIcon: Icon(Icons.class_), label: "Classes"),
         BottomNavigationBarItem(icon: Icon(Icons.people_outline), activeIcon: Icon(Icons.people), label: "Students"),

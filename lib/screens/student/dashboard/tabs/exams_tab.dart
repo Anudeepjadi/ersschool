@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/student_app_bar.dart';
 import '../../../../widgets/scrollable_table_wrapper.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -12,7 +13,7 @@ class ExamsTab extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
   final Function(int)? onTabSelected;
 
-  const ExamsTab({super.key, this.onOpenDrawer, this.onTabSelected});
+  ExamsTab({super.key, this.onOpenDrawer, this.onTabSelected});
 
   @override
   State<ExamsTab> createState() => _ExExamsTabState();
@@ -54,16 +55,16 @@ class _ExExamsTabState extends State<ExamsTab>
               color: Colors.white,
               child: TabBar(
                 controller: _tabController,
-                indicatorColor: const Color(0xFF0038FF),
+                indicatorColor: Color(0xFF0038FF),
                 indicatorSize: TabBarIndicatorSize.tab,
                 indicatorWeight: 3,
-                labelColor: const Color(0xFF0038FF),
+                labelColor: Color(0xFF0038FF),
                 unselectedLabelColor: Colors.grey.shade600,
                 labelStyle:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
+                    TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
                 unselectedLabelStyle:
-                    const TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
-                tabs: const [
+                    TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
+                tabs: [
                   Tab(
                     icon: Icon(Icons.assignment_turned_in_outlined, size: 18),
                     text: "Exam Details",
@@ -101,15 +102,14 @@ class _ExExamsTabState extends State<ExamsTab>
 
   Widget _buildExamDetailsTab() {
     return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
+      physics: BouncingScrollPhysics(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 1. Examination Overview
-          const Padding(
+          Padding(
             padding: EdgeInsets.only(left: 20, right: 20, top: 20),
-            child: Text(
-              "Examination Overview",
+            child: Text("Examination Overview".tr,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -121,12 +121,11 @@ class _ExExamsTabState extends State<ExamsTab>
 
           // 2. Upcoming Exams Section
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "Upcoming Exams",
+                Text("Upcoming Exams".tr,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -137,10 +136,8 @@ class _ExExamsTabState extends State<ExamsTab>
                   onPressed: () {
                     _tabController.animateTo(1); // Jump to Timetable Tab
                   },
-                  child: const Row(
-                    children: [
-                      Text(
-                        "View Timetable",
+                  child: Row(children: [
+                      Text("View Timetable".tr,
                         style: TextStyle(
                           color: Color(0xFF0038FF),
                           fontWeight: FontWeight.bold,
@@ -158,16 +155,15 @@ class _ExExamsTabState extends State<ExamsTab>
           ),
           _buildUpcomingExamsList(),
 
-          const SizedBox(height: 25),
+          SizedBox(height: 25),
 
           // 3. Recent Exam Results Section
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "Recent Exam Results",
+                Text("Recent Exam Results".tr,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -178,10 +174,8 @@ class _ExExamsTabState extends State<ExamsTab>
                   onPressed: () {
                     _tabController.animateTo(2); // Jump to Grade Report Tab
                   },
-                  child: const Row(
-                    children: [
-                      Text(
-                        "View All Results",
+                  child: Row(children: [
+                      Text("View All Results".tr,
                         style: TextStyle(
                           color: Color(0xFF0038FF),
                           fontWeight: FontWeight.bold,
@@ -199,23 +193,22 @@ class _ExExamsTabState extends State<ExamsTab>
           ),
           _buildRecentResultsList(),
 
-          const SizedBox(height: 25),
+          SizedBox(height: 25),
 
           // 4. Quick Actions Section
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Quick Actions",
+                Text("Quick Actions".tr,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF1E2875),
                   ),
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -241,7 +234,7 @@ class _ExExamsTabState extends State<ExamsTab>
             ),
           ),
 
-          const SizedBox(height: 30),
+          SizedBox(height: 30),
         ],
       ),
     );
@@ -252,32 +245,30 @@ class _ExExamsTabState extends State<ExamsTab>
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Performance Analysis', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Color(0xFF1E2875))),
+        title: Text('Performance Analysis'.tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Color(0xFF1E2875))),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Here is your academic overview based on recent exams:'),
-            const SizedBox(height: 16),
+            Text('Here is your academic overview based on recent exams:'.tr),
+            SizedBox(height: 16),
             _buildPerformanceRow('Top Subject:', 'Science (88%)', Colors.green),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             _buildPerformanceRow('Weakest Subject:', 'Hindi (64%)', Colors.orange),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             _buildPerformanceRow('Overall Average:', '78.5%', Colors.blue),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: Colors.blue.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Row(
-                children: [
+              child: Row(children: [
                   Icon(Icons.trending_up, color: Colors.blue, size: 24),
                   SizedBox(width: 8),
                   Expanded(
-                    child: Text(
-                      'Great job! Your performance has improved by 4% compared to the last term.',
+                    child: Text('Great job! Your performance has improved by 4% compared to the last term.'.tr,
                       style: TextStyle(fontSize: 12, color: Colors.black87),
                     ),
                   ),
@@ -289,7 +280,7 @@ class _ExExamsTabState extends State<ExamsTab>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
+            child: Text('Close'.tr),
           ),
         ],
       ),
@@ -300,7 +291,7 @@ class _ExExamsTabState extends State<ExamsTab>
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.black54)),
+        Text(label, style: TextStyle(fontWeight: FontWeight.w600, color: Colors.black54)),
         Text(value, style: TextStyle(fontWeight: FontWeight.bold, color: color, fontSize: 15)),
       ],
     );
@@ -308,16 +299,15 @@ class _ExExamsTabState extends State<ExamsTab>
 
   Widget _buildTimetableTab() {
     return ListView(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(20),
       children: [
-        const Text(
-          "Term 1 Exam Schedule",
+        Text("Term 1 Exam Schedule".tr,
           style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
               color: Color(0xFF1E2875)),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         _buildTimetableCard("Mathematics (MATH)", "25 Jun 2026", "10:00 AM",
             "1.30 Hrs", "Hall A", Colors.purple),
         _buildTimetableCard("Science (SCI)", "27 Jun 2026", "10:00 AM",
@@ -334,16 +324,15 @@ class _ExExamsTabState extends State<ExamsTab>
 
   Widget _buildGradeReportTab() {
     return ListView(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(20),
       children: [
-        const Text(
-          "Mid Term Academic Report",
+        Text("Mid Term Academic Report".tr,
           style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
               color: Color(0xFF1E2875)),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         _buildGradeScoreCard(
             "Mathematics (MATH)", "42", "50", "84%", "A", Colors.green),
         _buildGradeScoreCard(
@@ -362,8 +351,8 @@ class _ExExamsTabState extends State<ExamsTab>
 
   Widget _buildOverviewStatsRow() {
     return Container(
-      margin: const EdgeInsets.all(20),
-      padding: const EdgeInsets.all(16),
+      margin: EdgeInsets.all(20),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
@@ -391,14 +380,14 @@ class _ExExamsTabState extends State<ExamsTab>
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: color.withValues(alpha: 0.08),
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: color, size: 20),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             label,
             style: TextStyle(
@@ -407,10 +396,10 @@ class _ExExamsTabState extends State<ExamsTab>
                 fontWeight: FontWeight.w500),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.bold,
               color: Color(0xFF1E2875),
@@ -426,8 +415,8 @@ class _ExExamsTabState extends State<ExamsTab>
         color: Colors.grey.shade600, fontSize: 11, fontWeight: FontWeight.bold);
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      padding: const EdgeInsets.all(16),
+      margin: EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
@@ -443,18 +432,18 @@ class _ExExamsTabState extends State<ExamsTab>
                   // Header
                   Row(
                     children: [
-                      Expanded(flex: 6, child: Text("Exam Name", style: headerStyle)),
-                      Expanded(flex: 4, child: Text("Subject", style: headerStyle)),
-                      Expanded(flex: 5, child: Text("Date", style: headerStyle)),
-                      Expanded(flex: 4, child: Text("Time", style: headerStyle)),
-                      Expanded(flex: 4, child: Text("Duration", style: headerStyle)),
+                      Expanded(flex: 6, child: Text("Exam Name".tr, style: headerStyle)),
+                      Expanded(flex: 4, child: Text("Subject".tr, style: headerStyle)),
+                      Expanded(flex: 5, child: Text("Date".tr, style: headerStyle)),
+                      Expanded(flex: 4, child: Text("Time".tr, style: headerStyle)),
+                      Expanded(flex: 4, child: Text("Duration".tr, style: headerStyle)),
                       SizedBox(
                           width: 32,
-                          child: Text("Syllabus",
+                          child: Text("Syllabus".tr,
                               style: headerStyle, textAlign: TextAlign.center)),
                     ],
                   ),
-                  const Divider(height: 20),
+                  Divider(height: 20),
         
                   // Items
                   _buildUpcomingExamRow(
@@ -467,10 +456,10 @@ class _ExExamsTabState extends State<ExamsTab>
                       "10:00 AM",
                       "1.30 Hrs",
                       Colors.purple),
-                  const Divider(height: 20),
+                  Divider(height: 20),
                   _buildUpcomingExamRow("Unit Test - 1", "Term 1", "Science", "SCI",
                       "27 Jun 2026", "Monday", "10:00 AM", "1.30 Hrs", Colors.green),
-                  const Divider(height: 20),
+                  Divider(height: 20),
                   _buildUpcomingExamRow(
                       "Unit Test - 1",
                       "Term 1",
@@ -481,7 +470,7 @@ class _ExExamsTabState extends State<ExamsTab>
                       "10:00 AM",
                       "1.30 Hrs",
                       Colors.orange),
-                  const Divider(height: 20),
+                  Divider(height: 20),
                   _buildUpcomingExamRow(
                       "Unit Test - 1",
                       "Term 1",
@@ -492,7 +481,7 @@ class _ExExamsTabState extends State<ExamsTab>
                       "10:00 AM",
                       "1.30 Hrs",
                       Colors.pink),
-                  const Divider(height: 20),
+                  Divider(height: 20),
                   _buildUpcomingExamRow("Unit Test - 1", "Term 1", "Hindi", "HIN",
                       "03 Jun 2026", "Monday", "10:00 AM", "1.30 Hrs", Colors.blue),
                 ],
@@ -500,15 +489,14 @@ class _ExExamsTabState extends State<ExamsTab>
             ),
           ),
 
-          const Divider(height: 24),
+          Divider(height: 24),
           // View All Link
           GestureDetector(
             onTap: () => _tabController.animateTo(1),
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  "View All Upcoming Exams",
+                Text("View All Upcoming Exams".tr,
                   style: TextStyle(
                     color: Color(0xFF0038FF),
                     fontWeight: FontWeight.bold,
@@ -544,7 +532,7 @@ class _ExExamsTabState extends State<ExamsTab>
           child: Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(6),
+                padding: EdgeInsets.all(6),
                 decoration: BoxDecoration(
                   color: iconColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(6),
@@ -552,14 +540,14 @@ class _ExExamsTabState extends State<ExamsTab>
                 child:
                     Icon(Icons.assignment_outlined, color: iconColor, size: 14),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       examName,
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF1E2875)),
@@ -583,7 +571,7 @@ class _ExExamsTabState extends State<ExamsTab>
             children: [
               Text(
                 subject,
-                style: const TextStyle(
+                style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF1E2875)),
@@ -603,7 +591,7 @@ class _ExExamsTabState extends State<ExamsTab>
             children: [
               Text(
                 date,
-                style: const TextStyle(
+                style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF1E2875)),
@@ -620,7 +608,7 @@ class _ExExamsTabState extends State<ExamsTab>
           flex: 4,
           child: Text(
             time,
-            style: const TextStyle(fontSize: 11, color: Color(0xFF1E2875)),
+            style: TextStyle(fontSize: 11, color: Color(0xFF1E2875)),
           ),
         ),
         // Duration
@@ -628,7 +616,7 @@ class _ExExamsTabState extends State<ExamsTab>
           flex: 4,
           child: Text(
             duration,
-            style: const TextStyle(fontSize: 11, color: Color(0xFF1E2875)),
+            style: TextStyle(fontSize: 11, color: Color(0xFF1E2875)),
           ),
         ),
         // Syllabus Document Icon
@@ -637,7 +625,7 @@ class _ExExamsTabState extends State<ExamsTab>
           child: Container(
             width: 32,
             alignment: Alignment.center,
-            child: const Icon(Icons.description_outlined,
+            child: Icon(Icons.description_outlined,
                 color: Color(0xFF0038FF), size: 18),
           ),
         ),
@@ -650,8 +638,8 @@ class _ExExamsTabState extends State<ExamsTab>
         color: Colors.grey.shade600, fontSize: 11, fontWeight: FontWeight.bold);
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      padding: const EdgeInsets.all(16),
+      margin: EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
@@ -667,36 +655,36 @@ class _ExExamsTabState extends State<ExamsTab>
                   // Header
                   Row(
                     children: [
-                      Expanded(flex: 6, child: Text("Exam Name", style: headerStyle)),
-                      Expanded(flex: 4, child: Text("Subject", style: headerStyle)),
-                      Expanded(flex: 5, child: Text("Date", style: headerStyle)),
+                      Expanded(flex: 6, child: Text("Exam Name".tr, style: headerStyle)),
+                      Expanded(flex: 4, child: Text("Subject".tr, style: headerStyle)),
+                      Expanded(flex: 5, child: Text("Date".tr, style: headerStyle)),
                       Expanded(
                           flex: 4,
-                          child: Text("Marks Obtained",
+                          child: Text("Marks Obtained".tr,
                               style: headerStyle, textAlign: TextAlign.center)),
                       Expanded(
                           flex: 4,
-                          child: Text("Total Marks",
+                          child: Text("Total Marks".tr,
                               style: headerStyle, textAlign: TextAlign.center)),
                       Expanded(
                           flex: 4,
-                          child: Text("Percentage",
+                          child: Text("Percentage".tr,
                               style: headerStyle, textAlign: TextAlign.center)),
                       SizedBox(
                           width: 36,
-                          child: Text("Grade",
+                          child: Text("Grade".tr,
                               style: headerStyle, textAlign: TextAlign.center)),
                     ],
                   ),
-                  const Divider(height: 20),
+                  Divider(height: 20),
         
                   // Items
                   _buildRecentResultRow("Mid Term Exam", "Term 1", "Mathematics",
                       "MATH", "15 Apr 2026", "42", "50", "84%", "A", Colors.green),
-                  const Divider(height: 20),
+                  Divider(height: 20),
                   _buildRecentResultRow("Mid Term Exam", "Term 1", "Science", "SCI",
                       "16 Apr 2026", "44", "50", "88%", "A", Colors.green),
-                  const Divider(height: 20),
+                  Divider(height: 20),
                   _buildRecentResultRow("Mid Term Exam", "Term 1", "English", "ENG",
                       "17 Apr 2026", "38", "50", "76%", "B+", Colors.teal),
                 ],
@@ -704,15 +692,14 @@ class _ExExamsTabState extends State<ExamsTab>
             ),
           ),
 
-          const Divider(height: 24),
+          Divider(height: 24),
           // View All Link
           GestureDetector(
             onTap: () => _tabController.animateTo(2),
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  "View All Results",
+                Text("View All Results".tr,
                   style: TextStyle(
                     color: Color(0xFF0038FF),
                     fontWeight: FontWeight.bold,
@@ -754,14 +741,14 @@ class _ExExamsTabState extends State<ExamsTab>
                 decoration:
                     BoxDecoration(shape: BoxShape.circle, color: dotColor),
               ),
-              const SizedBox(width: 6),
+              SizedBox(width: 6),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       examName,
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF1E2875)),
@@ -785,7 +772,7 @@ class _ExExamsTabState extends State<ExamsTab>
             children: [
               Text(
                 subject,
-                style: const TextStyle(
+                style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF1E2875)),
@@ -810,7 +797,7 @@ class _ExExamsTabState extends State<ExamsTab>
           flex: 4,
           child: Text(
             marksObtained,
-            style: const TextStyle(
+            style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF1E2875)),
@@ -831,7 +818,7 @@ class _ExExamsTabState extends State<ExamsTab>
           flex: 4,
           child: Text(
             percentage,
-            style: const TextStyle(
+            style: TextStyle(
                 fontSize: 11, fontWeight: FontWeight.bold, color: Colors.green),
             textAlign: TextAlign.center,
           ),
@@ -839,7 +826,7 @@ class _ExExamsTabState extends State<ExamsTab>
         // Grade Pill
         Container(
           width: 36,
-          padding: const EdgeInsets.symmetric(vertical: 4),
+          padding: EdgeInsets.symmetric(vertical: 4),
           decoration: BoxDecoration(
             color: dotColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(6),
@@ -862,22 +849,22 @@ class _ExExamsTabState extends State<ExamsTab>
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 4.0),
+          padding: EdgeInsets.symmetric(horizontal: 2.0, vertical: 4.0),
           child: Column(
             children: [
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: color.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(icon, color: color, size: 22),
               ),
-              const SizedBox(height: 6),
+              SizedBox(height: 6),
               Text(
                 label,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF1E2875),
@@ -893,13 +880,13 @@ class _ExExamsTabState extends State<ExamsTab>
 
   void _downloadHallTicket(BuildContext context) async {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Preparing Hall Ticket...')),
+      SnackBar(content: Text('Preparing Hall Ticket...'.tr)),
     );
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(Duration(seconds: 2));
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Hall Ticket downloaded successfully!'),
+      SnackBar(
+        content: Text('Hall Ticket downloaded successfully!'.tr),
         backgroundColor: Colors.green,
       ),
     );
@@ -915,13 +902,13 @@ class _ExExamsTabState extends State<ExamsTab>
   ) {
     return Card(
       elevation: 0,
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: EdgeInsets.only(bottom: 12),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(14),
         side: BorderSide(color: Colors.grey.shade200),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(14),
+        padding: EdgeInsets.all(14),
         child: Column(
           children: [
             Row(
@@ -930,7 +917,7 @@ class _ExExamsTabState extends State<ExamsTab>
                 Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(6),
+                      padding: EdgeInsets.all(6),
                       decoration: BoxDecoration(
                         color: color.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
@@ -938,10 +925,10 @@ class _ExExamsTabState extends State<ExamsTab>
                       child: Icon(Icons.assignment_outlined,
                           color: color, size: 16),
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     Text(
                       subject,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF1E2875),
@@ -959,18 +946,18 @@ class _ExExamsTabState extends State<ExamsTab>
                 ),
               ],
             ),
-            const Divider(height: 20),
+            Divider(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("Date",
+                    Text("Date".tr,
                         style: TextStyle(color: Colors.grey, fontSize: 9)),
-                    const SizedBox(height: 2),
+                    SizedBox(height: 2),
                     Text(date,
-                        style: const TextStyle(
+                        style: TextStyle(
                             color: Color(0xFF1E2875),
                             fontSize: 11,
                             fontWeight: FontWeight.w500)),
@@ -979,11 +966,11 @@ class _ExExamsTabState extends State<ExamsTab>
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("Time",
+                    Text("Time".tr,
                         style: TextStyle(color: Colors.grey, fontSize: 9)),
-                    const SizedBox(height: 2),
+                    SizedBox(height: 2),
                     Text(time,
-                        style: const TextStyle(
+                        style: TextStyle(
                             color: Color(0xFF1E2875),
                             fontSize: 11,
                             fontWeight: FontWeight.w500)),
@@ -992,11 +979,11 @@ class _ExExamsTabState extends State<ExamsTab>
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("Duration",
+                    Text("Duration".tr,
                         style: TextStyle(color: Colors.grey, fontSize: 9)),
-                    const SizedBox(height: 2),
+                    SizedBox(height: 2),
                     Text(duration,
-                        style: const TextStyle(
+                        style: TextStyle(
                             color: Color(0xFF1E2875),
                             fontSize: 11,
                             fontWeight: FontWeight.w500)),
@@ -1020,37 +1007,37 @@ class _ExExamsTabState extends State<ExamsTab>
   ) {
     return Card(
       elevation: 0,
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: EdgeInsets.only(bottom: 12),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(14),
         side: BorderSide(color: Colors.grey.shade200),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: EdgeInsets.all(12),
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(Icons.analytics_outlined, color: color, size: 20),
             ),
-            const SizedBox(width: 14),
+            SizedBox(width: 14),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     subject,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF1E2875),
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   Row(
                     children: [
                       Text(
@@ -1060,10 +1047,10 @@ class _ExExamsTabState extends State<ExamsTab>
                           color: Colors.grey.shade600,
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                       Text(
                         "Percent: $percent",
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.bold,
                           color: Colors.green,
@@ -1075,7 +1062,7 @@ class _ExExamsTabState extends State<ExamsTab>
               ),
             ),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),

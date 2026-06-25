@@ -3,9 +3,10 @@ import '../widgets/admin_app_bar.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
 import '../../../core/data/app_data_store.dart';
 import '../../../core/utils/profile_manager.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminBranchListScreen extends StatefulWidget {
-  const AdminBranchListScreen({super.key});
+  AdminBranchListScreen({super.key});
   @override
   State<AdminBranchListScreen> createState() => _AdminBranchListScreenState();
 }
@@ -47,28 +48,28 @@ class _AdminBranchListScreenState extends State<AdminBranchListScreen> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Text(
           edit != null ? 'Edit Branch' : 'Add New Branch',
-          style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+          style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
         ),
         content: SingleChildScrollView(
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             _field(_codeCtrl, 'Branch Code'),
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
             _field(_headCtrl, 'Branch Head'),
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
             _field(_nameCtrl, 'Branch Name'),
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
             _field(_addressCtrl, 'Branch Address'),
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
             _field(_phoneCtrl, 'Contact Number', TextInputType.phone),
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
             _field(_emailCtrl, 'Email Address', TextInputType.emailAddress),
           ]),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: Text('Cancel'.tr)),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFB45309), foregroundColor: Colors.white),
+                backgroundColor: Color(0xFFB45309), foregroundColor: Colors.white),
             onPressed: () {
               if (_nameCtrl.text.isEmpty) return;
               setState(() {
@@ -83,7 +84,7 @@ class _AdminBranchListScreenState extends State<AdminBranchListScreen> {
                   'teachers': edit?['teachers'] ?? 0,
                   'status': 'Active',
                   'established': DateTime.now().year.toString(),
-                  'color': const Color(0xFF0038FF),
+                  'color': Color(0xFF0038FF),
                   'icon': Icons.apartment,
                   'school': ProfileManager().selectedSchool.value,
                 };
@@ -108,11 +109,11 @@ class _AdminBranchListScreenState extends State<AdminBranchListScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Delete Branch',
+        title: Text('Delete Branch'.tr,
             style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
-        content: const Text('Are you sure you want to delete this branch?'),
+        content: Text('Are you sure you want to delete this branch?'.tr),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: Text('Cancel'.tr)),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red, foregroundColor: Colors.white),
@@ -120,7 +121,7 @@ class _AdminBranchListScreenState extends State<AdminBranchListScreen> {
               setState(() => AppDataStore.instance.deleteBranch(branch));
               Navigator.pop(ctx);
             },
-            child: const Text('Delete'),
+            child: Text('Delete'.tr),
           ),
         ],
       ),
@@ -135,7 +136,7 @@ class _AdminBranchListScreenState extends State<AdminBranchListScreen> {
       decoration: InputDecoration(
         labelText: label,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       ),
     );
   }
@@ -143,28 +144,28 @@ class _AdminBranchListScreenState extends State<AdminBranchListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FF),
-      appBar: const AdminAppBar(title: 'Branch', subtitle: 'Manage school branches'),
-      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
+      backgroundColor: Color(0xFFF5F7FF),
+      appBar: AdminAppBar(title: 'Branch', subtitle: 'Manage school branches'),
+      bottomNavigationBar: AdminBottomNavBar(currentIndex: 4),
       body: Column(children: [
         // Header
         Container(
           color: Colors.white,
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          padding: EdgeInsets.symmetric(vertical: 16),
           child: Center(
             child: Column(children: [
-              const Text('Branch List',
+              Text('Branch List'.tr,
                   style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFFB45309))),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               ElevatedButton.icon(
                 onPressed: () => _showAddDialog(),
-                icon: const Icon(Icons.add, size: 16),
-                label: const Text('Add New'),
+                icon: Icon(Icons.add, size: 16),
+                label: Text('Add New'.tr),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFB45309),
+                  backgroundColor: Color(0xFFB45309),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8)),
@@ -175,20 +176,19 @@ class _AdminBranchListScreenState extends State<AdminBranchListScreen> {
         ),
         // Table header
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          color: const Color(0xFF2D3748),
-          child: const Row(children: [
-            SizedBox(width: 72, child: Text('Code', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
-            Expanded(child: Text('Name & Head', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
-            SizedBox(width: 72, child: Text('Contact', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          color: Color(0xFF2D3748),
+          child: Row(children: [
+            SizedBox(width: 72, child: Text('Code'.tr, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
+            Expanded(child: Text('Name & Head'.tr, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
+            SizedBox(width: 72, child: Text('Contact'.tr, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
             SizedBox(width: 72),
           ]),
         ),
         // Rows
         Expanded(
           child: _branches.isEmpty
-              ? const Center(
-                  child: Text('No branches found',
+              ? Center(child: Text('No branches found'.tr,
                       style: TextStyle(color: Colors.grey)))
               : ListView.separated(
                   padding: EdgeInsets.zero,
@@ -205,7 +205,7 @@ class _AdminBranchListScreenState extends State<AdminBranchListScreen> {
                     final email = b['email'] ?? '';
                     return Container(
                       color: Colors.white,
-                      padding: const EdgeInsets.symmetric(
+                      padding: EdgeInsets.symmetric(
                           horizontal: 16, vertical: 12),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -214,7 +214,7 @@ class _AdminBranchListScreenState extends State<AdminBranchListScreen> {
                           SizedBox(
                             width: 72,
                             child: Text(code,
-                                style: const TextStyle(
+                                style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                     color: Color(0xFF1E2875))),
@@ -225,17 +225,17 @@ class _AdminBranchListScreenState extends State<AdminBranchListScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(name,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w600,
                                         color: Color(0xFFB45309))),
                                 if (head.isNotEmpty)
                                   Text(head,
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                           fontSize: 11, color: Colors.grey)),
                                 if (email.isNotEmpty)
                                   Text(email,
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                           fontSize: 10, color: Colors.grey),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis),
@@ -246,7 +246,7 @@ class _AdminBranchListScreenState extends State<AdminBranchListScreen> {
                           SizedBox(
                             width: 72,
                             child: Text(phone,
-                                style: const TextStyle(fontSize: 11),
+                                style: TextStyle(fontSize: 11),
                                 maxLines: 2),
                           ),
                           // Actions
@@ -261,14 +261,14 @@ class _AdminBranchListScreenState extends State<AdminBranchListScreen> {
                                   child: Container(
                                     width: 30,
                                     height: 30,
-                                    decoration: const BoxDecoration(
+                                    decoration: BoxDecoration(
                                         color: Color(0xFF2563EB),
                                         shape: BoxShape.circle),
-                                    child: const Icon(Icons.edit,
+                                    child: Icon(Icons.edit,
                                         color: Colors.white, size: 14),
                                   ),
                                 ),
-                                const SizedBox(width: 4),
+                                SizedBox(width: 4),
                                 if (_branches.length > 1)
                                   InkWell(
                                     onTap: () => _delete(b),
@@ -293,23 +293,23 @@ class _AdminBranchListScreenState extends State<AdminBranchListScreen> {
         ),
         // Footer
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          color: const Color(0xFFFEF3C7),
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          color: Color(0xFFFEF3C7),
           child: Row(children: [
-            const Text('Items per page:',
+            Text('Items per page:'.tr,
                 style: TextStyle(fontSize: 12, color: Colors.black54)),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey.shade400),
                   borderRadius: BorderRadius.circular(4),
                   color: Colors.white),
-              child: const Text('10', style: TextStyle(fontSize: 12)),
+              child: Text('10'.tr, style: TextStyle(fontSize: 12)),
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: 16),
             Text('1 - ${_branches.length} of ${_branches.length}',
-                style: const TextStyle(fontSize: 12, color: Colors.black54)),
+                style: TextStyle(fontSize: 12, color: Colors.black54)),
           ]),
         ),
       ]),

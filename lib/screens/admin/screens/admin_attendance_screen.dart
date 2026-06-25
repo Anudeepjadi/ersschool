@@ -5,10 +5,11 @@ import '../../../core/data/app_data_store.dart';
 import '../../../core/utils/profile_manager.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminAttendanceScreen extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
-  const AdminAttendanceScreen({super.key, this.onOpenDrawer});
+  AdminAttendanceScreen({super.key, this.onOpenDrawer});
 
   @override
   State<AdminAttendanceScreen> createState() => _AdminAttendanceScreenState();
@@ -67,23 +68,23 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
         final leavePercentStr = totalCount > 0 ? "${((leaveCount / totalCount) * 100).toStringAsFixed(1)}%" : "0%";
 
         return Scaffold(
-          backgroundColor: const Color(0xFFF5F7FF),
+          backgroundColor: Color(0xFFF5F7FF),
           appBar: AdminAppBar(
             title: "Attendance",
             subtitle: "Track and manage student attendance",
             onOpenDrawer: widget.onOpenDrawer,
           ),
-          bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
+          bottomNavigationBar: AdminBottomNavBar(currentIndex: 4),
           body: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            padding: const EdgeInsets.all(16),
+            physics: BouncingScrollPhysics(),
+            padding: EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Dropdowns selectors
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
-                  physics: const BouncingScrollPhysics(),
+                  physics: BouncingScrollPhysics(),
                   child: Row(
                     children: [
                       SizedBox(
@@ -95,7 +96,7 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
                           onChanged: (v) => setState(() => _selectedClass = v!),
                         ),
                       ),
-                      const SizedBox(width: 10),
+                      SizedBox(width: 10),
                       SizedBox(
                         width: 140,
                         child: _buildDropdown(
@@ -105,7 +106,7 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
                           onChanged: (v) => setState(() => _selectedDate = v!),
                         ),
                       ),
-                      const SizedBox(width: 10),
+                      SizedBox(width: 10),
                       SizedBox(
                         width: 140,
                         child: _buildDropdown(
@@ -118,7 +119,7 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
 
                 // Card row metrics
                 SingleChildScrollView(
@@ -126,18 +127,18 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
                   child: Row(
                     children: [
                       _buildStatCard("Total Students", "$totalCount", null, Colors.blue),
-                      _buildStatCard("Present", "$presentCount", presentPercentStr, const Color(0xFF10B981)),
-                      _buildStatCard("Absent", "$absentCount", absentPercentStr, const Color(0xFFEF4444)),
-                      _buildStatCard("Late", "$lateCount", latePercentStr, const Color(0xFFF59E0B)),
-                      _buildStatCard("On Leave", "$leaveCount", leavePercentStr, const Color(0xFF9CA3AF)),
+                      _buildStatCard("Present", "$presentCount", presentPercentStr, Color(0xFF10B981)),
+                      _buildStatCard("Absent", "$absentCount", absentPercentStr, Color(0xFFEF4444)),
+                      _buildStatCard("Late", "$lateCount", latePercentStr, Color(0xFFF59E0B)),
+                      _buildStatCard("On Leave", "$leaveCount", leavePercentStr, Color(0xFF9CA3AF)),
                     ],
                   ),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
 
                 // Charts
                 _buildChartsSection(totalCount, presentCount, absentCount, lateCount),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
 
                 // Search bar & buttons
                 Row(
@@ -146,10 +147,10 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
                       child: TextField(
                         decoration: InputDecoration(
                           hintText: "Search students by name...",
-                          prefixIcon: const Icon(Icons.search, color: Color(0xFF757897)),
+                          prefixIcon: Icon(Icons.search, color: Color(0xFF757897)),
                           fillColor: Colors.white,
                           filled: true,
-                          contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                          contentPadding: EdgeInsets.symmetric(vertical: 0),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide.none,
@@ -157,20 +158,20 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: IconButton(
-                        icon: const Icon(Icons.filter_list, color: AppColors.primary),
+                        icon: Icon(Icons.filter_list, color: AppColors.primary),
                         onPressed: () {},
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
 
                 // Filter chips
                 SingleChildScrollView(
@@ -185,7 +186,7 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
 
                 // Student list table
                 _buildStudentListTable(filteredStudents),
@@ -204,7 +205,7 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
     required ValueChanged<String?> onChanged,
   }) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -214,13 +215,13 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey)),
+          Text(label, style: TextStyle(fontSize: 10, color: Colors.grey)),
           DropdownButtonHideUnderline(
             child: DropdownButton<String>(
               value: value,
               isDense: true,
               isExpanded: true,
-              style: const TextStyle(fontSize: 13, color: Color(0xFF1E2875), fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 13, color: Color(0xFF1E2875), fontWeight: FontWeight.bold),
               items: items.map((String item) {
                 return DropdownMenuItem<String>(
                   value: item,
@@ -239,8 +240,8 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
     return Container(
       width: 110,
       height: 100,
-      margin: const EdgeInsets.only(right: 12),
-      padding: const EdgeInsets.all(12),
+      margin: EdgeInsets.only(right: 12),
+      padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -249,14 +250,14 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
-          Text(value, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-          const SizedBox(height: 4),
+          Text(label, style: TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
+          SizedBox(height: 8),
+          Text(value, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+          SizedBox(height: 4),
           if (percentage != null)
             Text(percentage, style: TextStyle(fontSize: 11, color: color, fontWeight: FontWeight.bold))
           else
-            const SizedBox(height: 15),
+            SizedBox(height: 15),
         ],
       ),
     );
@@ -272,7 +273,7 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
     final double basePercent = (metrics['presentPercent'] as num).toDouble();
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -280,11 +281,10 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Attendance Analysis",
+          Text("Attendance Analysis".tr,
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Row(
             children: [
               // Donut Chart
@@ -302,19 +302,19 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
                           sections: [
                             PieChartSectionData(
                               value: presentVal > 0 ? presentVal : 0.1,
-                              color: const Color(0xFF10B981),
+                              color: Color(0xFF10B981),
                               radius: 12,
                               showTitle: false,
                             ),
                             PieChartSectionData(
                               value: absentVal > 0 ? absentVal : 0.1,
-                              color: const Color(0xFFEF4444),
+                              color: Color(0xFFEF4444),
                               radius: 12,
                               showTitle: false,
                             ),
                             PieChartSectionData(
                               value: lateVal > 0 ? lateVal : 0.1,
-                              color: const Color(0xFFF59E0B),
+                              color: Color(0xFFF59E0B),
                               radius: 12,
                               showTitle: false,
                             ),
@@ -326,16 +326,16 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
                         children: [
                           Text(
                             "${presentVal.toStringAsFixed(1)}%",
-                            style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+                            style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
                           ),
-                          const Text("Present", style: TextStyle(fontSize: 8, color: Colors.grey)),
+                          Text("Present".tr, style: TextStyle(fontSize: 8, color: Colors.grey)),
                         ],
                       )
                     ],
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               // Bar Chart
               Expanded(
                 flex: 6,
@@ -344,21 +344,21 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
                   child: BarChart(
                     BarChartData(
                       borderData: FlBorderData(show: false),
-                      gridData: const FlGridData(show: false),
+                      gridData: FlGridData(show: false),
                       titlesData: FlTitlesData(
                         show: true,
-                        topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                        rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                        leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                        topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                        rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                        leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
                         bottomTitles: AxisTitles(
                           sideTitles: SideTitles(
                             showTitles: true,
                             getTitlesWidget: (value, meta) {
                               const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
                               if (value.toInt() >= 0 && value.toInt() < days.length) {
-                                return Text(days[value.toInt()], style: const TextStyle(fontSize: 9, color: Colors.grey));
+                                return Text(days[value.toInt()], style: TextStyle(fontSize: 9, color: Colors.grey));
                               }
-                              return const SizedBox();
+                              return SizedBox();
                             },
                           ),
                         ),
@@ -388,7 +388,7 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
       barRods: [
         BarChartRodData(
           toY: y,
-          color: const Color(0xFF10B981),
+          color: Color(0xFF10B981),
           width: 8,
           borderRadius: BorderRadius.circular(4),
           backDrawRodData: BackgroundBarChartRodData(
@@ -406,8 +406,8 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
     return GestureDetector(
       onTap: () => setState(() => _activeFilter = label),
       child: Container(
-        margin: const EdgeInsets.only(right: 8),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        margin: EdgeInsets.only(right: 8),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.primary : Colors.white,
           borderRadius: BorderRadius.circular(20),
@@ -421,12 +421,12 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
-                color: isSelected ? Colors.white : const Color(0xFF757897),
+                color: isSelected ? Colors.white : Color(0xFF757897),
               ),
             ),
-            const SizedBox(width: 6),
+            SizedBox(width: 6),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
               decoration: BoxDecoration(
                 color: isSelected ? Colors.white24 : Colors.grey.shade100,
                 borderRadius: BorderRadius.circular(10),
@@ -436,7 +436,7 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
                 style: TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.bold,
-                  color: isSelected ? Colors.white : const Color(0xFF1E2875),
+                  color: isSelected ? Colors.white : Color(0xFF1E2875),
                 ),
               ),
             ),
@@ -456,23 +456,23 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   "Student List (${students.length})",
-                  style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+                  style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
                 ),
-                const Icon(Icons.more_horiz, color: Colors.grey),
+                Icon(Icons.more_horiz, color: Colors.grey),
               ],
             ),
           ),
           ListView.separated(
             shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
+            physics: NeverScrollableScrollPhysics(),
             itemCount: students.length,
-            separatorBuilder: (context, index) => const Divider(height: 1),
+            separatorBuilder: (context, index) => Divider(height: 1),
             itemBuilder: (context, index) {
               final student = students[index];
               final isPresent = student['status'] == 'Active' || student['status'] == 'Present';
@@ -483,13 +483,13 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
               String displayStatus = 'Present';
 
               if (isPresent) {
-                statusColor = const Color(0xFF10B981);
+                statusColor = Color(0xFF10B981);
                 displayStatus = 'Present';
               } else if (isAbsent) {
-                statusColor = const Color(0xFFEF4444);
+                statusColor = Color(0xFFEF4444);
                 displayStatus = 'Absent';
               } else if (isLate) {
-                statusColor = const Color(0xFFF59E0B);
+                statusColor = Color(0xFFF59E0B);
                 displayStatus = 'Late';
               }
 
@@ -499,7 +499,7 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
               final cleanRoll = student['roll'].toString().replaceAll("Roll No: ", "").replaceAll("Roll No. ", "");
 
               return Padding(
-                padding: const EdgeInsets.all(14),
+                padding: EdgeInsets.all(14),
                 child: Row(
                   children: [
                     CircleAvatar(
@@ -509,13 +509,13 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
                         style: TextStyle(color: statusColor, fontWeight: FontWeight.bold),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(student['name'] ?? 'N/A', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875))),
-                          Text("Roll No. $cleanRoll", style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                          Text(student['name'] ?? 'N/A', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875))),
+                          Text("Roll No. $cleanRoll", style: TextStyle(fontSize: 11, color: Colors.grey)),
                         ],
                       ),
                     ),
@@ -526,7 +526,7 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
                         setState(() {});
                       },
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                         decoration: BoxDecoration(
                           color: statusColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(20),
@@ -539,7 +539,7 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
                               displayStatus,
                               style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: statusColor),
                             ),
-                            const SizedBox(width: 4),
+                            SizedBox(width: 4),
                             Icon(Icons.swap_horiz, size: 10, color: statusColor),
                           ],
                         ),

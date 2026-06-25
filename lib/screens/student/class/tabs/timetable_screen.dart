@@ -3,10 +3,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:ersschool/core/theme/app_theme.dart';
 import 'package:ersschool/core/theme/app_colors.dart';
 import 'package:ersschool/widgets/scrollable_table_wrapper.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class TimetableScreen extends StatefulWidget {
   final bool showAppBar;
-  const TimetableScreen({super.key, this.showAppBar = true});
+  TimetableScreen({super.key, this.showAppBar = true});
 
   @override
   State<TimetableScreen> createState() => _TimetableScreenState();
@@ -92,20 +93,20 @@ class _TimetableScreenState extends State<TimetableScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: widget.showAppBar ? AppBar(
-        title: const Text('Full Timetable'),
+        title: Text('Full Timetable'.tr),
         backgroundColor: AppColors.primaryDark,
         foregroundColor: Colors.white,
       ) : null,
       backgroundColor: AppColors.background,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildDateSelector(),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             _buildTimetableHeader(),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             ScrollableTableWrapper(
               child: SizedBox(
                 width: 550,
@@ -122,7 +123,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
 
   Widget _buildDateSelector() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -130,7 +131,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 8,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
       ),
@@ -140,21 +141,20 @@ class _TimetableScreenState extends State<TimetableScreen> {
           IconButton(
             onPressed: () {
               setState(() {
-                selectedDate = selectedDate.subtract(const Duration(days: 1));
+                selectedDate = selectedDate.subtract(Duration(days: 1));
               });
             },
-            icon: const Icon(Icons.chevron_left, color: AppColors.textSecondary),
+            icon: Icon(Icons.chevron_left, color: AppColors.textSecondary),
           ),
           Expanded(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.calendar_today_outlined,
+                Icon(Icons.calendar_today_outlined,
                     size: 18, color: AppColors.primary),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Flexible(
-                  child: Text(
-                    'Wednesday, 17 Jun 2026',
+                  child: Text('Wednesday, 17 Jun 2026'.tr,
                     style: GoogleFonts.poppins(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -163,8 +163,8 @@ class _TimetableScreenState extends State<TimetableScreen> {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                const SizedBox(width: 4),
-                const Icon(Icons.keyboard_arrow_down,
+                SizedBox(width: 4),
+                Icon(Icons.keyboard_arrow_down,
                     size: 20, color: AppColors.textSecondary),
               ],
             ),
@@ -172,10 +172,10 @@ class _TimetableScreenState extends State<TimetableScreen> {
           IconButton(
             onPressed: () {
               setState(() {
-                selectedDate = selectedDate.add(const Duration(days: 1));
+                selectedDate = selectedDate.add(Duration(days: 1));
               });
             },
-            icon: const Icon(Icons.chevron_right, color: AppColors.textSecondary),
+            icon: Icon(Icons.chevron_right, color: AppColors.textSecondary),
           ),
         ],
       ),
@@ -183,8 +183,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
   }
 
   Widget _buildTimetableHeader() {
-    return Text(
-      'Timetable',
+    return Text('Timetable'.tr,
       style: GoogleFonts.poppins(
         fontSize: 18,
         fontWeight: FontWeight.w700,
@@ -198,26 +197,25 @@ class _TimetableScreenState extends State<TimetableScreen> {
 
     if (isBreak) {
       return Container(
-        margin: const EdgeInsets.only(bottom: 8),
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        margin: EdgeInsets.only(bottom: 8),
+        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
         decoration: BoxDecoration(
-          color: const Color(0xFFFEF3C7),
+          color: Color(0xFFFEF3C7),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFFFDE68A)),
+          border: Border.all(color: Color(0xFFFDE68A)),
         ),
         child: Row(
           children: [
             Icon(Icons.coffee_outlined, color: Color(0xFFF59E0B), size: 20),
-            const SizedBox(width: 12),
-            Text(
-              'Break Time',
+            SizedBox(width: 12),
+            Text('Break Time'.tr,
               style: GoogleFonts.poppins(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
                 color: Color(0xFFB45309),
               ),
             ),
-            const Spacer(),
+            Spacer(),
             Text(
               period['time'],
               style: GoogleFonts.poppins(
@@ -231,8 +229,8 @@ class _TimetableScreenState extends State<TimetableScreen> {
     }
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(14),
+      margin: EdgeInsets.only(bottom: 8),
+      padding: EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -240,7 +238,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 6,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
       ),
@@ -264,7 +262,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
               ),
             ),
           ),
-          const SizedBox(width: 10),
+          SizedBox(width: 10),
           // Time
           SizedBox(
             width: 70,
@@ -277,7 +275,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
               ),
             ),
           ),
-          const SizedBox(width: 10),
+          SizedBox(width: 10),
           // Subject icon
           Container(
             width: 36,
@@ -292,7 +290,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
               color: period['color'],
             ),
           ),
-          const SizedBox(width: 10),
+          SizedBox(width: 10),
           // Subject details
           Expanded(
             child: Column(
@@ -330,7 +328,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
                       backgroundColor: (period['color'] as Color).withValues(alpha: 0.2),
                       child: Icon(Icons.person, size: 16, color: period['color']),
                     ),
-                    const SizedBox(width: 6),
+                    SizedBox(width: 6),
                     Expanded(
                       child: Text(
                         period['teacher'],
@@ -347,10 +345,10 @@ class _TimetableScreenState extends State<TimetableScreen> {
               ],
             ),
           ),
-          const SizedBox(width: 10),
+          SizedBox(width: 10),
           // Room
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
               color: (period['color'] as Color).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(6),

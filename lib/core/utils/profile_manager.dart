@@ -10,8 +10,8 @@ class ProfileManager {
   final ValueNotifier<String?> studentProfileImagePath = ValueNotifier<String?>(null);
   final ValueNotifier<String?> adminProfileImagePath = ValueNotifier<String?>(null);
   final ValueNotifier<String?> teacherProfileImagePath = ValueNotifier<String?>(null);
-  final ValueNotifier<String> studentName = ValueNotifier<String>('Anudeep Jaadi');
-  final ValueNotifier<String> studentEmail = ValueNotifier<String>('anudeepjaadi@ecstasyschool.com');
+  final ValueNotifier<String> studentName = ValueNotifier<String>('Student Name');
+  final ValueNotifier<String> studentEmail = ValueNotifier<String>('student@school.com');
   final ValueNotifier<String> adminName = ValueNotifier<String>('Admin User');
   final ValueNotifier<String> teacherName = ValueNotifier<String>('Teacher Name');
   final ValueNotifier<String> selectedSchool = ValueNotifier<String>('Ecstasy School 1');
@@ -22,8 +22,8 @@ class ProfileManager {
     studentProfileImagePath.value = prefs.getString('student_profile_image');
     adminProfileImagePath.value = prefs.getString('admin_profile_image');
     teacherProfileImagePath.value = prefs.getString('teacher_profile_image');
-    studentName.value = prefs.getString('student_name') ?? 'Anudeep Jaadi';
-    studentEmail.value = prefs.getString('student_email') ?? 'anudeepjaadi@ecstasyschool.com';
+    studentName.value = prefs.getString('student_name') ?? 'Student Name';
+    studentEmail.value = prefs.getString('student_email') ?? 'student@school.com';
     adminName.value = prefs.getString('admin_name') ?? 'Admin User';
     teacherName.value = prefs.getString('teacher_name') ?? 'Teacher Name';
     

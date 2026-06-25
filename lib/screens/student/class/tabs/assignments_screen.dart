@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ersschool/core/theme/app_theme.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class AssignmentsScreen extends StatefulWidget {
   final bool showAppBar;
-  const AssignmentsScreen({super.key, this.showAppBar = true});
+  AssignmentsScreen({super.key, this.showAppBar = true});
 
   @override
   State<AssignmentsScreen> createState() => _AssignmentsScreenState();
@@ -207,12 +208,12 @@ class _AssignmentsScreenState extends State<AssignmentsScreen>
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.pending_actions_outlined, size: 18),
-              const SizedBox(width: 6),
-              const Text('Pending'),
-              const SizedBox(width: 6),
+              Icon(Icons.pending_actions_outlined, size: 18),
+              SizedBox(width: 6),
+              Text('Pending'.tr),
+              SizedBox(width: 6),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
                   color: widget.showAppBar 
                       ? Colors.white.withValues(alpha: 0.2) 
@@ -232,12 +233,12 @@ class _AssignmentsScreenState extends State<AssignmentsScreen>
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.check_circle_outline, size: 18),
-              const SizedBox(width: 6),
-              const Text('Completed'),
-              const SizedBox(width: 6),
+              Icon(Icons.check_circle_outline, size: 18),
+              SizedBox(width: 6),
+              Text('Completed'.tr),
+              SizedBox(width: 6),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
                   color: widget.showAppBar 
                       ? Colors.white.withValues(alpha: 0.2) 
@@ -259,17 +260,17 @@ class _AssignmentsScreenState extends State<AssignmentsScreen>
     return Scaffold(
       appBar: widget.showAppBar
           ? AppBar(
-              title: const Text('Assignments'),
+              title: Text('Assignments'.tr),
               backgroundColor: AppColors.primaryDark,
               foregroundColor: Colors.white,
               actions: [
                 IconButton(
                   onPressed: () {},
-                  icon: const Icon(Icons.search),
+                  icon: Icon(Icons.search),
                 ),
                 IconButton(
                   onPressed: () {},
-                  icon: const Icon(Icons.filter_list_outlined),
+                  icon: Icon(Icons.filter_list_outlined),
                 ),
               ],
               bottom: tabBar,
@@ -299,7 +300,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen>
 
   Widget _buildPendingList() {
     return ListView.builder(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       itemCount: pendingAssignments.length,
       itemBuilder: (context, index) {
         return _buildPendingCard(pendingAssignments[index]);
@@ -309,7 +310,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen>
 
   Widget _buildCompletedList() {
     return ListView.builder(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       itemCount: completedAssignments.length,
       itemBuilder: (context, index) {
         return _buildCompletedCard(completedAssignments[index]);
@@ -322,7 +323,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen>
     final isUrgent = a['isUrgent'] == true;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
@@ -330,7 +331,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen>
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 8,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
         border: isUrgent
@@ -343,10 +344,10 @@ class _AssignmentsScreenState extends State<AssignmentsScreen>
           if (isUrgent)
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 6),
+              padding: EdgeInsets.symmetric(vertical: 6),
               decoration: BoxDecoration(
                 color: AppColors.error.withValues(alpha: 0.1),
-                borderRadius: const BorderRadius.only(
+                borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(14),
                   topRight: Radius.circular(14),
                 ),
@@ -356,9 +357,8 @@ class _AssignmentsScreenState extends State<AssignmentsScreen>
                 children: [
                   Icon(Icons.warning_amber_outlined,
                       size: 14, color: AppColors.error),
-                  const SizedBox(width: 4),
-                  Text(
-                    'Due Today – Submit before deadline!',
+                  SizedBox(width: 4),
+                  Text('Due Today – Submit before deadline!'.tr,
                     style: GoogleFonts.poppins(
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
@@ -369,7 +369,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen>
               ),
             ),
           Padding(
-            padding: const EdgeInsets.all(14),
+            padding: EdgeInsets.all(14),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -385,7 +385,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen>
                       ),
                       child: Icon(a['icon'], size: 20, color: color),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -410,7 +410,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen>
                     ),
                     // Type badge
                     Container(
-                      padding: const EdgeInsets.symmetric(
+                      padding: EdgeInsets.symmetric(
                           horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: (a['typeColor'] as Color).withValues(alpha: 0.1),
@@ -420,7 +420,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen>
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(a['typeIcon'], size: 12, color: a['typeColor']),
-                          const SizedBox(width: 3),
+                          SizedBox(width: 3),
                           Text(
                             a['type'],
                             style: GoogleFonts.poppins(
@@ -434,7 +434,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen>
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
                 // Description
                 Text(
                   a['description'],
@@ -444,18 +444,18 @@ class _AssignmentsScreenState extends State<AssignmentsScreen>
                     height: 1.4,
                   ),
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 // Footer
                 Row(
                   children: [
                     // Marks
                     _buildInfoChip(Icons.grade_outlined, a['marks'], color),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     // Attachments
                     if ((a['attachments'] as int) > 0)
                       _buildInfoChip(Icons.attach_file_outlined,
                           '${a['attachments']} files', AppColors.textSecondary),
-                    const Spacer(),
+                    Spacer(),
                     // Due date
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
@@ -477,7 +477,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen>
                         ),
                       ],
                     ),
-                    const SizedBox(width: 6),
+                    SizedBox(width: 6),
                     Icon(Icons.chevron_right,
                         size: 20, color: AppColors.textSecondary),
                   ],
@@ -494,11 +494,11 @@ class _AssignmentsScreenState extends State<AssignmentsScreen>
     final color = a['color'] as Color;
     final gradeColor = a['grade'] == 'A+' || a['grade'] == 'A'
         ? AppColors.success
-        : const Color(0xFFF59E0B);
+        : Color(0xFFF59E0B);
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(14),
+      margin: EdgeInsets.only(bottom: 12),
+      padding: EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
@@ -506,7 +506,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen>
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 8,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
       ),
@@ -525,7 +525,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen>
                 ),
                 child: Icon(a['icon'], size: 20, color: color),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -550,7 +550,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen>
               ),
               // Grade badge
               Container(
-                padding: const EdgeInsets.symmetric(
+                padding: EdgeInsets.symmetric(
                     horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: gradeColor.withValues(alpha: 0.1),
@@ -560,7 +560,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen>
                 child: Column(
                   children: [
                     Icon(a['gradeIcon'], size: 16, color: gradeColor),
-                    const SizedBox(height: 2),
+                    SizedBox(height: 2),
                     Text(
                       a['grade'],
                       style: GoogleFonts.poppins(
@@ -574,7 +574,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen>
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           // Description
           Text(
             a['description'],
@@ -584,10 +584,10 @@ class _AssignmentsScreenState extends State<AssignmentsScreen>
               height: 1.4,
             ),
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           // Score and feedback
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: gradeColor.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(10),
@@ -595,7 +595,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen>
             child: Row(
               children: [
                 Icon(Icons.analytics_outlined, size: 16, color: gradeColor),
-                const SizedBox(width: 6),
+                SizedBox(width: 6),
                 Text(
                   'Score: ${a['score']}',
                   style: GoogleFonts.poppins(
@@ -604,9 +604,9 @@ class _AssignmentsScreenState extends State<AssignmentsScreen>
                     color: gradeColor,
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Icon(Icons.chat_bubble_outline, size: 14, color: AppColors.textSecondary),
-                const SizedBox(width: 4),
+                SizedBox(width: 4),
                 Expanded(
                   child: Text(
                     a['feedback'],
@@ -621,12 +621,12 @@ class _AssignmentsScreenState extends State<AssignmentsScreen>
               ],
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           // Footer
           Row(
             children: [
               Icon(Icons.check_circle, size: 14, color: AppColors.success),
-              const SizedBox(width: 4),
+              SizedBox(width: 4),
               Text(
                 'Submitted on ${a['dueTime']}',
                 style: GoogleFonts.poppins(
@@ -644,7 +644,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen>
 
   Widget _buildInfoChip(IconData icon, String label, Color color) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(6),
@@ -653,7 +653,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen>
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, size: 13, color: color),
-          const SizedBox(width: 4),
+          SizedBox(width: 4),
           Text(
             label,
             style: GoogleFonts.poppins(

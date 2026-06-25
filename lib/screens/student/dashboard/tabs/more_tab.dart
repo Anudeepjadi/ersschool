@@ -8,16 +8,17 @@ import '../widgets/student_app_bar.dart';
 import '../../../login/login_screen.dart';
 import '../../transport/transport_screen.dart';
 import '../../calendar/calendar_screen.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class MoreTab extends StatelessWidget {
   final Function(int)? onTabSelected;
 
-  const MoreTab({super.key, this.onTabSelected});
+  MoreTab({super.key, this.onTabSelected});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FF),
+      backgroundColor: Color(0xFFF5F7FF),
       appBar: StudentAppBar(
         title: "More",
         subtitle: "Settings and additional options",
@@ -27,21 +28,21 @@ class MoreTab extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
 
             // Profile Info Section
             _buildProfileSection(context),
 
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
 
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Quick links section
                   _sectionTitle('Quick Links'),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
                   Row(
                     children: [
                       Expanded(
@@ -58,7 +59,7 @@ class MoreTab extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                       Expanded(
                         child: _buildQuickCard(
                           context,
@@ -76,11 +77,11 @@ class MoreTab extends StatelessWidget {
                     ],
                   ),
 
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
 
                   // Account section
                   _sectionTitle('Account'),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10),
                   _buildTile(
                     context,
                     icon: Icons.notifications_outlined,
@@ -115,11 +116,11 @@ class MoreTab extends StatelessWidget {
                     onTap: () => _showComingSoon(context, 'Language Settings'),
                   ),
 
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
 
                   // Support section
                   _sectionTitle('Support & Info'),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10),
                   _buildTile(
                     context,
                     icon: Icons.info_outline,
@@ -153,12 +154,12 @@ class MoreTab extends StatelessWidget {
                     onTap: () => _showComingSoon(context, 'Privacy Policy'),
                   ),
 
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
 
                   // Logout
                   _buildLogoutButton(context),
 
-                  const SizedBox(height: 30),
+                  SizedBox(height: 30),
                 ],
               ),
             ),
@@ -172,7 +173,7 @@ class MoreTab extends StatelessWidget {
   Widget _sectionTitle(String title) {
     return Text(
       title,
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 13,
         fontWeight: FontWeight.bold,
         color: Colors.grey,
@@ -192,7 +193,7 @@ class MoreTab extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 18),
+        padding: EdgeInsets.symmetric(vertical: 18),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
@@ -200,7 +201,7 @@ class MoreTab extends StatelessWidget {
             BoxShadow(
               color: color.withValues(alpha: 0.08),
               blurRadius: 8,
-              offset: const Offset(0, 2),
+              offset: Offset(0, 2),
             ),
           ],
         ),
@@ -208,14 +209,14 @@ class MoreTab extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(14),
               ),
               child: Icon(icon, color: color, size: 26),
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
             Text(
               label,
               style: TextStyle(
@@ -240,7 +241,7 @@ class MoreTab extends StatelessWidget {
     required VoidCallback onTap,
   }) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 10),
+      margin: EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
@@ -248,14 +249,14 @@ class MoreTab extends StatelessWidget {
           BoxShadow(
             color: Colors.grey.shade100,
             blurRadius: 4,
-            offset: const Offset(0, 1),
+            offset: Offset(0, 1),
           ),
         ],
       ),
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         leading: Container(
-          padding: const EdgeInsets.all(8),
+          padding: EdgeInsets.all(8),
           decoration: BoxDecoration(
             color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(10),
@@ -264,7 +265,7 @@ class MoreTab extends StatelessWidget {
         ),
         title: Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 14,
             color: Color(0xFF1E2875),
@@ -275,7 +276,7 @@ class MoreTab extends StatelessWidget {
           style: TextStyle(fontSize: 11, color: Colors.grey.shade500),
         ),
         trailing:
-            const Icon(Icons.arrow_forward_ios, size: 13, color: Colors.grey),
+            Icon(Icons.arrow_forward_ios, size: 13, color: Colors.grey),
         onTap: onTap,
       ),
     );
@@ -292,13 +293,13 @@ class MoreTab extends StatelessWidget {
             builder: (ctx) => AlertDialog(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16)),
-              title: const Text('Logout',
+              title: Text('Logout'.tr,
                   style: TextStyle(fontWeight: FontWeight.bold)),
-              content: const Text('Are you sure you want to logout?'),
+              content: Text('Are you sure you want to logout?'.tr),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(ctx),
-                  child: const Text('Cancel'),
+                  child: Text('Cancel'.tr),
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
@@ -310,25 +311,24 @@ class MoreTab extends StatelessWidget {
                     Navigator.pop(ctx);
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (_) => const LoginScreen()),
+                      MaterialPageRoute(builder: (_) => LoginScreen()),
                     );
                   },
-                  child: const Text('Logout',
+                  child: Text('Logout'.tr,
                       style: TextStyle(color: Colors.white)),
                 ),
               ],
             ),
           );
         },
-        icon: const Icon(Icons.logout, color: Colors.white),
-        label: const Text(
-          'Logout',
+        icon: Icon(Icons.logout, color: Colors.white),
+        label: Text('Logout'.tr,
           style: TextStyle(
               color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
         ),
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.red,
-          padding: const EdgeInsets.symmetric(vertical: 14),
+          padding: EdgeInsets.symmetric(vertical: 14),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
           elevation: 0,
@@ -344,26 +344,24 @@ class MoreTab extends StatelessWidget {
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Text(feature,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Settings & details for $feature'),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: Colors.grey.shade100,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Row(
-                children: [
+              child: Row(children: [
                   Icon(Icons.info_outline, color: AppColors.primary, size: 20),
                   SizedBox(width: 8),
                   Expanded(
-                    child: Text(
-                      'This is dummy data representing the active status of this module.',
+                    child: Text('This is dummy data representing the active status of this module.'.tr,
                       style: TextStyle(fontSize: 12, color: Colors.black87),
                     ),
                   ),
@@ -375,7 +373,7 @@ class MoreTab extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Close'),
+            child: Text('Close'.tr),
           ),
           ElevatedButton(
             onPressed: () {
@@ -391,7 +389,7 @@ class MoreTab extends StatelessWidget {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8)),
             ),
-            child: const Text('Save Changes'),
+            child: Text('Save Changes'.tr),
           ),
         ],
       ),
@@ -401,36 +399,36 @@ class MoreTab extends StatelessWidget {
   void _showThemeSelectorDialog(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(
+      shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (ctx) => Padding(
-        padding: const EdgeInsets.all(24.0),
+        padding: EdgeInsets.all(24.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Select Theme',
+            Text('Select Theme'.tr,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             ListTile(
-              leading: const Icon(Icons.brightness_auto),
-              title: const Text('System Default'),
+              leading: Icon(Icons.brightness_auto),
+              title: Text('System Default'.tr),
               onTap: () {
                 ProfileManager().themeMode.value = ThemeMode.system;
                 Navigator.pop(ctx);
               },
             ),
             ListTile(
-              leading: const Icon(Icons.light_mode),
-              title: const Text('Light Theme'),
+              leading: Icon(Icons.light_mode),
+              title: Text('Light Theme'.tr),
               onTap: () {
                 ProfileManager().themeMode.value = ThemeMode.light;
                 Navigator.pop(ctx);
               },
             ),
             ListTile(
-              leading: const Icon(Icons.dark_mode),
-              title: const Text('Dark Theme'),
+              leading: Icon(Icons.dark_mode),
+              title: Text('Dark Theme'.tr),
               onTap: () {
                 ProfileManager().themeMode.value = ThemeMode.dark;
                 Navigator.pop(ctx);
@@ -448,16 +446,15 @@ class MoreTab extends StatelessWidget {
       applicationName: 'Ecstasy School ERP',
       applicationVersion: '1.0.0',
       applicationIcon: Container(
-        padding: const EdgeInsets.all(8),
+        padding: EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: AppColors.primary.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
         ),
-        child: const Icon(Icons.school, color: AppColors.primary, size: 32),
+        child: Icon(Icons.school, color: AppColors.primary, size: 32),
       ),
-      children: const [
-        Text(
-          'A comprehensive school management app for Ecstasy School students and parents.',
+      children: [
+        Text('A comprehensive school management app for Ecstasy School students and parents.'.tr,
         ),
       ],
     );
@@ -466,9 +463,9 @@ class MoreTab extends StatelessWidget {
   // ── Profile Section ────────────────────────────────────────────────────────
   Widget _buildProfileSection(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: 16),
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
@@ -477,7 +474,7 @@ class MoreTab extends StatelessWidget {
               color: Colors.grey.withValues(alpha: 0.1),
               spreadRadius: 1,
               blurRadius: 10,
-              offset: const Offset(0, 4),
+              offset: Offset(0, 4),
             ),
           ],
         ),
@@ -490,7 +487,7 @@ class MoreTab extends StatelessWidget {
                   onTabSelected!(1);
                 } else {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => const MyInfoScreen()));
+                      MaterialPageRoute(builder: (_) => MyInfoScreen()));
                 }
               },
               child: Container(
@@ -503,11 +500,11 @@ class MoreTab extends StatelessWidget {
                   builder: (context, path, _) {
                     return CircleAvatar(
                       radius: 32,
-                      backgroundColor: const Color(0xFFF0F4FF),
+                      backgroundColor: Color(0xFFF0F4FF),
                       backgroundImage:
                           path != null ? FileImage(File(path)) : null,
                       child: path == null
-                          ? const Icon(
+                          ? Icon(
                               Icons.person,
                               color: AppColors.primary,
                               size: 36,
@@ -518,7 +515,7 @@ class MoreTab extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: 16),
             // Name & class
             ValueListenableBuilder<String>(
               valueListenable: ProfileManager().studentName,
@@ -533,26 +530,25 @@ class MoreTab extends StatelessWidget {
                     children: [
                       Text(
                         studentName,
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Color(0xFF1E2875),
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4),
                       Text(
                         classRoll,
-                        style: const TextStyle(color: Colors.grey, fontSize: 13),
+                        style: TextStyle(color: Colors.grey, fontSize: 13),
                       ),
-                      const SizedBox(height: 6),
+                      SizedBox(height: 6),
                       Row(
                         children: [
-                          const Icon(Icons.verified_rounded,
+                          Icon(Icons.verified_rounded,
                               color: Colors.green, size: 14),
-                          const SizedBox(width: 4),
-                          Text(
-                            'Active Student',
+                          SizedBox(width: 4),
+                          Text('Active Student'.tr,
                             style: TextStyle(
                               color: Colors.grey.shade700,
                               fontSize: 11,
@@ -568,7 +564,7 @@ class MoreTab extends StatelessWidget {
             // Edit icon
             IconButton(
               icon:
-                  const Icon(Icons.edit_outlined, color: Colors.grey, size: 22),
+                  Icon(Icons.edit_outlined, color: Colors.grey, size: 22),
               onPressed: () {
                 if (onTabSelected != null) {
                   onTabSelected!(1); // Switch to My Info tab
