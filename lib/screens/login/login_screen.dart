@@ -134,10 +134,11 @@ class _LoginScreenState extends State<LoginScreen> {
       builder: (context) {
         return Padding(
           padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
               const Text(
                 'Choose an account',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -195,10 +196,11 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ],
           ),
-        );
-      },
-    );
-  }
+        ),
+      );
+    },
+  );
+}
 
   @override
   Widget build(BuildContext context) {

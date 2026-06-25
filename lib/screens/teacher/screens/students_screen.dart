@@ -497,14 +497,17 @@ class _StudentsScreenState extends State<StudentsScreen> {
                     const SizedBox(height: 4),
                     Text("ID: ${st.admissionNo}", style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w500)),
                     const Spacer(),
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      decoration: BoxDecoration(
-                        color: Colors.blue[800],
-                        borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(12), bottomRight: Radius.circular(12)),
+                    InkWell(
+                      onTap: () => _showIDCardDialog(st),
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.blue[800],
+                          borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(12), bottomRight: Radius.circular(12)),
+                        ),
+                        child: const Center(child: Text("VIEW ID CARD", style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold))),
                       ),
-                      child: const Center(child: Text("VIEW ID CARD", style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold))),
                     ),
                   ] else ...[
                     // No ID Card Placeholder
@@ -522,14 +525,17 @@ class _StudentsScreenState extends State<StudentsScreen> {
                     const SizedBox(height: 4),
                     Text("Adm: ${st.admissionNo}", style: const TextStyle(fontSize: 10, color: Colors.grey)),
                     const Spacer(),
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(12), bottomRight: Radius.circular(12)),
+                    InkWell(
+                      onTap: () => _generateIdCards(student: st),
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(12), bottomRight: Radius.circular(12)),
+                        ),
+                        child: const Center(child: Text("GENERATE ID", style: TextStyle(color: Colors.grey, fontSize: 10, fontWeight: FontWeight.bold))),
                       ),
-                      child: const Center(child: Text("GENERATE ID", style: TextStyle(color: Colors.grey, fontSize: 10, fontWeight: FontWeight.bold))),
                     ),
                   ],
                 ],
@@ -541,6 +547,192 @@ class _StudentsScreenState extends State<StudentsScreen> {
       ],
     ),
   );
+  }
+
+  void _showIDCardDialog(StudentItem student) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          backgroundColor: Colors.transparent,
+          child: _buildIDCardLayout(
+            headerColor: Colors.blue.shade800,
+            headerText: "ECSTASY SCHOOL 1",
+            subHeader: "Shaping Futures, Building Tomorrow",
+            roleText: "STUDENT",
+            name: student.name,
+            details: {
+              'Class': student.className.split(' - ').first,
+              'Roll No.': student.rollNo,
+              'Gender': student.gender,
+              'Parent': student.parentName,
+              'DOB': '14 May 2010',
+              'Blood Group': 'B+',
+            },
+            idNumber: student.admissionNo,
+            avatarUrl: student.avatarUrl,
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildIDCardLayout({
+    required Color headerColor,
+    required String headerText,
+    required String subHeader,
+    required String roleText,
+    required String name,
+    required Map<String, String> details,
+    required String idNumber,
+    required String avatarUrl,
+  }) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey.shade200, width: 1.5),
+        boxShadow: [
+          BoxShadow(color: Colors.grey.shade50, blurRadius: 4, offset: const Offset(0, 2)),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Header banner
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: headerColor,
+              borderRadius: const BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.school, color: Colors.white, size: 24),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(headerText, style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold)),
+                      Text(subHeader, style: const TextStyle(color: Colors.white70, fontSize: 8)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Info body
+          Padding(
+            padding: const EdgeInsets.all(14.0),
+            child: Row(
+              children: [
+                // Profile Picture placeholder
+                Container(
+                  width: 70,
+                  height: 90,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade100,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey.shade300),
+                    image: avatarUrl.isNotEmpty
+                        ? DecorationImage(
+                            image: NetworkImage(avatarUrl),
+                            fit: BoxFit.cover,
+                          )
+                        : null,
+                  ),
+                  alignment: Alignment.center,
+                  child: avatarUrl.isEmpty ? Icon(Icons.person, size: 40, color: Colors.grey.shade400) : null,
+                ),
+                const SizedBox(width: 14),
+                // Card details
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        name,
+                        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+                      ),
+                      const SizedBox(height: 6),
+                      ...details.entries.map((e) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 2.0),
+                          child: Row(
+                            children: [
+                              Text("${e.key}: ", style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
+                              Text(e.value, style: const TextStyle(fontSize: 10, color: Color(0xFF1E2875), fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                        );
+                      }),
+                    ],
+                  ),
+                ),
+                // Vertical role strip
+                RotatedBox(
+                  quarterTurns: 3,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: headerColor.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      roleText,
+                      style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: headerColor, letterSpacing: 0.5),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+          const Divider(height: 1),
+          // Barcode representation & ID footer
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Fake barcode lines
+                    Row(
+                      children: List.generate(20, (index) {
+                        return Container(
+                          width: (index % 3 == 0) ? 3.0 : 1.5,
+                          height: 20,
+                          color: Colors.black,
+                          margin: const EdgeInsets.only(right: 1),
+                        );
+                      }),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(idNumber, style: const TextStyle(fontSize: 9, fontFamily: 'monospace', color: Colors.grey)),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 50,
+                      height: 1,
+                      color: Colors.grey.shade400,
+                    ),
+                    const SizedBox(height: 4),
+                    const Text("Principal Sign", style: TextStyle(fontSize: 8, color: Colors.grey, fontWeight: FontWeight.bold)),
+                  ],
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
   }
 
   void _importStudents() {
@@ -595,9 +787,9 @@ class _StudentsScreenState extends State<StudentsScreen> {
     });
   }
 
-  void _generateIdCards() {
-    final nameController = TextEditingController();
-    final idController = TextEditingController();
+  void _generateIdCards({StudentItem? student}) {
+    final nameController = TextEditingController(text: student?.name ?? "");
+    final idController = TextEditingController(text: student?.admissionNo ?? "");
 
     showDialog(
       context: context,
@@ -667,6 +859,25 @@ class _StudentsScreenState extends State<StudentsScreen> {
           ElevatedButton(
             onPressed: () {
               if (nameController.text.isNotEmpty && idController.text.isNotEmpty) {
+                if (student != null) {
+                  setState(() {
+                    final index = _students.indexWhere((s) => s.admissionNo == student.admissionNo);
+                    if (index != -1) {
+                      _students[index] = StudentItem(
+                        name: nameController.text,
+                        className: student.className,
+                        rollNo: student.rollNo,
+                        admissionNo: idController.text,
+                        gender: student.gender,
+                        parentName: student.parentName,
+                        isActive: student.isActive,
+                        avatarUrl: student.avatarUrl,
+                        siblings: student.siblings,
+                        hasIdCard: true,
+                      );
+                    }
+                  });
+                }
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -1466,7 +1677,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
                 QuickActionItem(title: "Add Student", icon: Icons.add_circle_outline, onTap: _showAddStudentDialog),
                 QuickActionItem(title: "Import Students", icon: Icons.file_upload_outlined, onTap: _importStudents),
                 QuickActionItem(title: "Download Student List", icon: Icons.file_download_outlined, onTap: _downloadStudentList),
-                QuickActionItem(title: "Generate ID Cards", icon: Icons.badge_outlined, onTap: _generateIdCards),
+                QuickActionItem(title: "Generate ID Cards", icon: Icons.badge_outlined, onTap: () => _generateIdCards()),
               ],
             ),
             const SizedBox(height: 20),
