@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../../core/theme/app_colors.dart';
 import '../widgets/admin_app_bar.dart';
+import '../widgets/admin_bottom_nav_bar.dart';
 
 class AdminAttendanceScreen extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
@@ -98,6 +99,7 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
         subtitle: "Track and manage student attendance",
         onOpenDrawer: widget.onOpenDrawer,
       ),
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.all(16),
@@ -105,35 +107,42 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Dropdowns selectors
-            Row(
-              children: [
-                Expanded(
-                  child: _buildDropdown(
-                    label: "Class",
-                    value: _selectedClass,
-                    items: ['Class 8 - A', 'Class 8 - B', 'Class 9 - A'],
-                    onChanged: (v) => setState(() => _selectedClass = v!),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 140,
+                    child: _buildDropdown(
+                      label: "Class",
+                      value: _selectedClass,
+                      items: ['Class 8 - A', 'Class 8 - B', 'Class 9 - A'],
+                      onChanged: (v) => setState(() => _selectedClass = v!),
+                    ),
                   ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: _buildDropdown(
-                    label: "Date",
-                    value: _selectedDate,
-                    items: ['20 May 2024', '21 May 2024'],
-                    onChanged: (v) => setState(() => _selectedDate = v!),
+                  const SizedBox(width: 10),
+                  SizedBox(
+                    width: 140,
+                    child: _buildDropdown(
+                      label: "Date",
+                      value: _selectedDate,
+                      items: ['20 May 2024', '21 May 2024'],
+                      onChanged: (v) => setState(() => _selectedDate = v!),
+                    ),
                   ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: _buildDropdown(
-                    label: "View By",
-                    value: _selectedView,
-                    items: ['Daily', 'Weekly', 'Monthly'],
-                    onChanged: (v) => setState(() => _selectedView = v!),
+                  const SizedBox(width: 10),
+                  SizedBox(
+                    width: 140,
+                    child: _buildDropdown(
+                      label: "View By",
+                      value: _selectedView,
+                      items: ['Daily', 'Weekly', 'Monthly'],
+                      onChanged: (v) => setState(() => _selectedView = v!),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             const SizedBox(height: 16),
 

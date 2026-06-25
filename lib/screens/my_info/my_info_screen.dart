@@ -23,7 +23,8 @@ class _CountryCode {
 // Screen
 // ─────────────────────────────────────────────────────────────────────────────
 class MyInfoScreen extends StatefulWidget {
-  const MyInfoScreen({super.key});
+  final Function(int)? onTabSelected;
+  const MyInfoScreen({super.key, this.onTabSelected});
 
   @override
   State<MyInfoScreen> createState() => _MyInfoScreenState();
@@ -720,6 +721,11 @@ class _MyInfoScreenState extends State<MyInfoScreen> with SingleTickerProviderSt
         title: "My Info",
         subtitle: "View and edit your profile",
         onOpenDrawer: () => Scaffold.of(context).openDrawer(),
+        onProfileTap: () {
+          if (widget.onTabSelected != null) {
+            widget.onTabSelected!(1);
+          }
+        },
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -730,7 +736,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> with SingleTickerProviderSt
                 // cap max width for desktop
                 constraints: const BoxConstraints(maxWidth: 960),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: hPad, vertical: 16),
+                  padding: EdgeInsets.only(left: hPad, right: hPad, top: 4, bottom: 16),
                   child: Column(children: [
                     // ── 1. Profile header ────────────────────────────────────────
                 _buildProfileCard(),

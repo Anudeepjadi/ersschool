@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../widgets/admin_app_bar.dart';
+import '../widgets/admin_bottom_nav_bar.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../../core/theme/app_colors.dart';
 
@@ -117,27 +119,8 @@ class _AdminFeesScreenState extends State<AdminFeesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FF),
-      appBar: AppBar(
-        title: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Fees Collection",
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                  color: Colors.white),
-            ),
-            Text(
-              "Manage and track all fee collections",
-              style: TextStyle(fontSize: 12, color: Colors.white70),
-            ),
-          ],
-        ),
-        backgroundColor: AppColors.primaryDark,
-        foregroundColor: Colors.white,
-        elevation: 0,
-      ),
+      appBar: const AdminAppBar(title: "Fees Collection", subtitle: "Manage your account details"),
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.all(16),
@@ -145,35 +128,42 @@ class _AdminFeesScreenState extends State<AdminFeesScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Filter dropdowns
-            Row(
-              children: [
-                Expanded(
-                  child: _buildDropdown(
-                    label: "Session",
-                    value: _selectedSession,
-                    items: ['2026 - 27', '2025 - 26'],
-                    onChanged: (v) => setState(() => _selectedSession = v!),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 140,
+                    child: _buildDropdown(
+                      label: "Session",
+                      value: _selectedSession,
+                      items: ['2026 - 27', '2025 - 26'],
+                      onChanged: (v) => setState(() => _selectedSession = v!),
+                    ),
                   ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: _buildDropdown(
-                    label: "Class",
-                    value: _selectedClass,
-                    items: ['All Classes', '8 - A', '7 - B'],
-                    onChanged: (v) => setState(() => _selectedClass = v!),
+                  const SizedBox(width: 8),
+                  SizedBox(
+                    width: 140,
+                    child: _buildDropdown(
+                      label: "Class",
+                      value: _selectedClass,
+                      items: ['All Classes', '8 - A', '7 - B'],
+                      onChanged: (v) => setState(() => _selectedClass = v!),
+                    ),
                   ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: _buildDropdown(
-                    label: "Fee Type",
-                    value: _selectedFeeType,
-                    items: ['All Fee Types', 'Tuition Fee', 'Transport Fee'],
-                    onChanged: (v) => setState(() => _selectedFeeType = v!),
+                  const SizedBox(width: 8),
+                  SizedBox(
+                    width: 140,
+                    child: _buildDropdown(
+                      label: "Fee Type",
+                      value: _selectedFeeType,
+                      items: ['All Fee Types', 'Tuition Fee', 'Transport Fee'],
+                      onChanged: (v) => setState(() => _selectedFeeType = v!),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             const SizedBox(height: 16),
 

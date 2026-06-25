@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../../core/theme/app_colors.dart';
 import '../widgets/admin_app_bar.dart';
+import '../widgets/admin_bottom_nav_bar.dart';
 
 class AdminExaminationsScreen extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
@@ -31,6 +32,7 @@ class _AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FF),
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
       appBar: AdminAppBar(
         title: "Examinations",
         subtitle: "Manage exams, schedules and results",
@@ -119,11 +121,10 @@ class _AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
             ],
           ),
           const SizedBox(height: 14),
-          ListView.separated(
+          ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: _schedules.length,
-            separatorBuilder: (context, index) => const Divider(),
             itemBuilder: (context, index) {
               final sched = _schedules[index];
               Color statusColor;
@@ -138,36 +139,78 @@ class _AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                   statusColor = Colors.blue;
               }
 
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
+              return Container(
+                margin: const EdgeInsets.only(bottom: 12),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.grey.shade100),
+                ),
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: statusColor.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Icon(Icons.event_available_outlined, color: statusColor, size: 20),
+                    ),
+                    const SizedBox(width: 12),
                     Expanded(
-                      flex: 4,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(sched['name'], style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                          Text("Class ${sched['class']} • ${sched['type']}", style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  sched['name'],
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF1E2875),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: statusColor.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  sched['status'],
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                    color: statusColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            "Class ${sched['class']} • ${sched['type']}",
+                            style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                          ),
+                          const SizedBox(height: 6),
+                          Row(
+                            children: [
+                              Icon(Icons.calendar_month_outlined, size: 14, color: Colors.grey.shade500),
+                              const SizedBox(width: 4),
+                              Text(
+                                "${sched['start']} - ${sched['end']}",
+                                style: TextStyle(fontSize: 11, color: Colors.grey.shade500),
+                              ),
+                            ],
+                          ),
                         ],
-                      ),
-                    ),
-                    Expanded(
-                      flex: 4,
-                      child: Text(
-                        "${sched['start']} - ${sched['end']}",
-                        style: const TextStyle(fontSize: 11, color: Color(0xFF757897), fontWeight: FontWeight.w500),
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: statusColor.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        sched['status'],
-                        style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: statusColor),
                       ),
                     ),
                   ],
@@ -306,11 +349,10 @@ class _AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
             ),
           ),
-          ListView.separated(
+          ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: _results.length,
-            separatorBuilder: (context, index) => const Divider(height: 1),
             itemBuilder: (context, index) {
               final res = _results[index];
               Color resColor;
@@ -325,20 +367,84 @@ class _AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                   resColor = const Color(0xFFF59E0B);
               }
 
-              return ListTile(
-                title: Text(res['student'], style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                subtitle: Text("Class ${res['class']} • ${res['exam']}", style: const TextStyle(fontSize: 11, color: Colors.grey)),
-                trailing: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.end,
+              return Container(
+                margin: const EdgeInsets.only(bottom: 12),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.grey.shade100),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("${res['obtained']}/${res['total']}", style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                    Text(
-                      "${res['pct']} (${res['result']})",
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                        color: resColor,
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: resColor.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Icon(Icons.person_outline, color: resColor, size: 20),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  res['student'],
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF1E2875),
+                                  ),
+                                ),
+                              ),
+                              Text(
+                                "${res['obtained']}/${res['total']}",
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF1E2875),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 6),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  "Class ${res['class']} • ${res['exam']}",
+                                  style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: resColor.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  "${res['pct']} (${res['result']})",
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                    color: resColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                   ],

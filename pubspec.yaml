@@ -29,6 +29,7 @@ flutter:
     - assets/images/loginscreenlogo.png
     - assets/images/student_profile.png
     - assets/images/student_welcome.png
+    - assets/images/school_bus.png
     - assets/animations/ers_animation.mp4
 
 flutter_icons:

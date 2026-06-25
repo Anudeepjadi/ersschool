@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../widgets/admin_app_bar.dart';
+import '../widgets/admin_bottom_nav_bar.dart';
 import '../../../core/theme/app_colors.dart';
 
 class AdminHelpCenterScreen extends StatefulWidget {
@@ -20,24 +22,8 @@ class _AdminHelpCenterScreenState extends State<AdminHelpCenterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FF),
-      appBar: AppBar(
-        title: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Help Center",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white),
-            ),
-            Text(
-              "Get help and support",
-              style: TextStyle(fontSize: 12, color: Colors.white70),
-            ),
-          ],
-        ),
-        backgroundColor: AppColors.primaryDark,
-        foregroundColor: Colors.white,
-        elevation: 0,
-      ),
+      appBar: const AdminAppBar(title: "Help Center", subtitle: "Manage your account details"),
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.all(16),
@@ -143,7 +129,7 @@ class _AdminHelpCenterScreenState extends State<AdminHelpCenterScreen> {
             physics: const NeverScrollableScrollPhysics(),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              childAspectRatio: 2.2,
+              childAspectRatio: 1.8,
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
             ),

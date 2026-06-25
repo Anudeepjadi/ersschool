@@ -64,8 +64,9 @@ class _CalendarPopupState extends State<_CalendarPopup> {
   @override
   void initState() {
     super.initState();
-    _selectedDate = DateTime(2026, 5, 24);
-    _currentMonth = DateTime(2026, 5, 1);
+    final now = DateTime.now();
+    _selectedDate = DateTime(now.year, now.month, now.day);
+    _currentMonth = DateTime(now.year, now.month, 1);
   }
 
   void _nextMonth() => setState(() {
@@ -94,7 +95,7 @@ class _CalendarPopupState extends State<_CalendarPopup> {
   }
 
   String _monthName(int m) => const [
-        "", "Jan", "Feb", "Mar", "Apr", "Jun", "Jun",
+        "", "Jan", "Feb", "Mar", "Apr", "May", "Jun",
         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
       ][m];
 

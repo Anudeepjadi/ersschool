@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/utils/profile_manager.dart';
 import '../login/login_screen.dart';
 import '../class/class_screen.dart';
 import '../my_info/my_info_screen.dart';
@@ -7,6 +9,7 @@ import 'tabs/home_tab.dart';
 import 'tabs/fee_tab.dart';
 import 'tabs/exams_tab.dart';
 import 'tabs/more_tab.dart';
+import '../admin/widgets/ai_bot_fab.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -32,10 +35,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
         onTabSelected: _onTabChanged,
       ),
       const MyInfoScreen(),
-      ClassScreen(onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer()),
-      FeeTab(onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer()),
-      ExamsTab(onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer()),
-      const MoreTab(),
+      ClassScreen(
+        onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer(),
+        onTabSelected: _onTabChanged,
+      ),
+      FeeTab(
+        onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer(),
+        onTabSelected: _onTabChanged,
+      ),
+      ExamsTab(
+        onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer(),
+        onTabSelected: _onTabChanged,
+      ),
+      MoreTab(
+        onTabSelected: _onTabChanged,
+      ),
     ];
 
     return Scaffold(
@@ -44,19 +58,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            const UserAccountsDrawerHeader(
-              decoration: BoxDecoration(
+            UserAccountsDrawerHeader(
+              decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   colors: [AppColors.primaryDark, AppColors.secondary],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
               ),
-              currentAccountPicture: CircleAvatar(
-                backgroundColor: Colors.white,
-                child: Icon(Icons.person, size: 40, color: AppColors.primary),
+              currentAccountPicture: ValueListenableBuilder<String?>(
+                valueListenable: ProfileManager().studentProfileImagePath,
+                builder: (context, path, _) {
+                  return CircleAvatar(
+                    backgroundColor: Colors.white,
+                    backgroundImage: path != null ? FileImage(File(path)) : null,
+                    child: path == null ? const Icon(Icons.person, size: 40, color: AppColors.primary) : null,
+                  );
+                },
               ),
-              accountName: Text(
+              accountName: const Text(
                 "Anudeep Jaadi",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
@@ -139,6 +159,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ],
       ),
       body: tabs[currentIndex],
+      floatingActionButton: const AiBotFab(),
     );
   }
 }

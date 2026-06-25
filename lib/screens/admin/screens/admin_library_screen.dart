@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../widgets/admin_app_bar.dart';
+import '../widgets/admin_bottom_nav_bar.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../../core/theme/app_colors.dart';
 
@@ -132,36 +134,8 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FF),
-      appBar: AppBar(
-        title: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Library Management",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white),
-            ),
-            Text(
-              "Track catalog, issuances, and returns",
-              style: TextStyle(fontSize: 12, color: Colors.white70),
-            ),
-          ],
-        ),
-        backgroundColor: AppColors.primaryDark,
-        foregroundColor: Colors.white,
-        elevation: 0,
-        bottom: TabBar(
-          controller: _tabController,
-          indicatorColor: Colors.white,
-          indicatorWeight: 3,
-          labelColor: Colors.white,
-          unselectedLabelColor: Colors.white70,
-          labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-          tabs: const [
-            Tab(text: "Catalog & Stats"),
-            Tab(text: "Issued Register"),
-          ],
-        ),
-      ),
+      appBar: const AdminAppBar(title: "Library Management", subtitle: "Manage your account details"),
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
       body: TabBarView(
         controller: _tabController,
         children: [

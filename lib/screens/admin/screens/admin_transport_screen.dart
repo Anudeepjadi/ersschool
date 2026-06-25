@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../widgets/admin_app_bar.dart';
+import '../widgets/admin_bottom_nav_bar.dart';
 import '../../../core/theme/app_colors.dart';
 
 class AdminTransportScreen extends StatefulWidget {
@@ -114,36 +116,8 @@ class _AdminTransportScreenState extends State<AdminTransportScreen> with Single
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FF),
-      appBar: AppBar(
-        title: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Transport Management",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white),
-            ),
-            Text(
-              "Track routes, buses, and driver rosters",
-              style: TextStyle(fontSize: 12, color: Colors.white70),
-            ),
-          ],
-        ),
-        backgroundColor: AppColors.primaryDark,
-        foregroundColor: Colors.white,
-        elevation: 0,
-        bottom: TabBar(
-          controller: _tabController,
-          indicatorColor: Colors.white,
-          indicatorWeight: 3,
-          labelColor: Colors.white,
-          unselectedLabelColor: Colors.white70,
-          labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-          tabs: const [
-            Tab(text: "Routes & Buses"),
-            Tab(text: "Drivers Registry"),
-          ],
-        ),
-      ),
+      appBar: const AdminAppBar(title: "Transport Management", subtitle: "Manage your account details"),
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
       body: TabBarView(
         controller: _tabController,
         children: [
@@ -173,6 +147,44 @@ class _AdminTransportScreenState extends State<AdminTransportScreen> with Single
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Bus Image Banner
+          Container(
+            height: 120,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: Colors.grey.shade100),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Manage Fleet", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                        const SizedBox(height: 8),
+                        Text("Track and manage your school buses in real time.", style: TextStyle(fontSize: 12, color: Colors.grey)),
+                      ],
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Image.asset("assets/images/school_bus.png", fit: BoxFit.contain),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+
           // Stats Row
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,

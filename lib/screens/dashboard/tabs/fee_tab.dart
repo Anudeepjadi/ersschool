@@ -29,9 +29,10 @@ class _FeeTabState extends State<FeeTab> {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       appBar: StudentAppBar(
-        title: "Fee",
-        subtitle: "Manage and track your payments",
-        onOpenDrawer: widget.onOpenDrawer ?? () => Scaffold.of(context).openDrawer(),
+        title: "Fee Details",
+        subtitle: "View and manage your fee payments",
+        onOpenDrawer: widget.onOpenDrawer,
+        onProfileTap: widget.onTabSelected != null ? () => widget.onTabSelected!(1) : null,
       ),
       body: Column(
         children: [
@@ -381,52 +382,63 @@ class _FeeTabState extends State<FeeTab> {
           ],
         ),
         const SizedBox(height: 12),
-        // Fee table column headers
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          decoration: BoxDecoration(
-            color: Colors.grey.shade50,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: const Row(
-            children: [
-              Expanded(
-                flex: 2,
-                child: Text(
-                  "Particulars",
-                  style: TextStyle(fontSize: 10, color: Color(0xFF6B7280), fontWeight: FontWeight.bold),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
+          child: SizedBox(
+            width: 550,
+            child: Column(
+              children: [
+                // Fee table column headers
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade50,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          "Particulars",
+                          style: TextStyle(fontSize: 10, color: Color(0xFF6B7280), fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          "Due Date",
+                          style: TextStyle(fontSize: 10, color: Color(0xFF6B7280), fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          "Amount (₹)",
+                          style: TextStyle(fontSize: 10, color: Color(0xFF6B7280), fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          "Status",
+                          style: TextStyle(fontSize: 10, color: Color(0xFF6B7280), fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      SizedBox(width: 16), // space to match right chevron
+                    ],
+                  ),
                 ),
-              ),
-              Expanded(
-                flex: 2,
-                child: Text(
-                  "Due Date",
-                  style: TextStyle(fontSize: 10, color: Color(0xFF6B7280), fontWeight: FontWeight.bold),
-                ),
-              ),
-              Expanded(
-                flex: 2,
-                child: Text(
-                  "Amount (₹)",
-                  style: TextStyle(fontSize: 10, color: Color(0xFF6B7280), fontWeight: FontWeight.bold),
-                ),
-              ),
-              Expanded(
-                flex: 2,
-                child: Text(
-                  "Status",
-                  style: TextStyle(fontSize: 10, color: Color(0xFF6B7280), fontWeight: FontWeight.bold),
-                ),
-              ),
-              SizedBox(width: 16), // space to match right chevron
-            ],
+                const SizedBox(height: 6),
+                // Items list
+                _buildFeeItem("Tuition Fee", "Term 1", "30 Apr 2026", "15,000", true),
+                _buildFeeItem("Tuition Fee", "Term 2", "30 Jun 2026", "15,000", true),
+                _buildFeeItem("Tuition Fee", "Term 3", "30 Sep 2026", "15,000", false),
+              ],
+            ),
           ),
         ),
-        const SizedBox(height: 6),
-        // Items list
-        _buildFeeItem("Tuition Fee", "Term 1", "30 Apr 2026", "15,000", true),
-        _buildFeeItem("Tuition Fee", "Term 2", "30 Jun 2026", "15,000", true),
-        _buildFeeItem("Tuition Fee", "Term 3", "30 Sep 2026", "15,000", false),
         const SizedBox(height: 16),
         // Totals and Pay Now Row
         Row(
@@ -657,9 +669,20 @@ class _FeeTabState extends State<FeeTab> {
           ],
         ),
         const SizedBox(height: 12),
-        _buildRecentPaymentItem("Tuition Fee - Term 2", "Receipt #FEE-2026-0021", "₹ 15,000", "UPI", "15 Apr 2026"),
-        _buildRecentPaymentItem("Tuition Fee - Term 1", "Receipt #FEE-2026-0015", "₹ 15,000", "Credit Card", "15 Jan 2026"),
-        _buildRecentPaymentItem("Admission Fee", "Receipt #FEE-2025-0098", "₹ 10,000", "Net Banking", "10 Apr 2025"),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
+          child: SizedBox(
+            width: 600,
+            child: Column(
+              children: [
+                _buildRecentPaymentItem("Tuition Fee - Term 2", "Receipt #FEE-2026-0021", "₹ 15,000", "UPI", "15 Apr 2026"),
+                _buildRecentPaymentItem("Tuition Fee - Term 1", "Receipt #FEE-2026-0015", "₹ 15,000", "Credit Card", "15 Jan 2026"),
+                _buildRecentPaymentItem("Admission Fee", "Receipt #FEE-2025-0098", "₹ 10,000", "Net Banking", "10 Apr 2025"),
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }

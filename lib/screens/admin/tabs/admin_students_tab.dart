@@ -4,7 +4,8 @@ import '../widgets/admin_app_bar.dart';
 import '../widgets/ai_bot_fab.dart';
 
 class AdminStudentsTab extends StatefulWidget {
-  const AdminStudentsTab({super.key});
+  final VoidCallback? onOpenDrawer;
+  const AdminStudentsTab({super.key, this.onOpenDrawer});
 
   @override
   State<AdminStudentsTab> createState() => AdminStudentsTabState();
@@ -28,7 +29,7 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
       'name': 'Aarav Sharma',
       'class': 'Class 10',
       'roll': 'Roll No: 01',
-      'admission': 'ECS00123',
+      'admission': 'ECS00001',
       'status': 'Active',
       'avatar': 'AS',
       'phone': '9876543210',
@@ -38,7 +39,7 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
       'name': 'Priya Patel',
       'class': 'Class 10',
       'roll': 'Roll No: 15',
-      'admission': 'ECS00124',
+      'admission': 'ECS00002',
       'status': 'Active',
       'avatar': 'PP',
       'phone': '9876543211',
@@ -48,7 +49,7 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
       'name': 'Rohan Gupta',
       'class': 'Class 9',
       'roll': 'Roll No: 08',
-      'admission': 'ECS00125',
+      'admission': 'ECS00003',
       'status': 'Active',
       'avatar': 'RG',
       'phone': '9876543212',
@@ -58,7 +59,7 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
       'name': 'Ananya Singh',
       'class': 'Class 8',
       'roll': 'Roll No: 22',
-      'admission': 'ECS00126',
+      'admission': 'ECS00004',
       'status': 'Active',
       'avatar': 'AS',
       'phone': '9876543213',
@@ -68,7 +69,7 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
       'name': 'Vikram Reddy',
       'class': 'Class 10',
       'roll': 'Roll No: 03',
-      'admission': 'ECS00127',
+      'admission': 'ECS00005',
       'status': 'Inactive',
       'avatar': 'VR',
       'phone': '9876543214',
@@ -78,7 +79,7 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
       'name': 'Sneha Joshi',
       'class': 'Class 9',
       'roll': 'Roll No: 11',
-      'admission': 'ECS00128',
+      'admission': 'ECS00006',
       'status': 'Active',
       'avatar': 'SJ',
       'phone': '9876543215',
@@ -88,7 +89,7 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
       'name': 'Arjun Nair',
       'class': 'Class 8',
       'roll': 'Roll No: 05',
-      'admission': 'ECS00129',
+      'admission': 'ECS00007',
       'status': 'Active',
       'avatar': 'AN',
       'phone': '9876543216',
@@ -98,7 +99,7 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
       'name': 'Kavya Menon',
       'class': 'Class 7',
       'roll': 'Roll No: 19',
-      'admission': 'ECS00130',
+      'admission': 'ECS00008',
       'status': 'Active',
       'avatar': 'KM',
       'phone': '9876543217',
@@ -108,7 +109,7 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
       'name': 'Rahul Verma',
       'class': 'Class 7',
       'roll': 'Roll No: 02',
-      'admission': 'ECS00131',
+      'admission': 'ECS00009',
       'status': 'Inactive',
       'avatar': 'RV',
       'phone': '9876543218',
@@ -118,7 +119,7 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
       'name': 'Meera Das',
       'class': 'Class 6',
       'roll': 'Roll No: 14',
-      'admission': 'ECS00132',
+      'admission': 'ECS00010',
       'status': 'Active',
       'avatar': 'MD',
       'phone': '9876543219',
@@ -128,7 +129,7 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
       'name': 'Little Timmy',
       'class': 'LKG',
       'roll': 'Roll No: 01',
-      'admission': 'ECS00133',
+      'admission': 'ECS00011',
       'status': 'Active',
       'avatar': 'LT',
       'phone': '9876543220',
@@ -184,9 +185,10 @@ class AdminStudentsTabState extends State<AdminStudentsTab> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FF),
-      appBar: const AdminAppBar(
+      appBar: AdminAppBar(
         title: "Students",
         subtitle: "Manage 13 standard classes",
+        onOpenDrawer: widget.onOpenDrawer,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

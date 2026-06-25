@@ -46,11 +46,10 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
     super.initState();
     _quickActions = [
       {'id': 'add_student', 'icon': Icons.person_add, 'label': "Add\nStudent", 'color': const Color(0xFF0038FF)},
-      {'id': 'add_teacher', 'icon': Icons.people_alt_outlined, 'label': "Add\nTeacher", 'color': const Color(0xFF1E2875)},
-      {'id': 'mark_attendance', 'icon': Icons.how_to_reg, 'label': "Mark\nAttendance", 'color': const Color(0xFFF59E0B)},
-      {'id': 'collect_fees', 'icon': Icons.receipt_long, 'label': "Collect\nFees", 'color': const Color(0xFF10B981)},
-      {'id': 'notice_board', 'icon': Icons.campaign, 'label': "Notice\nBoard", 'color': const Color(0xFF3B82F6)},
-      {'id': 'ai_assistant', 'icon': Icons.smart_toy, 'label': "AI\nAssistant", 'color': const Color(0xFF8B5CF6)},
+      {'id': 'add_teacher', 'icon': Icons.person_add, 'label': "Add\nTeacher", 'color': const Color(0xFF10B981)},
+      {'id': 'mark_attendance', 'icon': Icons.calendar_today, 'label': "Mark\nAttendance", 'color': const Color(0xFF8B5CF6)},
+      {'id': 'collect_fees', 'icon': Icons.receipt_long, 'label': "Collect\nFees", 'color': const Color(0xFFF59E0B)},
+      {'id': 'notice_board', 'icon': Icons.campaign, 'label': "Notice\nBoard", 'color': const Color(0xFF0038FF)},
       {'id': 'more', 'icon': Icons.more_horiz, 'label': "More", 'color': const Color(0xFF6B7280)},
     ];
   }
@@ -77,6 +76,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
         title: "Welcome Admin 👋",
         subtitle: "Here's what's happening today.",
         onOpenDrawer: widget.onOpenDrawer,
+        onProfileTap: widget.onOpenProfile,
       ),
       body: Stack(
         children: [
@@ -90,9 +90,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 16),
-                  
-                  const SizedBox(height: 16),  // 2. Date display
+                  const SizedBox(height: 4),  // 2. Date display
                   _buildDateDisplay(),
 
                   const SizedBox(height: 20),
@@ -355,18 +353,20 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
         const SizedBox(height: 14),
         SizedBox(
           width: double.infinity,
-          child: Wrap(
-            spacing: 12,
-            runSpacing: 16,
-            alignment: WrapAlignment.start,
-            children: _quickActions.map((action) {
-              return _buildQuickActionItem(
-                action['icon'] as IconData,
-                action['label'] as String,
-                action['color'] as Color,
-                _getQuickActionCallback(action['id'] as String),
-              );
-            }).toList(),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: _quickActions.map((action) {
+                return _buildQuickActionItem(
+                  action['icon'] as IconData,
+                  action['label'] as String,
+                  action['color'] as Color,
+                  _getQuickActionCallback(action['id'] as String),
+                );
+              }).toList(),
+            ),
           ),
         ),
       ],
@@ -458,16 +458,16 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
                   child: Icon(icon, color: color, size: 24),
                 ),
                 const SizedBox(height: 8),
-                Text(
-                  label,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF1E2875),
-                    height: 1.2,
-                  ),
+              Text(
+                label,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF1E2875),
+                  height: 1.2,
                 ),
+              ),
               ],
             ),
           ),

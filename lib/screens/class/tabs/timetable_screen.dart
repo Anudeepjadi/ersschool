@@ -104,7 +104,16 @@ class _TimetableScreenState extends State<TimetableScreen> {
             const SizedBox(height: 20),
             _buildTimetableHeader(),
             const SizedBox(height: 12),
-            ...periods.map((period) => _buildPeriodCard(period)),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              child: SizedBox(
+                width: 550,
+                child: Column(
+                  children: periods.map((period) => _buildPeriodCard(period)).toList(),
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -136,23 +145,29 @@ class _TimetableScreenState extends State<TimetableScreen> {
             },
             icon: const Icon(Icons.chevron_left, color: AppColors.textSecondary),
           ),
-          Row(
-            children: [
-              const Icon(Icons.calendar_today_outlined,
-                  size: 18, color: AppColors.primary),
-              const SizedBox(width: 8),
-              Text(
-                'Wednesday, 17 Jun 2026',
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.textPrimary,
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.calendar_today_outlined,
+                    size: 18, color: AppColors.primary),
+                const SizedBox(width: 8),
+                Flexible(
+                  child: Text(
+                    'Wednesday, 17 Jun 2026',
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.textPrimary,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-              ),
-              const SizedBox(width: 4),
-              const Icon(Icons.keyboard_arrow_down,
-                  size: 20, color: AppColors.textSecondary),
-            ],
+                const SizedBox(width: 4),
+                const Icon(Icons.keyboard_arrow_down,
+                    size: 20, color: AppColors.textSecondary),
+              ],
+            ),
           ),
           IconButton(
             onPressed: () {
@@ -282,6 +297,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   period['subject'],
@@ -304,27 +320,32 @@ class _TimetableScreenState extends State<TimetableScreen> {
           // Teacher
           Expanded(
             child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  CircleAvatar(
-                    radius: 14,
-                    backgroundColor: (period['color'] as Color).withValues(alpha: 0.2),
-                    child: Icon(Icons.person, size: 16, color: period['color']),
-                  ),
-                  const SizedBox(width: 6),
-                  Text(
-                    period['teacher'],
-                    style: GoogleFonts.poppins(
-                      fontSize: 11,
-                      color: AppColors.textSecondary,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 14,
+                      backgroundColor: (period['color'] as Color).withValues(alpha: 0.2),
+                      child: Icon(Icons.person, size: 16, color: period['color']),
                     ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text(
+                        period['teacher'],
+                        style: GoogleFonts.poppins(
+                          fontSize: 11,
+                          color: AppColors.textSecondary,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
           const SizedBox(width: 10),
           // Room

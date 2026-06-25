@@ -32,10 +32,12 @@ class _AiBotFabState extends State<AiBotFab> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
+    return Transform.translate(
+      offset: const Offset(0, 14),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
         AnimatedBuilder(
           animation: _animation,
           builder: (context, child) {
@@ -45,8 +47,8 @@ class _AiBotFabState extends State<AiBotFab> with SingleTickerProviderStateMixin
             );
           },
           child: Container(
-            margin: const EdgeInsets.only(bottom: 8, right: 4),
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            margin: const EdgeInsets.only(bottom: 6, right: 2),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: const BorderRadius.only(
@@ -68,19 +70,21 @@ class _AiBotFabState extends State<AiBotFab> with SingleTickerProviderStateMixin
               style: TextStyle(
                 color: Color(0xFF0038FF),
                 fontWeight: FontWeight.bold,
-                fontSize: 12,
+                fontSize: 10,
               ),
             ),
           ),
         ),
         FloatingActionButton(
+          mini: true,
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminChatSupportScreen()));
           },
           backgroundColor: Colors.white,
-          child: const Icon(Icons.smart_toy, color: Color(0xFF0038FF), size: 30),
+          child: const Icon(Icons.smart_toy, color: Color(0xFF0038FF), size: 22),
         ),
-      ],
+        ],
+      ),
     );
   }
 }

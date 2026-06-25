@@ -54,6 +54,7 @@ class _ClassScreenState extends State<ClassScreen> with SingleTickerProviderStat
         title: "Class",
         subtitle: "Access your class related information",
         onOpenDrawer: widget.onOpenDrawer ?? () => Scaffold.of(context).openDrawer(),
+        onProfileTap: widget.onTabSelected != null ? () => widget.onTabSelected!(1) : null,
       ) : null,
       body: Column(
         children: [
@@ -151,109 +152,118 @@ class _ClassScreenState extends State<ClassScreen> with SingleTickerProviderStat
           ),
           const SizedBox(height: 20),
           // Timetable Header
-          Row(
-            children: const [
-              Expanded(
-                  flex: 10,
-                  child: Text("Period",
-                      style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500))),
-              Expanded(
-                  flex: 20,
-                  child: Text("Time",
-                      style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500))),
-              Expanded(
-                  flex: 30,
-                  child: Text("Subject",
-                      style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500))),
-              Expanded(
-                  flex: 30,
-                  child: Text("Teacher",
-                      style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500))),
-              Expanded(
-                  flex: 10,
-                  child: Text("Room",
-                      style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500))),
-            ],
-          ),
-          const SizedBox(height: 12),
-          const Divider(height: 1),
-          _buildTimetableItem(
-            period: "1",
-            time: "08:00 AM\n- 08:45 AM",
-            subject: "Mathematics",
-            subjectCode: "MATH",
-            teacher: "Mr. Amit Verma",
-            room: "101",
-            color: Colors.blue,
-            icon: Icons.menu_book,
-          ),
-          _buildTimetableItem(
-            period: "2",
-            time: "08:45 AM\n- 09:30 AM",
-            subject: "English",
-            subjectCode: "ENG",
-            teacher: "Ms. Priya Sharma",
-            room: "102",
-            color: Colors.green,
-            icon: Icons.menu_book,
-          ),
-          _buildTimetableItem(
-            period: "3",
-            time: "09:30 AM\n- 10:15 AM",
-            subject: "Science",
-            subjectCode: "SCI",
-            teacher: "Mr. Rahul Mehta",
-            room: "103",
-            color: Colors.orange,
-            icon: Icons.science_outlined,
-          ),
-
-          _buildBreakTime("Break Time", "10:15 AM - 10:30 AM"),
-
-          _buildTimetableItem(
-            period: "4",
-            time: "10:30 AM\n- 11:15 AM",
-            subject: "Social Science",
-            subjectCode: "SST",
-            teacher: "Ms. Neha Gupta",
-            room: "104",
-            color: Colors.purple,
-            icon: Icons.public,
-          ),
-          _buildTimetableItem(
-            period: "5",
-            time: "11:15 AM\n- 12:00 PM",
-            subject: "Hindi",
-            subjectCode: "HIN",
-            teacher: "Mr. Sandeep Yadav",
-            room: "105",
-            color: Colors.indigo,
-            icon: Icons.language,
-          ),
-          _buildTimetableItem(
-            period: "6",
-            time: "12:00 PM\n- 12:45 PM",
-            subject: "Computer Science",
-            subjectCode: "CS",
-            teacher: "Ms. Anjali Singh",
-            room: "106",
-            color: Colors.teal,
-            icon: Icons.computer,
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            child: SizedBox(
+              width: 550,
+              child: Column(
+                children: [
+                  Row(
+                    children: const [
+                      Expanded(
+                          flex: 10,
+                          child: Text("Period",
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500))),
+                      Expanded(
+                          flex: 20,
+                          child: Text("Time",
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500))),
+                      Expanded(
+                          flex: 30,
+                          child: Text("Subject",
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500))),
+                      Expanded(
+                          flex: 30,
+                          child: Text("Teacher",
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500))),
+                      Expanded(
+                          flex: 10,
+                          child: Text("Room",
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500))),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  const Divider(height: 1),
+                  _buildTimetableItem(
+                    period: "1",
+                    time: "08:00 AM\n- 08:45 AM",
+                    subject: "Mathematics",
+                    subjectCode: "MATH",
+                    teacher: "Mr. Amit Verma",
+                    room: "101",
+                    color: Colors.blue,
+                    icon: Icons.menu_book,
+                  ),
+                  _buildTimetableItem(
+                    period: "2",
+                    time: "08:45 AM\n- 09:30 AM",
+                    subject: "English",
+                    subjectCode: "ENG",
+                    teacher: "Ms. Priya Sharma",
+                    room: "102",
+                    color: Colors.green,
+                    icon: Icons.menu_book,
+                  ),
+                  _buildTimetableItem(
+                    period: "3",
+                    time: "09:30 AM\n- 10:15 AM",
+                    subject: "Science",
+                    subjectCode: "SCI",
+                    teacher: "Mr. Rahul Mehta",
+                    room: "103",
+                    color: Colors.orange,
+                    icon: Icons.science_outlined,
+                  ),
+                  _buildBreakTime("Break Time", "10:15 AM - 10:30 AM"),
+                  _buildTimetableItem(
+                    period: "4",
+                    time: "10:30 AM\n- 11:15 AM",
+                    subject: "Social Science",
+                    subjectCode: "SST",
+                    teacher: "Ms. Neha Gupta",
+                    room: "104",
+                    color: Colors.purple,
+                    icon: Icons.public,
+                  ),
+                  _buildTimetableItem(
+                    period: "5",
+                    time: "11:15 AM\n- 12:00 PM",
+                    subject: "Hindi",
+                    subjectCode: "HIN",
+                    teacher: "Mr. Sandeep Yadav",
+                    room: "105",
+                    color: Colors.indigo,
+                    icon: Icons.language,
+                  ),
+                  _buildTimetableItem(
+                    period: "6",
+                    time: "12:00 PM\n- 12:45 PM",
+                    subject: "Computer Science",
+                    subjectCode: "CS",
+                    teacher: "Ms. Anjali Singh",
+                    room: "106",
+                    color: Colors.teal,
+                    icon: Icons.computer,
+                  ),
+                ],
+              ),
+            ),
           ),
 
           const SizedBox(height: 32),
