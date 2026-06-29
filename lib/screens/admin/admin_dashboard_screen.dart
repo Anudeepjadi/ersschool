@@ -14,6 +14,7 @@ import 'screens/student_management/admin_register_student_screen.dart';
 import 'screens/admin_attendance_screen.dart';
 import 'screens/admin_fees_screen.dart';
 import 'screens/admin_examinations_screen.dart';
+import 'screens/admin_meetings_screen.dart';
 import 'screens/admin_hostel_screen.dart';
 import 'screens/admin_library_screen.dart';
 import 'screens/admin_transport_screen.dart';
@@ -54,6 +55,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   final GlobalKey<AdminTeachersTabState> _teachersTabKey =
       GlobalKey<AdminTeachersTabState>();
   final GlobalKey<AdminExaminationsScreenState> _examinationsKey = GlobalKey<AdminExaminationsScreenState>();
+  final GlobalKey<AdminMeetingsScreenState> _meetingsKey = GlobalKey<AdminMeetingsScreenState>();
+  bool _isMeetingsExpanded = false;
 
   @override
   void initState() {
@@ -357,6 +360,51 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 MaterialPageRoute(
                     builder: (_) => const AdminAttendanceScreen()));
           }),
+          Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              initiallyExpanded: false,
+              leading: Icon(
+                Icons.video_camera_front_outlined,
+                color: currentIndex == 6 ? AppColors.primary : const Color(0xFF757897),
+              ),
+              title: Text(
+                "Meetings".tr,
+                style: TextStyle(
+                  color: currentIndex == 6 ? AppColors.primary : const Color(0xFF1E2875),
+                  fontWeight: currentIndex == 6 ? FontWeight.bold : FontWeight.w500,
+                  fontSize: 13,
+                ),
+              ),
+              trailing: Icon(
+                _isMeetingsExpanded ? Icons.keyboard_arrow_down : Icons.chevron_right,
+                size: 16,
+                color: Colors.grey.shade400,
+              ),
+              childrenPadding: const EdgeInsets.only(left: 12),
+              onExpansionChanged: (isExpanded) {
+                setState(() {
+                  _isMeetingsExpanded = isExpanded;
+                });
+                if (isExpanded) {
+                  _onTabChanged(6);
+                  _meetingsKey.currentState?.selectFeature(MeetingsFeature.menu);
+                }
+              },
+              children: [
+                _buildDrawerSubItem("Schedule Online Meeting", false, () {
+                  _onTabChanged(6);
+                  _meetingsKey.currentState?.selectFeature(MeetingsFeature.schedule);
+                  Navigator.pop(context);
+                }),
+                _buildDrawerSubItem("Calendar", false, () {
+                  _onTabChanged(6);
+                  _meetingsKey.currentState?.selectFeature(MeetingsFeature.calendar);
+                  Navigator.pop(context);
+                }),
+              ],
+            ),
+          ),
           _buildDrawerItem(Icons.currency_rupee, "Fees", false, () {
             Navigator.pop(context);
             Navigator.push(context,
