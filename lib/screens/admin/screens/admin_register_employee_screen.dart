@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import '../widgets/admin_bottom_nav_bar.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/data/app_data_store.dart';
@@ -277,6 +278,7 @@ class _AdminRegisterEmployeeScreenState extends State<AdminRegisterEmployeeScree
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 2),
       backgroundColor: const Color(0xFFF5F7FF),
       body: SafeArea(
         child: SingleChildScrollView(

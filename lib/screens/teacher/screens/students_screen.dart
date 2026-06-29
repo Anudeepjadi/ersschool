@@ -965,7 +965,6 @@ class _StudentsScreenState extends State<StudentsScreen> {
   void _editStudent(StudentItem student) {
     final nameController = TextEditingController(text: student.name);
     final rollController = TextEditingController(text: student.rollNo);
-    final admissionController = TextEditingController(text: student.admissionNo);
     final parentController = TextEditingController(text: student.parentName);
     
     // Find existing student record in store for additional fields

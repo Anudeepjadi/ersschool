@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/admin_bottom_nav_bar.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -11,6 +12,7 @@ class AdminEmployeeDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 2),
       backgroundColor: const Color(0xFFF5F7FF),
       body: SafeArea(
         child: SingleChildScrollView(

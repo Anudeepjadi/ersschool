@@ -138,7 +138,7 @@ class _AdminRegisterStudentScreenState extends State<AdminRegisterStudentScreen>
                             Switch(
                               value: _formData['status'] != 'Inactive', 
                               onChanged: (v) { setState(() { _formData['status'] = v ? 'Active' : 'Inactive'; }); },
-                              activeColor: AppColors.primary,
+                              activeThumbColor: AppColors.primary,
                             ),
                             Text("Student is Active".tr, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Color(0xFF334155))),
                           ],
@@ -182,7 +182,7 @@ class _AdminRegisterStudentScreenState extends State<AdminRegisterStudentScreen>
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.primary.withOpacity(0.1), width: 2),
+                  border: Border.all(color: AppColors.primary.withValues(alpha: 0.1), width: 2),
                 ),
                 child: CircleAvatar(
                   radius: 50,
@@ -228,7 +228,7 @@ class _AdminRegisterStudentScreenState extends State<AdminRegisterStudentScreen>
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: const Color(0xFFE2E8F0)),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10, offset: const Offset(0, 4)),
         ],
       ),
       child: Column(

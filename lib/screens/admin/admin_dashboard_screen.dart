@@ -43,7 +43,6 @@ class AdminDashboardScreen extends StatefulWidget {
 class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   int currentIndex = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final GlobalKey<AdminStudentsTabState> _studentsTabKey = GlobalKey<AdminStudentsTabState>();
   final GlobalKey<AdminTeachersTabState> _teachersTabKey = GlobalKey<AdminTeachersTabState>();
 
   @override
@@ -66,9 +65,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         onOpenProfile: () => _onTabChanged(4),
         onAddStudent: () {
           _onTabChanged(1);
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            _studentsTabKey.currentState?.showAddStudentBottomSheet();
-          });
         },
         onAddTeacher: () {
           _onTabChanged(2);
@@ -79,7 +75,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         onTabSelected: _onTabChanged,
       ),
       AdminStudentsTab(
-        key: _studentsTabKey,
         onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer(),
       ),
       AdminTeachersTab(

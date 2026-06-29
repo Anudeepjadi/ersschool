@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../widgets/admin_bottom_nav_bar.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 import 'package:ersschool/core/theme/app_colors.dart';
 import '../../widgets/admin_app_bar.dart';
@@ -57,6 +58,7 @@ class _AdminVehicleDetailsScreenState extends State<AdminVehicleDetailsScreen> {
     double fieldWidth = screenWidth > 600 ? 250 : screenWidth - 32;
 
     return Scaffold(
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
       backgroundColor: Colors.white,
       appBar: AdminAppBar(title: "Vehicle Details", subtitle: "Manage vehicles and routes"),
       body: SingleChildScrollView(

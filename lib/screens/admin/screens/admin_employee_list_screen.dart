@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/admin_bottom_nav_bar.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/data/app_data_store.dart';
 import '../widgets/admin_app_bar.dart';
@@ -69,6 +70,7 @@ class _AdminEmployeeListScreenState extends State<AdminEmployeeListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 2),
       backgroundColor: const Color(0xFFF5F7FF),
       appBar: const AdminAppBar(
         title: "Employee Management",

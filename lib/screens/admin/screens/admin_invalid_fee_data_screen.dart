@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/admin_bottom_nav_bar.dart';
 import '../../../core/theme/app_colors.dart';
 import '../widgets/admin_app_bar.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
@@ -66,6 +67,7 @@ class _AdminInvalidFeeDataScreenState extends State<AdminInvalidFeeDataScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
       backgroundColor: Color(0xFFF5F7FF),
       appBar: AdminAppBar(
         title: "Invalid Fee Data",

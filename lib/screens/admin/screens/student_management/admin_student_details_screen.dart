@@ -142,7 +142,7 @@ class _AdminStudentDetailsScreenState extends State<AdminStudentDetailsScreen> {
             padding: const EdgeInsets.all(4),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: AppColors.primary.withOpacity(0.2), width: 2),
+              border: Border.all(color: AppColors.primary.withValues(alpha: 0.2), width: 2),
             ),
             child: CircleAvatar(
               radius: 60,
@@ -202,7 +202,7 @@ class _AdminStudentDetailsScreenState extends State<AdminStudentDetailsScreen> {
         border: Border.all(color: const Color(0xFFE2E8F0)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),

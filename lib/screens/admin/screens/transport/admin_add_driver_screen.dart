@@ -45,6 +45,7 @@ class _AdminAddDriverScreenState extends State<AdminAddDriverScreen> {
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 600;
     return Scaffold(
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
       backgroundColor: const Color(0xFFF3F4F6),
       appBar: AdminAppBar(
         title: widget.existingData == null ? "Add Driver Details" : "Edit Driver Details",

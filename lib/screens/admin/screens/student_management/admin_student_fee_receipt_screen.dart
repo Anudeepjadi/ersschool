@@ -72,7 +72,7 @@ class _AdminStudentFeeReceiptScreenState extends State<AdminStudentFeeReceiptScr
                               name: 'Fee_Receipt_${widget.student?['name'] ?? 'student'}',
                             );
                           } catch (e) {
-                            if (mounted) {
+                            if (context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text("Error: $e")),
                               );

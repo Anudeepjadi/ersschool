@@ -133,7 +133,7 @@ class _AdminStudentListScreenState extends State<AdminStudentListScreen> {
                           name: 'Student_List_${DateTime.now().millisecondsSinceEpoch}',
                         );
                       } catch (e) {
-                        if (mounted) {
+                        if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("Error: $e")),
                           );

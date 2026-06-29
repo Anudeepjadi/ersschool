@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../widgets/admin_bottom_nav_bar.dart';
 import 'package:ersschool/core/theme/app_colors.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 import '../../widgets/admin_app_bar.dart';
@@ -43,6 +44,7 @@ class _AdminStudentPromotionsScreenState extends State<AdminStudentPromotionsScr
     double searchWidth = screenWidth > 600 ? 300 : screenWidth - 32;
 
     return Scaffold(
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 1),
       backgroundColor: Colors.white,
       appBar: AdminAppBar(
         title: "Student Promotions".tr,
