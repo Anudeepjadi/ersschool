@@ -7,7 +7,7 @@ import 'package:ersschool/core/localization/language_manager.dart';
 
 class TimetableScreen extends StatefulWidget {
   final bool showAppBar;
-  TimetableScreen({super.key, this.showAppBar = true});
+  const TimetableScreen({super.key, this.showAppBar = true});
 
   @override
   State<TimetableScreen> createState() => _TimetableScreenState();

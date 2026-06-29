@@ -5,7 +5,7 @@ class TeacherBottomNav extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTabSelected;
 
-  TeacherBottomNav({
+  const TeacherBottomNav({
     super.key,
     required this.currentIndex,
     required this.onTabSelected,
@@ -13,7 +13,12 @@ class TeacherBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
+    return Theme(
+      data: Theme.of(context).copyWith(
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+      ),
+      child: BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       currentIndex: currentIndex > 5 ? 5 : currentIndex,
       selectedItemColor: AppColors.primary,
@@ -29,6 +34,6 @@ class TeacherBottomNav extends StatelessWidget {
         BottomNavigationBarItem(icon: Icon(Icons.bar_chart_outlined), activeIcon: Icon(Icons.bar_chart), label: "Reports"),
         BottomNavigationBarItem(icon: Icon(Icons.more_horiz), activeIcon: Icon(Icons.more_horiz), label: "More"),
       ],
-    );
+    ));
   }
 }

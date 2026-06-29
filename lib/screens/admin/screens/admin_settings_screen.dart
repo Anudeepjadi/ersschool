@@ -12,7 +12,7 @@ import 'admin_class_subjects_mapping_screen.dart';
 import '../../../core/localization/language_manager.dart';
 
 class AdminSettingsScreen extends StatefulWidget {
-  AdminSettingsScreen({super.key});
+  const AdminSettingsScreen({super.key});
 
   @override
   State<AdminSettingsScreen> createState() => _AdminSettingsScreenState();
@@ -267,7 +267,7 @@ class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
       trailing: Switch(
         value: value,
         onChanged: onChanged,
-        activeColor: Color(0xFF1E2875),
+        activeThumbColor: Color(0xFF1E2875),
       ),
     );
   }

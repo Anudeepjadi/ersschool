@@ -7,7 +7,7 @@ import 'package:ersschool/core/localization/language_manager.dart';
 class AdminEventsScreen extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
 
-  AdminEventsScreen({super.key, this.onOpenDrawer});
+  const AdminEventsScreen({super.key, this.onOpenDrawer});
 
   @override
   State<AdminEventsScreen> createState() => _AdminEventsScreenState();

@@ -11,7 +11,7 @@ class TeacherDrawer extends StatelessWidget {
   final int? currentIndex;
   final Function(int)? onTabSelected;
 
-  TeacherDrawer({
+  const TeacherDrawer({
     super.key,
     this.currentIndex,
     this.onTabSelected,

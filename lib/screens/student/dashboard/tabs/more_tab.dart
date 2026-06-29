@@ -10,10 +10,14 @@ import '../../transport/transport_screen.dart';
 import '../../calendar/calendar_screen.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 
+import '../../holidays/holidays_screen.dart';
+import '../../privacy/privacy_policy_screen.dart';
+import '../../settings/change_password_screen.dart';
+
 class MoreTab extends StatelessWidget {
   final Function(int)? onTabSelected;
 
-  MoreTab({super.key, this.onTabSelected});
+  const MoreTab({super.key, this.onTabSelected});
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +101,25 @@ class MoreTab extends StatelessWidget {
                     title: 'Change Password',
                     subtitle: 'Update your login password',
                     color: Colors.purple,
-                    onTap: () => _showComingSoon(context, 'Change Password'),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => ChangePasswordScreen(
+                              onTabSelected: onTabSelected)),
+                    ),
+                  ),
+                  _buildTile(
+                    context,
+                    icon: Icons.beach_access_outlined,
+                    title: 'Holidays',
+                    subtitle: 'View upcoming school holidays',
+                    color: Colors.red,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => StudentHolidaysScreen(
+                              onTabSelected: onTabSelected)),
+                    ),
                   ),
                   _buildTile(
                     context,
@@ -113,7 +135,7 @@ class MoreTab extends StatelessWidget {
                     title: 'Language',
                     subtitle: 'English (Default)',
                     color: Colors.teal,
-                    onTap: () => _showComingSoon(context, 'Language Settings'),
+                    onTap: () => _showLanguageSelectorDialog(context),
                   ),
 
                   SizedBox(height: 24),
@@ -151,7 +173,12 @@ class MoreTab extends StatelessWidget {
                     title: 'Privacy Policy',
                     subtitle: 'Read our privacy policy',
                     color: Colors.grey,
-                    onTap: () => _showComingSoon(context, 'Privacy Policy'),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => PrivacyPolicyScreen(
+                              onTabSelected: onTabSelected)),
+                    ),
                   ),
 
                   SizedBox(height: 24),
@@ -393,6 +420,33 @@ class MoreTab extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void _showLanguageSelectorDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          title: Text('Language'.tr),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: ['English', 'Hindi', 'Telugu'].map((lang) {
+              return ListTile(
+                title: Text(lang.tr),
+                trailing: LanguageManager.instance.currentLanguage == lang
+                    ? Icon(Icons.check, color: Colors.green)
+                    : null,
+                onTap: () {
+                  LanguageManager.instance.changeLanguage(lang);
+                  Navigator.pop(ctx);
+                },
+              );
+            }).toList(),
+          ),
+        );
+      },
     );
   }
 

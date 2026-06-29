@@ -8,7 +8,7 @@ class FeeTab extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
   final Function(int)? onTabSelected;
 
-  FeeTab({super.key, this.onOpenDrawer, this.onTabSelected});
+  const FeeTab({super.key, this.onOpenDrawer, this.onTabSelected});
 
   @override
   State<FeeTab> createState() => _FeeTabState();

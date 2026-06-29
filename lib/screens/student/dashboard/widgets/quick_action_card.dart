@@ -5,7 +5,7 @@ class QuickActionCard extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
 
-  QuickActionCard({
+  const QuickActionCard({
     super.key,
     required this.title,
     required this.icon,

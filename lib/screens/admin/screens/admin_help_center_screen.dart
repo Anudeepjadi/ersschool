@@ -4,7 +4,7 @@ import '../widgets/admin_bottom_nav_bar.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminHelpCenterScreen extends StatefulWidget {
-  AdminHelpCenterScreen({super.key});
+  const AdminHelpCenterScreen({super.key});
 
   @override
   State<AdminHelpCenterScreen> createState() => _AdminHelpCenterScreenState();

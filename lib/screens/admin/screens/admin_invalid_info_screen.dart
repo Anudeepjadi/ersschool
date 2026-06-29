@@ -8,7 +8,7 @@ import 'admin_transaction_logs_screen.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminInvalidInfoScreen extends StatefulWidget {
-  AdminInvalidInfoScreen({super.key});
+  const AdminInvalidInfoScreen({super.key});
 
   @override
   State<AdminInvalidInfoScreen> createState() => _AdminInvalidInfoScreenState();
@@ -114,7 +114,7 @@ class _AdminInvalidInfoScreenState extends State<AdminInvalidInfoScreen> {
       leading: Container(
         padding: EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Icon(icon, color: color, size: 20),

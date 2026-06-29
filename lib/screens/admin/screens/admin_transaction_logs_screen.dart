@@ -3,7 +3,7 @@ import '../../../core/theme/app_colors.dart';
 import '../widgets/admin_app_bar.dart';
 
 class AdminTransactionLogsScreen extends StatefulWidget {
-  AdminTransactionLogsScreen({super.key});
+  const AdminTransactionLogsScreen({super.key});
 
   @override
   State<AdminTransactionLogsScreen> createState() => _AdminTransactionLogsScreenState();

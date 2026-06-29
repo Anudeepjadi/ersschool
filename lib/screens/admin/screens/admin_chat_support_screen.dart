@@ -7,7 +7,7 @@ import 'package:ersschool/core/localization/language_manager.dart';
 class AdminChatSupportScreen extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
   final bool openBotChat;
-  AdminChatSupportScreen({super.key, this.onOpenDrawer, this.openBotChat = false});
+  const AdminChatSupportScreen({super.key, this.onOpenDrawer, this.openBotChat = false});
 
   @override
   State<AdminChatSupportScreen> createState() => _AdminChatSupportScreenState();

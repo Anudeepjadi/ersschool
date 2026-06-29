@@ -18,7 +18,7 @@ class QuickActionItem {
 class QuickActionsBar extends StatelessWidget {
   final List<QuickActionItem> actions;
 
-  QuickActionsBar({
+  const QuickActionsBar({
     super.key,
     required this.actions,
   });

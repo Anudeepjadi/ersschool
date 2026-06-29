@@ -5,7 +5,7 @@ import '../../../core/data/app_data_store.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminFeeTypesScreen extends StatefulWidget {
-  AdminFeeTypesScreen({super.key});
+  const AdminFeeTypesScreen({super.key});
   @override
   State<AdminFeeTypesScreen> createState() => _AdminFeeTypesScreenState();
 }
@@ -124,55 +124,35 @@ class _AdminFeeTypesScreenState extends State<AdminFeeTypesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF5F7FF),
-      appBar: AdminAppBar(
+      backgroundColor: const Color(0xFFF5F7FF),
+      appBar: const AdminAppBar(
           title: 'Fee Types', subtitle: 'Manage student fee types'),
-      bottomNavigationBar: AdminBottomNavBar(currentIndex: 4),
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showAddDialog(),
+        backgroundColor: const Color(0xFFB45309),
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
       body: Column(children: [
         Container(
-          color: Colors.white,
-          padding: EdgeInsets.symmetric(vertical: 16),
-          child: Center(
-            child: Column(children: [
-              Text('Student Fee Types'.tr,
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFFB45309))),
-              SizedBox(height: 12),
-              ElevatedButton.icon(
-                onPressed: () => _showAddDialog(),
-                icon: Icon(Icons.add, size: 16),
-                label: Text('Add New'.tr),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFB45309),
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8)),
-                ),
-              ),
-            ]),
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          color: Color(0xFF2D3748),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          color: const Color(0xFF1E2875),
           child: Row(children: [
             Expanded(
                 flex: 3,
                 child: Text('Fee Type'.tr,
-                    style: TextStyle(
+                    style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 13))),
             Expanded(
                 flex: 2,
                 child: Text('Is Active'.tr,
-                    style: TextStyle(
+                    style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 13))),
-            SizedBox(width: 76),
+            const SizedBox(width: 72),
           ]),
         ),
         Expanded(
@@ -194,7 +174,9 @@ class _AdminFeeTypesScreenState extends State<AdminFeeTypesScreen> {
                         Expanded(
                             flex: 3,
                             child: Text(f['type'] ?? '',
-                                style: TextStyle(fontSize: 13))),
+                                style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500))),
                         Expanded(
                           flex: 2,
                           child: Icon(
@@ -209,26 +191,26 @@ class _AdminFeeTypesScreenState extends State<AdminFeeTypesScreen> {
                           InkWell(
                             onTap: () => _showAddDialog(editIndex: i),
                             child: Container(
-                              width: 32,
-                              height: 32,
+                              width: 30,
+                              height: 30,
                               decoration: BoxDecoration(
                                   color: Color(0xFF2563EB),
                                   shape: BoxShape.circle),
                               child: Icon(Icons.edit,
-                                  color: Colors.white, size: 16),
+                                  color: Colors.white, size: 14),
                             ),
                           ),
                           SizedBox(width: 8),
                           InkWell(
                             onTap: () => _delete(i),
                             child: Container(
-                              width: 32,
-                              height: 32,
+                              width: 30,
+                              height: 30,
                               decoration: BoxDecoration(
                                   color: Colors.red.shade100,
                                   shape: BoxShape.circle),
                               child: Icon(Icons.delete_outline,
-                                  color: Colors.red.shade700, size: 16),
+                                  color: Colors.red.shade700, size: 14),
                             ),
                           ),
                         ]),

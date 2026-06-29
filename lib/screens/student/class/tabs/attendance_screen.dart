@@ -5,7 +5,7 @@ import 'package:ersschool/core/localization/language_manager.dart';
 
 class AttendanceScreen extends StatelessWidget {
   final bool showAppBar;
-  AttendanceScreen({super.key, this.showAppBar = true});
+  const AttendanceScreen({super.key, this.showAppBar = true});
 
   @override
   Widget build(BuildContext context) {

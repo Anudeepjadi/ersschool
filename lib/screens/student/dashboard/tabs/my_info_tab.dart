@@ -5,7 +5,7 @@ import '../../../../core/utils/profile_manager.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 
 class MyInfoTab extends StatelessWidget {
-  MyInfoTab({super.key});
+  const MyInfoTab({super.key});
 
   @override
   Widget build(BuildContext context) {

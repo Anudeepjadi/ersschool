@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -40,7 +41,7 @@ class StudentsScreen extends StatefulWidget {
   final int activeTab;
   final Function(int) onSubTabSelected;
 
-  StudentsScreen({
+  const StudentsScreen({
     super.key,
     this.activeTab = 0,
     required this.onSubTabSelected,
@@ -67,7 +68,7 @@ class StudentsScreen extends StatefulWidget {
             gender: s['gender'] as String? ?? 'Male',
             parentName: s['phone'] as String? ?? 'Parent',
             isActive: s['status'] == 'Active',
-            avatarUrl: s['avatar'] as String? ?? s['avatarUrl'] as String? ?? '',
+            avatarUrl: (s['avatar'] ?? s['photoPath'] ?? '').toString(),
             siblings: [],
             hasIdCard: s['hasIdCard'] as bool? ?? false,
           );
@@ -557,6 +558,12 @@ class _StudentsScreenState extends State<StudentsScreen> {
   }
 
   void _showIDCardDialog(StudentItem student) {
+    // Fetch latest data from store for the dialog
+    final storeRecord = AppDataStore.instance.students.firstWhere(
+      (s) => s['admission'] == student.admissionNo,
+      orElse: () => {},
+    );
+
     showDialog(
       context: context,
       builder: (context) {
@@ -568,17 +575,17 @@ class _StudentsScreenState extends State<StudentsScreen> {
             headerText: "ECSTASY SCHOOL 1",
             subHeader: "Shaping Futures, Building Tomorrow",
             roleText: "STUDENT",
-            name: student.name,
+            name: storeRecord['name'] ?? student.name,
             details: {
-              'Class': student.className.split(' - ').first,
-              'Roll No.': student.rollNo,
-              'Gender': student.gender,
-              'Parent': student.parentName,
-              'DOB': '14 May 2010',
-              'Blood Group': 'B+',
+              'Class': (storeRecord['class'] ?? student.className).toString().split(' - ').first,
+              'Roll No.': (storeRecord['roll'] ?? student.rollNo).toString().replaceAll('Roll No: ', ''),
+              'Gender': storeRecord['gender'] ?? student.gender,
+              'Parent': storeRecord['phone'] ?? student.parentName,
+              'Email': storeRecord['email'] ?? "",
+              'Mother': storeRecord['motherName'] ?? "",
             },
             idNumber: student.admissionNo,
-            avatarUrl: student.avatarUrl,
+            avatarUrl: storeRecord['avatar'] ?? student.avatarUrl,
           ),
         );
       },
@@ -637,20 +644,20 @@ class _StudentsScreenState extends State<StudentsScreen> {
             child: Row(
               children: [
                 Container(
-                  width: 70,
-                  height: 90,
+                  width: 80,
+                  height: 100,
                   decoration: BoxDecoration(
                     color: Colors.grey.shade100,
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(color: Colors.grey.shade300),
-                    image: (avatarUrl.isNotEmpty)
-                        ? (avatarUrl.startsWith('http')
+                    image: (avatarUrl.isNotEmpty && !avatarUrl.startsWith('http') && File(avatarUrl).existsSync())
+                        ? DecorationImage(image: FileImage(File(avatarUrl)), fit: BoxFit.cover)
+                        : (avatarUrl.startsWith('http')
                             ? DecorationImage(image: NetworkImage(avatarUrl), fit: BoxFit.cover)
-                            : DecorationImage(image: FileImage(File(avatarUrl)), fit: BoxFit.cover))
-                        : null,
+                            : null),
                   ),
                   alignment: Alignment.center,
-                  child: (avatarUrl.isEmpty)
+                  child: (avatarUrl.isEmpty || (!avatarUrl.startsWith('http') && !File(avatarUrl).existsSync()))
                       ? Icon(Icons.person, size: 40, color: Colors.grey.shade400)
                       : null,
                 ),
@@ -667,11 +674,18 @@ class _StudentsScreenState extends State<StudentsScreen> {
                       SizedBox(height: 6),
                       ...details.entries.map((e) {
                         return Padding(
-                          padding: EdgeInsets.only(bottom: 2.0),
+                          padding: const EdgeInsets.only(bottom: 2.0),
                           child: Row(
                             children: [
-                              Text("${e.key}: ", style: TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
-                              Text(e.value, style: TextStyle(fontSize: 10, color: Color(0xFF1E2875), fontWeight: FontWeight.bold)),
+                              Text("${e.key}: ", style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
+                              Expanded(
+                                child: Text(
+                                  e.value, 
+                                  style: const TextStyle(fontSize: 10, color: Color(0xFF1E2875), fontWeight: FontWeight.bold),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
+                              ),
                             ],
                           ),
                         );
@@ -875,7 +889,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
                             setModalState(() => pickedImage = File(pickedFile.path));
                           }
                         } catch (e) {
-                          if (mounted) {
+                          if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text("Error picking image. Please check permissions.".tr)),
                             );
@@ -953,8 +967,20 @@ class _StudentsScreenState extends State<StudentsScreen> {
     final rollController = TextEditingController(text: student.rollNo);
     final admissionController = TextEditingController(text: student.admissionNo);
     final parentController = TextEditingController(text: student.parentName);
+    
+    // Find existing student record in store for additional fields
+    final storeRecord = AppDataStore.instance.students.firstWhere(
+      (s) => s['admission'] == student.admissionNo,
+      orElse: () => {},
+    );
+    
+    final emailController = TextEditingController(text: storeRecord['email'] ?? "");
+    final motherNameController = TextEditingController(text: storeRecord['motherName'] ?? "");
+    
     String gender = student.gender;
     bool isActive = student.isActive;
+    File? pickedImage;
+    final ImagePicker picker = ImagePicker();
 
     showDialog(
       context: context,
@@ -964,32 +990,83 @@ class _StudentsScreenState extends State<StudentsScreen> {
             return AlertDialog(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               title: Text("Edit Student".tr),
-              content: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextField(controller: nameController, decoration: InputDecoration(labelText: "Student Name")),
-                    TextField(controller: rollController, decoration: InputDecoration(labelText: "Roll No")),
-                    TextField(controller: admissionController, decoration: InputDecoration(labelText: "Admission No"), enabled: false), // ID usually shouldn't change
-                    TextField(controller: parentController, decoration: InputDecoration(labelText: "Parent Name")),
-                    SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Text("Gender: ".tr),
-                        Radio<String>(value: "Male", groupValue: gender, onChanged: (val) => setModalState(() => gender = val!)),
-                        Text("Male".tr),
-                        Radio<String>(value: "Female", groupValue: gender, onChanged: (val) => setModalState(() => gender = val!)),
-                        Text("Female".tr),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text("Status: ".tr),
-                        Switch(value: isActive, onChanged: (val) => setModalState(() => isActive = val)),
-                        Text(isActive ? "Active" : "Inactive"),
-                      ],
-                    ),
-                  ],
+              content: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 450),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Photo Upload/Edit Section
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Stack(
+                            children: [
+                              Container(
+                                width: 80,
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[100],
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: Colors.grey[300]!),
+                                  image: pickedImage != null 
+                                    ? DecorationImage(image: FileImage(pickedImage!), fit: BoxFit.cover)
+                                    : (student.avatarUrl.isNotEmpty 
+                                        ? (student.avatarUrl.startsWith('http') 
+                                            ? DecorationImage(image: NetworkImage(student.avatarUrl), fit: BoxFit.cover)
+                                            : DecorationImage(image: FileImage(File(student.avatarUrl)), fit: BoxFit.cover))
+                                        : null),
+                                ),
+                                child: (pickedImage == null && student.avatarUrl.isEmpty)
+                                  ? const Icon(Icons.person, size: 40, color: Colors.grey)
+                                  : null,
+                              ),
+                              Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: InkWell(
+                                  onTap: () async {
+                                    final XFile? file = await picker.pickImage(source: ImageSource.gallery);
+                                    if (file != null) {
+                                      setModalState(() => pickedImage = File(file.path));
+                                    }
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.all(4),
+                                    decoration: const BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
+                                    child: const Icon(Icons.camera_alt, color: Colors.white, size: 16),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      TextField(controller: nameController, decoration: InputDecoration(labelText: "Student Name".tr)),
+                      TextField(controller: rollController, decoration: InputDecoration(labelText: "Roll No".tr)),
+                      TextField(controller: emailController, decoration: InputDecoration(labelText: "Email Address".tr)),
+                      TextField(controller: parentController, decoration: InputDecoration(labelText: "Father Name".tr)),
+                      TextField(controller: motherNameController, decoration: InputDecoration(labelText: "Mother Name".tr)),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Text("Gender: ".tr),
+                          Radio<String>(value: "Male", groupValue: gender, onChanged: (val) => setModalState(() => gender = val!)),
+                          Text("Male".tr),
+                          Radio<String>(value: "Female", groupValue: gender, onChanged: (val) => setModalState(() => gender = val!)),
+                          Text("Female".tr),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text("Status: ".tr),
+                          Switch(value: isActive, onChanged: (val) => setModalState(() => isActive = val)),
+                          Text(isActive ? "Active".tr : "Inactive".tr),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
               actions: [
@@ -1007,7 +1084,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
                           gender: gender,
                           parentName: parentController.text,
                           isActive: isActive,
-                          avatarUrl: student.avatarUrl,
+                          avatarUrl: pickedImage?.path ?? student.avatarUrl,
                           siblings: student.siblings,
                           hasIdCard: student.hasIdCard,
                         );
@@ -1016,14 +1093,17 @@ class _StudentsScreenState extends State<StudentsScreen> {
                         // Sync edit back to AppDataStore
                         final storeIndex = AppDataStore.instance.students.indexWhere((s) => s['admission'] == student.admissionNo);
                         if (storeIndex != -1) {
-                          AppDataStore.instance.students[storeIndex] = {
-                            ...AppDataStore.instance.students[storeIndex],
-                            'name': updated.name,
-                            'roll': 'Roll No: ${updated.rollNo}',
-                            'status': updated.isActive ? 'Active' : 'Inactive',
-                            'gender': updated.gender,
-                            'phone': updated.parentName,
-                          };
+                          AppDataStore.instance.students[storeIndex]['name'] = updated.name;
+                          AppDataStore.instance.students[storeIndex]['roll'] = 'Roll No: ${updated.rollNo}';
+                          AppDataStore.instance.students[storeIndex]['status'] = updated.isActive ? 'Active' : 'Inactive';
+                          AppDataStore.instance.students[storeIndex]['gender'] = updated.gender;
+                          AppDataStore.instance.students[storeIndex]['phone'] = updated.parentName;
+                          AppDataStore.instance.students[storeIndex]['email'] = emailController.text;
+                          AppDataStore.instance.students[storeIndex]['motherName'] = motherNameController.text;
+                          if (pickedImage != null) {
+                            AppDataStore.instance.students[storeIndex]['avatar'] = pickedImage!.path;
+                          }
+                          AppDataStore.instance.notifyConfigChange();
                         }
                       }
                     });

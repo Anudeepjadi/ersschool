@@ -32,7 +32,7 @@ class MeetingsScreen extends StatefulWidget {
   final int activeTab;
   final Function(int)? onSubTabSelected;
 
-  MeetingsScreen({
+  const MeetingsScreen({
     super.key,
     this.activeTab = 0,
     this.onSubTabSelected,

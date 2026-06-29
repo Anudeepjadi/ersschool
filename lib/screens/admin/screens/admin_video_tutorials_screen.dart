@@ -5,7 +5,7 @@ import '../../../core/theme/app_colors.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminVideoTutorialsScreen extends StatefulWidget {
-  AdminVideoTutorialsScreen({super.key});
+  const AdminVideoTutorialsScreen({super.key});
 
   @override
   State<AdminVideoTutorialsScreen> createState() => _AdminVideoTutorialsScreenState();

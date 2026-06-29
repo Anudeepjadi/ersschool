@@ -27,7 +27,7 @@ class ReportsScreen extends StatefulWidget {
   final int activeTab;
   final Function(int)? onSubTabSelected;
 
-  ReportsScreen({
+  const ReportsScreen({
     super.key,
     this.activeTab = 0,
     this.onSubTabSelected,

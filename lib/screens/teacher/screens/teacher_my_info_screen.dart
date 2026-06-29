@@ -25,7 +25,7 @@ class _CountryCode {
 // ─────────────────────────────────────────────────────────────────────────────
 class TeacherMyInfoScreen extends StatefulWidget {
   final Function(int)? onTabSelected;
-  TeacherMyInfoScreen({super.key, this.onTabSelected});
+  const TeacherMyInfoScreen({super.key, this.onTabSelected});
 
   @override
   State<TeacherMyInfoScreen> createState() => _TeacherMyInfoScreenState();
@@ -136,7 +136,7 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
   final ImagePicker _picker = ImagePicker();
 
   // ── Country codes ──────────────────────────────────────────────────────────
-  static List<_CountryCode> _countryCodes = [
+  static final List<_CountryCode> _countryCodes = [
     _CountryCode('+91', '🇮🇳', 'India'),
     _CountryCode('+1', '🇺🇸', 'USA'),
     _CountryCode('+44', '🇬🇧', 'UK'),

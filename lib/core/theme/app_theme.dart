@@ -31,22 +31,23 @@ class AppTheme {
           ),
         ),
       ),
-      inputDecorationTheme: InputDecorationTheme(
+      inputDecorationTheme: const InputDecorationTheme(
         filled: true,
-        fillColor: Colors.grey.shade50,
+        fillColor: Colors.white,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.grey.shade300),
+          borderRadius: BorderRadius.all(Radius.circular(4)),
+          borderSide: BorderSide(color: Color(0xFFE0E0E0)),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.grey.shade300),
+          borderRadius: BorderRadius.all(Radius.circular(4)),
+          borderSide: BorderSide(color: Color(0xFFE0E0E0)),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.primary, width: 2),
+          borderRadius: BorderRadius.all(Radius.circular(4)),
+          borderSide: BorderSide(color: AppColors.primary, width: 2),
         ),
-        labelStyle: const TextStyle(color: Colors.grey),
+
+        labelStyle: TextStyle(color: Colors.grey),
       ),
     );
   }
@@ -80,22 +81,22 @@ class AppTheme {
           ),
         ),
       ),
-      inputDecorationTheme: InputDecorationTheme(
+      inputDecorationTheme: const InputDecorationTheme(
         filled: true,
-        fillColor: const Color(0xFF1E1E1E),
+        fillColor: Color(0xFF1E1E1E),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.grey.shade800),
+          borderRadius: BorderRadius.all(Radius.circular(4)),
+          borderSide: BorderSide(color: Color(0xFF424242)),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.grey.shade800),
+          borderRadius: BorderRadius.all(Radius.circular(4)),
+          borderSide: BorderSide(color: Color(0xFF424242)),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.primary, width: 2),
+          borderRadius: BorderRadius.all(Radius.circular(4)),
+          borderSide: BorderSide(color: AppColors.primary, width: 2),
         ),
-        labelStyle: const TextStyle(color: Colors.grey),
+        labelStyle: TextStyle(color: Colors.grey),
       ),
     );
   }

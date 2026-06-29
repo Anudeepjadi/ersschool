@@ -5,7 +5,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminReportsScreen extends StatefulWidget {
-  AdminReportsScreen({super.key});
+  const AdminReportsScreen({super.key});
 
   @override
   State<AdminReportsScreen> createState() => _AdminReportsScreenState();

@@ -11,7 +11,7 @@ class TransportScreen extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
   final Function(int)? onTabSelected;
 
-  TransportScreen({super.key, this.onOpenDrawer, this.onTabSelected});
+  const TransportScreen({super.key, this.onOpenDrawer, this.onTabSelected});
 
   @override
   State<TransportScreen> createState() => _TransportScreenState();

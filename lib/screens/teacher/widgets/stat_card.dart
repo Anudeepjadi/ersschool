@@ -9,7 +9,7 @@ class StatCard extends StatelessWidget {
   final VoidCallback? onTap;
   final bool isSelected;
 
-  StatCard({
+  const StatCard({
     super.key,
     required this.title,
     required this.value,

@@ -8,7 +8,7 @@ class AdminConfigDetailScreen extends StatefulWidget {
   final IconData icon;
   final Color color;
 
-  AdminConfigDetailScreen({
+  const AdminConfigDetailScreen({
     super.key,
     required this.title,
     required this.icon,

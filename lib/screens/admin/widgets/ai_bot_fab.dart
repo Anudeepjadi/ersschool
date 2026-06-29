@@ -3,7 +3,7 @@ import '../../ai_assistant/ai_assistant_screen.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 
 class AiBotFab extends StatefulWidget {
-  AiBotFab({super.key});
+  const AiBotFab({super.key});
 
   @override
   State<AiBotFab> createState() => _AiBotFabState();

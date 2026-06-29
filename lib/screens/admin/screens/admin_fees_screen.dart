@@ -8,7 +8,7 @@ import '../../../core/utils/profile_manager.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminFeesScreen extends StatefulWidget {
-  AdminFeesScreen({super.key});
+  const AdminFeesScreen({super.key});
 
   @override
   State<AdminFeesScreen> createState() => _AdminFeesScreenState();
@@ -404,6 +404,7 @@ class _AdminFeesScreenState extends State<AdminFeesScreen> {
                   icon: Icon(Icons.keyboard_arrow_down, color: Color(0xFF1E2875)),
                   style: TextStyle(fontSize: 14, color: Color(0xFF1E2875), fontWeight: FontWeight.bold),
                   items: [
+                    DropdownMenuItem(value: 'All Branches', child: Text("All Branches".tr)),
                     DropdownMenuItem(value: 'Ecstasy School 1', child: Text("Ecstasy School 1 (ECS001)".tr)),
                     DropdownMenuItem(value: 'Ecstasy School 2', child: Text("Ecstasy School 2 (ECS002)".tr)),
                     DropdownMenuItem(value: 'Ecstasy School 3', child: Text("Ecstasy School 3 (ECS003)".tr)),

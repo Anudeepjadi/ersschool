@@ -5,7 +5,7 @@ import 'package:ersschool/core/localization/language_manager.dart';
 class HomeScreen extends StatelessWidget {
   final Function(int, {int? subTab, String? moreSubScreen}) onNavigateTab;
 
-  HomeScreen({Key? key, required this.onNavigateTab}) : super(key: key);
+  const HomeScreen({super.key, required this.onNavigateTab});
 
   void _showStatDetail(
     BuildContext context,

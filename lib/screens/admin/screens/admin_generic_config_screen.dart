@@ -15,7 +15,7 @@ class AdminGenericConfigScreen extends StatefulWidget {
   final IconData icon;
   final Color color;
 
-  AdminGenericConfigScreen({
+  const AdminGenericConfigScreen({
     super.key,
     required this.title,
     required this.subtitle,
@@ -42,7 +42,9 @@ class _AdminGenericConfigScreenState extends State<AdminGenericConfigScreen> {
 
   @override
   void dispose() {
-    for (final c in _controllers) c.dispose();
+    for (final c in _controllers) {
+      c.dispose();
+    }
     super.dispose();
   }
 
@@ -75,8 +77,11 @@ class _AdminGenericConfigScreenState extends State<AdminGenericConfigScreen> {
               if (_controllers.first.text.isEmpty) return;
               setState(() {
                 final entry = {for (int i = 0; i < widget.columns.length; i++) widget.columns[i]: _controllers[i].text};
-                if (editIndex != null) _data[editIndex] = entry;
-                else _data.add(entry);
+                if (editIndex != null) {
+                  _data[editIndex] = entry;
+                } else {
+                  _data.add(entry);
+                }
               });
               Navigator.pop(ctx);
             },

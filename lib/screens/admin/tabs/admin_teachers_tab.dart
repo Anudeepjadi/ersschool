@@ -7,7 +7,7 @@ import '../widgets/ai_bot_fab.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 class AdminTeachersTab extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
-  AdminTeachersTab({super.key, this.onOpenDrawer});
+  const AdminTeachersTab({super.key, this.onOpenDrawer});
 
   @override
   State<AdminTeachersTab> createState() => AdminTeachersTabState();

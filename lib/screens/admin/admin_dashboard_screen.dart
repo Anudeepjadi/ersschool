@@ -21,7 +21,6 @@ import 'screens/admin_communications_screen.dart';
 import 'screens/admin_id_cards_screen.dart';
 import 'screens/admin_certificates_screen.dart';
 import 'screens/admin_reports_screen.dart';
-import 'screens/admin_invalid_info_screen.dart';
 import 'screens/admin_sms_screen.dart';
 import 'screens/admin_settings_screen.dart';
 import 'screens/admin_help_center_screen.dart';
@@ -30,12 +29,17 @@ import 'screens/admin_system_updates_screen.dart';
 import 'screens/admin_video_tutorials_screen.dart';
 import 'screens/admin_about_us_screen.dart';
 
+import 'screens/student_management/admin_student_list_screen.dart';
+import 'screens/student_management/admin_register_student_screen.dart';
+import 'screens/student_management/admin_student_promotions_screen.dart';
+import 'screens/student_management/admin_student_siblings_screen.dart';
+
 import 'widgets/admin_bottom_nav_bar.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
   final int initialIndex;
-  AdminDashboardScreen({super.key, this.initialIndex = 0});
+  const AdminDashboardScreen({super.key, this.initialIndex = 0});
 
   @override
   State<AdminDashboardScreen> createState() => _AdminDashboardScreenState();
@@ -44,7 +48,7 @@ class AdminDashboardScreen extends StatefulWidget {
 class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   int currentIndex = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final GlobalKey<AdminStudentsTabState> _studentsTabKey = GlobalKey<AdminStudentsTabState>();
+  final GlobalKey _studentsTabKey = GlobalKey();
   final GlobalKey<AdminTeachersTabState> _teachersTabKey = GlobalKey<AdminTeachersTabState>();
 
   @override
@@ -67,9 +71,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         onOpenProfile: () => _onTabChanged(4),
         onAddStudent: () {
           _onTabChanged(1);
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            _studentsTabKey.currentState?.showAddStudentBottomSheet();
-          });
         },
         onAddTeacher: () {
           _onTabChanged(2);
@@ -258,74 +259,138 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             setState(() => currentIndex = 0);
             Navigator.pop(context);
           }),
-          _buildDrawerItem(Icons.people_alt_outlined, "Students", currentIndex == 1, () {
-            setState(() => currentIndex = 1);
-            Navigator.pop(context);
-          }),
-          _buildDrawerItem(Icons.co_present_outlined, "Teachers", currentIndex == 2, () {
-            setState(() => currentIndex = 2);
-            Navigator.pop(context);
-          }),
+
+          // Students Dropdown
+          Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              leading: Icon(Icons.people_alt_outlined, color: currentIndex == 1 ? AppColors.primary : Color(0xFF757897)),
+              title: Text("Students".tr, style: TextStyle(
+                color: currentIndex == 1 ? AppColors.primary : Color(0xFF1E2875),
+                fontWeight: currentIndex == 1 ? FontWeight.bold : FontWeight.w500,
+                fontSize: 13,
+              )),
+              childrenPadding: EdgeInsets.only(left: 12),
+              children: [
+                _buildDrawerSubItem("Students List", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminStudentListScreen()));
+                }),
+                _buildDrawerSubItem("Register New Student", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminRegisterStudentScreen()));
+                }),
+                _buildDrawerSubItem("Student Promotions", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminStudentPromotionsScreen()));
+                }),
+                _buildDrawerSubItem("Student Siblings", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminStudentSiblingsScreen()));
+                }),
+                _buildDrawerSubItem("Student ID Cards", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminIDCardsScreen()));
+                }),
+              ],
+            ),
+          ),
+
+          // Teachers Dropdown
+          Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              leading: Icon(Icons.co_present_outlined, color: currentIndex == 2 ? AppColors.primary : Color(0xFF757897)),
+              title: Text("Teachers".tr, style: TextStyle(
+                color: currentIndex == 2 ? AppColors.primary : Color(0xFF1E2875),
+                fontWeight: currentIndex == 2 ? FontWeight.bold : FontWeight.w500,
+                fontSize: 13,
+              )),
+              childrenPadding: EdgeInsets.only(left: 12),
+              children: [
+                _buildDrawerSubItem("Teachers List", currentIndex == 2, () {
+                  setState(() => currentIndex = 2);
+                  Navigator.pop(context);
+                }),
+                _buildDrawerSubItem("Add New Teacher", false, () {
+                  Navigator.pop(context);
+                  _onTabChanged(2);
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    _teachersTabKey.currentState?.showAddTeacherBottomSheet();
+                  });
+                }),
+              ],
+            ),
+          ),
+
           _buildDrawerItem(Icons.corporate_fare_outlined, "Branches", currentIndex == 3, () {
             setState(() => currentIndex = 3);
             Navigator.pop(context);
           }),
-          _buildDrawerItem(Icons.calendar_today_outlined, "Attendance", false, () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => AdminAttendanceScreen()));
-          }),
-          _buildDrawerItem(Icons.currency_rupee, "Fees", false, () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => AdminFeesScreen()));
-          }),
-          _buildDrawerItem(Icons.assignment_outlined, "Examination", false, () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => AdminExaminationsScreen()));
-          }),
-          _buildDrawerItem(Icons.menu_book_outlined, "Library", false, () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => AdminLibraryScreen()));
-          }),
-          _buildDrawerItem(Icons.directions_bus_outlined, "Transport", false, () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => AdminTransportScreen()));
-          }),
-          _buildDrawerItem(Icons.bed_outlined, "Hostel", false, () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => AdminHostelScreen()));
-          }),
-          _buildDrawerItem(Icons.event_outlined, "Events", false, () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => AdminEventsScreen()));
-          }),
-          _buildDrawerItem(Icons.campaign_outlined, "Communications", false, () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => AdminCommunicationsScreen()));
-          }),
-          _buildDrawerItem(Icons.badge_outlined, "ID Card", false, () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => AdminIDCardsScreen()));
-          }),
-          _buildDrawerItem(Icons.workspace_premium_outlined, "Certificates", false, () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => AdminCertificatesScreen()));
-          }),
-          _buildDrawerItem(Icons.assessment_outlined, "Reports", false, () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => AdminReportsScreen()));
-          }),
-          _buildDrawerItem(Icons.error_outline, "Invalid Info", false, () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => AdminInvalidInfoScreen()));
-          }),
-          _buildDrawerItem(Icons.sms_outlined, "SMS", false, () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => AdminSmsScreen()));
-          }),
-          _buildDrawerItem(Icons.settings_outlined, "Settings", false, () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => AdminSettingsScreen()));
-          }),
+
+          // Configuration Dropdown
+          Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              leading: Icon(Icons.settings_suggest_outlined, color: Color(0xFF757897)),
+              title: Text("Configuration".tr, style: TextStyle(
+                color: Color(0xFF1E2875),
+                fontWeight: FontWeight.w500,
+                fontSize: 13,
+              )),
+              childrenPadding: EdgeInsets.only(left: 12),
+              children: [
+                _buildDrawerSubItem("Attendance", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => AdminAttendanceScreen()));
+                }),
+                _buildDrawerSubItem("Fees", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => AdminFeesScreen()));
+                }),
+                _buildDrawerSubItem("Examination", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => AdminExaminationsScreen()));
+                }),
+                _buildDrawerSubItem("Library", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => AdminLibraryScreen()));
+                }),
+                _buildDrawerSubItem("Transport", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => AdminTransportScreen()));
+                }),
+                _buildDrawerSubItem("Hostel", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => AdminHostelScreen()));
+                }),
+                _buildDrawerSubItem("Events", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => AdminEventsScreen()));
+                }),
+                _buildDrawerSubItem("Communications", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => AdminCommunicationsScreen()));
+                }),
+                _buildDrawerSubItem("Certificates", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => AdminCertificatesScreen()));
+                }),
+                _buildDrawerSubItem("Reports", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => AdminReportsScreen()));
+                }),
+                _buildDrawerSubItem("SMS", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => AdminSmsScreen()));
+                }),
+                _buildDrawerSubItem("Settings", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => AdminSettingsScreen()));
+                }),
+              ],
+            ),
+          ),
 
           Divider(height: 20),
 
@@ -396,16 +461,34 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     return ListTile(
       leading: Icon(icon, color: selected ? AppColors.primary : Color(0xFF757897)),
       title: Text(
-        title,
+        title.tr,
         style: TextStyle(
-          color: selected ? AppColors.primary : Color(0xFF1E2875),
+          color: selected ? AppColors.primary : const Color(0xFF1E2875),
           fontWeight: selected ? FontWeight.bold : FontWeight.w500,
           fontSize: 13,
         ),
       ),
       trailing: showChevron
-          ? Icon(Icons.chevron_right, size: 16, color: Colors.grey)
+          ? Icon(Icons.chevron_right, size: 16, color: Colors.grey.shade400)
           : null,
+      selected: selected,
+      onTap: onTap,
+      dense: true,
+    );
+  }
+
+  Widget _buildDrawerSubItem(String title, bool selected, VoidCallback onTap) {
+    return ListTile(
+      contentPadding: const EdgeInsets.only(left: 56, right: 16),
+      title: Text(
+        title.tr,
+        style: TextStyle(
+          color: selected ? AppColors.primary : const Color(0xFF757897),
+          fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+          fontSize: 13,
+        ),
+      ),
+      trailing: Icon(Icons.chevron_right, size: 14, color: Colors.grey.shade400),
       selected: selected,
       onTap: onTap,
       dense: true,

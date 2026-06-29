@@ -5,7 +5,7 @@ import '../widgets/admin_app_bar.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminCertificatesScreen extends StatefulWidget {
-  AdminCertificatesScreen({super.key});
+  const AdminCertificatesScreen({super.key});
 
   @override
   State<AdminCertificatesScreen> createState() => _AdminCertificatesScreenState();

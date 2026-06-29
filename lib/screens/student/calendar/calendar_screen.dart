@@ -8,7 +8,7 @@ class CalendarScreen extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
   final Function(int)? onTabSelected;
 
-  CalendarScreen({super.key, this.onOpenDrawer, this.onTabSelected});
+  const CalendarScreen({super.key, this.onOpenDrawer, this.onTabSelected});
 
   @override
   State<CalendarScreen> createState() => _CalendarScreenState();

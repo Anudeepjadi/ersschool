@@ -7,7 +7,7 @@ import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminExaminationsScreen extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
-  AdminExaminationsScreen({super.key, this.onOpenDrawer});
+  const AdminExaminationsScreen({super.key, this.onOpenDrawer});
 
   @override
   State<AdminExaminationsScreen> createState() => _AdminExaminationsScreenState();

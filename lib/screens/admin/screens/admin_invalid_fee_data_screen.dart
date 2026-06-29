@@ -4,7 +4,7 @@ import '../widgets/admin_app_bar.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminInvalidFeeDataScreen extends StatefulWidget {
-  AdminInvalidFeeDataScreen({super.key});
+  const AdminInvalidFeeDataScreen({super.key});
 
   @override
   State<AdminInvalidFeeDataScreen> createState() => _AdminInvalidFeeDataScreenState();

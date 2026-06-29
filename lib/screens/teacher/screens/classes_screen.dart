@@ -32,7 +32,7 @@ class ClassesScreen extends StatefulWidget {
   final Function(int)? onSubTabSelected;
   final Function(int, {int? subTab, String? moreSubScreen})? onNavigateTab;
 
-  ClassesScreen({
+  const ClassesScreen({
     super.key,
     this.activeTab = 0,
     this.onSubTabSelected,
@@ -272,7 +272,7 @@ class _ClassesScreenState extends State<ClassesScreen> {
   }
 
   void _showTeacherMessageDialog(String teacherName) {
-    final TextEditingController _messageController = TextEditingController();
+    final TextEditingController messageController = TextEditingController();
 
     showDialog(
       context: context,
@@ -286,7 +286,7 @@ class _ClassesScreenState extends State<ClassesScreen> {
                 style: TextStyle(fontSize: 13, color: Colors.grey)),
             SizedBox(height: 12),
             TextField(
-              controller: _messageController,
+              controller: messageController,
               maxLines: 4,
               decoration: InputDecoration(
                 hintText: "Enter teacher requirement text here...",
@@ -301,7 +301,7 @@ class _ClassesScreenState extends State<ClassesScreen> {
           TextButton(onPressed: () => Navigator.pop(context), child: Text("Cancel".tr)),
           ElevatedButton(
             onPressed: () {
-              if (_messageController.text.isNotEmpty) {
+              if (messageController.text.isNotEmpty) {
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text("Requirement sent to $teacherName successfully!"))

@@ -5,7 +5,7 @@ import '../../../core/data/app_data_store.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminHolidaysScreen extends StatefulWidget {
-  AdminHolidaysScreen({super.key});
+  const AdminHolidaysScreen({super.key});
   @override
   State<AdminHolidaysScreen> createState() => _AdminHolidaysScreenState();
 }
@@ -176,55 +176,35 @@ class _AdminHolidaysScreenState extends State<AdminHolidaysScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF5F7FF),
-      appBar: AdminAppBar(
+      backgroundColor: const Color(0xFFF5F7FF),
+      appBar: const AdminAppBar(
           title: 'Holidays', subtitle: 'Manage school holidays'),
-      bottomNavigationBar: AdminBottomNavBar(currentIndex: 4),
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showAddDialog(),
+        backgroundColor: const Color(0xFFB45309),
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
       body: Column(children: [
         Container(
-          color: Colors.white,
-          padding: EdgeInsets.symmetric(vertical: 16),
-          child: Center(
-            child: Column(children: [
-              Text('Holidays List'.tr,
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFFB45309))),
-              SizedBox(height: 12),
-              ElevatedButton.icon(
-                onPressed: () => _showAddDialog(),
-                icon: Icon(Icons.add, size: 16),
-                label: Text('Add New'.tr),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFB45309),
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8)),
-                ),
-              ),
-            ]),
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          color: Color(0xFF2D3748),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          color: const Color(0xFF1E2875),
           child: Row(children: [
             Expanded(
                 flex: 2,
                 child: Text('Date'.tr,
-                    style: TextStyle(
+                    style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 13))),
             Expanded(
                 flex: 3,
                 child: Text('Description'.tr,
-                    style: TextStyle(
+                    style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 13))),
-            SizedBox(width: 76),
+            const SizedBox(width: 76),
           ]),
         ),
         Expanded(

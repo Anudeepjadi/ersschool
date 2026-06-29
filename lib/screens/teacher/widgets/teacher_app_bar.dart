@@ -12,7 +12,7 @@ class TeacherAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onProfileTap;
   final List<Widget>? actions;
 
-  TeacherAppBar({
+  const TeacherAppBar({
     super.key,
     required this.title,
     required this.subtitle,
@@ -119,7 +119,7 @@ class TeacherAppBar extends StatelessWidget implements PreferredSizeWidget {
           padding: EdgeInsets.only(right: 16, left: 4),
           child: GestureDetector(
             onTap: onProfileTap ?? () {
-              // TODO: Navigate to teacher profile if needed
+              // Navigate to teacher profile if needed
             },
             child: Container(
               decoration: BoxDecoration(

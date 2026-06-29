@@ -4,7 +4,7 @@ import 'package:ersschool/core/localization/language_manager.dart';
 class MoreScreen extends StatelessWidget {
   final Function(String) onOptionSelected;
 
-  MoreScreen({
+  const MoreScreen({
     super.key,
     required this.onOptionSelected,
   });
