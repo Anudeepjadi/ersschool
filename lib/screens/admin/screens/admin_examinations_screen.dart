@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/data/app_data_store.dart';
@@ -42,7 +41,15 @@ enum ExaminationFeature {
 
 class AdminExaminationsScreen extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
-  AdminExaminationsScreen({super.key, this.onOpenDrawer});
+  final ExaminationFeature initialFeature;
+  final bool openDrawer;
+
+  const AdminExaminationsScreen({
+    super.key,
+    this.onOpenDrawer,
+    this.initialFeature = ExaminationFeature.menu,
+    this.openDrawer = false,
+  });
 
   @override
   State<AdminExaminationsScreen> createState() =>
@@ -249,22 +256,6 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
     }
   }
 
-  String _getFeatureLabel(ExaminationFeature feature) {
-    switch (feature) {
-      case ExaminationFeature.menu:
-        return "Main Menu";
-      case ExaminationFeature.examDetails:
-        return "Exam Details";
-      case ExaminationFeature.examTimetable:
-        return "Exam Timetable";
-      case ExaminationFeature.examHallTickets:
-        return "Exam Hall Tickets";
-      case ExaminationFeature.gradeReport:
-        return "Grade Report";
-      case ExaminationFeature.gradeReportCustom:
-        return "Grade Report Custom";
-    }
-  }
 
   @override
   Widget build(BuildContext context) {

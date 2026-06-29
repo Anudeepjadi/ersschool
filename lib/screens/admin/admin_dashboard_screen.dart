@@ -13,6 +13,7 @@ import 'tabs/admin_more_tab.dart';
 import 'screens/admin_attendance_screen.dart';
 import 'screens/admin_fees_screen.dart';
 import 'screens/admin_examinations_screen.dart';
+import 'screens/admin_meetings_screen.dart';
 import 'screens/admin_hostel_screen.dart';
 import 'screens/admin_library_screen.dart';
 import 'screens/admin_transport_screen.dart';
@@ -21,6 +22,7 @@ import 'screens/admin_communications_screen.dart';
 import 'screens/admin_id_cards_screen.dart';
 import 'screens/admin_certificates_screen.dart';
 import 'screens/admin_reports_screen.dart';
+import 'screens/admin_invalid_info_screen.dart';
 import 'screens/admin_sms_screen.dart';
 import 'screens/admin_settings_screen.dart';
 import 'screens/admin_help_center_screen.dart';
@@ -47,14 +49,11 @@ class AdminDashboardScreen extends StatefulWidget {
 
 class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   int currentIndex = 0;
-  bool _isExamExpanded = false;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-<<<<<<< HEAD
-=======
-  final GlobalKey _studentsTabKey = GlobalKey();
->>>>>>> parent of da62c40 (Merge branch 'jagan' into Anudeep)
   final GlobalKey<AdminTeachersTabState> _teachersTabKey = GlobalKey<AdminTeachersTabState>();
   final GlobalKey<AdminExaminationsScreenState> _examinationsKey = GlobalKey<AdminExaminationsScreenState>();
+  final GlobalKey<AdminMeetingsScreenState> _meetingsKey = GlobalKey<AdminMeetingsScreenState>();
+  bool _isMeetingsExpanded = false;
 
   @override
   void initState() {
@@ -103,6 +102,11 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         key: _examinationsKey,
         onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer(),
         initialFeature: ExaminationFeature.menu,
+      ),
+      AdminMeetingsScreen(
+        key: _meetingsKey,
+        onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer(),
+        initialFeature: MeetingsFeature.menu,
       ),
     ];
 
@@ -340,6 +344,51 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             Navigator.pop(context);
             Navigator.push(context, MaterialPageRoute(builder: (_) => AdminAttendanceScreen()));
           }),
+          Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              initiallyExpanded: false,
+              leading: Icon(
+                Icons.video_camera_front_outlined,
+                color: currentIndex == 6 ? AppColors.primary : const Color(0xFF757897),
+              ),
+              title: Text(
+                "Meetings".tr,
+                style: TextStyle(
+                  color: currentIndex == 6 ? AppColors.primary : const Color(0xFF1E2875),
+                  fontWeight: currentIndex == 6 ? FontWeight.bold : FontWeight.w500,
+                  fontSize: 13,
+                ),
+              ),
+              trailing: Icon(
+                _isMeetingsExpanded ? Icons.keyboard_arrow_down : Icons.chevron_right,
+                size: 16,
+                color: Colors.grey.shade400,
+              ),
+              childrenPadding: const EdgeInsets.only(left: 12),
+              onExpansionChanged: (isExpanded) {
+                setState(() {
+                  _isMeetingsExpanded = isExpanded;
+                });
+                if (isExpanded) {
+                  _onTabChanged(6);
+                  _meetingsKey.currentState?.selectFeature(MeetingsFeature.menu);
+                }
+              },
+              children: [
+                _buildDrawerSubItem("Schedule Online Meeting", false, () {
+                  _onTabChanged(6);
+                  _meetingsKey.currentState?.selectFeature(MeetingsFeature.schedule);
+                  Navigator.pop(context);
+                }),
+                _buildDrawerSubItem("Calendar", false, () {
+                  _onTabChanged(6);
+                  _meetingsKey.currentState?.selectFeature(MeetingsFeature.calendar);
+                  Navigator.pop(context);
+                }),
+              ],
+            ),
+          ),
           _buildDrawerItem(Icons.currency_rupee, "Fees", false, () {
             Navigator.pop(context);
             Navigator.push(context, MaterialPageRoute(builder: (_) => AdminFeesScreen()));
@@ -473,6 +522,22 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           ? Icon(Icons.chevron_right, size: 16, color: Colors.grey.shade400)
           : null,
       selected: selected,
+      onTap: onTap,
+      dense: true,
+    );
+  }
+
+  Widget _buildDrawerSubItem(String title, bool selected, VoidCallback onTap) {
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 48, vertical: 0),
+      title: Text(
+        title.tr,
+        style: TextStyle(
+          color: selected ? AppColors.primary : const Color(0xFF1E2875),
+          fontSize: 12,
+          fontWeight: selected ? FontWeight.bold : FontWeight.w500,
+        ),
+      ),
       onTap: onTap,
       dense: true,
     );
