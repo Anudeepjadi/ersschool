@@ -16,10 +16,6 @@ dependencies:
   google_fonts: ^8.1.0
   fl_chart: ^0.69.0
   shared_preferences: ^2.5.5
-  pdf: ^3.12.0
-  printing: ^5.14.3
-  path_provider: ^2.1.6
-  open_filex: ^4.7.0
 
 dev_dependencies:
   flutter_test:
@@ -35,7 +31,6 @@ flutter:
     - assets/images/student_welcome.png
     - assets/images/school_bus.png
     - assets/animations/ers_animation.mp4
-    - assets/images/principal_signature.png
 
 flutter_icons:
   android: true
