@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/admin_app_bar.dart';
+import '../widgets/admin_bottom_nav_bar.dart';
 import '../../../widgets/custom_date_picker.dart';
 import '../../../widgets/app_footer.dart';
 
@@ -150,6 +151,7 @@ class _AdminDiaryScreenState extends State<AdminDiaryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 0),
       appBar: const AdminAppBar(
         title: "Class Dairy",
         subtitle: "Manage daily class updates",

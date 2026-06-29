@@ -3,6 +3,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import '../widgets/admin_app_bar.dart';
+import '../widgets/admin_bottom_nav_bar.dart';
 import '../../../widgets/app_footer.dart';
 
 class AdminTimeTableScreen extends StatefulWidget {
@@ -147,6 +148,7 @@ class _AdminTimeTableScreenState extends State<AdminTimeTableScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
       appBar: const AdminAppBar(title: "Time Table", subtitle: "Manage class schedules"),
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 0),
       body: Column(
         children: [
           Expanded(

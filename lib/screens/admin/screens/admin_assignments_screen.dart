@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import '../widgets/admin_app_bar.dart';
+import '../widgets/admin_bottom_nav_bar.dart';
 import '../../../widgets/custom_date_picker.dart';
 import '../../../widgets/app_footer.dart';
 
@@ -116,6 +117,7 @@ class _AdminAssignmentsScreenState extends State<AdminAssignmentsScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
       appBar: const AdminAppBar(title: "Class Assignments", subtitle: "Manage class assignments"),
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 0),
       body: Column(
         children: [
           Expanded(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../widgets/admin_app_bar.dart';
+import '../widgets/admin_bottom_nav_bar.dart';
 import '../../../widgets/app_footer.dart';
 
 class AdminClassDetailsScreen extends StatefulWidget {
@@ -111,6 +112,7 @@ class _AdminClassDetailsScreenState extends State<AdminClassDetailsScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
       appBar: const AdminAppBar(title: "Class Details", subtitle: "View and manage class information"),
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 0),
       body: Column(
         children: [
           Expanded(

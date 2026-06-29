@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/admin_app_bar.dart';
+import '../widgets/admin_bottom_nav_bar.dart';
 import '../../../widgets/app_footer.dart';
 
 class AdminClassTeachersScreen extends StatefulWidget {
@@ -152,6 +153,7 @@ class _AdminClassTeachersScreenState extends State<AdminClassTeachersScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
       appBar: const AdminAppBar(title: "Class Teachers", subtitle: "Assign teachers to classes"),
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 0),
       body: Column(
         children: [
           Expanded(

@@ -10,6 +10,7 @@ import 'tabs/admin_branches_tab.dart';
 import 'tabs/admin_more_tab.dart';
 
 // Import all sub-screens
+import 'screens/student_management/admin_register_student_screen.dart';
 import 'screens/admin_attendance_screen.dart';
 import 'screens/admin_fees_screen.dart';
 import 'screens/admin_examinations_screen.dart';
@@ -21,6 +22,7 @@ import 'screens/admin_communications_screen.dart';
 import 'screens/admin_id_cards_screen.dart';
 import 'screens/admin_certificates_screen.dart';
 import 'screens/admin_reports_screen.dart';
+import 'screens/admin_class_details_screen.dart';
 import 'screens/admin_settings_screen.dart';
 import 'screens/admin_help_center_screen.dart';
 import 'screens/admin_chat_support_screen.dart';
@@ -41,8 +43,8 @@ class AdminDashboardScreen extends StatefulWidget {
 class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   int currentIndex = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final GlobalKey<AdminStudentsTabState> _studentsTabKey = GlobalKey<AdminStudentsTabState>();
-  final GlobalKey<AdminTeachersTabState> _teachersTabKey = GlobalKey<AdminTeachersTabState>();
+  final GlobalKey<AdminTeachersTabState> _teachersTabKey =
+      GlobalKey<AdminTeachersTabState>();
 
   @override
   void initState() {
@@ -63,10 +65,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer(),
         onOpenProfile: () => _onTabChanged(4),
         onAddStudent: () {
-          _onTabChanged(1);
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            _studentsTabKey.currentState?.showAddStudentBottomSheet();
-          });
+          Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminRegisterStudentScreen()));
         },
         onAddTeacher: () {
           _onTabChanged(2);
@@ -76,7 +75,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         },
       ),
       AdminStudentsTab(
-        key: _studentsTabKey,
         onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer(),
       ),
       AdminTeachersTab(
@@ -134,7 +132,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 Align(
                   alignment: Alignment.topRight,
                   child: IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white, size: 22),
+                    icon:
+                        const Icon(Icons.close, color: Colors.white, size: 22),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ),
@@ -151,8 +150,12 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                           return CircleAvatar(
                             radius: 28,
                             backgroundColor: Colors.white,
-                            backgroundImage: path != null ? FileImage(File(path)) : null,
-                            child: path == null ? const Icon(Icons.person, color: AppColors.primary, size: 36) : null,
+                            backgroundImage:
+                                path != null ? FileImage(File(path)) : null,
+                            child: path == null
+                                ? const Icon(Icons.person,
+                                    color: AppColors.primary, size: 36)
+                                : null,
                           );
                         },
                       ),
@@ -185,15 +188,18 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 ),
                 const SizedBox(height: 16),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Colors.white.withValues(alpha: 0.15)),
+                    border:
+                        Border.all(color: Colors.white.withValues(alpha: 0.15)),
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.school_outlined, color: Colors.white, size: 18),
+                      const Icon(Icons.school_outlined,
+                          color: Colors.white, size: 18),
                       const SizedBox(width: 8),
                       const Expanded(
                         child: Text(
@@ -216,72 +222,109 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               ],
             ),
           ),
-          
+
           // MAIN Section
           _buildDrawerSectionTitle("MAIN"),
-          _buildDrawerItem(Icons.grid_view_outlined, "Dashboard", currentIndex == 0, () {
+          _buildDrawerItem(
+              Icons.grid_view_outlined, "Dashboard", currentIndex == 0, () {
             setState(() => currentIndex = 0);
             Navigator.pop(context);
           }),
-          _buildDrawerItem(Icons.people_alt_outlined, "Students", currentIndex == 1, () {
+          _buildDrawerItem(
+              Icons.people_alt_outlined, "Students", currentIndex == 1, () {
             setState(() => currentIndex = 1);
             Navigator.pop(context);
           }),
-          _buildDrawerItem(Icons.co_present_outlined, "Teachers", currentIndex == 2, () {
+          _buildDrawerItem(
+              Icons.co_present_outlined, "Teachers", currentIndex == 2, () {
             setState(() => currentIndex = 2);
             Navigator.pop(context);
           }),
-          _buildDrawerItem(Icons.corporate_fare_outlined, "Branches", currentIndex == 3, () {
+          _buildDrawerItem(
+              Icons.corporate_fare_outlined, "Branches", currentIndex == 3, () {
             setState(() => currentIndex = 3);
             Navigator.pop(context);
           }),
-          _buildDrawerItem(Icons.calendar_today_outlined, "Attendance", false, () {
+          _buildDrawerItem(Icons.class_outlined, "Classes", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminAttendanceScreen()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => const AdminClassDetailsScreen()));
+          }),
+          _buildDrawerItem(Icons.calendar_today_outlined, "Attendance", false,
+              () {
+            Navigator.pop(context);
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => const AdminAttendanceScreen()));
           }),
           _buildDrawerItem(Icons.currency_rupee, "Fees", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminFeesScreen()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => const AdminFeesScreen()));
           }),
           _buildDrawerItem(Icons.assignment_outlined, "Examination", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminExaminationsScreen()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => AdminExaminationsScreen()));
           }),
           _buildDrawerItem(Icons.menu_book_outlined, "Library", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminLibraryScreen()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => const AdminLibraryScreen()));
           }),
-          _buildDrawerItem(Icons.directions_bus_outlined, "Transport", false, () {
+          _buildDrawerItem(Icons.directions_bus_outlined, "Transport", false,
+              () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminTransportScreen()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => const AdminTransportScreen()));
           }),
           _buildDrawerItem(Icons.bed_outlined, "Hostel", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminHostelScreen()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => const AdminHostelScreen()));
           }),
           _buildDrawerItem(Icons.event_outlined, "Events", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEventsScreen()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => const AdminEventsScreen()));
           }),
-          _buildDrawerItem(Icons.campaign_outlined, "Communications", false, () {
+          _buildDrawerItem(Icons.campaign_outlined, "Communications", false,
+              () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminCommunicationsScreen()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => const AdminCommunicationsScreen()));
           }),
           _buildDrawerItem(Icons.badge_outlined, "ID Card", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminIDCardsScreen()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => const AdminIDCardsScreen()));
           }),
-          _buildDrawerItem(Icons.workspace_premium_outlined, "Certificates", false, () {
+          _buildDrawerItem(
+              Icons.workspace_premium_outlined, "Certificates", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminCertificatesScreen()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => const AdminCertificatesScreen()));
           }),
           _buildDrawerItem(Icons.assessment_outlined, "Reports", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminReportsScreen()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => const AdminReportsScreen()));
           }),
           _buildDrawerItem(Icons.settings_outlined, "Settings", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminSettingsScreen()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => const AdminSettingsScreen()));
           }),
 
           const Divider(height: 20),
@@ -290,30 +333,48 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           _buildDrawerSectionTitle("SUPPORT"),
           _buildDrawerItem(Icons.help_outline, "Help Center", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminHelpCenterScreen()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => const AdminHelpCenterScreen()));
           }, showChevron: false),
-          _buildDrawerItem(Icons.headset_mic_outlined, "Chat Support", false, () {
+          _buildDrawerItem(Icons.headset_mic_outlined, "Chat Support", false,
+              () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminChatSupportScreen()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => const AdminChatSupportScreen()));
           }, showChevron: false),
-          _buildDrawerItem(Icons.cloud_download_outlined, "System Updates", false, () {
+          _buildDrawerItem(
+              Icons.cloud_download_outlined, "System Updates", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminSystemUpdatesScreen()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => const AdminSystemUpdatesScreen()));
           }, showChevron: false),
-          _buildDrawerItem(Icons.play_circle_outline, "Video Tutorials", false, () {
+          _buildDrawerItem(Icons.play_circle_outline, "Video Tutorials", false,
+              () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminVideoTutorialsScreen()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => const AdminVideoTutorialsScreen()));
           }, showChevron: false),
           _buildDrawerItem(Icons.info_outline, "About Us", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminAboutUsScreen()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => const AdminAboutUsScreen()));
           }, showChevron: false),
 
           const Divider(height: 20),
-          
+
           ListTile(
             leading: const Icon(Icons.logout, color: Colors.red),
-            title: const Text("Logout", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+            title: const Text("Logout",
+                style:
+                    TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
             onTap: () {
               Navigator.pop(context);
               Navigator.pushReplacement(
@@ -351,7 +412,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     bool showChevron = true,
   }) {
     return ListTile(
-      leading: Icon(icon, color: selected ? AppColors.primary : const Color(0xFF757897)),
+      leading: Icon(icon,
+          color: selected ? AppColors.primary : const Color(0xFF757897)),
       title: Text(
         title,
         style: TextStyle(
