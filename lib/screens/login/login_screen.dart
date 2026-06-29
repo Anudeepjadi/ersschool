@@ -8,7 +8,7 @@ import '../teacher/teacher_dashboard_screen.dart';
 import '../../core/localization/language_manager.dart';
 
 class LoginScreen extends StatefulWidget {
-  LoginScreen({super.key});
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -567,7 +567,7 @@ class _LoginScreenState extends State<LoginScreen> {
 // Custom Paint widget to render the Google 'G' icon vector in high resolution
 class GoogleLogo extends StatelessWidget {
   final double size;
-  GoogleLogo({super.key, this.size = 24});
+  const GoogleLogo({super.key, this.size = 24});
 
   @override
   Widget build(BuildContext context) {

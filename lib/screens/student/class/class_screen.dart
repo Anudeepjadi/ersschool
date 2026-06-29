@@ -12,7 +12,7 @@ class ClassScreen extends StatefulWidget {
   final bool showAppBar;
   final Function(int)? onTabSelected;
 
-  ClassScreen({
+  const ClassScreen({
     super.key,
     this.onOpenDrawer,
     this.showAppBar = true,

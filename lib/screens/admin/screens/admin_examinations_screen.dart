@@ -42,18 +42,11 @@ enum ExaminationFeature {
 
 class AdminExaminationsScreen extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
-  final ExaminationFeature initialFeature;
-  final bool openDrawer;
-
-  const AdminExaminationsScreen({
-    super.key,
-    this.onOpenDrawer,
-    this.initialFeature = ExaminationFeature.menu,
-    this.openDrawer = false,
-  });
+  AdminExaminationsScreen({super.key, this.onOpenDrawer});
 
   @override
-  State<AdminExaminationsScreen> createState() => AdminExaminationsScreenState();
+  State<AdminExaminationsScreen> createState() =>
+      AdminExaminationsScreenState();
 }
 
 class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
@@ -77,7 +70,8 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
   bool _showGradeData = true;
 
   // Timetable State variables
-  final TextEditingController _examTitleController = TextEditingController(text: "SA1");
+  final TextEditingController _examTitleController =
+      TextEditingController(text: "SA1");
   List<Map<String, dynamic>> _timetableRows = [];
 
   // Hall Tickets State variables
@@ -85,10 +79,29 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
   final TextEditingController _searchController = TextEditingController();
 
   // Dropdown options
-  final List<String> _branches = ['Ecstasy School 1', 'Ecstasy School 2', 'Ecstasy School 3'];
-  final List<String> _classes = ['Grade 1', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'];
+  final List<String> _branches = [
+    'Ecstasy School 1',
+    'Ecstasy School 2',
+    'Ecstasy School 3'
+  ];
+  final List<String> _classes = [
+    'Grade 1',
+    'Class 6',
+    'Class 7',
+    'Class 8',
+    'Class 9',
+    'Class 10'
+  ];
   final List<String> _exams = ['SA1', 'SA2', 'Unit Test 1', 'Unit Test 2'];
-  final List<String> _subjects = ['Telugu', 'English', 'Hindi', 'Maths', 'Science', 'Social', 'Art work'];
+  final List<String> _subjects = [
+    'Telugu',
+    'English',
+    'Hindi',
+    'Maths',
+    'Science',
+    'Social',
+    'Art work'
+  ];
 
   @override
   void initState() {
@@ -258,7 +271,9 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: const Color(0xFFF5F7FF),
-      bottomNavigationBar: widget.onOpenDrawer == null ? AdminBottomNavBar(currentIndex: 4) : null,
+      bottomNavigationBar: widget.onOpenDrawer == null
+          ? AdminBottomNavBar(currentIndex: 4)
+          : null,
       drawer: _buildDrawer(),
       appBar: AdminAppBar(
         title: _getFeatureTitle(),
@@ -311,9 +326,15 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
     final List<Map<String, dynamic>> menuItems = [
       {'title': 'Exam Details', 'feature': ExaminationFeature.examDetails},
       {'title': 'Exam Timetable', 'feature': ExaminationFeature.examTimetable},
-      {'title': 'Exam Hall Tickets', 'feature': ExaminationFeature.examHallTickets},
+      {
+        'title': 'Exam Hall Tickets',
+        'feature': ExaminationFeature.examHallTickets
+      },
       {'title': 'Grade Report', 'feature': ExaminationFeature.gradeReport},
-      {'title': 'Grade Report Custom', 'feature': ExaminationFeature.gradeReportCustom},
+      {
+        'title': 'Grade Report Custom',
+        'feature': ExaminationFeature.gradeReportCustom
+      },
     ];
 
     return Container(
@@ -337,7 +358,8 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 title: Text(
                   (item['title'] as String).tr,
                   style: const TextStyle(
@@ -346,7 +368,8 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                     fontSize: 14,
                   ),
                 ),
-                trailing: const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
+                trailing: const Icon(Icons.arrow_forward_ios,
+                    size: 14, color: Colors.grey),
                 onTap: () {
                   setState(() {
                     _selectedFeature = item['feature'] as ExaminationFeature;
@@ -366,10 +389,38 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
   Widget _buildExamDetailsView() {
     // Mock exams
     final List<Map<String, dynamic>> mockExams = [
-      {'name': 'Summative Assessment 1', 'code': 'SA1', 'type': 'Terminal', 'duration': '3 Hours', 'marks': '100', 'status': 'Upcoming'},
-      {'name': 'Formative Assessment 1', 'code': 'FA1', 'type': 'Class Test', 'duration': '1.5 Hours', 'marks': '50', 'status': 'Completed'},
-      {'name': 'Summative Assessment 2', 'code': 'SA2', 'type': 'Terminal', 'duration': '3 Hours', 'marks': '100', 'status': 'Upcoming'},
-      {'name': 'Formative Assessment 2', 'code': 'FA2', 'type': 'Class Test', 'duration': '1.5 Hours', 'marks': '50', 'status': 'Completed'},
+      {
+        'name': 'Summative Assessment 1',
+        'code': 'SA1',
+        'type': 'Terminal',
+        'duration': '3 Hours',
+        'marks': '100',
+        'status': 'Upcoming'
+      },
+      {
+        'name': 'Formative Assessment 1',
+        'code': 'FA1',
+        'type': 'Class Test',
+        'duration': '1.5 Hours',
+        'marks': '50',
+        'status': 'Completed'
+      },
+      {
+        'name': 'Summative Assessment 2',
+        'code': 'SA2',
+        'type': 'Terminal',
+        'duration': '3 Hours',
+        'marks': '100',
+        'status': 'Upcoming'
+      },
+      {
+        'name': 'Formative Assessment 2',
+        'code': 'FA2',
+        'type': 'Class Test',
+        'duration': '1.5 Hours',
+        'marks': '50',
+        'status': 'Completed'
+      },
     ];
 
     return Column(
@@ -392,7 +443,8 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                       label: "Branch",
                       value: _selectedBranch,
                       items: _branches,
-                      onChanged: (val) => setState(() => _selectedBranch = val!),
+                      onChanged: (val) =>
+                          setState(() => _selectedBranch = val!),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -409,9 +461,11 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
               const SizedBox(height: 12),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF8B4513), // Brown matching screenshot "Get Data"
+                  backgroundColor: const Color(
+                      0xFF8B4513), // Brown matching screenshot "Get Data"
                   foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
                   padding: const EdgeInsets.symmetric(vertical: 14),
                 ),
                 onPressed: () {
@@ -419,7 +473,9 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                     _showDetailsData = true;
                   });
                 },
-                child: Text("Get Data".tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                child: Text("Get Data".tr,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 13)),
               )
             ],
           ),
@@ -438,19 +494,53 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
               children: [
                 Text(
                   "Examination Records - $_selectedClass".tr,
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+                  style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1E2875)),
                 ),
                 const SizedBox(height: 12),
                 ScrollableTableWrapper(
                   child: DataTable(
-                    headingRowColor: WidgetStateProperty.all(const Color(0xFFF8FAFC)),
+                    headingRowColor:
+                        WidgetStateProperty.all(const Color(0xFFF8FAFC)),
                     columns: [
-                      DataColumn(label: Text("Exam Name".tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: Color(0xFF1E2875)))),
-                      DataColumn(label: Text("Code".tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: Color(0xFF1E2875)))),
-                      DataColumn(label: Text("Type".tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: Color(0xFF1E2875)))),
-                      DataColumn(label: Text("Duration".tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: Color(0xFF1E2875)))),
-                      DataColumn(label: Text("Max Marks".tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: Color(0xFF1E2875)))),
-                      DataColumn(label: Text("Status".tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: Color(0xFF1E2875)))),
+                      DataColumn(
+                          label: Text("Exam Name".tr,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 11,
+                                  color: Color(0xFF1E2875)))),
+                      DataColumn(
+                          label: Text("Code".tr,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 11,
+                                  color: Color(0xFF1E2875)))),
+                      DataColumn(
+                          label: Text("Type".tr,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 11,
+                                  color: Color(0xFF1E2875)))),
+                      DataColumn(
+                          label: Text("Duration".tr,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 11,
+                                  color: Color(0xFF1E2875)))),
+                      DataColumn(
+                          label: Text("Max Marks".tr,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 11,
+                                  color: Color(0xFF1E2875)))),
+                      DataColumn(
+                          label: Text("Status".tr,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 11,
+                                  color: Color(0xFF1E2875)))),
                     ],
                     rows: mockExams.map((exam) {
                       final isUpcoming = exam['status'] == 'Upcoming';
@@ -463,15 +553,19 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                           DataCell(Text(exam['marks']!.toString())),
                           DataCell(
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 4),
                               decoration: BoxDecoration(
-                                color: isUpcoming ? Colors.orange.withValues(alpha: 0.1) : Colors.green.withValues(alpha: 0.1),
+                                color: isUpcoming
+                                    ? Colors.orange.withValues(alpha: 0.1)
+                                    : Colors.green.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Text(
                                 exam['status']!.toString().tr,
                                 style: TextStyle(
-                                  color: isUpcoming ? Colors.orange : Colors.green,
+                                  color:
+                                      isUpcoming ? Colors.orange : Colors.green,
                                   fontSize: 10,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -512,7 +606,8 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                       label: "Branch",
                       value: _selectedBranch,
                       items: _branches,
-                      onChanged: (val) => setState(() => _selectedBranch = val!),
+                      onChanged: (val) =>
+                          setState(() => _selectedBranch = val!),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -545,7 +640,8 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF8B4513),
                   foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
                   padding: const EdgeInsets.symmetric(vertical: 14),
                 ),
                 onPressed: () {
@@ -553,7 +649,9 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                     _showTimetableData = true;
                   });
                 },
-                child: Text("Get Timetable".tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                child: Text("Get Timetable".tr,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 13)),
               )
             ],
           ),
@@ -577,18 +675,25 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Exam Title".tr, style: const TextStyle(fontSize: 10, color: Colors.grey)),
+                          Text("Exam Title".tr,
+                              style: const TextStyle(
+                                  fontSize: 10, color: Colors.grey)),
                           const SizedBox(height: 4),
                           SizedBox(
                             height: 40,
                             child: TextField(
                               controller: _examTitleController,
-                              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+                              style: const TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF1E2875)),
                               decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                                contentPadding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
-                                  borderSide: BorderSide(color: Colors.grey.shade300),
+                                  borderSide:
+                                      BorderSide(color: Colors.grey.shade300),
                                 ),
                               ),
                             ),
@@ -601,26 +706,34 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF8B4513),
                         foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
                       ),
                       onPressed: () {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text("Timetable for ${_examTitleController.text} saved successfully!".tr),
+                            content: Text(
+                                "Timetable for ${_examTitleController.text} saved successfully!"
+                                    .tr),
                             backgroundColor: AppColors.success,
                           ),
                         );
                       },
-                      child: Text("Save".tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                      child: Text("Save".tr,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 12)),
                     ),
                     const SizedBox(width: 8),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF10B981),
                         foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
                       ),
                       onPressed: () {
                         setState(() {
@@ -636,7 +749,9 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                           });
                         });
                       },
-                      child: Text("Add New".tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                      child: Text("Add New".tr,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 12)),
                     ),
                   ],
                 ),
@@ -646,10 +761,12 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                 ScrollableTableWrapper(
                   child: Theme(
                     data: Theme.of(context).copyWith(
-                      dividerTheme: const DividerThemeData(thickness: 1, space: 1),
+                      dividerTheme:
+                          const DividerThemeData(thickness: 1, space: 1),
                     ),
                     child: Table(
-                      border: TableBorder.all(color: Colors.grey.shade200, width: 1),
+                      border: TableBorder.all(
+                          color: Colors.grey.shade200, width: 1),
                       columnWidths: const {
                         0: FixedColumnWidth(160),
                         1: FixedColumnWidth(180),
@@ -660,7 +777,9 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                       children: [
                         // Headers Row
                         TableRow(
-                          decoration: const BoxDecoration(color: Color(0xFF0F172A)), // Very dark blue/black header
+                          decoration: const BoxDecoration(
+                              color: Color(
+                                  0xFF0F172A)), // Very dark blue/black header
                           children: [
                             _buildTableHeaderCell("Subject"),
                             _buildTableHeaderCell("Date"),
@@ -678,16 +797,19 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 8),
                                   decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.grey.shade300),
+                                    border:
+                                        Border.all(color: Colors.grey.shade300),
                                     borderRadius: BorderRadius.circular(6),
                                   ),
                                   child: DropdownButtonHideUnderline(
                                     child: DropdownButton<String>(
                                       value: row['subject'],
                                       isDense: true,
-                                      style: const TextStyle(fontSize: 12, color: Colors.black),
+                                      style: const TextStyle(
+                                          fontSize: 12, color: Colors.black),
                                       onChanged: (v) {
                                         setState(() {
                                           row['subject'] = v!;
@@ -717,21 +839,29 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                                     );
                                     if (date != null) {
                                       setState(() {
-                                        row['date'] = "${date.day}/${date.month}/${date.year}";
+                                        row['date'] =
+                                            "${date.day}/${date.month}/${date.year}";
                                       });
                                     }
                                   },
                                   child: Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 6),
                                     decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.grey.shade300),
+                                      border: Border.all(
+                                          color: Colors.grey.shade300),
                                       borderRadius: BorderRadius.circular(6),
                                     ),
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(row['date'], style: const TextStyle(fontSize: 12)),
-                                        Icon(Icons.calendar_month, color: Colors.grey.shade600, size: 16),
+                                        Text(row['date'],
+                                            style:
+                                                const TextStyle(fontSize: 12)),
+                                        Icon(Icons.calendar_month,
+                                            color: Colors.grey.shade600,
+                                            size: 16),
                                       ],
                                     ),
                                   ),
@@ -755,7 +885,8 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Center(
                                   child: IconButton(
-                                    icon: const Icon(Icons.delete, color: Colors.red, size: 18),
+                                    icon: const Icon(Icons.delete,
+                                        color: Colors.red, size: 18),
                                     onPressed: () {
                                       setState(() {
                                         _timetableRows.removeAt(index);
@@ -795,8 +926,10 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
   }
 
   Widget _buildTimePickerRow(Map<String, dynamic> row, String prefix) {
-    final List<String> hours = List.generate(12, (index) => (index + 1).toString().padLeft(2, '0'));
-    final List<String> minutes = List.generate(60, (index) => index.toString().padLeft(2, '0'));
+    final List<String> hours =
+        List.generate(12, (index) => (index + 1).toString().padLeft(2, '0'));
+    final List<String> minutes =
+        List.generate(60, (index) => index.toString().padLeft(2, '0'));
     final List<String> periods = ['AM', 'PM'];
 
     return Row(
@@ -808,13 +941,17 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
             Container(
               height: 24,
               padding: const EdgeInsets.symmetric(horizontal: 4),
-              decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(4)),
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.shade300),
+                  borderRadius: BorderRadius.circular(4)),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
                   value: row['${prefix}Hour'],
                   style: const TextStyle(fontSize: 11, color: Colors.black),
                   onChanged: (v) => setState(() => row['${prefix}Hour'] = v!),
-                  items: hours.map((h) => DropdownMenuItem(value: h, child: Text(h))).toList(),
+                  items: hours
+                      .map((h) => DropdownMenuItem(value: h, child: Text(h)))
+                      .toList(),
                 ),
               ),
             ),
@@ -830,13 +967,17 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
             Container(
               height: 24,
               padding: const EdgeInsets.symmetric(horizontal: 4),
-              decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(4)),
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.shade300),
+                  borderRadius: BorderRadius.circular(4)),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
                   value: row['${prefix}Minute'],
                   style: const TextStyle(fontSize: 11, color: Colors.black),
                   onChanged: (v) => setState(() => row['${prefix}Minute'] = v!),
-                  items: minutes.map((m) => DropdownMenuItem(value: m, child: Text(m))).toList(),
+                  items: minutes
+                      .map((m) => DropdownMenuItem(value: m, child: Text(m)))
+                      .toList(),
                 ),
               ),
             ),
@@ -846,17 +987,22 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text("AM/PM", style: TextStyle(fontSize: 8, color: Colors.grey)),
+            const Text("AM/PM",
+                style: TextStyle(fontSize: 8, color: Colors.grey)),
             Container(
               height: 24,
               padding: const EdgeInsets.symmetric(horizontal: 4),
-              decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(4)),
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.shade300),
+                  borderRadius: BorderRadius.circular(4)),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
                   value: row['${prefix}Period'],
                   style: const TextStyle(fontSize: 11, color: Colors.black),
                   onChanged: (v) => setState(() => row['${prefix}Period'] = v!),
-                  items: periods.map((p) => DropdownMenuItem(value: p, child: Text(p))).toList(),
+                  items: periods
+                      .map((p) => DropdownMenuItem(value: p, child: Text(p)))
+                      .toList(),
                 ),
               ),
             ),
@@ -871,35 +1017,146 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
     // Get students from database matching search query and filters
     // Fallback students to match the user's specific screenshot
     final List<Map<String, dynamic>> fallbackStudents = [
-      {'name': 'Deepthi', 'gender': 'Female', 'roll': 'ECS00021', 'admission': 'ECS00021', 'class': 'Grade 1', 'section': 'A', 'school': 'Ecstasy School 1'},
-      {'name': 'Deepthi', 'gender': 'Female', 'roll': 'ECS00022', 'admission': 'ECS00022', 'class': 'Grade 1', 'section': 'A', 'school': 'Ecstasy School 1'},
-      {'name': 'dhurandarrr', 'gender': 'Male', 'roll': 'ECS00023', 'admission': 'ECS00023', 'class': 'Grade 1', 'section': 'A', 'school': 'Ecstasy School 1'},
-      {'name': 'ECSTASY SOLUTIONS PVT LTD', 'gender': 'Male', 'roll': 'ECS00024', 'admission': 'ECS00024', 'class': 'Grade 1', 'section': 'A', 'school': 'Ecstasy School 1'},
-      {'name': 'lakshmi', 'gender': 'Male', 'roll': 'ECS00025', 'admission': 'ECS00025', 'class': 'Grade 1', 'section': 'A', 'school': 'Ecstasy School 1'},
-      {'name': 'MadiviliNaresh', 'gender': 'Male', 'roll': 'ECS00026', 'admission': 'ECS00026', 'class': 'Grade 1', 'section': 'A', 'school': 'Ecstasy School 1'},
-      {'name': 'phani', 'gender': 'Male', 'roll': 'ECS00027', 'admission': 'ECS00027', 'class': 'Grade 1', 'section': 'A', 'school': 'Ecstasy School 1'},
-      {'name': 'Priya', 'gender': 'Female', 'roll': 'ECS00028', 'admission': 'ECS00028', 'class': 'Grade 1', 'section': 'A', 'school': 'Ecstasy School 1'},
-      {'name': 'Rimsa', 'gender': 'Female', 'roll': 'ECS00029', 'admission': 'ECS00029', 'class': 'Grade 1', 'section': 'A', 'school': 'Ecstasy School 1'},
-      {'name': 'suresh', 'gender': 'Male', 'roll': 'ECS00030', 'admission': 'ECS00030', 'class': 'Grade 1', 'section': 'A', 'school': 'Ecstasy School 1'},
-      {'name': 'tony', 'gender': 'Male', 'roll': 'ECS00031', 'admission': 'ECS00031', 'class': 'Grade 1', 'section': 'A', 'school': 'Ecstasy School 1'},
-      {'name': 'Vijaya', 'gender': 'Male', 'roll': 'ECS00032', 'admission': 'ECS00032', 'class': 'Grade 1', 'section': 'A', 'school': 'Ecstasy School 1'},
-      {'name': 'vinitha', 'gender': 'Female', 'roll': 'ECS00033', 'admission': 'ECS00033', 'class': 'Grade 1', 'section': 'A', 'school': 'Ecstasy School 1'},
+      {
+        'name': 'Deepthi',
+        'gender': 'Female',
+        'roll': 'ECS00021',
+        'admission': 'ECS00021',
+        'class': 'Grade 1',
+        'section': 'A',
+        'school': 'Ecstasy School 1'
+      },
+      {
+        'name': 'Deepthi',
+        'gender': 'Female',
+        'roll': 'ECS00022',
+        'admission': 'ECS00022',
+        'class': 'Grade 1',
+        'section': 'A',
+        'school': 'Ecstasy School 1'
+      },
+      {
+        'name': 'dhurandarrr',
+        'gender': 'Male',
+        'roll': 'ECS00023',
+        'admission': 'ECS00023',
+        'class': 'Grade 1',
+        'section': 'A',
+        'school': 'Ecstasy School 1'
+      },
+      {
+        'name': 'ECSTASY SOLUTIONS PVT LTD',
+        'gender': 'Male',
+        'roll': 'ECS00024',
+        'admission': 'ECS00024',
+        'class': 'Grade 1',
+        'section': 'A',
+        'school': 'Ecstasy School 1'
+      },
+      {
+        'name': 'lakshmi',
+        'gender': 'Male',
+        'roll': 'ECS00025',
+        'admission': 'ECS00025',
+        'class': 'Grade 1',
+        'section': 'A',
+        'school': 'Ecstasy School 1'
+      },
+      {
+        'name': 'MadiviliNaresh',
+        'gender': 'Male',
+        'roll': 'ECS00026',
+        'admission': 'ECS00026',
+        'class': 'Grade 1',
+        'section': 'A',
+        'school': 'Ecstasy School 1'
+      },
+      {
+        'name': 'phani',
+        'gender': 'Male',
+        'roll': 'ECS00027',
+        'admission': 'ECS00027',
+        'class': 'Grade 1',
+        'section': 'A',
+        'school': 'Ecstasy School 1'
+      },
+      {
+        'name': 'Priya',
+        'gender': 'Female',
+        'roll': 'ECS00028',
+        'admission': 'ECS00028',
+        'class': 'Grade 1',
+        'section': 'A',
+        'school': 'Ecstasy School 1'
+      },
+      {
+        'name': 'Rimsa',
+        'gender': 'Female',
+        'roll': 'ECS00029',
+        'admission': 'ECS00029',
+        'class': 'Grade 1',
+        'section': 'A',
+        'school': 'Ecstasy School 1'
+      },
+      {
+        'name': 'suresh',
+        'gender': 'Male',
+        'roll': 'ECS00030',
+        'admission': 'ECS00030',
+        'class': 'Grade 1',
+        'section': 'A',
+        'school': 'Ecstasy School 1'
+      },
+      {
+        'name': 'tony',
+        'gender': 'Male',
+        'roll': 'ECS00031',
+        'admission': 'ECS00031',
+        'class': 'Grade 1',
+        'section': 'A',
+        'school': 'Ecstasy School 1'
+      },
+      {
+        'name': 'Vijaya',
+        'gender': 'Male',
+        'roll': 'ECS00032',
+        'admission': 'ECS00032',
+        'class': 'Grade 1',
+        'section': 'A',
+        'school': 'Ecstasy School 1'
+      },
+      {
+        'name': 'vinitha',
+        'gender': 'Female',
+        'roll': 'ECS00033',
+        'admission': 'ECS00033',
+        'class': 'Grade 1',
+        'section': 'A',
+        'school': 'Ecstasy School 1'
+      },
     ];
 
     // Read real students from data store first
     List<Map<String, dynamic>> studentsList = AppDataStore.instance.students
-        .where((s) => s['school'] == _selectedBranch && s['class'] == _selectedClass)
+        .where((s) =>
+            s['school'] == _selectedBranch && s['class'] == _selectedClass)
         .toList();
 
     // If empty (e.g. no DB students for Grade 1), fallback to our mock list
     if (studentsList.isEmpty) {
-      studentsList = fallbackStudents.where((s) => s['school'] == _selectedBranch && s['class'] == _selectedClass).toList();
+      studentsList = fallbackStudents
+          .where((s) =>
+              s['school'] == _selectedBranch && s['class'] == _selectedClass)
+          .toList();
     }
 
     // Apply search query filter
     if (_searchQuery.isNotEmpty) {
       studentsList = studentsList
-          .where((s) => s['name']!.toString().toLowerCase().contains(_searchQuery.toLowerCase()))
+          .where((s) => s['name']!
+              .toString()
+              .toLowerCase()
+              .contains(_searchQuery.toLowerCase()))
           .toList();
     }
 
@@ -923,7 +1180,8 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                       label: "Branch",
                       value: _selectedBranch,
                       items: _branches,
-                      onChanged: (val) => setState(() => _selectedBranch = val!),
+                      onChanged: (val) =>
+                          setState(() => _selectedBranch = val!),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -951,7 +1209,8 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF8B4513),
                   foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
                   padding: const EdgeInsets.symmetric(vertical: 14),
                 ),
                 onPressed: () {
@@ -959,7 +1218,9 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                     _showHallTicketData = true;
                   });
                 },
-                child: Text("Get Data".tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                child: Text("Get Data".tr,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 13)),
               )
             ],
           ),
@@ -978,7 +1239,8 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
             },
             decoration: InputDecoration(
               hintText: "Search students by name...".tr,
-              prefixIcon: const Icon(Icons.search, color: Color(0xFF757897), size: 18),
+              prefixIcon:
+                  const Icon(Icons.search, color: Color(0xFF757897), size: 18),
               fillColor: Colors.white,
               filled: true,
               contentPadding: const EdgeInsets.symmetric(vertical: 0),
@@ -1003,10 +1265,12 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                 ScrollableTableWrapper(
                   child: Theme(
                     data: Theme.of(context).copyWith(
-                      dividerTheme: const DividerThemeData(thickness: 1, space: 1),
+                      dividerTheme:
+                          const DividerThemeData(thickness: 1, space: 1),
                     ),
                     child: Table(
-                      border: TableBorder.all(color: Colors.grey.shade100, width: 1),
+                      border: TableBorder.all(
+                          color: Colors.grey.shade100, width: 1),
                       columnWidths: const {
                         0: FixedColumnWidth(220),
                         1: FixedColumnWidth(100),
@@ -1018,7 +1282,8 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                       children: [
                         // Headers Row
                         TableRow(
-                          decoration: const BoxDecoration(color: Color(0xFF0F172A)),
+                          decoration:
+                              const BoxDecoration(color: Color(0xFF0F172A)),
                           children: [
                             _buildTableHeaderCell("Student Name"),
                             _buildTableHeaderCell("Gender"),
@@ -1035,7 +1300,9 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                               TableCell(
                                 child: Padding(
                                   padding: const EdgeInsets.all(16.0),
-                                  child: Text("No students found.".tr, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                                  child: Text("No students found.".tr,
+                                      style: const TextStyle(
+                                          fontSize: 12, color: Colors.grey)),
                                 ),
                               ),
                               TableCell(child: Container()),
@@ -1050,27 +1317,41 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                             return TableRow(
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                                  child: Text(stud['name'] ?? '', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 10),
+                                  child: Text(stud['name'] ?? '',
+                                      style: const TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500)),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                                  child: Text(stud['gender']?.toString().tr ?? '', style: const TextStyle(fontSize: 12)),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 10),
+                                  child: Text(
+                                      stud['gender']?.toString().tr ?? '',
+                                      style: const TextStyle(fontSize: 12)),
                                 ),
                                 const Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                                  child: Text("2025-26", style: TextStyle(fontSize: 12)),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 10),
+                                  child: Text("2025-26",
+                                      style: TextStyle(fontSize: 12)),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                                  child: Text(stud['class'] ?? '', style: const TextStyle(fontSize: 12)),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 10),
+                                  child: Text(stud['class'] ?? '',
+                                      style: const TextStyle(fontSize: 12)),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                                  child: Text(stud['section'] ?? 'A', style: const TextStyle(fontSize: 12)),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 10),
+                                  child: Text(stud['section'] ?? 'A',
+                                      style: const TextStyle(fontSize: 12)),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 6),
                                   child: Center(
                                     child: SizedBox(
                                       height: 30,
@@ -1078,14 +1359,18 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: Colors.black,
                                           foregroundColor: Colors.white,
-                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(4)),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 12),
                                         ),
                                         onPressed: () {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (_) => AdminHallTicketPrintScreen(
+                                              builder: (_) =>
+                                                  AdminHallTicketPrintScreen(
                                                 student: stud,
                                                 examination: _selectedExam,
                                               ),
@@ -1094,7 +1379,9 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                                         },
                                         child: Text(
                                           "Hall Ticket".tr,
-                                          style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                                          style: const TextStyle(
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.bold),
                                         ),
                                       ),
                                     ),
@@ -1138,7 +1425,8 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                         label: "Branch",
                         value: _selectedBranch,
                         items: _branches,
-                        onChanged: (val) => setState(() => _selectedBranch = val!),
+                        onChanged: (val) =>
+                            setState(() => _selectedBranch = val!),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -1147,7 +1435,8 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                         label: "Class",
                         value: _selectedClass,
                         items: _classes,
-                        onChanged: (val) => setState(() => _selectedClass = val!),
+                        onChanged: (val) =>
+                            setState(() => _selectedClass = val!),
                       ),
                     ),
                   ],
@@ -1157,7 +1446,8 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF8B4513),
                     foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
                   onPressed: () {
@@ -1165,7 +1455,9 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                       _showGradeData = true;
                     });
                   },
-                  child: Text("Get Data".tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                  child: Text("Get Data".tr,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 13)),
                 )
               ],
             ),
@@ -1192,24 +1484,33 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                   const SizedBox(height: 16),
                   Text(
                     "Grade Report Custom Rules".tr,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+                    style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF1E2875)),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    "Custom report parameters and thresholds details will be configured in the next phase.".tr,
+                    "Custom report parameters and thresholds details will be configured in the next phase."
+                        .tr,
                     style: const TextStyle(fontSize: 12, color: Colors.grey),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 20),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
                       color: Colors.grey.shade100,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
-                      "Configuration Pre-loaded for $_selectedBranch - $_selectedClass".tr,
-                      style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey),
+                      "Configuration Pre-loaded for $_selectedBranch - $_selectedClass"
+                          .tr,
+                      style: const TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey),
                     ),
                   ),
                 ],
@@ -1221,19 +1522,84 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
 
     // Standard Grade Report View matching the screenshot
     final List<Map<String, String>> mockGradeStudents = [
-      {'admission': '02600046', 'name': 'Deepthi', 'gender': 'Female', 'class': 'Grade 1'},
-      {'admission': '02600047', 'name': 'Priya', 'gender': 'Female', 'class': 'Grade 1'},
-      {'admission': '02600048', 'name': 'Deepthi', 'gender': 'Female', 'class': 'Grade 1'},
-      {'admission': '02600049', 'name': 'suresh', 'gender': 'Male', 'class': 'Grade 1'},
-      {'admission': '02600050', 'name': 'Rimsa', 'gender': 'Female', 'class': 'Grade 1'},
-      {'admission': '02600051', 'name': 'tony', 'gender': 'Male', 'class': 'Grade 1'},
-      {'admission': '02600055', 'name': 'lakshmi', 'gender': 'Male', 'class': 'Grade 1'},
-      {'admission': '02600057', 'name': 'Vijaya', 'gender': 'Male', 'class': 'Grade 1'},
-      {'admission': '02600060', 'name': 'phani', 'gender': 'Male', 'class': 'Grade 1'},
-      {'admission': '02600061', 'name': 'vinitha', 'gender': 'Female', 'class': 'Grade 1'},
-      {'admission': '02600074', 'name': 'dhurandarrr', 'gender': 'Male', 'class': 'Grade 1'},
-      {'admission': '02600075', 'name': 'MadiviliNaresh', 'gender': 'Male', 'class': 'Grade 1'},
-      {'admission': '02600078', 'name': 'ECSTASY SOLUTIONS PVT LTD', 'gender': 'Male', 'class': 'Grade 1'},
+      {
+        'admission': '02600046',
+        'name': 'Deepthi',
+        'gender': 'Female',
+        'class': 'Grade 1'
+      },
+      {
+        'admission': '02600047',
+        'name': 'Priya',
+        'gender': 'Female',
+        'class': 'Grade 1'
+      },
+      {
+        'admission': '02600048',
+        'name': 'Deepthi',
+        'gender': 'Female',
+        'class': 'Grade 1'
+      },
+      {
+        'admission': '02600049',
+        'name': 'suresh',
+        'gender': 'Male',
+        'class': 'Grade 1'
+      },
+      {
+        'admission': '02600050',
+        'name': 'Rimsa',
+        'gender': 'Female',
+        'class': 'Grade 1'
+      },
+      {
+        'admission': '02600051',
+        'name': 'tony',
+        'gender': 'Male',
+        'class': 'Grade 1'
+      },
+      {
+        'admission': '02600055',
+        'name': 'lakshmi',
+        'gender': 'Male',
+        'class': 'Grade 1'
+      },
+      {
+        'admission': '02600057',
+        'name': 'Vijaya',
+        'gender': 'Male',
+        'class': 'Grade 1'
+      },
+      {
+        'admission': '02600060',
+        'name': 'phani',
+        'gender': 'Male',
+        'class': 'Grade 1'
+      },
+      {
+        'admission': '02600061',
+        'name': 'vinitha',
+        'gender': 'Female',
+        'class': 'Grade 1'
+      },
+      {
+        'admission': '02600074',
+        'name': 'dhurandarrr',
+        'gender': 'Male',
+        'class': 'Grade 1'
+      },
+      {
+        'admission': '02600075',
+        'name': 'MadiviliNaresh',
+        'gender': 'Male',
+        'class': 'Grade 1'
+      },
+      {
+        'admission': '02600078',
+        'name': 'ECSTASY SOLUTIONS PVT LTD',
+        'gender': 'Male',
+        'class': 'Grade 1'
+      },
     ];
 
     List<Map<String, String>> currentGradeList = [];
@@ -1241,7 +1607,8 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
       currentGradeList = mockGradeStudents;
     } else {
       currentGradeList = AppDataStore.instance.students
-          .where((s) => s['school'] == _selectedBranch && s['class'] == _selectedClass)
+          .where((s) =>
+              s['school'] == _selectedBranch && s['class'] == _selectedClass)
           .map((s) => {
                 'admission': (s['admission'] ?? '').toString(),
                 'name': (s['name'] ?? '').toString(),
@@ -1253,7 +1620,13 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
 
     if (_gradeSearchQuery.isNotEmpty) {
       currentGradeList = currentGradeList
-          .where((s) => s['name']!.toLowerCase().contains(_gradeSearchQuery.toLowerCase()) || s['admission']!.toLowerCase().contains(_gradeSearchQuery.toLowerCase()))
+          .where((s) =>
+              s['name']!
+                  .toLowerCase()
+                  .contains(_gradeSearchQuery.toLowerCase()) ||
+              s['admission']!
+                  .toLowerCase()
+                  .contains(_gradeSearchQuery.toLowerCase()))
           .toList();
     }
 
@@ -1277,7 +1650,8 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                       label: "Branch",
                       value: _selectedBranch,
                       items: _branches,
-                      onChanged: (val) => setState(() => _selectedBranch = val!),
+                      onChanged: (val) =>
+                          setState(() => _selectedBranch = val!),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -1308,7 +1682,8 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                       label: "Section",
                       value: _selectedSection,
                       items: const ['A', 'B', 'C'],
-                      onChanged: (val) => setState(() => _selectedSection = val!),
+                      onChanged: (val) =>
+                          setState(() => _selectedSection = val!),
                     ),
                   ),
                 ],
@@ -1322,18 +1697,23 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFC0392B), // Red/coral
                         foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
                         padding: const EdgeInsets.symmetric(vertical: 14),
                       ),
                       onPressed: () {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text("Recreating reports for $_selectedClass - Section $_selectedSection...".tr),
+                            content: Text(
+                                "Recreating reports for $_selectedClass - Section $_selectedSection..."
+                                    .tr),
                             backgroundColor: AppColors.primary,
                           ),
                         );
                       },
-                      child: Text("Recreate Report for Class".tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11)),
+                      child: Text("Recreate Report for Class".tr,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 11)),
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -1343,7 +1723,8 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF8B4513), // Brown
                         foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
                         padding: const EdgeInsets.symmetric(vertical: 14),
                       ),
                       onPressed: () {
@@ -1351,7 +1732,9 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                           _showGradeData = true;
                         });
                       },
-                      child: Text("Search".tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11)),
+                      child: Text("Search".tr,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 11)),
                     ),
                   ),
                 ],
@@ -1373,10 +1756,12 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
             },
             decoration: InputDecoration(
               hintText: "Search".tr,
-              suffixIcon: const Icon(Icons.search, color: Color(0xFF27AE60), size: 20), // Green search icon!
+              suffixIcon: const Icon(Icons.search,
+                  color: Color(0xFF27AE60), size: 20), // Green search icon!
               fillColor: Colors.white,
               filled: true,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: BorderSide(color: Colors.grey.shade300),
@@ -1402,10 +1787,12 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                 ScrollableTableWrapper(
                   child: Theme(
                     data: Theme.of(context).copyWith(
-                      dividerTheme: const DividerThemeData(thickness: 1, space: 1),
+                      dividerTheme:
+                          const DividerThemeData(thickness: 1, space: 1),
                     ),
                     child: Table(
-                      border: TableBorder.all(color: Colors.grey.shade100, width: 1),
+                      border: TableBorder.all(
+                          color: Colors.grey.shade100, width: 1),
                       columnWidths: const {
                         0: FixedColumnWidth(50),
                         1: FixedColumnWidth(140),
@@ -1416,7 +1803,8 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                       children: [
                         // Headers Row
                         TableRow(
-                          decoration: const BoxDecoration(color: Color(0xFF0F172A)),
+                          decoration:
+                              const BoxDecoration(color: Color(0xFF0F172A)),
                           children: [
                             _buildTableHeaderCell(""), // Empty space
                             _buildTableHeaderCell("Admission No"),
@@ -1432,7 +1820,9 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                               TableCell(
                                 child: Padding(
                                   padding: const EdgeInsets.all(16.0),
-                                  child: Text("No records found.".tr, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                                  child: Text("No records found.".tr,
+                                      style: const TextStyle(
+                                          fontSize: 12, color: Colors.grey)),
                                 ),
                               ),
                               TableCell(child: Container()),
@@ -1446,24 +1836,36 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                             return TableRow(
                               children: [
                                 const Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 12),
                                   child: Text(""),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-                                  child: Text(stud['admission'] ?? '', style: const TextStyle(fontSize: 12)),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 12),
+                                  child: Text(stud['admission'] ?? '',
+                                      style: const TextStyle(fontSize: 12)),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-                                  child: Text(stud['name'] ?? '', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 12),
+                                  child: Text(stud['name'] ?? '',
+                                      style: const TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500)),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-                                  child: Text(stud['gender']?.toString().tr ?? '', style: const TextStyle(fontSize: 12)),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 12),
+                                  child: Text(
+                                      stud['gender']?.toString().tr ?? '',
+                                      style: const TextStyle(fontSize: 12)),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-                                  child: Text(stud['class'] ?? '', style: const TextStyle(fontSize: 12)),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 12),
+                                  child: Text(stud['class'] ?? '',
+                                      style: const TextStyle(fontSize: 12)),
                                 ),
                               ],
                             );
@@ -1497,14 +1899,18 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(label.tr, style: const TextStyle(fontSize: 9, color: Colors.grey)),
+          Text(label.tr,
+              style: const TextStyle(fontSize: 9, color: Colors.grey)),
           const SizedBox(height: 2),
           DropdownButtonHideUnderline(
             child: DropdownButton<String>(
               value: value,
               isDense: true,
               isExpanded: true,
-              style: const TextStyle(fontSize: 11, color: Color(0xFF1E2875), fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                  fontSize: 11,
+                  color: Color(0xFF1E2875),
+                  fontWeight: FontWeight.bold),
               items: items.map((String item) {
                 return DropdownMenuItem<String>(
                   value: item,
@@ -1538,7 +1944,8 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                     CircleAvatar(
                       radius: 25,
                       backgroundColor: Colors.white,
-                      child: Icon(Icons.person, color: Color(0xFF001C7F), size: 30),
+                      child: Icon(Icons.person,
+                          color: Color(0xFF001C7F), size: 30),
                     ),
                     const SizedBox(width: 12),
                     Column(
@@ -1569,34 +1976,48 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                     ProfileManager().selectedSchool.value = value;
                   },
                   color: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  itemBuilder: (BuildContext context) =>
+                      <PopupMenuEntry<String>>[
                     PopupMenuItem<String>(
                       value: 'Ecstasy School 1',
-                      child: Text('Ecstasy School 1'.tr, style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                      child: Text('Ecstasy School 1'.tr,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF1E2875))),
                     ),
                     PopupMenuItem<String>(
                       value: 'Ecstasy School 2',
-                      child: Text('Ecstasy School 2'.tr, style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                      child: Text('Ecstasy School 2'.tr,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF1E2875))),
                     ),
                     PopupMenuItem<String>(
                       value: 'Ecstasy School 3',
-                      child: Text('Ecstasy School 3'.tr, style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                      child: Text('Ecstasy School 3'.tr,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF1E2875))),
                     ),
                   ],
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.white.withValues(alpha: 0.15)),
+                      border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.15)),
                     ),
                     child: ValueListenableBuilder<String>(
                       valueListenable: ProfileManager().selectedSchool,
                       builder: (context, selectedSchool, _) {
                         return Row(
                           children: [
-                            const Icon(Icons.school_outlined, color: Colors.white, size: 18),
+                            const Icon(Icons.school_outlined,
+                                color: Colors.white, size: 18),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
@@ -1627,7 +2048,8 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
             Navigator.pop(context);
             Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (_) => AdminDashboardScreen(initialIndex: 0)),
+              MaterialPageRoute(
+                  builder: (_) => AdminDashboardScreen(initialIndex: 0)),
               (route) => false,
             );
           }),
@@ -1635,7 +2057,8 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
             Navigator.pop(context);
             Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (_) => AdminDashboardScreen(initialIndex: 1)),
+              MaterialPageRoute(
+                  builder: (_) => AdminDashboardScreen(initialIndex: 1)),
               (route) => false,
             );
           }),
@@ -1643,31 +2066,38 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
             Navigator.pop(context);
             Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (_) => AdminDashboardScreen(initialIndex: 2)),
+              MaterialPageRoute(
+                  builder: (_) => AdminDashboardScreen(initialIndex: 2)),
               (route) => false,
             );
           }),
-          _buildDrawerItem(Icons.corporate_fare_outlined, "Branches", false, () {
+          _buildDrawerItem(Icons.corporate_fare_outlined, "Branches", false,
+              () {
             Navigator.pop(context);
             Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (_) => AdminDashboardScreen(initialIndex: 3)),
+              MaterialPageRoute(
+                  builder: (_) => AdminDashboardScreen(initialIndex: 3)),
               (route) => false,
             );
           }),
-          _buildDrawerItem(Icons.calendar_today_outlined, "Attendance", false, () {
+          _buildDrawerItem(Icons.calendar_today_outlined, "Attendance", false,
+              () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => AdminAttendanceScreen()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => AdminAttendanceScreen()));
           }),
           _buildDrawerItem(Icons.currency_rupee, "Fees", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => AdminFeesScreen()));
+            Navigator.push(
+                context, MaterialPageRoute(builder: (_) => AdminFeesScreen()));
           }),
           Theme(
             data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
             child: ExpansionTile(
               initiallyExpanded: true,
-              leading: const Icon(Icons.assignment_outlined, color: AppColors.primary),
+              leading: const Icon(Icons.assignment_outlined,
+                  color: AppColors.primary),
               title: Text(
                 "Examination".tr,
                 style: const TextStyle(
@@ -1677,7 +2107,9 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                 ),
               ),
               trailing: Icon(
-                _isExamExpanded ? Icons.keyboard_arrow_down : Icons.chevron_right,
+                _isExamExpanded
+                    ? Icons.keyboard_arrow_down
+                    : Icons.chevron_right,
                 size: 16,
                 color: AppColors.primary,
               ),
@@ -1723,69 +2155,91 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
           ),
           _buildDrawerItem(Icons.menu_book_outlined, "Library", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => AdminLibraryScreen()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => AdminLibraryScreen()));
           }),
-          _buildDrawerItem(Icons.directions_bus_outlined, "Transport", false, () {
+          _buildDrawerItem(Icons.directions_bus_outlined, "Transport", false,
+              () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => AdminTransportScreen()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => AdminTransportScreen()));
           }),
           _buildDrawerItem(Icons.bed_outlined, "Hostel", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => AdminHostelScreen()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => AdminHostelScreen()));
           }),
           _buildDrawerItem(Icons.event_outlined, "Events", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => AdminEventsScreen()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => AdminEventsScreen()));
           }),
-          _buildDrawerItem(Icons.campaign_outlined, "Communications", false, () {
+          _buildDrawerItem(Icons.campaign_outlined, "Communications", false,
+              () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => AdminCommunicationsScreen()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => AdminCommunicationsScreen()));
           }),
           _buildDrawerItem(Icons.badge_outlined, "ID Card", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => AdminIDCardsScreen()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => AdminIDCardsScreen()));
           }),
-          _buildDrawerItem(Icons.workspace_premium_outlined, "Certificates", false, () {
+          _buildDrawerItem(
+              Icons.workspace_premium_outlined, "Certificates", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => AdminCertificatesScreen()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => AdminCertificatesScreen()));
           }),
           _buildDrawerItem(Icons.assessment_outlined, "Reports", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => AdminReportsScreen()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => AdminReportsScreen()));
           }),
           _buildDrawerItem(Icons.error_outline, "Invalid Info", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => AdminInvalidInfoScreen()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => AdminInvalidInfoScreen()));
           }),
           _buildDrawerItem(Icons.sms_outlined, "SMS", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => AdminSmsScreen()));
+            Navigator.push(
+                context, MaterialPageRoute(builder: (_) => AdminSmsScreen()));
           }),
           _buildDrawerItem(Icons.settings_outlined, "Settings", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => AdminSettingsScreen()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => AdminSettingsScreen()));
           }),
           const Divider(height: 20),
           _buildDrawerSectionTitle("SUPPORT"),
           _buildDrawerItem(Icons.help_outline, "Help Center", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => AdminHelpCenterScreen()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => AdminHelpCenterScreen()));
           }, showChevron: false),
-          _buildDrawerItem(Icons.headset_mic_outlined, "Chat Support", false, () {
+          _buildDrawerItem(Icons.headset_mic_outlined, "Chat Support", false,
+              () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => AdminChatSupportScreen()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => AdminChatSupportScreen()));
           }, showChevron: false),
-          _buildDrawerItem(Icons.cloud_download_outlined, "System Updates", false, () {
+          _buildDrawerItem(
+              Icons.cloud_download_outlined, "System Updates", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => AdminSystemUpdatesScreen()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => AdminSystemUpdatesScreen()));
           }, showChevron: false),
-          _buildDrawerItem(Icons.play_circle_outline, "Video Tutorials", false, () {
+          _buildDrawerItem(Icons.play_circle_outline, "Video Tutorials", false,
+              () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => AdminVideoTutorialsScreen()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => AdminVideoTutorialsScreen()));
           }, showChevron: false),
           _buildDrawerItem(Icons.info_outline, "About Us", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => AdminAboutUsScreen()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => AdminAboutUsScreen()));
           }, showChevron: false),
           const Divider(height: 20),
           _buildDrawerItem(Icons.logout, "Logout", false, () {
@@ -1824,7 +2278,8 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
     bool showChevron = true,
   }) {
     return ListTile(
-      leading: Icon(icon, color: selected ? AppColors.primary : const Color(0xFF757897)),
+      leading: Icon(icon,
+          color: selected ? AppColors.primary : const Color(0xFF757897)),
       title: Text(
         title,
         style: TextStyle(

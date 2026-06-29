@@ -13,7 +13,7 @@ import '../../admin/widgets/ai_bot_fab.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 
 class DashboardScreen extends StatefulWidget {
-  DashboardScreen({super.key});
+  const DashboardScreen({super.key});
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();

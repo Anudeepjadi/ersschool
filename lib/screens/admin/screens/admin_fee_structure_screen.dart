@@ -5,7 +5,7 @@ import '../../../core/data/app_data_store.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminFeeStructureScreen extends StatefulWidget {
-  AdminFeeStructureScreen({super.key});
+  const AdminFeeStructureScreen({super.key});
   @override
   State<AdminFeeStructureScreen> createState() =>
       _AdminFeeStructureScreenState();
@@ -13,6 +13,7 @@ class AdminFeeStructureScreen extends StatefulWidget {
 
 class _AdminFeeStructureScreenState extends State<AdminFeeStructureScreen> {
   final _store = AppDataStore.instance;
+  final ScrollController _scrollController = ScrollController();
 
   String _selectedBranch = 'Ecstasy School 1';
   String _selectedYear = '2025-26';
@@ -62,6 +63,7 @@ class _AdminFeeStructureScreenState extends State<AdminFeeStructureScreen> {
   @override
   void dispose() {
     _store.configVersion.removeListener(_onStoreChanged);
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -204,170 +206,207 @@ class _AdminFeeStructureScreenState extends State<AdminFeeStructureScreen> {
     }
 
     return Scaffold(
-      backgroundColor: Color(0xFFF5F7FF),
-      appBar: AdminAppBar(
+      backgroundColor: const Color(0xFFF5F7FF),
+      appBar: const AdminAppBar(
           title: 'Fee Structure', subtitle: 'Fee structure for each class'),
-      bottomNavigationBar: AdminBottomNavBar(currentIndex: 4),
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showAddDialog(),
+        backgroundColor: const Color(0xFF16A34A),
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
       body: Column(children: [
         // Filter bar
         Container(
           color: Colors.white,
-          padding: EdgeInsets.all(12),
+          padding: const EdgeInsets.all(12),
           child: Column(children: [
             Row(children: [
               Expanded(child: _dd('Branch', _selectedBranch, branchList,
                   (v) => setState(() => _selectedBranch = v!))),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Expanded(child: _dd('Year', _selectedYear, yearList,
                   (v) => setState(() => _selectedYear = v!))),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Expanded(child: _dd('Class', _selectedClass, classList,
                   (v) => setState(() => _selectedClass = v!))),
             ]),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Row(mainAxisAlignment: MainAxisAlignment.end, children: [
               ElevatedButton(
                 onPressed: _loadFees,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFB45309),
+                  backgroundColor: const Color(0xFF1E2875),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8)),
-                  padding: EdgeInsets.symmetric(
+                  padding: const EdgeInsets.symmetric(
                       horizontal: 14, vertical: 10),
                 ),
                 child: Text('Get Fee Details'.tr,
-                    style: TextStyle(fontSize: 12)),
-              ),
-              SizedBox(width: 8),
-              ElevatedButton.icon(
-                onPressed: () => _showAddDialog(),
-                icon: Icon(Icons.add, size: 14),
-                label: Text('Add New'.tr, style: TextStyle(fontSize: 12)),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF16A34A),
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8)),
-                  padding: EdgeInsets.symmetric(
-                      horizontal: 14, vertical: 10),
-                ),
+                    style: const TextStyle(fontSize: 12)),
               ),
             ]),
           ]),
         ),
-        // Table header
-        Container(
-          padding:
-              EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          color: Color(0xFF2D3748),
-          child: Row(children: [
-            Expanded(flex: 2, child: Text('Branch'.tr, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
-            SizedBox(width: 56, child: Text('Year'.tr, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
-            SizedBox(width: 56, child: Text('Class'.tr, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
-            Expanded(flex: 2, child: Text('Fee Type'.tr, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
-            SizedBox(width: 60, child: Text('Amount'.tr, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
-            SizedBox(width: 68),
-          ]),
-        ),
-        // Rows
+        // Table Area with Horizontal Scroll
         Expanded(
-          child: !_loaded
-              ? Center(child: CircularProgressIndicator())
-              : _feeRows.isEmpty
-                  ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.table_chart_outlined,
-                              size: 48, color: Colors.grey.shade300),
-                          SizedBox(height: 12),
-                          Text(
-                              'No fee structure for this selection.\nTap "Add New" to add one.',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.grey)),
-                        ],
-                      ),
-                    )
-                  : ListView.separated(
-                      padding: EdgeInsets.zero,
-                      itemCount: _feeRows.length,
-                      separatorBuilder: (_, __) =>
-                          Divider(height: 1, color: Colors.grey.shade100),
-                      itemBuilder: (_, i) {
-                        final row = _feeRows[i];
-                        return Container(
-                          color: Colors.white,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 10),
-                          child: Row(children: [
-                            Expanded(
-                                flex: 2,
-                                child: Text(row['branch'],
-                                    style: TextStyle(
-                                        fontSize: 11,
-                                        color: Colors.grey.shade600),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis)),
-                            SizedBox(
-                                width: 56,
-                                child: Text(row['year'],
-                                    style: TextStyle(fontSize: 11))),
-                            SizedBox(
-                              width: 56,
-                              child: Text(row['class'],
-                                  style: TextStyle(
-                                      fontSize: 11,
-                                      color: Color(0xFFB45309),
-                                      fontWeight: FontWeight.w600)),
-                            ),
-                            Expanded(
-                                flex: 2,
-                                child: Text(row['feeType'],
-                                    style: TextStyle(fontSize: 11),
-                                    maxLines: 2)),
-                            SizedBox(
-                              width: 60,
-                              child: Text(
-                                (row['amount'] as double)
-                                    .toStringAsFixed(0),
-                                style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                            Row(children: [
-                              InkWell(
-                                onTap: () => _showAddDialog(editIndex: i),
-                                child: Container(
-                                  width: 28,
-                                  height: 28,
-                                  decoration: BoxDecoration(
-                                      color: Color(0xFF2563EB),
-                                      shape: BoxShape.circle),
-                                  child: Icon(Icons.edit,
-                                      color: Colors.white, size: 14),
+          child: Scrollbar(
+            controller: _scrollController,
+            thumbVisibility: true,
+            child: SingleChildScrollView(
+              controller: _scrollController,
+              scrollDirection: Axis.horizontal,
+              child: SizedBox(
+                width: 600, // Fixed width to ensure columns are spread out
+                child: Column(children: [
+                  // Table header
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    color: const Color(0xFF1E2875),
+                    child: Row(children: [
+                      Expanded(
+                          flex: 3,
+                          child: Text('Branch Year'.tr,
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13))),
+                      Expanded(
+                          flex: 2,
+                          child: Text('Class'.tr,
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13))),
+                      Expanded(
+                          flex: 4,
+                          child: Text('Fee Type'.tr,
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13))),
+                      Expanded(
+                          flex: 2,
+                          child: Text('Amount'.tr,
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13))),
+                      const SizedBox(width: 72),
+                    ]),
+                  ),
+                  // Rows
+                  Expanded(
+                    child: !_loaded
+                        ? Center(child: CircularProgressIndicator())
+                        : _feeRows.isEmpty
+                            ? Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.table_chart_outlined,
+                                        size: 48, color: Colors.grey.shade300),
+                                    SizedBox(height: 12),
+                                    Text(
+                                        'No fee structure for this selection.\nTap "Add New" to add one.',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(color: Colors.grey)),
+                                  ],
                                 ),
+                              )
+                            : ListView.separated(
+                                padding: EdgeInsets.zero,
+                                itemCount: _feeRows.length,
+                                separatorBuilder: (_, __) =>
+                                    Divider(height: 1, color: Colors.grey.shade100),
+                                itemBuilder: (_, i) {
+                                  final row = _feeRows[i];
+                                  return Container(
+                                    color: Colors.white,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 10),
+                                    child: Row(children: [
+                                      Expanded(
+                                          flex: 3,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(row['branch'],
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.grey.shade600),
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis),
+                                              Text(row['year'],
+                                                  style: TextStyle(
+                                                      fontSize: 11,
+                                                      color:
+                                                          Colors.grey.shade500)),
+                                            ],
+                                          )),
+                                      Expanded(
+                                        flex: 2,
+                                        child: Text(row['class'],
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                color: Color(0xFFB45309),
+                                                fontWeight: FontWeight.w600)),
+                                      ),
+                                      Expanded(
+                                          flex: 4,
+                                          child: Text(row['feeType'],
+                                              style: TextStyle(fontSize: 13),
+                                              maxLines: 2)),
+                                      Expanded(
+                                        flex: 2,
+                                        child: Text(
+                                          (row['amount'] as double)
+                                              .toStringAsFixed(0),
+                                          style: TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                      ),
+                                      Row(children: [
+                                        InkWell(
+                                          onTap: () => _showAddDialog(editIndex: i),
+                                          child: Container(
+                                            width: 30,
+                                            height: 30,
+                                            decoration: BoxDecoration(
+                                                color: Color(0xFF2563EB),
+                                                shape: BoxShape.circle),
+                                            child: Icon(Icons.edit,
+                                                color: Colors.white, size: 14),
+                                          ),
+                                        ),
+                                        SizedBox(width: 4),
+                                        InkWell(
+                                          onTap: () => _delete(i),
+                                          child: Container(
+                                            width: 30,
+                                            height: 30,
+                                            decoration: BoxDecoration(
+                                                color: Colors.red.shade100,
+                                                shape: BoxShape.circle),
+                                            child: Icon(Icons.delete_outline,
+                                                color: Colors.red.shade700,
+                                                size: 14),
+                                          ),
+                                        ),
+                                      ]),
+                                    ]),
+                                  );
+                                },
                               ),
-                              SizedBox(width: 4),
-                              InkWell(
-                                onTap: () => _delete(i),
-                                child: Container(
-                                  width: 28,
-                                  height: 28,
-                                  decoration: BoxDecoration(
-                                      color: Colors.red.shade100,
-                                      shape: BoxShape.circle),
-                                  child: Icon(Icons.delete_outline,
-                                      color: Colors.red.shade700,
-                                      size: 14),
-                                ),
-                              ),
-                            ]),
-                          ]),
-                        );
-                      },
-                    ),
+                  ),
+                ]),
+              ),
+            ),
+          ),
         ),
         // Footer
         Container(
@@ -404,7 +443,7 @@ class _AdminFeeStructureScreenState extends State<AdminFeeStructureScreen> {
               fontSize: 10, color: Colors.grey, fontWeight: FontWeight.w600)),
       SizedBox(height: 3),
       DropdownButtonFormField<String>(
-        value: items.contains(value) ? value : items.first,
+        initialValue: items.contains(value) ? value : items.first,
         isExpanded: true,
         decoration: InputDecoration(
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),

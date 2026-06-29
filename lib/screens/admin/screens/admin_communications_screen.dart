@@ -5,7 +5,7 @@ import '../widgets/admin_app_bar.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminCommunicationsScreen extends StatefulWidget {
-  AdminCommunicationsScreen({super.key});
+  const AdminCommunicationsScreen({super.key});
 
   @override
   State<AdminCommunicationsScreen> createState() => _AdminCommunicationsScreenState();

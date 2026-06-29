@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import '../widgets/admin_bottom_nav_bar.dart';
 import '../../../core/theme/app_colors.dart';
 import '../widgets/admin_app_bar.dart';
 
 class AdminTransactionLogsScreen extends StatefulWidget {
-  AdminTransactionLogsScreen({super.key});
+  const AdminTransactionLogsScreen({super.key});
 
   @override
   State<AdminTransactionLogsScreen> createState() => _AdminTransactionLogsScreenState();
@@ -81,6 +82,7 @@ class _AdminTransactionLogsScreenState extends State<AdminTransactionLogsScreen>
     }).toList();
 
     return Scaffold(
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
       backgroundColor: Color(0xFFF5F7FF),
       appBar: AdminAppBar(
         title: "Transaction Logs",

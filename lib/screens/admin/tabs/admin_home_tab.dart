@@ -22,7 +22,7 @@ class AdminHomeTab extends StatefulWidget {
   final VoidCallback onAddTeacher;
   final ValueChanged<int>? onTabSelected;
 
-  AdminHomeTab({
+  const AdminHomeTab({
     super.key,
     required this.onOpenDrawer,
     required this.onOpenProfile,
@@ -77,7 +77,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
           valueListenable: ProfileManager().adminName,
           builder: (context, name, _) {
             return AdminAppBar(
-              title: "Welcome".tr + " $name 👋",
+              title: "${"Welcome".tr} $name 👋",
               subtitle: "Here's what's happening today.".tr,
               onOpenDrawer: widget.onOpenDrawer,
               onProfileTap: widget.onOpenProfile,
@@ -636,6 +636,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
                   icon: Icon(Icons.keyboard_arrow_down, color: Color(0xFF1E2875)),
                   style: TextStyle(fontSize: 14, color: Color(0xFF1E2875), fontWeight: FontWeight.bold),
                   items: [
+                    DropdownMenuItem(value: 'All Branches', child: Text("All Branches".tr)),
                     DropdownMenuItem(value: 'Ecstasy School 1', child: Text("Ecstasy School 1 (ECS001)".tr)),
                     DropdownMenuItem(value: 'Ecstasy School 2', child: Text("Ecstasy School 2 (ECS002)".tr)),
                     DropdownMenuItem(value: 'Ecstasy School 3', child: Text("Ecstasy School 3 (ECS003)".tr)),

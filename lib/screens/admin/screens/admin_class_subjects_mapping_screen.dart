@@ -5,7 +5,7 @@ import '../../../core/data/app_data_store.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminClassSubjectsMappingScreen extends StatefulWidget {
-  AdminClassSubjectsMappingScreen({super.key});
+  const AdminClassSubjectsMappingScreen({super.key});
   @override
   State<AdminClassSubjectsMappingScreen> createState() =>
       _AdminClassSubjectsMappingScreenState();
@@ -73,7 +73,7 @@ class _AdminClassSubjectsMappingScreenState
                   ),
                 )
               : DropdownButtonFormField<String>(
-                  value: _classOptions.contains(_classCtrl.text)
+                  initialValue: _classOptions.contains(_classCtrl.text)
                       ? _classCtrl.text
                       : null,
                   decoration: InputDecoration(
@@ -99,7 +99,7 @@ class _AdminClassSubjectsMappingScreenState
                   ),
                 )
               : DropdownButtonFormField<String>(
-                  value: _subjectOptions.contains(_subjectCtrl.text)
+                  initialValue: _subjectOptions.contains(_subjectCtrl.text)
                       ? _subjectCtrl.text
                       : null,
                   decoration: InputDecoration(
@@ -194,49 +194,29 @@ class _AdminClassSubjectsMappingScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF5F7FF),
-      appBar: AdminAppBar(
+      backgroundColor: const Color(0xFFF5F7FF),
+      appBar: const AdminAppBar(
           title: 'Class Subjects Mapping',
           subtitle: 'Map subjects to classes'),
-      bottomNavigationBar: AdminBottomNavBar(currentIndex: 4),
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showDialog(),
+        backgroundColor: const Color(0xFF0891B2),
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
       body: Column(children: [
-        Container(
-          color: Colors.white,
-          padding: EdgeInsets.symmetric(vertical: 16),
-          child: Center(
-            child: Column(children: [
-              Text('Class Subjects Mapping'.tr,
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFFB45309))),
-              SizedBox(height: 12),
-              ElevatedButton.icon(
-                onPressed: () => _showDialog(),
-                icon: Icon(Icons.add, size: 16),
-                label: Text('Add New'.tr),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF0891B2),
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8)),
-                ),
-              ),
-            ]),
-          ),
-        ),
         // ── Table header ─────────────────────────────────────────────────────
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          color: Color(0xFF2D3748),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          color: const Color(0xFF1E2875),
           child: Row(children: [
             Expanded(
                 child: Text('Class  /  Subject  /  Teacher'.tr,
-                    style: TextStyle(
+                    style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 13))),
-            SizedBox(width: 76),
+            const SizedBox(width: 76),
           ]),
         ),
 

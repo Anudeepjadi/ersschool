@@ -5,7 +5,7 @@ import 'package:ersschool/core/localization/language_manager.dart';
 
 class AssignmentsScreen extends StatefulWidget {
   final bool showAppBar;
-  AssignmentsScreen({super.key, this.showAppBar = true});
+  const AssignmentsScreen({super.key, this.showAppBar = true});
 
   @override
   State<AssignmentsScreen> createState() => _AssignmentsScreenState();

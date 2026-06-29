@@ -6,7 +6,7 @@ import '../../../core/theme/app_colors.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminLibraryScreen extends StatefulWidget {
-  AdminLibraryScreen({super.key});
+  const AdminLibraryScreen({super.key});
 
   @override
   State<AdminLibraryScreen> createState() => _AdminLibraryScreenState();

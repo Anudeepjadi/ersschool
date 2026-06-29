@@ -4,7 +4,7 @@ import '../core/theme/app_colors.dart';
 class ScrollableTableWrapper extends StatefulWidget {
   final Widget child;
 
-  ScrollableTableWrapper({super.key, required this.child});
+  const ScrollableTableWrapper({super.key, required this.child});
 
   @override
   State<ScrollableTableWrapper> createState() => _ScrollableTableWrapperState();

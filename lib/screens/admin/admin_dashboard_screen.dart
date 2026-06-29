@@ -21,7 +21,6 @@ import 'screens/admin_communications_screen.dart';
 import 'screens/admin_id_cards_screen.dart';
 import 'screens/admin_certificates_screen.dart';
 import 'screens/admin_reports_screen.dart';
-import 'screens/admin_invalid_info_screen.dart';
 import 'screens/admin_sms_screen.dart';
 import 'screens/admin_settings_screen.dart';
 import 'screens/admin_help_center_screen.dart';
@@ -30,12 +29,17 @@ import 'screens/admin_system_updates_screen.dart';
 import 'screens/admin_video_tutorials_screen.dart';
 import 'screens/admin_about_us_screen.dart';
 
+import 'screens/student_management/admin_student_list_screen.dart';
+import 'screens/student_management/admin_register_student_screen.dart';
+import 'screens/student_management/admin_student_promotions_screen.dart';
+import 'screens/student_management/admin_student_siblings_screen.dart';
+
 import 'widgets/admin_bottom_nav_bar.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
   final int initialIndex;
-  AdminDashboardScreen({super.key, this.initialIndex = 0});
+  const AdminDashboardScreen({super.key, this.initialIndex = 0});
 
   @override
   State<AdminDashboardScreen> createState() => _AdminDashboardScreenState();
@@ -45,7 +49,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   int currentIndex = 0;
   bool _isExamExpanded = false;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final GlobalKey<AdminStudentsTabState> _studentsTabKey = GlobalKey<AdminStudentsTabState>();
+<<<<<<< HEAD
+=======
+  final GlobalKey _studentsTabKey = GlobalKey();
+>>>>>>> parent of da62c40 (Merge branch 'jagan' into Anudeep)
   final GlobalKey<AdminTeachersTabState> _teachersTabKey = GlobalKey<AdminTeachersTabState>();
   final GlobalKey<AdminExaminationsScreenState> _examinationsKey = GlobalKey<AdminExaminationsScreenState>();
 
@@ -69,9 +76,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         onOpenProfile: () => _onTabChanged(4),
         onAddStudent: () {
           _onTabChanged(1);
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            _studentsTabKey.currentState?.showAddStudentBottomSheet();
-          });
         },
         onAddTeacher: () {
           _onTabChanged(2);
@@ -82,7 +86,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         onTabSelected: _onTabChanged,
       ),
       AdminStudentsTab(
-        key: _studentsTabKey,
         onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer(),
       ),
       AdminTeachersTab(
@@ -265,14 +268,70 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             setState(() => currentIndex = 0);
             Navigator.pop(context);
           }),
-          _buildDrawerItem(Icons.people_alt_outlined, "Students", currentIndex == 1, () {
-            setState(() => currentIndex = 1);
-            Navigator.pop(context);
-          }),
-          _buildDrawerItem(Icons.co_present_outlined, "Teachers", currentIndex == 2, () {
-            setState(() => currentIndex = 2);
-            Navigator.pop(context);
-          }),
+
+          // Students Dropdown
+          Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              leading: Icon(Icons.people_alt_outlined, color: currentIndex == 1 ? AppColors.primary : Color(0xFF757897)),
+              title: Text("Students".tr, style: TextStyle(
+                color: currentIndex == 1 ? AppColors.primary : Color(0xFF1E2875),
+                fontWeight: currentIndex == 1 ? FontWeight.bold : FontWeight.w500,
+                fontSize: 13,
+              )),
+              childrenPadding: EdgeInsets.only(left: 12),
+              children: [
+                _buildDrawerSubItem("Students List", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminStudentListScreen()));
+                }),
+                _buildDrawerSubItem("Register New Student", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminRegisterStudentScreen()));
+                }),
+                _buildDrawerSubItem("Student Promotions", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminStudentPromotionsScreen()));
+                }),
+                _buildDrawerSubItem("Student Siblings", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminStudentSiblingsScreen()));
+                }),
+                _buildDrawerSubItem("Student ID Cards", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminIDCardsScreen()));
+                }),
+              ],
+            ),
+          ),
+
+          // Teachers Dropdown
+          Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              leading: Icon(Icons.co_present_outlined, color: currentIndex == 2 ? AppColors.primary : Color(0xFF757897)),
+              title: Text("Teachers".tr, style: TextStyle(
+                color: currentIndex == 2 ? AppColors.primary : Color(0xFF1E2875),
+                fontWeight: currentIndex == 2 ? FontWeight.bold : FontWeight.w500,
+                fontSize: 13,
+              )),
+              childrenPadding: EdgeInsets.only(left: 12),
+              children: [
+                _buildDrawerSubItem("Teachers List", currentIndex == 2, () {
+                  setState(() => currentIndex = 2);
+                  Navigator.pop(context);
+                }),
+                _buildDrawerSubItem("Add New Teacher", false, () {
+                  Navigator.pop(context);
+                  _onTabChanged(2);
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    _teachersTabKey.currentState?.showAddTeacherBottomSheet();
+                  });
+                }),
+              ],
+            ),
+          ),
+
           _buildDrawerItem(Icons.corporate_fare_outlined, "Branches", currentIndex == 3, () {
             setState(() => currentIndex = 3);
             Navigator.pop(context);
@@ -285,62 +344,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             Navigator.pop(context);
             Navigator.push(context, MaterialPageRoute(builder: (_) => AdminFeesScreen()));
           }),
-          Theme(
-            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-            child: ExpansionTile(
-              leading: const Icon(Icons.assignment_outlined, color: Color(0xFF757897)),
-              title: Text(
-                "Examination".tr,
-                style: const TextStyle(
-                  color: Color(0xFF1E2875),
-                  fontWeight: FontWeight.w500,
-                  fontSize: 13,
-                ),
-              ),
-              trailing: Icon(
-                _isExamExpanded ? Icons.keyboard_arrow_down : Icons.chevron_right,
-                size: 16,
-                color: Colors.grey,
-              ),
-              childrenPadding: const EdgeInsets.only(left: 12),
-              onExpansionChanged: (isExpanded) {
-                setState(() {
-                  _isExamExpanded = isExpanded;
-                });
-                if (isExpanded) {
-                  _onTabChanged(5);
-                  _examinationsKey.currentState?.selectFeature(ExaminationFeature.menu);
-                }
-              },
-              children: [
-                _buildDrawerSubItem("Exam Details", () {
-                  _onTabChanged(5);
-                  _examinationsKey.currentState?.selectFeature(ExaminationFeature.examDetails);
-                  Navigator.pop(context);
-                }),
-                _buildDrawerSubItem("Exam Timetable", () {
-                  _onTabChanged(5);
-                  _examinationsKey.currentState?.selectFeature(ExaminationFeature.examTimetable);
-                  Navigator.pop(context);
-                }),
-                _buildDrawerSubItem("Exam Hall Tickets", () {
-                  _onTabChanged(5);
-                  _examinationsKey.currentState?.selectFeature(ExaminationFeature.examHallTickets);
-                  Navigator.pop(context);
-                }),
-                _buildDrawerSubItem("Grade Report", () {
-                  _onTabChanged(5);
-                  _examinationsKey.currentState?.selectFeature(ExaminationFeature.gradeReport);
-                  Navigator.pop(context);
-                }),
-                _buildDrawerSubItem("Grade Report Custom", () {
-                  _onTabChanged(5);
-                  _examinationsKey.currentState?.selectFeature(ExaminationFeature.gradeReportCustom);
-                  Navigator.pop(context);
-                }),
-              ],
-            ),
-          ),
+          _buildDrawerItem(Icons.assignment_outlined, "Examination", false, () {
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (_) => AdminExaminationsScreen()));
+          }),
           _buildDrawerItem(Icons.menu_book_outlined, "Library", false, () {
             Navigator.pop(context);
             Navigator.push(context, MaterialPageRoute(builder: (_) => AdminLibraryScreen()));
@@ -455,33 +462,17 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     return ListTile(
       leading: Icon(icon, color: selected ? AppColors.primary : Color(0xFF757897)),
       title: Text(
-        title,
+        title.tr,
         style: TextStyle(
-          color: selected ? AppColors.primary : Color(0xFF1E2875),
+          color: selected ? AppColors.primary : const Color(0xFF1E2875),
           fontWeight: selected ? FontWeight.bold : FontWeight.w500,
           fontSize: 13,
         ),
       ),
       trailing: showChevron
-          ? Icon(Icons.chevron_right, size: 16, color: Colors.grey)
+          ? Icon(Icons.chevron_right, size: 16, color: Colors.grey.shade400)
           : null,
       selected: selected,
-      onTap: onTap,
-      dense: true,
-    );
-  }
-
-  Widget _buildDrawerSubItem(String title, VoidCallback onTap) {
-    return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 48, vertical: 0),
-      title: Text(
-        title.tr,
-        style: const TextStyle(
-          color: Color(0xFF1E2875),
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
       onTap: onTap,
       dense: true,
     );

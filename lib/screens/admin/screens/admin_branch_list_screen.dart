@@ -6,7 +6,7 @@ import '../../../core/utils/profile_manager.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminBranchListScreen extends StatefulWidget {
-  AdminBranchListScreen({super.key});
+  const AdminBranchListScreen({super.key});
   @override
   State<AdminBranchListScreen> createState() => _AdminBranchListScreenState();
 }
@@ -144,45 +144,45 @@ class _AdminBranchListScreenState extends State<AdminBranchListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF5F7FF),
-      appBar: AdminAppBar(title: 'Branch', subtitle: 'Manage school branches'),
-      bottomNavigationBar: AdminBottomNavBar(currentIndex: 4),
+      backgroundColor: const Color(0xFFF5F7FF),
+      appBar: const AdminAppBar(title: 'Branch', subtitle: 'Manage school branches'),
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showAddDialog(),
+        backgroundColor: const Color(0xFFB45309),
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
       body: Column(children: [
-        // Header
-        Container(
-          color: Colors.white,
-          padding: EdgeInsets.symmetric(vertical: 16),
-          child: Center(
-            child: Column(children: [
-              Text('Branch List'.tr,
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFFB45309))),
-              SizedBox(height: 12),
-              ElevatedButton.icon(
-                onPressed: () => _showAddDialog(),
-                icon: Icon(Icons.add, size: 16),
-                label: Text('Add New'.tr),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFB45309),
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8)),
-                ),
-              ),
-            ]),
-          ),
-        ),
         // Table header
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          color: Color(0xFF2D3748),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          color: const Color(0xFF1E2875),
           child: Row(children: [
-            SizedBox(width: 72, child: Text('Code'.tr, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
-            Expanded(child: Text('Name & Head'.tr, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
-            SizedBox(width: 72, child: Text('Contact'.tr, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
-            SizedBox(width: 72),
+            Expanded(
+              flex: 2,
+              child: Text('Code'.tr,
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13)),
+            ),
+            Expanded(
+              flex: 5,
+              child: Text('Name & Head'.tr,
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13)),
+            ),
+            Expanded(
+              flex: 3,
+              child: Text('Contact'.tr,
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13)),
+            ),
+            const SizedBox(width: 72),
           ]),
         ),
         // Rows
@@ -211,8 +211,8 @@ class _AdminBranchListScreenState extends State<AdminBranchListScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // Code
-                          SizedBox(
-                            width: 72,
+                          Expanded(
+                            flex: 2,
                             child: Text(code,
                                 style: TextStyle(
                                     fontSize: 12,
@@ -221,12 +221,13 @@ class _AdminBranchListScreenState extends State<AdminBranchListScreen> {
                           ),
                           // Name + head + address
                           Expanded(
+                            flex: 5,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(name,
                                     style: TextStyle(
-                                        fontSize: 12,
+                                        fontSize: 13,
                                         fontWeight: FontWeight.w600,
                                         color: Color(0xFFB45309))),
                                 if (head.isNotEmpty)
@@ -243,47 +244,44 @@ class _AdminBranchListScreenState extends State<AdminBranchListScreen> {
                             ),
                           ),
                           // Phone
-                          SizedBox(
-                            width: 72,
+                          Expanded(
+                            flex: 3,
                             child: Text(phone,
                                 style: TextStyle(fontSize: 11),
                                 maxLines: 2),
                           ),
                           // Actions
-                          SizedBox(
-                            width: 72,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              InkWell(
+                                onTap: () =>
+                                    _showAddDialog(edit: b, editIdx: i),
+                                child: Container(
+                                  width: 30,
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                      color: Color(0xFF2563EB),
+                                      shape: BoxShape.circle),
+                                  child: Icon(Icons.edit,
+                                      color: Colors.white, size: 14),
+                                ),
+                              ),
+                              SizedBox(width: 4),
+                              if (_branches.length > 1)
                                 InkWell(
-                                  onTap: () =>
-                                      _showAddDialog(edit: b, editIdx: i),
+                                  onTap: () => _delete(b),
                                   child: Container(
                                     width: 30,
                                     height: 30,
                                     decoration: BoxDecoration(
-                                        color: Color(0xFF2563EB),
+                                        color: Colors.red.shade100,
                                         shape: BoxShape.circle),
-                                    child: Icon(Icons.edit,
-                                        color: Colors.white, size: 14),
+                                    child: Icon(Icons.delete_outline,
+                                        color: Colors.red.shade700, size: 14),
                                   ),
                                 ),
-                                SizedBox(width: 4),
-                                if (_branches.length > 1)
-                                  InkWell(
-                                    onTap: () => _delete(b),
-                                    child: Container(
-                                      width: 30,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                          color: Colors.red.shade100,
-                                          shape: BoxShape.circle),
-                                      child: Icon(Icons.delete_outline,
-                                          color: Colors.red.shade700, size: 14),
-                                    ),
-                                  ),
-                              ],
-                            ),
+                            ],
                           ),
                         ],
                       ),

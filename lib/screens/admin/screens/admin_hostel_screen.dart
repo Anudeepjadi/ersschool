@@ -6,7 +6,7 @@ import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminHostelScreen extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
-  AdminHostelScreen({super.key, this.onOpenDrawer});
+  const AdminHostelScreen({super.key, this.onOpenDrawer});
 
   @override
   State<AdminHostelScreen> createState() => _AdminHostelScreenState();

@@ -25,7 +25,7 @@ class AdminMoreTab extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
   final VoidCallback? onOpenProfile;
 
-  AdminMoreTab({super.key, this.onOpenDrawer, this.onOpenProfile});
+  const AdminMoreTab({super.key, this.onOpenDrawer, this.onOpenProfile});
 
   @override
   State<AdminMoreTab> createState() => _AdminMoreTabState();

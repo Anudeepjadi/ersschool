@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_colors.dart';
 import '../../../core/localization/language_manager.dart';
 import '../admin_dashboard_screen.dart';
 
@@ -8,7 +7,7 @@ class AdminBottomNavBar extends StatelessWidget {
   final int currentIndex;
   final Function(int)? onTabSelected;
 
-  AdminBottomNavBar({
+  const AdminBottomNavBar({
     super.key,
     required this.currentIndex,
     this.onTabSelected,
@@ -32,7 +31,12 @@ class AdminBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
+    return Theme(
+      data: Theme.of(context).copyWith(
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+      ),
+      child: BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       currentIndex: currentIndex,
       selectedItemColor: AppColors.primary,
@@ -62,6 +66,6 @@ class AdminBottomNavBar extends StatelessWidget {
           label: "More".tr,
         ),
       ],
-    );
+    ));
   }
 }

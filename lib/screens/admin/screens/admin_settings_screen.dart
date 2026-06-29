@@ -12,7 +12,7 @@ import 'admin_class_subjects_mapping_screen.dart';
 import '../../../core/localization/language_manager.dart';
 
 class AdminSettingsScreen extends StatefulWidget {
-  AdminSettingsScreen({super.key});
+  const AdminSettingsScreen({super.key});
 
   @override
   State<AdminSettingsScreen> createState() => _AdminSettingsScreenState();
@@ -20,7 +20,6 @@ class AdminSettingsScreen extends StatefulWidget {
 
 class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
   final _store = AppDataStore.instance;
-  bool _notificationsEnabled = true;
 
   @override
   Widget build(BuildContext context) {
@@ -36,10 +35,6 @@ class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _section("GENERAL SETTINGS".tr, [
-              _item("Language".tr, Icons.language_outlined, Colors.purple, () => _showLanguageDialog()),
-              _switchItem("Notifications".tr, Icons.notifications_outlined, Colors.amber, _notificationsEnabled, (v) {
-                setState(() => _notificationsEnabled = v);
-              }),
               _item("Holidays".tr, Icons.beach_access_outlined, Colors.red,
                   () => _push(AdminHolidaysScreen())),
               _item("Branch".tr, Icons.apartment_outlined, Colors.blue,
@@ -256,46 +251,6 @@ class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
     );
   }
 
-  Widget _switchItem(String title, IconData icon, Color color, bool value, ValueChanged<bool> onChanged) {
-    return ListTile(
-      leading: Container(
-        padding: EdgeInsets.all(8),
-        decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(10)),
-        child: Icon(icon, color: color, size: 20),
-      ),
-      title: Text(title, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-      trailing: Switch(
-        value: value,
-        onChanged: onChanged,
-        activeColor: Color(0xFF1E2875),
-      ),
-    );
-  }
 
-  void _showLanguageDialog() {
-    showDialog(
-      context: context,
-      builder: (ctx) {
-        return AlertDialog(
-          title: Text('Language'.tr),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: ['English', 'Hindi', 'Telugu'].map((lang) {
-              return ListTile(
-                title: Text(lang.tr),
-                trailing: LanguageManager.instance.currentLanguage == lang
-                    ? Icon(Icons.check, color: Colors.green)
-                    : null,
-                onTap: () {
-                  LanguageManager.instance.changeLanguage(lang);
-                  Navigator.pop(ctx);
-                  setState(() {});
-                },
-              );
-            }).toList(),
-          ),
-        );
-      },
-    );
-  }
+
 }

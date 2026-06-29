@@ -6,7 +6,7 @@ import '../../../core/data/app_data_store.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminSmsScreen extends StatefulWidget {
-  AdminSmsScreen({super.key});
+  const AdminSmsScreen({super.key});
 
   @override
   State<AdminSmsScreen> createState() => _AdminSmsScreenState();
@@ -404,6 +404,7 @@ class _AdminSmsScreenState extends State<AdminSmsScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                     items: [
+                      DropdownMenuItem(value: 'All Branches', child: Text("All Branches".tr)),
                       DropdownMenuItem(value: 'Ecstasy School 1', child: Text("Ecstasy School 1 (ECS001)".tr)),
                       DropdownMenuItem(value: 'Ecstasy School 2', child: Text("Ecstasy School 2 (ECS002)".tr)),
                       DropdownMenuItem(value: 'Ecstasy School 3', child: Text("Ecstasy School 3 (ECS003)".tr)),

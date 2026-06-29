@@ -28,7 +28,7 @@ class EmployeeItem {
 class EmployeesScreen extends StatefulWidget {
   final int activeTab;
   final Function(int)? onSubTabSelected;
-  EmployeesScreen({super.key, this.activeTab = 0, this.onSubTabSelected});
+  const EmployeesScreen({super.key, this.activeTab = 0, this.onSubTabSelected});
 
   @override
   EmployeesScreenState createState() => EmployeesScreenState();

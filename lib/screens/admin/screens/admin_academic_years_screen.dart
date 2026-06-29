@@ -5,7 +5,7 @@ import '../../../core/data/app_data_store.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminAcademicYearsScreen extends StatefulWidget {
-  AdminAcademicYearsScreen({super.key});
+  const AdminAcademicYearsScreen({super.key});
   @override
   State<AdminAcademicYearsScreen> createState() =>
       _AdminAcademicYearsScreenState();
@@ -123,12 +123,17 @@ class _AdminAcademicYearsScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF5F7FF),
-      appBar: AdminAppBar(
+      backgroundColor: const Color(0xFFF5F7FF),
+      appBar: const AdminAppBar(
           title: 'Academic Year', subtitle: 'Manage academic years'),
-      bottomNavigationBar: AdminBottomNavBar(currentIndex: 4),
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showAddDialog(),
+        backgroundColor: const Color(0xFF16A34A),
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(children: [
           // ── Main table ───────────────────────────────────────────────────
           Container(
@@ -137,48 +142,26 @@ class _AdminAcademicYearsScreenState
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: Colors.grey.shade200)),
             child: Column(children: [
-              Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(children: [
-                  Text('Academic Years'.tr,
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFFB45309))),
-                  SizedBox(height: 12),
-                  ElevatedButton.icon(
-                    onPressed: () => _showAddDialog(),
-                    icon: Icon(Icons.add, size: 16),
-                    label: Text('Add New'.tr),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF16A34A),
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                    ),
-                  ),
-                ]),
-              ),
               Container(
-                padding: EdgeInsets.symmetric(
+                padding: const EdgeInsets.symmetric(
                     horizontal: 16, vertical: 12),
-                color: Color(0xFF2D3748),
+                color: const Color(0xFF1E2875),
                 child: Row(children: [
                   Expanded(
                       flex: 3,
                       child: Text('Academic Year'.tr,
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                               fontSize: 13))),
                   Expanded(
                       flex: 2,
                       child: Text('Is Active'.tr,
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                               fontSize: 13))),
-                  SizedBox(width: 76),
+                  const SizedBox(width: 72),
                 ]),
               ),
               ..._years.asMap().entries.map((e) {
@@ -193,7 +176,8 @@ class _AdminAcademicYearsScreenState
                       Expanded(
                           flex: 3,
                           child: Text(y['year'],
-                              style: TextStyle(fontSize: 13))),
+                              style: TextStyle(
+                                  fontSize: 13, fontWeight: FontWeight.w500))),
                       Expanded(
                         flex: 2,
                         child: Icon(
@@ -208,26 +192,26 @@ class _AdminAcademicYearsScreenState
                         InkWell(
                           onTap: () => _showAddDialog(editIndex: i),
                           child: Container(
-                            width: 32,
-                            height: 32,
+                            width: 30,
+                            height: 30,
                             decoration: BoxDecoration(
                                 color: Color(0xFF2563EB),
                                 shape: BoxShape.circle),
                             child: Icon(Icons.edit,
-                                color: Colors.white, size: 16),
+                                color: Colors.white, size: 14),
                           ),
                         ),
                         SizedBox(width: 8),
                         InkWell(
                           onTap: () => _delete(i),
                           child: Container(
-                            width: 32,
-                            height: 32,
+                            width: 30,
+                            height: 30,
                             decoration: BoxDecoration(
                                 color: Colors.red.shade100,
                                 shape: BoxShape.circle),
                             child: Icon(Icons.delete_outline,
-                                color: Colors.red.shade700, size: 16),
+                                color: Colors.red.shade700, size: 14),
                           ),
                         ),
                       ]),
@@ -287,7 +271,7 @@ class _AdminAcademicYearsScreenState
                   Row(children: [
                     Expanded(
                       child: DropdownButtonFormField<String>(
-                        value: _years.any((y) =>
+                        initialValue: _years.any((y) =>
                                 y['year'] == _currentYear)
                             ? _currentYear
                             : (_years.isNotEmpty

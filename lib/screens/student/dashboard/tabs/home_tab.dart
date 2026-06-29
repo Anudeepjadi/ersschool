@@ -10,7 +10,7 @@ class HomeTab extends StatelessWidget {
   final VoidCallback onOpenDrawer;
   final Function(int) onTabSelected;
 
-  HomeTab({
+  const HomeTab({
     super.key,
     required this.onOpenDrawer,
     required this.onTabSelected,

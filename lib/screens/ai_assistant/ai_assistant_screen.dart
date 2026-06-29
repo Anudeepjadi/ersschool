@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
-import 'package:flutter/cupertino.dart';
 import 'dart:async';
 import 'package:ersschool/core/localization/language_manager.dart';
 
 class AiAssistantScreen extends StatefulWidget {
-  AiAssistantScreen({super.key});
+  const AiAssistantScreen({super.key});
 
   @override
   State<AiAssistantScreen> createState() => _AiAssistantScreenState();

@@ -15,7 +15,7 @@ class AdminAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget>? actions;
   final bool showSchoolSelector;
 
-  AdminAppBar({
+  const AdminAppBar({
     super.key,
     required this.title,
     required this.subtitle,

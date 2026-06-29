@@ -4,7 +4,7 @@ import 'package:video_player/video_player.dart';
 import '../login/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
-  SplashScreen({super.key});
+  const SplashScreen({super.key});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();

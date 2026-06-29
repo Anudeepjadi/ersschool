@@ -13,7 +13,7 @@ class StudentAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onProfileTap;
   final List<Widget>? actions;
 
-  StudentAppBar({
+  const StudentAppBar({
     super.key,
     required this.title,
     required this.subtitle,

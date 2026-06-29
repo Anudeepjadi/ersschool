@@ -4,7 +4,7 @@ import '../../../../core/theme/app_colors.dart';
 class StudentCurvedHeader extends StatelessWidget {
   final Widget child;
 
-  StudentCurvedHeader({super.key, required this.child});
+  const StudentCurvedHeader({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {

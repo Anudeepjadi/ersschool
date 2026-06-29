@@ -7,7 +7,7 @@ import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminBranchesTab extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
-  AdminBranchesTab({super.key, this.onOpenDrawer});
+  const AdminBranchesTab({super.key, this.onOpenDrawer});
 
   @override
   State<AdminBranchesTab> createState() => _AdminBranchesTabState();

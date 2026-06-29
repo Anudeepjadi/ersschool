@@ -9,7 +9,7 @@ import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminAttendanceScreen extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
-  AdminAttendanceScreen({super.key, this.onOpenDrawer});
+  const AdminAttendanceScreen({super.key, this.onOpenDrawer});
 
   @override
   State<AdminAttendanceScreen> createState() => _AdminAttendanceScreenState();

@@ -45,7 +45,7 @@ class ExamsScreen extends StatefulWidget {
   final int activeTab;
   final Function(int)? onSubTabSelected;
 
-  ExamsScreen({
+  const ExamsScreen({
     super.key,
     this.activeTab = 0,
     this.onSubTabSelected,
@@ -100,7 +100,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
     ExamResultItem(name: "Mid Term Exam", term: "Term 1", className: "Class 9", subject: "Science", publishedDate: "15 May 2024"),
   ];
 
-  int _conductedExamsCount = 4;
+  final int _conductedExamsCount = 4;
 
   void _showCreateExamDialog() {
     final nameController = TextEditingController();

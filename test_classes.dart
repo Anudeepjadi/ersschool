@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_print
 import 'lib/core/data/app_data_store.dart';
 
 void main() {

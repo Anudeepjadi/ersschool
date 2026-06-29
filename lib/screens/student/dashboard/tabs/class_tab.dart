@@ -5,7 +5,7 @@ import 'package:ersschool/core/localization/language_manager.dart';
 class ClassTab extends StatelessWidget {
   final VoidCallback onOpenDrawer;
 
-  ClassTab({super.key, required this.onOpenDrawer});
+  const ClassTab({super.key, required this.onOpenDrawer});
 
   @override
   Widget build(BuildContext context) {

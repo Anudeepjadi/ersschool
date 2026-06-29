@@ -15,7 +15,7 @@ class AdminActiveListScreen extends StatefulWidget {
   final List<Map<String, dynamic>> dataSource;
   final Color accentColor;
 
-  AdminActiveListScreen({
+  const AdminActiveListScreen({
     super.key,
     required this.title,
     required this.columnLabel,
@@ -142,58 +142,37 @@ class _AdminActiveListScreenState extends State<AdminActiveListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF5F7FF),
+      backgroundColor: const Color(0xFFF5F7FF),
       appBar: AdminAppBar(
           title: widget.title,
           subtitle: 'Manage ${widget.title.toLowerCase()}'),
-      bottomNavigationBar: AdminBottomNavBar(currentIndex: 4),
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showDialog(),
+        backgroundColor: widget.accentColor,
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
       body: Column(children: [
-        // Header
-        Container(
-          color: Colors.white,
-          padding: EdgeInsets.symmetric(vertical: 16),
-          child: Center(
-            child: Column(children: [
-              Text(widget.title,
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFFB45309))),
-              SizedBox(height: 12),
-              ElevatedButton.icon(
-                onPressed: () => _showDialog(),
-                icon: Icon(Icons.add, size: 16),
-                label: Text('Add New'.tr),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: widget.accentColor,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8)),
-                ),
-              ),
-            ]),
-          ),
-        ),
         // Table header
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          color: Color(0xFF2D3748),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          color: const Color(0xFF1E2875),
           child: Row(children: [
             Expanded(
                 flex: 3,
                 child: Text(widget.columnLabel,
-                    style: TextStyle(
+                    style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 13))),
             Expanded(
                 flex: 2,
                 child: Text('Is Active'.tr,
-                    style: TextStyle(
+                    style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 13))),
-            SizedBox(width: 76),
+            const SizedBox(width: 76),
           ]),
         ),
         // Rows

@@ -5,7 +5,7 @@ import '../../../core/theme/app_colors.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminSystemUpdatesScreen extends StatefulWidget {
-  AdminSystemUpdatesScreen({super.key});
+  const AdminSystemUpdatesScreen({super.key});
 
   @override
   State<AdminSystemUpdatesScreen> createState() => _AdminSystemUpdatesScreenState();

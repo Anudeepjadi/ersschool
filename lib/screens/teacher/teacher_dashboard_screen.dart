@@ -17,7 +17,7 @@ import 'widgets/teacher_drawer.dart';
 import 'widgets/teacher_bottom_nav.dart';
 class TeacherDashboardScreen extends StatefulWidget {
   final int initialIndex;
-  TeacherDashboardScreen({super.key, this.initialIndex = 0});
+  const TeacherDashboardScreen({super.key, this.initialIndex = 0});
 
   @override
   State<TeacherDashboardScreen> createState() => _TeacherDashboardScreenState();

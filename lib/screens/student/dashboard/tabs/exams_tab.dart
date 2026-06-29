@@ -13,7 +13,7 @@ class ExamsTab extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
   final Function(int)? onTabSelected;
 
-  ExamsTab({super.key, this.onOpenDrawer, this.onTabSelected});
+  const ExamsTab({super.key, this.onOpenDrawer, this.onTabSelected});
 
   @override
   State<ExamsTab> createState() => _ExExamsTabState();

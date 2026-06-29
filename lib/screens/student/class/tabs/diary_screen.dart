@@ -5,7 +5,7 @@ import 'package:ersschool/core/localization/language_manager.dart';
 
 class DiaryScreen extends StatefulWidget {
   final bool showAppBar;
-  DiaryScreen({super.key, this.showAppBar = true});
+  const DiaryScreen({super.key, this.showAppBar = true});
 
   @override
   State<DiaryScreen> createState() => _DiaryScreenState();
