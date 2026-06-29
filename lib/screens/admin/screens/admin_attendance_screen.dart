@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/data/app_data_store.dart';
-import '../../../core/utils/profile_manager.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
-import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminAttendanceScreen extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
@@ -16,185 +13,211 @@ class AdminAttendanceScreen extends StatefulWidget {
 }
 
 class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
-  String _selectedClass = 'Class 10';
-  String _selectedDate = '20 May 2026';
+  String _selectedClass = 'Class 8 - A';
+  String _selectedDate = '20 May 2024';
   String _selectedView = 'Daily';
   String _activeFilter = 'All';
 
-  List<Map<String, dynamic>> get _students => AppDataStore.instance.students
-      .where((s) => s['school'] == ProfileManager().selectedSchool.value)
-      .toList();
+  final List<Map<String, dynamic>> _students = [
+    {
+      'name': 'Rahul Kumar',
+      'email': 'rahul.kumar@email.com',
+      'phone': '+91 98765 43210',
+      'roll': '101',
+      'status': 'Present',
+      'remarks': '—',
+    },
+    {
+      'name': 'Ananya Sharma',
+      'email': 'ananya.sharma@email.com',
+      'phone': '+91 98765 43211',
+      'roll': '102',
+      'status': 'Present',
+      'remarks': '—',
+    },
+    {
+      'name': 'Aarav Singh',
+      'email': 'aarav.singh@email.com',
+      'phone': '+91 98765 43212',
+      'roll': '103',
+      'status': 'Absent',
+      'remarks': 'Medical Leave',
+    },
+    {
+      'name': 'Diya Patel',
+      'email': 'diya.patel@email.com',
+      'phone': '+91 98765 43213',
+      'roll': '104',
+      'status': 'Present',
+      'remarks': '—',
+    },
+    {
+      'name': 'Kabir Verma',
+      'email': 'kabir.verma@email.com',
+      'phone': '+91 98765 43214',
+      'roll': '105',
+      'status': 'Late',
+      'remarks': 'Reached at 09:15 AM',
+    },
+    {
+      'name': 'Meera Gupta',
+      'email': 'meera.gupta@email.com',
+      'phone': '+91 98765 43215',
+      'roll': '106',
+      'status': 'Present',
+      'remarks': '—',
+    },
+    {
+      'name': 'Vivaan Joshi',
+      'email': 'vivaan.joshi@email.com',
+      'phone': '+91 98765 43216',
+      'roll': '107',
+      'status': 'Present',
+      'remarks': '—',
+    },
+    {
+      'name': 'Ishita Reddy',
+      'email': 'ishita.reddy@email.com',
+      'phone': '+91 98765 43217',
+      'roll': '108',
+      'status': 'Present',
+      'remarks': '—',
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<String>(
-      valueListenable: ProfileManager().selectedSchool,
-      builder: (context, school, _) {
-        final schoolClasses = _students.map((s) => s['class'] as String).toSet().toList();
-        schoolClasses.sort();
-        if (schoolClasses.isEmpty) {
-          schoolClasses.addAll(['Class 10', 'Class 9', 'Class 8']);
-        }
-        if (!schoolClasses.contains(_selectedClass)) {
-          _selectedClass = schoolClasses.first;
-        }
+    final filteredStudents = _students.where((student) {
+      if (_activeFilter == 'All') return true;
+      return student['status'] == _activeFilter;
+    }).toList();
 
-        final classStudents = _students.where((s) => s['class'] == _selectedClass).map((s) {
-          final dynamicStatus = AppDataStore.instance.getStudentAttendance(school, _selectedDate, s['admission'] as String, s['status'] as String);
-          return {
-            ...s,
-            'status': dynamicStatus,
-          };
-        }).toList();
+    return Scaffold(
+      backgroundColor: const Color(0xFFF5F7FF),
+      appBar: AdminAppBar(
+        title: "Attendance",
+        subtitle: "Track and manage student attendance",
+        onOpenDrawer: widget.onOpenDrawer,
+      ),
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Dropdowns selectors
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 140,
+                    child: _buildDropdown(
+                      label: "Class",
+                      value: _selectedClass,
+                      items: ['Class 8 - A', 'Class 8 - B', 'Class 9 - A'],
+                      onChanged: (v) => setState(() => _selectedClass = v!),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  SizedBox(
+                    width: 140,
+                    child: _buildDropdown(
+                      label: "Date",
+                      value: _selectedDate,
+                      items: ['20 May 2024', '21 May 2024'],
+                      onChanged: (v) => setState(() => _selectedDate = v!),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  SizedBox(
+                    width: 140,
+                    child: _buildDropdown(
+                      label: "View By",
+                      value: _selectedView,
+                      items: ['Daily', 'Weekly', 'Monthly'],
+                      onChanged: (v) => setState(() => _selectedView = v!),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
 
-        final filteredStudents = classStudents.where((student) {
-          if (_activeFilter == 'All') return true;
-          final isPresent = student['status'] == 'Active' || student['status'] == 'Present';
-          final isAbsent = student['status'] == 'Inactive' || student['status'] == 'Absent';
-          if (_activeFilter == 'Present') return isPresent;
-          if (_activeFilter == 'Absent') return isAbsent;
-          return student['status'] == _activeFilter;
-        }).toList();
+            // Card row metrics
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  _buildStatCard("Total Students", "48", null, Colors.blue),
+                  _buildStatCard("Present", "44", "91.67%", const Color(0xFF10B981)),
+                  _buildStatCard("Absent", "3", "6.25%", const Color(0xFFEF4444)),
+                  _buildStatCard("Late", "1", "2.08%", const Color(0xFFF59E0B)),
+                  _buildStatCard("On Leave", "0", "0%", const Color(0xFF9CA3AF)),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
 
-        final totalCount = classStudents.length;
-        final presentCount = classStudents.where((s) => s['status'] == 'Active' || s['status'] == 'Present').length;
-        final absentCount = classStudents.where((s) => s['status'] == 'Inactive' || s['status'] == 'Absent').length;
-        final lateCount = classStudents.where((s) => s['status'] == 'Late').length;
-        final leaveCount = classStudents.where((s) => s['status'] == 'Leave' || s['status'] == 'On Leave').length;
+            // Charts
+            _buildChartsSection(),
+            const SizedBox(height: 16),
 
-        final presentPercentStr = totalCount > 0 ? "${((presentCount / totalCount) * 100).toStringAsFixed(1)}%" : "0%";
-        final absentPercentStr = totalCount > 0 ? "${((absentCount / totalCount) * 100).toStringAsFixed(1)}%" : "0%";
-        final latePercentStr = totalCount > 0 ? "${((lateCount / totalCount) * 100).toStringAsFixed(1)}%" : "0%";
-        final leavePercentStr = totalCount > 0 ? "${((leaveCount / totalCount) * 100).toStringAsFixed(1)}%" : "0%";
-
-        return Scaffold(
-          backgroundColor: Color(0xFFF5F7FF),
-          appBar: AdminAppBar(
-            title: "Attendance",
-            subtitle: "Track and manage student attendance",
-            onOpenDrawer: widget.onOpenDrawer,
-          ),
-          bottomNavigationBar: AdminBottomNavBar(currentIndex: 4),
-          body: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            padding: EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            // Search bar & buttons
+            Row(
               children: [
-                // Dropdowns selectors
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  physics: BouncingScrollPhysics(),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 140,
-                        child: _buildDropdown(
-                          label: "Class",
-                          value: _selectedClass,
-                          items: schoolClasses,
-                          onChanged: (v) => setState(() => _selectedClass = v!),
-                        ),
-                      ),
-                      SizedBox(width: 10),
-                      SizedBox(
-                        width: 140,
-                        child: _buildDropdown(
-                          label: "Date",
-                          value: _selectedDate,
-                          items: ['20 May 2026', '21 May 2026', '22 May 2026', '23 May 2026', '24 May 2026'],
-                          onChanged: (v) => setState(() => _selectedDate = v!),
-                        ),
-                      ),
-                      SizedBox(width: 10),
-                      SizedBox(
-                        width: 140,
-                        child: _buildDropdown(
-                          label: "View By",
-                          value: _selectedView,
-                          items: ['Daily', 'Weekly', 'Monthly'],
-                          onChanged: (v) => setState(() => _selectedView = v!),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 16),
-
-                // Card row metrics
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      _buildStatCard("Total Students", "$totalCount", null, Colors.blue),
-                      _buildStatCard("Present", "$presentCount", presentPercentStr, Color(0xFF10B981)),
-                      _buildStatCard("Absent", "$absentCount", absentPercentStr, Color(0xFFEF4444)),
-                      _buildStatCard("Late", "$lateCount", latePercentStr, Color(0xFFF59E0B)),
-                      _buildStatCard("On Leave", "$leaveCount", leavePercentStr, Color(0xFF9CA3AF)),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 16),
-
-                // Charts
-                _buildChartsSection(totalCount, presentCount, absentCount, lateCount),
-                SizedBox(height: 16),
-
-                // Search bar & buttons
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: "Search students by name...",
-                          prefixIcon: Icon(Icons.search, color: Color(0xFF757897)),
-                          fillColor: Colors.white,
-                          filled: true,
-                          contentPadding: EdgeInsets.symmetric(vertical: 0),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 12),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: "Search students by name...",
+                      prefixIcon: const Icon(Icons.search, color: Color(0xFF757897)),
+                      fillColor: Colors.white,
+                      filled: true,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                      border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: IconButton(
-                        icon: Icon(Icons.filter_list, color: AppColors.primary),
-                        onPressed: () {},
+                        borderSide: BorderSide.none,
                       ),
                     ),
-                  ],
-                ),
-                SizedBox(height: 16),
-
-                // Filter chips
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      _buildFilterChip('All', totalCount),
-                      _buildFilterChip('Present', presentCount),
-                      _buildFilterChip('Absent', absentCount),
-                      _buildFilterChip('Late', lateCount),
-                      _buildFilterChip('On Leave', leaveCount),
-                    ],
                   ),
                 ),
-                SizedBox(height: 16),
-
-                // Student list table
-                _buildStudentListTable(filteredStudents),
+                const SizedBox(width: 12),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: IconButton(
+                    icon: const Icon(Icons.filter_list, color: AppColors.primary),
+                    onPressed: () {},
+                  ),
+                ),
               ],
             ),
-          ),
-        );
-      },
+            const SizedBox(height: 16),
+
+            // Filter chips
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  _buildFilterChip('All', _students.length),
+                  _buildFilterChip('Present', 44),
+                  _buildFilterChip('Absent', 3),
+                  _buildFilterChip('Late', 1),
+                  _buildFilterChip('On Leave', 0),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Student list table
+            _buildStudentListTable(filteredStudents),
+          ],
+        ),
+      ),
     );
   }
 
@@ -205,7 +228,7 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
     required ValueChanged<String?> onChanged,
   }) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -215,13 +238,13 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(label, style: TextStyle(fontSize: 10, color: Colors.grey)),
+          Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey)),
           DropdownButtonHideUnderline(
             child: DropdownButton<String>(
               value: value,
               isDense: true,
               isExpanded: true,
-              style: TextStyle(fontSize: 13, color: Color(0xFF1E2875), fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 13, color: Color(0xFF1E2875), fontWeight: FontWeight.bold),
               items: items.map((String item) {
                 return DropdownMenuItem<String>(
                   value: item,
@@ -239,9 +262,8 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
   Widget _buildStatCard(String label, String value, String? percentage, Color color) {
     return Container(
       width: 110,
-      height: 100,
-      margin: EdgeInsets.only(right: 12),
-      padding: EdgeInsets.all(12),
+      margin: const EdgeInsets.only(right: 12),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -250,30 +272,21 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
-          SizedBox(height: 8),
-          Text(value, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-          SizedBox(height: 4),
-          if (percentage != null)
-            Text(percentage, style: TextStyle(fontSize: 11, color: color, fontWeight: FontWeight.bold))
-          else
-            SizedBox(height: 15),
+          Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          Text(value, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+          if (percentage != null) ...[
+            const SizedBox(height: 4),
+            Text(percentage, style: TextStyle(fontSize: 11, color: color, fontWeight: FontWeight.bold)),
+          ]
         ],
       ),
     );
   }
 
-  Widget _buildChartsSection(int total, int present, int absent, int late) {
-    final double presentVal = total > 0 ? (present / total) * 100 : 0.0;
-    final double absentVal = total > 0 ? (absent / total) * 100 : 0.0;
-    final double lateVal = total > 0 ? (late / total) * 100 : 0.0;
-
-    final school = ProfileManager().selectedSchool.value;
-    final metrics = AppDataStore.instance.getSchoolMetrics(school);
-    final double basePercent = (metrics['presentPercent'] as num).toDouble();
-
+  Widget _buildChartsSection() {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -281,10 +294,11 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Attendance Analysis".tr,
+          const Text(
+            "Attendance Analysis",
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Row(
             children: [
               // Donut Chart
@@ -300,42 +314,24 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
                           sectionsSpace: 0,
                           centerSpaceRadius: 35,
                           sections: [
-                            PieChartSectionData(
-                              value: presentVal > 0 ? presentVal : 0.1,
-                              color: Color(0xFF10B981),
-                              radius: 12,
-                              showTitle: false,
-                            ),
-                            PieChartSectionData(
-                              value: absentVal > 0 ? absentVal : 0.1,
-                              color: Color(0xFFEF4444),
-                              radius: 12,
-                              showTitle: false,
-                            ),
-                            PieChartSectionData(
-                              value: lateVal > 0 ? lateVal : 0.1,
-                              color: Color(0xFFF59E0B),
-                              radius: 12,
-                              showTitle: false,
-                            ),
+                            PieChartSectionData(value: 91.67, color: const Color(0xFF10B981), radius: 12, showTitle: false),
+                            PieChartSectionData(value: 6.25, color: const Color(0xFFEF4444), radius: 12, showTitle: false),
+                            PieChartSectionData(value: 2.08, color: const Color(0xFFF59E0B), radius: 12, showTitle: false),
                           ],
                         ),
                       ),
-                      Column(
+                      const Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(
-                            "${presentVal.toStringAsFixed(1)}%",
-                            style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
-                          ),
-                          Text("Present".tr, style: TextStyle(fontSize: 8, color: Colors.grey)),
+                          Text("91.67%", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                          Text("Present", style: TextStyle(fontSize: 8, color: Colors.grey)),
                         ],
                       )
                     ],
                   ),
                 ),
               ),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               // Bar Chart
               Expanded(
                 flex: 6,
@@ -344,31 +340,31 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
                   child: BarChart(
                     BarChartData(
                       borderData: FlBorderData(show: false),
-                      gridData: FlGridData(show: false),
+                      gridData: const FlGridData(show: false),
                       titlesData: FlTitlesData(
                         show: true,
-                        topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                        rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                        leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                        topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                        rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                        leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                         bottomTitles: AxisTitles(
                           sideTitles: SideTitles(
                             showTitles: true,
                             getTitlesWidget: (value, meta) {
                               const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
                               if (value.toInt() >= 0 && value.toInt() < days.length) {
-                                return Text(days[value.toInt()], style: TextStyle(fontSize: 9, color: Colors.grey));
+                                return Text(days[value.toInt()], style: const TextStyle(fontSize: 9, color: Colors.grey));
                               }
-                              return SizedBox();
+                              return const SizedBox();
                             },
                           ),
                         ),
                       ),
                       barGroups: [
-                        _buildBarGroup(0, basePercent),
-                        _buildBarGroup(1, basePercent - 4 > 0 ? basePercent - 4 : 0),
-                        _buildBarGroup(2, basePercent + 4 < 100 ? basePercent + 4 : 100),
-                        _buildBarGroup(3, basePercent - 2 > 0 ? basePercent - 2 : 0),
-                        _buildBarGroup(4, basePercent + 1 < 100 ? basePercent + 1 : 100),
+                        _buildBarGroup(0, 92),
+                        _buildBarGroup(1, 88),
+                        _buildBarGroup(2, 96),
+                        _buildBarGroup(3, 90),
+                        _buildBarGroup(4, 93),
                         _buildBarGroup(5, 0),
                       ],
                     ),
@@ -388,7 +384,7 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
       barRods: [
         BarChartRodData(
           toY: y,
-          color: Color(0xFF10B981),
+          color: const Color(0xFF10B981),
           width: 8,
           borderRadius: BorderRadius.circular(4),
           backDrawRodData: BackgroundBarChartRodData(
@@ -406,8 +402,8 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
     return GestureDetector(
       onTap: () => setState(() => _activeFilter = label),
       child: Container(
-        margin: EdgeInsets.only(right: 8),
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        margin: const EdgeInsets.only(right: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.primary : Colors.white,
           borderRadius: BorderRadius.circular(20),
@@ -421,12 +417,12 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
-                color: isSelected ? Colors.white : Color(0xFF757897),
+                color: isSelected ? Colors.white : const Color(0xFF757897),
               ),
             ),
-            SizedBox(width: 6),
+            const SizedBox(width: 6),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
               decoration: BoxDecoration(
                 color: isSelected ? Colors.white24 : Colors.grey.shade100,
                 borderRadius: BorderRadius.circular(10),
@@ -436,7 +432,7 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
                 style: TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.bold,
-                  color: isSelected ? Colors.white : Color(0xFF1E2875),
+                  color: isSelected ? Colors.white : const Color(0xFF1E2875),
                 ),
               ),
             ),
@@ -456,93 +452,70 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   "Student List (${students.length})",
-                  style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+                  style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
                 ),
-                Icon(Icons.more_horiz, color: Colors.grey),
+                const Icon(Icons.more_horiz, color: Colors.grey),
               ],
             ),
           ),
           ListView.separated(
             shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             itemCount: students.length,
-            separatorBuilder: (context, index) => Divider(height: 1),
+            separatorBuilder: (context, index) => const Divider(height: 1),
             itemBuilder: (context, index) {
               final student = students[index];
-              final isPresent = student['status'] == 'Active' || student['status'] == 'Present';
-              final isAbsent = student['status'] == 'Inactive' || student['status'] == 'Absent';
-              final isLate = student['status'] == 'Late';
-              
-              Color statusColor = Colors.grey;
-              String displayStatus = 'Present';
-
-              if (isPresent) {
-                statusColor = Color(0xFF10B981);
-                displayStatus = 'Present';
-              } else if (isAbsent) {
-                statusColor = Color(0xFFEF4444);
-                displayStatus = 'Absent';
-              } else if (isLate) {
-                statusColor = Color(0xFFF59E0B);
-                displayStatus = 'Late';
+              Color statusColor;
+              switch (student['status']) {
+                case 'Present':
+                  statusColor = const Color(0xFF10B981);
+                  break;
+                case 'Absent':
+                  statusColor = const Color(0xFFEF4444);
+                  break;
+                case 'Late':
+                  statusColor = const Color(0xFFF59E0B);
+                  break;
+                default:
+                  statusColor = Colors.grey;
               }
 
-              final avatarLetter = student['name'] != null && student['name'].toString().isNotEmpty
-                  ? student['name'].toString()[0]
-                  : 'S';
-              final cleanRoll = student['roll'].toString().replaceAll("Roll No: ", "").replaceAll("Roll No. ", "");
-
               return Padding(
-                padding: EdgeInsets.all(14),
+                padding: const EdgeInsets.all(14),
                 child: Row(
                   children: [
                     CircleAvatar(
                       backgroundColor: statusColor.withValues(alpha: 0.1),
                       child: Text(
-                        avatarLetter,
+                        student['name'][0],
                         style: TextStyle(color: statusColor, fontWeight: FontWeight.bold),
                       ),
                     ),
-                    SizedBox(width: 12),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(student['name'] ?? 'N/A', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875))),
-                          Text("Roll No. $cleanRoll", style: TextStyle(fontSize: 11, color: Colors.grey)),
+                          Text(student['name'], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875))),
+                          Text("Roll No. ${student['roll']}", style: const TextStyle(fontSize: 11, color: Colors.grey)),
                         ],
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        final newStatus = isPresent ? 'Absent' : 'Present';
-                        AppDataStore.instance.setStudentAttendance(ProfileManager().selectedSchool.value, _selectedDate, student['admission'] as String, newStatus);
-                        setState(() {});
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: statusColor.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: statusColor.withValues(alpha: 0.3)),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              displayStatus,
-                              style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: statusColor),
-                            ),
-                            SizedBox(width: 4),
-                            Icon(Icons.swap_horiz, size: 10, color: statusColor),
-                          ],
-                        ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: statusColor.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        student['status'],
+                        style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: statusColor),
                       ),
                     ),
                   ],

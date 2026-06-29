@@ -42,6 +42,13 @@ enum ExaminationFeature {
 
 class AdminExaminationsScreen extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
+  final ExaminationFeature initialFeature;
+  final bool openDrawer;
+  const AdminExaminationsScreen({
+    super.key,
+    this.onOpenDrawer,
+    this.initialFeature = ExaminationFeature.menu,
+    this.openDrawer = false,
   final bool openDrawer;
   final ExaminationFeature initialFeature;
 
