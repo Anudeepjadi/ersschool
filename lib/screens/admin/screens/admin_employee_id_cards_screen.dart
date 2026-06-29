@@ -6,16 +6,16 @@ import 'package:ersschool/core/data/app_data_store.dart';
 import 'package:ersschool/core/utils/profile_manager.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
-import 'student_management/admin_student_id_card_print_screen.dart';
+import 'admin_employee_id_card_print_screen.dart';
 
-class AdminIDCardsScreen extends StatefulWidget {
-  const AdminIDCardsScreen({super.key});
+class AdminEmployeeIDCardsScreen extends StatefulWidget {
+  const AdminEmployeeIDCardsScreen({super.key});
 
   @override
-  State<AdminIDCardsScreen> createState() => _AdminIDCardsScreenState();
+  State<AdminEmployeeIDCardsScreen> createState() => _AdminEmployeeIDCardsScreenState();
 }
 
-class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
+class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen> {
   String _selectedBranch = 'Ecstasy School 1 (ECS001)';
   String _selectedYear = '2025-26';
   String _selectedStatus = 'Only Active';
@@ -27,7 +27,7 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
   int _currentPage = 1;
   int _itemsPerPage = 25;
 
-  List<Map<String, dynamic>> get _students => AppDataStore.instance.students
+  List<Map<String, dynamic>> get _employees => AppDataStore.instance.teachers
       .where((s) => s['school'] == ProfileManager().selectedSchool.value)
       .toList();
 
@@ -40,10 +40,10 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AdminAppBar(
-        title: "Student ID Cards".tr,
-        subtitle: "Generate student ID cards",
+        title: "Employee ID Cards".tr,
+        subtitle: "Generate Employee ID Cards",
       ),
-      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 1),
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 2),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -57,7 +57,7 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
                   children: [
                     SizedBox(width: fieldWidth, child: _buildFilterDropdown("Branch", _selectedBranch, ["All Branches", "Ecstasy School 1 (ECS001)", "Ecstasy School 2 (ECS002)", "Ecstasy (ECS003)", "Ecstasy (ECS004)"], (val) => setState(() => _selectedBranch = val!))),
                     SizedBox(width: fieldWidth, child: _buildFilterDropdown("Academic Year", _selectedYear, ["2025-26"], (val) => setState(() => _selectedYear = val!))),
-                    SizedBox(width: fieldWidth, child: _buildFilterDropdown("Active / Inactive", _selectedStatus, ["All students", "Only Active", "Only Inactive"], (val) => setState(() => _selectedStatus = val!))),
+                    SizedBox(width: fieldWidth, child: _buildFilterDropdown("Active / Inactive", _selectedStatus, ["All employees", "Only Active", "Only Inactive"], (val) => setState(() => _selectedStatus = val!))),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -130,7 +130,7 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
                       child: Text("Download Selected ID Cards".tr, style: const TextStyle(color: Colors.white)),
                     ),
                     ElevatedButton(
-                      onPressed: () => _showDownloadDialog(targetName: "all students"),
+                      onPressed: () => _showDownloadDialog(targetName: "All employees"),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.success, // green
                         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -237,7 +237,7 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
                         DataCell(Text(data['address'] ?? "")),
                         DataCell(
                           InkWell(
-                            onTap: () => _showDownloadDialog(studentData: data),
+                            onTap: () => _showDownloadDialog(employeeData: data),
                             child: Container(
                               padding: const EdgeInsets.all(4),
                               decoration: const BoxDecoration(
@@ -362,7 +362,7 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
   }
 
   List<Map<String, dynamic>> get _filteredData {
-    final students = _students;
+    final students = _employees;
     if (_searchQuery.isEmpty) return students;
     final query = _searchQuery.toLowerCase();
     return students.where((student) {
@@ -414,7 +414,7 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
     );
   }
 
-  void _showDownloadDialog({String? targetName, Map<String, dynamic>? studentData}) {
+  void _showDownloadDialog({String? targetName, Map<String, dynamic>? employeeData}) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -445,10 +445,10 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (studentData != null) _buildIdCardPreview(studentData),
-              if (studentData != null) const SizedBox(height: 16),
+              if (employeeData != null) _buildIdCardPreview(employeeData),
+              if (employeeData != null) const SizedBox(height: 16),
               Text(
-                "Are you sure you want to download ID card for ${targetName ?? studentData?['name'] ?? ''} ?".tr,
+                "Are you sure you want to download ID card for ${targetName ?? employeeData?['name'] ?? ''} ?".tr,
                 style: const TextStyle(fontSize: 14, color: Colors.black87),
                 textAlign: TextAlign.center,
               ),
@@ -467,11 +467,11 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
             ElevatedButton(
               onPressed: () {
                 Navigator.pop(context); // Close dialog
-                if (studentData != null) {
+                if (employeeData != null) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => AdminStudentIdCardPrintScreen(studentData: studentData),
+                      builder: (context) => AdminEmployeeIdCardPrintScreen(employeeData: employeeData),
                     ),
                   );
                 } else {
@@ -493,8 +493,8 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
     );
   }
 
-  Widget _buildIdCardPreview(Map<String, dynamic> studentData) {
-    final photo = studentData['photoPath'];
+  Widget _buildIdCardPreview(Map<String, dynamic> employeeData) {
+    final photo = employeeData['photoPath'];
     final bool hasValidPhoto = photo != null && File(photo.toString()).existsSync();
     final headerColor = Colors.blue.shade800;
     
@@ -559,7 +559,7 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      "STUDENT",
+                      "EMPLOYEE",
                       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10, letterSpacing: 1.5, color: headerColor),
                     ),
                   ],
@@ -571,7 +571,7 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        studentData['name'] ?? "",
+                        employeeData['name'] ?? "",
                         style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
                         softWrap: false,
                         overflow: TextOverflow.ellipsis,
@@ -579,12 +579,12 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
                       const SizedBox(height: 4),
                       Divider(color: headerColor, thickness: 1.5, endIndent: 20),
                       const SizedBox(height: 8),
-                      _buildIdInfoRow("Class", "${studentData['class'] ?? ''} - ${studentData['section'] ?? 'A'}"),
-                      _buildIdInfoRow("Roll No.", studentData['roll']?.toString().replaceAll('Roll No: ', '') ?? "N/A"),
-                      _buildIdInfoRow("Gender", studentData['gender'] ?? ""),
-                      _buildIdInfoRow("Parent", studentData['mobile'] ?? studentData['phone'] ?? ""),
-                      _buildIdInfoRow("Email", studentData['email'] ?? ""),
-                      _buildIdInfoRow("Mother", studentData['mother'] ?? ""),
+                      _buildIdInfoRow("Class", "${employeeData['class'] ?? '-'} ${employeeData['section'] ?? 'A'}"),
+                      _buildIdInfoRow("Code", employeeData['employeeCode'] ?? "N/A"),
+                      _buildIdInfoRow("Gender", employeeData['gender'] ?? ""),
+                      _buildIdInfoRow("Phone", employeeData['phone'] ?? ""),
+                      _buildIdInfoRow("Email", employeeData['email'] ?? ""),
+                      _buildIdInfoRow("Exp.", employeeData['experience'] ?? "N/A"),
                     ],
                   ),
                 ),
@@ -613,7 +613,7 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
                       }),
                     ),
                     const SizedBox(height: 4),
-                    Text(studentData['admission'] ?? studentData['admNo'] ?? "", style: const TextStyle(fontSize: 9, fontFamily: 'monospace', color: Colors.grey)),
+                    Text(employeeData['employeeCode'] ?? "0000", style: const TextStyle(fontSize: 9, fontFamily: 'monospace', color: Colors.grey)),
                   ],
                 ),
                 Column(
