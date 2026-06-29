@@ -54,8 +54,8 @@ class AdminBottomNavBar extends StatelessWidget {
           label: "Students".tr,
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.person_outline),
-          label: "Teachers".tr,
+          icon: Icon(Icons.people_outline),
+          label: "Employees".tr,
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.business_outlined),

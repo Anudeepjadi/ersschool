@@ -1,160 +1,266 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:ersschool/core/localization/language_manager.dart';
+import 'package:ersschool/core/theme/app_colors.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
+import '../widgets/admin_app_bar.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+import 'admin_employee_id_card_print_screen.dart';
 
-class AdminEmployeeDetailsScreen extends StatelessWidget {
+class AdminEmployeeDetailsScreen extends StatefulWidget {
   final Map<String, dynamic> employee;
-
   const AdminEmployeeDetailsScreen({super.key, required this.employee});
 
   @override
+  State<AdminEmployeeDetailsScreen> createState() => _AdminEmployeeDetailsScreenState();
+}
+
+class _AdminEmployeeDetailsScreenState extends State<AdminEmployeeDetailsScreen> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF8FAFC), // Slate 50
       bottomNavigationBar: const AdminBottomNavBar(currentIndex: 2),
-      backgroundColor: const Color(0xFFF5F7FF),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            children: [
-              // ─── Top Header with Buttons on Right ────────────────────────
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                color: Colors.white,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    _topActionBtn("Print", const Color(0xFF1E2843), () => _printDetails(context)),
-                    const SizedBox(width: 10),
-                    _topActionBtn("Close", Colors.grey.shade600, () => Navigator.pop(context)),
-                  ],
-                ),
-              ),
-
-              // ─── Centered Title ──────────────────────────────────────────
-              const SizedBox(height: 20),
-              const Center(
-                child: Text(
-                  "Employee Details",
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1E2875),
+      appBar: AdminAppBar(
+        title: "Employee Profile".tr,
+        subtitle: "View detailed information",
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Top Profile Header
+            _buildProfileHeader(),
+            
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  // Action Buttons Row
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        _buildActionButton(Icons.currency_rupee, "Salary", Colors.green.shade700, () {}),
+                        _buildActionButton(Icons.print, "Print Profile", AppColors.primary, () => _printDetails(context)),
+                        _buildActionButton(Icons.badge, "Print ID", AppColors.primaryDark, () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AdminEmployeeIdCardPrintScreen(employeeData: widget.employee),
+                            ),
+                          );
+                        }),
+                        _buildActionButton(Icons.close, "Close", Colors.grey.shade700, () => Navigator.pop(context)),
+                      ],
+                    ),
                   ),
-                ),
-              ),
-
-              // ─── Centered Profile Picture ────────────────────────────────
-              const SizedBox(height: 24),
-              Center(
-                child: Container(
-                  height: 140,
-                  width: 140,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.white, width: 4),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.1),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Icon(Icons.person, size: 100, color: Colors.grey.shade400),
-                ),
-              ),
-
-              const SizedBox(height: 32),
-
-              // ─── Details Grid (Rows with Two Columns) ───────────────────
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.05),
-                        blurRadius: 10,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  const SizedBox(height: 16),
+                  
+                  // Content Sections
+                  _buildInfoCard(
+                    title: "Personal Information",
+                    icon: Icons.person_outline,
                     children: [
-                      _buildRow(
-                        _buildDetailRow("Employee Code:", employee['employeeCode'] ?? '-'),
-                        _buildDetailRow("Branch:", employee['school'] ?? 'N/A'),
-                      ),
-                      const SizedBox(height: 16),
-                      _buildRow(
-                        _buildDetailRow("Full Name:", employee['name'] ?? 'N/A'),
-                        _buildDetailRow("Date Of Birth:", "-"),
-                      ),
-                      const SizedBox(height: 16),
-                      _buildRow(
-                        _buildDetailRow("Gender:", employee['gender'] ?? 'N/A'),
-                        _buildDetailRow("Email:", "null, null"),
-                      ),
-                      const SizedBox(height: 16),
-                      _buildRow(
-                        _buildDetailRow("Contact Mobile:", employee['phone'] ?? 'N/A'),
-                        _buildDetailRow("Aadhaar Number:", "-"),
-                      ),
-                      const SizedBox(height: 16),
-                      _buildRow(
-                        _buildDetailRow("Address:", "Hyderabad"),
-                        _buildDetailRow("Employee Role:", employee['department'] ?? 'Employee'),
-                      ),
-                      const SizedBox(height: 16),
-                      _buildRow(
-                        _buildDetailRow("Employee Type:", "Full Time Employee"),
-                        _buildDetailRow("Salary:", "-"),
-                      ),
-                      const SizedBox(height: 16),
-                      _buildRow(
-                        _buildDetailRow("Designation:", employee['subject'] ?? 'Staff'),
-                        _buildDetailRow("Is Active:", employee['status'] == 'Active' ? "True" : "False"),
-                      ),
-                      const SizedBox(height: 16),
-                      _buildRow(
-                        _buildDetailRow("Date of Join:", "-"),
-                        _buildDetailRow("Released Date:", "-"),
-                      ),
-                      const SizedBox(height: 16),
-                      _buildDetailRow("Other Details:", "-"),
+                      _buildDetailRow("Full Name", widget.employee['name'] ?? "N/A"),
+                      _buildDetailRow("Gender", widget.employee['gender'] ?? "N/A"),
+                      _buildDetailRow("Date of Birth", widget.employee['dob'] ?? "N/A"),
+                      _buildDetailRow("Aadhaar Number", widget.employee['aadhaar'] ?? "N/A"),
+                      _buildDetailRow("Address", widget.employee['address'] ?? "Hyderabad", isMultiLine: true),
                     ],
                   ),
-                ),
+                  
+                  _buildInfoCard(
+                    title: "Contact Details",
+                    icon: Icons.contact_phone_outlined,
+                    children: [
+                      _buildDetailRow("Primary Mobile", widget.employee['phone'] ?? "N/A"),
+                      _buildDetailRow("Primary Email", widget.employee['email'] ?? "N/A"),
+                      _buildDetailRow("Secondary Mobile", widget.employee['secondary_mobile'] ?? "N/A"),
+                    ],
+                  ),
+                  
+                  _buildInfoCard(
+                    title: "Professional Information",
+                    icon: Icons.work_outline,
+                    children: [
+                      _buildDetailRow("Employee Code", widget.employee['employeeCode'] ?? "N/A"),
+                      _buildDetailRow("Role / Dept", widget.employee['department'] ?? "N/A"),
+                      _buildDetailRow("Designation", widget.employee['subject'] ?? "Staff"),
+                      _buildDetailRow("Employee Type", widget.employee['employee_type'] ?? "Full Time"),
+                      _buildDetailRow("Branch", widget.employee['school'] ?? "N/A"),
+                      _buildDetailRow("Date of Join", widget.employee['date_of_join'] ?? "N/A"),
+                      _buildDetailRow("Experience", widget.employee['experience'] ?? "N/A"),
+                    ],
+                  ),
+                ],
               ),
-
-              const SizedBox(height: 40),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _topActionBtn(String label, Color color, VoidCallback onTap) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(6),
-        ),
-        child: Text(
-          label,
-          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+  Widget _buildProfileHeader() {
+    final String status = (widget.employee['status'] ?? 'Active').toString();
+    final bool isActive = status == 'Active';
+
+    final photo = widget.employee['avatar'] ?? widget.employee['photoPath'];
+    final bool hasValidPhoto = photo != null && File(photo.toString()).existsSync();
+
+    return Container(
+      width: double.infinity,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        border: Border(bottom: BorderSide(color: Color(0xFFE2E8F0))),
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
+      child: Column(
+        children: [
+          // Photo with border
+          Container(
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: AppColors.primary.withValues(alpha: 0.2), width: 2),
+            ),
+            child: CircleAvatar(
+              radius: 60,
+              backgroundColor: Colors.grey.shade100,
+              backgroundImage: hasValidPhoto
+                  ? FileImage(File(photo.toString()))
+                  : null,
+              child: !hasValidPhoto
+                  ? const Icon(Icons.person, size: 60, color: Colors.grey)
+                  : null,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            widget.employee['name']?.toString() ?? "Employee Name".tr,
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color(0xFF1E293B)),
+          ),
+          const SizedBox(height: 4),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "${widget.employee['department'] ?? 'Role'.tr} | ${widget.employee['employeeCode'] ?? 'N/A'}",
+                style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+              ),
+              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                decoration: BoxDecoration(
+                  color: isActive ? Colors.green.shade50 : Colors.red.shade50,
+                  borderRadius: BorderRadius.circular(100),
+                  border: Border.all(color: isActive ? Colors.green.shade200 : Colors.red.shade200),
+                ),
+                child: Text(
+                  status.tr.toUpperCase(),
+                  style: TextStyle(
+                    color: isActive ? Colors.green.shade700 : Colors.red.shade700,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoCard({required String title, required IconData icon, required List<Widget> children}) {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              children: [
+                Icon(icon, size: 20, color: AppColors.primary),
+                const SizedBox(width: 8),
+                Text(
+                  title.tr,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: Color(0xFF334155),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Divider(height: 1),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(children: children),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDetailRow(String label, String value, {bool isMultiLine = false}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12.0),
+      child: Row(
+        crossAxisAlignment: isMultiLine ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: 120,
+            child: Text(
+              label.tr,
+              style: TextStyle(color: Colors.grey.shade500, fontSize: 13),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value.toString().tr,
+              style: const TextStyle(
+                color: Color(0xFF1E293B),
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionButton(IconData icon, String text, Color color, VoidCallback onPressed) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 8.0),
+      child: ElevatedButton.icon(
+        onPressed: onPressed,
+        icon: Icon(icon, size: 16),
+        label: Text(text.tr, style: const TextStyle(fontSize: 13)),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: color,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
       ),
     );
@@ -185,13 +291,13 @@ class AdminEmployeeDetailsScreen extends StatelessWidget {
                       child: pw.Column(
                         crossAxisAlignment: pw.CrossAxisAlignment.start,
                         children: [
-                          _pdfDetailRow("Employee Code:", employee['employeeCode'] ?? '-'),
-                          _pdfDetailRow("Full Name:", employee['name'] ?? 'N/A'),
-                          _pdfDetailRow("Gender:", employee['gender'] ?? 'N/A'),
-                          _pdfDetailRow("Contact Mobile:", employee['phone'] ?? 'N/A'),
+                          _pdfDetailRow("Employee Code:", widget.employee['employeeCode'] ?? '-'),
+                          _pdfDetailRow("Full Name:", widget.employee['name'] ?? 'N/A'),
+                          _pdfDetailRow("Gender:", widget.employee['gender'] ?? 'N/A'),
+                          _pdfDetailRow("Contact Mobile:", widget.employee['phone'] ?? 'N/A'),
                           _pdfDetailRow("Address:", "Hyderabad"),
                           _pdfDetailRow("Employee Type:", "Full Time Employee"),
-                          _pdfDetailRow("Designation:", employee['subject'] ?? 'Staff'),
+                          _pdfDetailRow("Designation:", widget.employee['subject'] ?? 'Staff'),
                           _pdfDetailRow("Date of Join:", "-"),
                         ],
                       ),
@@ -201,13 +307,13 @@ class AdminEmployeeDetailsScreen extends StatelessWidget {
                       child: pw.Column(
                         crossAxisAlignment: pw.CrossAxisAlignment.start,
                         children: [
-                          _pdfDetailRow("Branch:", employee['school'] ?? 'N/A'),
+                          _pdfDetailRow("Branch:", widget.employee['school'] ?? 'N/A'),
                           _pdfDetailRow("Date Of Birth:", "-"),
                           _pdfDetailRow("Email:", "null, null"),
                           _pdfDetailRow("Aadhaar Number:", "-"),
-                          _pdfDetailRow("Employee Role:", employee['department'] ?? 'Employee'),
+                          _pdfDetailRow("Employee Role:", widget.employee['department'] ?? 'Employee'),
                           _pdfDetailRow("Salary:", "-"),
-                          _pdfDetailRow("Is Active:", employee['status'] == 'Active' ? "True" : "False"),
+                          _pdfDetailRow("Is Active:", widget.employee['status'] == 'Active' ? "True" : "False"),
                           _pdfDetailRow("Released Date:", "-"),
                         ],
                       ),
@@ -226,7 +332,7 @@ class AdminEmployeeDetailsScreen extends StatelessWidget {
 
       await Printing.layoutPdf(
         onLayout: (PdfPageFormat format) async => pdf.save(),
-        name: 'Employee_${employee['name']?.toString().replaceAll(' ', '_') ?? 'Details'}.pdf',
+        name: 'Employee_${widget.employee['name']?.toString().replaceAll(' ', '_') ?? 'Details'}.pdf',
       );
     } catch (e) {
       debugPrint("Print Error: $e");
@@ -252,34 +358,6 @@ class AdminEmployeeDetailsScreen extends StatelessWidget {
           pw.Text(value, style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold, color: PdfColor.fromInt(0xFF1E2875))),
         ],
       ),
-    );
-  }
-
-  Widget _buildRow(Widget left, Widget right) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(child: left),
-        const SizedBox(width: 24),
-        Expanded(child: right),
-      ],
-    );
-  }
-
-  Widget _buildDetailRow(String label, String value) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: const TextStyle(fontSize: 13, color: Color(0xFF1E2875), fontWeight: FontWeight.w600),
-        ),
-      ],
     );
   }
 }

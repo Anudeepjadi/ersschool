@@ -1,4 +1,4 @@
-import 'dart:io';
+
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/data/app_data_store.dart';
@@ -49,6 +49,14 @@ class AdminExaminationsScreen extends StatefulWidget {
     this.onOpenDrawer,
     this.initialFeature = ExaminationFeature.menu,
     this.openDrawer = false,
+  final bool openDrawer;
+  final ExaminationFeature initialFeature;
+
+  const AdminExaminationsScreen({
+    super.key,
+    this.onOpenDrawer,
+    this.openDrawer = false,
+    this.initialFeature = ExaminationFeature.menu,
   });
 
   @override
@@ -256,22 +264,7 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
     }
   }
 
-  String _getFeatureLabel(ExaminationFeature feature) {
-    switch (feature) {
-      case ExaminationFeature.menu:
-        return "Main Menu";
-      case ExaminationFeature.examDetails:
-        return "Exam Details";
-      case ExaminationFeature.examTimetable:
-        return "Exam Timetable";
-      case ExaminationFeature.examHallTickets:
-        return "Exam Hall Tickets";
-      case ExaminationFeature.gradeReport:
-        return "Grade Report";
-      case ExaminationFeature.gradeReportCustom:
-        return "Grade Report Custom";
-    }
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -331,16 +324,18 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
 
   Widget _buildMainMenuView() {
     final List<Map<String, dynamic>> menuItems = [
-      {'title': 'Exam Details', 'feature': ExaminationFeature.examDetails},
-      {'title': 'Exam Timetable', 'feature': ExaminationFeature.examTimetable},
+      {'title': 'Exam Details', 'feature': ExaminationFeature.examDetails, 'icon': Icons.description_outlined},
+      {'title': 'Exam Timetable', 'feature': ExaminationFeature.examTimetable, 'icon': Icons.calendar_month_outlined},
       {
         'title': 'Exam Hall Tickets',
-        'feature': ExaminationFeature.examHallTickets
+        'feature': ExaminationFeature.examHallTickets,
+        'icon': Icons.confirmation_number_outlined
       },
-      {'title': 'Grade Report', 'feature': ExaminationFeature.gradeReport},
+      {'title': 'Grade Report', 'feature': ExaminationFeature.gradeReport, 'icon': Icons.assessment_outlined},
       {
         'title': 'Grade Report Custom',
-        'feature': ExaminationFeature.gradeReportCustom
+        'feature': ExaminationFeature.gradeReportCustom,
+        'icon': Icons.settings_suggest_outlined
       },
     ];
 
@@ -367,6 +362,14 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
               ListTile(
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                leading: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF5F7FF),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(item['icon'] as IconData, color: AppColors.primary, size: 20),
+                ),
                 title: Text(
                   (item['title'] as String).tr,
                   style: const TextStyle(

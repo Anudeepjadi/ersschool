@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
 import '../widgets/admin_bottom_nav_bar.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/data/app_data_store.dart';
@@ -80,24 +81,7 @@ class _AdminEmployeeListScreenState extends State<AdminEmployeeListScreen> {
         physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
-            // 1. Centered Title (Layout from image, Theme from App)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 24),
-              color: Colors.white,
-              child: Center(
-                child: Text(
-                  widget.staffType == 'Attender' ? "Attender/Aaya List" : "${widget.staffType} List",
-                  style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1E2875), // Using app's primary text color
-                  ),
-                ),
-              ),
-            ),
 
-            // 2. Control Row (Branch Dropdown & Add New Button)
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
               child: Row(
@@ -145,7 +129,7 @@ class _AdminEmployeeListScreenState extends State<AdminEmployeeListScreen> {
                     onPressed: () {
                       Navigator.push(
                         context, 
-                        MaterialPageRoute(builder: (_) => AdminRegisterEmployeeScreen(staffType: widget.staffType))
+                        MaterialPageRoute(builder: (_) => const AdminRegisterEmployeeScreen())
                       );
                     },
                     style: ElevatedButton.styleFrom(
@@ -272,7 +256,14 @@ class _AdminEmployeeListScreenState extends State<AdminEmployeeListScreen> {
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
-        onTap: () => _showEmployeeDetailsDialog(emp),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AdminEmployeeDetailsScreen(employee: emp),
+            ),
+          );
+        },
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
           child: Row(
@@ -280,14 +271,19 @@ class _AdminEmployeeListScreenState extends State<AdminEmployeeListScreen> {
               CircleAvatar(
                 radius: 24,
                 backgroundColor: AppColors.primary.withValues(alpha: 0.1),
-                child: Text(
-                  emp['avatar'] ?? 'E',
-                  style: const TextStyle(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                ),
+                backgroundImage: emp['photoPath'] != null && File(emp['photoPath']).existsSync()
+                    ? FileImage(File(emp['photoPath']))
+                    : null,
+                child: emp['photoPath'] != null && File(emp['photoPath']).existsSync()
+                    ? null
+                    : Text(
+                        emp['avatar'] ?? 'E',
+                        style: const TextStyle(
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -510,89 +506,6 @@ class _AdminEmployeeListScreenState extends State<AdminEmployeeListScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  void _showEmployeeDetailsDialog(Map<String, dynamic> emp) {
-    final isActive = emp['status'] == 'Active';
-    showDialog(
-      context: context,
-      builder: (context) => Dialog(
-        backgroundColor: const Color(0xFF1E2843),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text("Teacher Profile", style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
-                  IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white, size: 20),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ],
-              ),
-              const Divider(color: Colors.white24),
-              const SizedBox(height: 20),
-              CircleAvatar(
-                radius: 36,
-                backgroundColor: AppColors.primary.withValues(alpha: 0.2),
-                child: Text(
-                  emp['avatar'] ?? 'E',
-                  style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 24),
-                ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                emp['name'] ?? 'N/A',
-                style: const TextStyle(color: AppColors.primary, fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 4),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(
-                  color: (isActive ? const Color(0xFF10B981) : Colors.orange).withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  isActive ? "Active" : "Inactive",
-                  style: TextStyle(
-                    fontSize: 10, 
-                    fontWeight: FontWeight.bold, 
-                    color: isActive ? const Color(0xFF10B981) : Colors.orange
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
-              _buildProfileRow(Icons.menu_book_outlined, "Subject", emp['subject'] ?? 'N/A'),
-              const Divider(color: Colors.white12, height: 24),
-              _buildProfileRow(Icons.apartment, "Department", emp['department'] ?? 'N/A'),
-              const Divider(color: Colors.white12, height: 24),
-              _buildProfileRow(Icons.timeline, "Experience", "15 years"),
-              const Divider(color: Colors.white12, height: 24),
-              _buildProfileRow(Icons.phone_outlined, "Phone", emp['phone'] ?? 'N/A'),
-              const Divider(color: Colors.white12, height: 24),
-              _buildProfileRow(Icons.face_outlined, "Gender", emp['gender'] ?? 'Male'),
-              const SizedBox(height: 10),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildProfileRow(IconData icon, String label, String value) {
-    return Row(
-      children: [
-        Icon(icon, size: 18, color: AppColors.primary),
-        const SizedBox(width: 10),
-        Text(label, style: const TextStyle(color: Colors.grey, fontSize: 13, fontWeight: FontWeight.bold)),
-        const Spacer(),
-        Text(value, style: const TextStyle(color: AppColors.primary, fontSize: 13, fontWeight: FontWeight.bold)),
-      ],
     );
   }
 

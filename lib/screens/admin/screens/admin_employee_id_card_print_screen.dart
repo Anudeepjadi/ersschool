@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
-import '../../widgets/admin_bottom_nav_bar.dart';
+import '../widgets/admin_bottom_nav_bar.dart';
 import 'dart:io';
 import 'package:ersschool/core/theme/app_colors.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 import 'package:ersschool/core/utils/profile_manager.dart';
-import '../../widgets/admin_app_bar.dart';
+import '../widgets/admin_app_bar.dart';
 import 'dart:typed_data';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
-class AdminStudentIdCardPrintScreen extends StatelessWidget {
-  final Map<String, dynamic> studentData;
-  const AdminStudentIdCardPrintScreen({super.key, required this.studentData});
+class AdminEmployeeIdCardPrintScreen extends StatelessWidget {
+  final Map<String, dynamic> employeeData;
+  const AdminEmployeeIdCardPrintScreen({super.key, required this.employeeData});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 1),
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 2),
       backgroundColor: const Color(0xFFF1F5F9), // Slate 100
       appBar: AdminAppBar(
         title: "Print ID Card".tr,
-        subtitle: "Preview and print student ID",
+        subtitle: "Preview and print employee ID",
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -42,8 +42,8 @@ class AdminStudentIdCardPrintScreen extends StatelessWidget {
                   _actionButton(Icons.print, "Print Card", AppColors.primaryDark, () async {
                     try {
                       await Printing.layoutPdf(
-                        onLayout: (PdfPageFormat format) => _generatePdf(format, studentData),
-                        name: 'ID_Card_${studentData['name'] ?? 'student'}',
+                        onLayout: (PdfPageFormat format) => _generatePdf(format, employeeData),
+                        name: 'ID_Card_${employeeData['name'] ?? 'student'}',
                       );
                     } catch (e) {
                       if (!context.mounted) return;
@@ -54,10 +54,10 @@ class AdminStudentIdCardPrintScreen extends StatelessWidget {
                   }),
                   _actionButton(Icons.share, "Share PDF", Colors.green.shade700, () async {
                     try {
-                      final pdfBytes = await _generatePdf(PdfPageFormat.a4, studentData);
+                      final pdfBytes = await _generatePdf(PdfPageFormat.a4, employeeData);
                       await Printing.sharePdf(
                         bytes: pdfBytes,
-                        filename: "ID_Card_${studentData['admission'] ?? studentData['name']}.pdf",
+                        filename: "ID_Card_${employeeData['admission'] ?? employeeData['name']}.pdf",
                       );
                     } catch (e) {
                       if (!context.mounted) return;
@@ -77,7 +77,7 @@ class AdminStudentIdCardPrintScreen extends StatelessWidget {
   }
 
   Widget _buildProfessionalIdCard() {
-    final photo = studentData['avatar'] ?? studentData['photoPath'];
+    final photo = employeeData['photoPath'];
     final bool hasValidPhoto = photo != null && File(photo.toString()).existsSync();
     const headerColor = Color(0xFF1E40AF); // Deeper blue
     
@@ -155,7 +155,7 @@ class AdminStudentIdCardPrintScreen extends StatelessWidget {
                           : const Icon(Icons.person, color: Colors.grey, size: 50),
                     ),
                     const SizedBox(height: 8),
-                    const Text("STUDENT", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10, letterSpacing: 1.5, color: headerColor)),
+                    const Text("EMPLOYEE", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10, letterSpacing: 1.5, color: headerColor)),
                   ],
                 ),
                 const SizedBox(width: 18),
@@ -166,7 +166,7 @@ class AdminStudentIdCardPrintScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        studentData['name'] ?? "",
+                        employeeData['name'] ?? "",
                         style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
                         softWrap: false,
                         overflow: TextOverflow.ellipsis,
@@ -174,12 +174,12 @@ class AdminStudentIdCardPrintScreen extends StatelessWidget {
                       const SizedBox(height: 4),
                       const Divider(color: headerColor, thickness: 1.5, endIndent: 20),
                       const SizedBox(height: 8),
-                      _detailItem("Class", "${studentData['class'] ?? ''} - ${studentData['section'] ?? 'A'}"),
-                      _detailItem("Roll No.", studentData['roll']?.toString().replaceAll('Roll No: ', '') ?? "N/A"),
-                      _detailItem("Gender", studentData['gender'] ?? ""),
-                      _detailItem("Parent", studentData['mobile'] ?? studentData['phone'] ?? ""),
-                      _detailItem("Email", studentData['email'] ?? ""),
-                      _detailItem("Mother", studentData['mother'] ?? ""),
+                      _detailItem("Class", "${employeeData['class'] ?? ''} - ${employeeData['section'] ?? 'A'}"),
+                      _detailItem("Code", employeeData['employeeCode'] ?? "N/A"),
+                      _detailItem("Gender", employeeData['gender'] ?? ""),
+                      _detailItem("Phone", employeeData['phone'] ?? ""),
+                      _detailItem("Email", employeeData['email'] ?? ""),
+                      _detailItem("Exp.", employeeData['experience'] ?? ""),
                     ],
                   ),
                 ),
@@ -211,7 +211,7 @@ class AdminStudentIdCardPrintScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      studentData['admission'] ?? studentData['admNo'] ?? "",
+                      employeeData['employeeCode'] ?? "0000",
                       style: const TextStyle(fontSize: 10, fontFamily: 'monospace', fontWeight: FontWeight.bold),
                     ),
                   ],
@@ -288,7 +288,7 @@ class AdminStudentIdCardPrintScreen extends StatelessWidget {
     );
   }
 
-  Future<Uint8List> _generatePdf(PdfPageFormat format, Map<String, dynamic> studentData) async {
+  Future<Uint8List> _generatePdf(PdfPageFormat format, Map<String, dynamic> employeeData) async {
     final pdf = pw.Document();
     final headerColor = PdfColor.fromInt(0xFF1E40AF);
     final detailTextColor = PdfColor.fromInt(0xFF1E2875);
@@ -301,7 +301,7 @@ class AdminStudentIdCardPrintScreen extends StatelessWidget {
     } catch (_) {}
 
     pw.ImageProvider? studentPhoto;
-    final photo = studentData['avatar'] ?? studentData['photoPath'];
+    final photo = employeeData['photoPath'];
     if (photo != null && File(photo.toString()).existsSync()) {
       studentPhoto = pw.MemoryImage(File(photo.toString()).readAsBytesSync());
     }
@@ -370,7 +370,7 @@ class AdminStudentIdCardPrintScreen extends StatelessWidget {
                                   : null,
                             ),
                             pw.SizedBox(height: 6),
-                            pw.Text("STUDENT", style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 9, color: headerColor)),
+                            pw.Text("EMPLOYEE", style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 9, color: headerColor)),
                           ],
                         ),
                         pw.SizedBox(width: 16),
@@ -379,18 +379,18 @@ class AdminStudentIdCardPrintScreen extends StatelessWidget {
                             crossAxisAlignment: pw.CrossAxisAlignment.start,
                             children: [
                               pw.Text(
-                                studentData['name'] ?? "",
+                                employeeData['name'] ?? "",
                                 style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold, color: detailTextColor),
                               ),
                               pw.Padding(
                                 padding: const pw.EdgeInsets.only(top: 2, bottom: 8),
                                 child: pw.Divider(color: headerColor, thickness: 1.5),
                               ),
-                              _pdfDetailItem("Class", "${studentData['class'] ?? ''} - ${studentData['section'] ?? 'A'}", detailTextColor),
-                              _pdfDetailItem("Roll No.", studentData['roll']?.toString().replaceAll('Roll No: ', '') ?? "N/A", detailTextColor),
-                              _pdfDetailItem("Gender", studentData['gender'] ?? "", detailTextColor),
-                              _pdfDetailItem("Parent", studentData['mobile'] ?? studentData['phone'] ?? "", detailTextColor),
-                              _pdfDetailItem("Admission", studentData['admission'] ?? studentData['admNo'] ?? "", detailTextColor),
+                              _pdfDetailItem("Class", "${employeeData['class'] ?? ''} - ${employeeData['section'] ?? 'A'}", detailTextColor),
+                              _pdfDetailItem("Code", employeeData['employeeCode'] ?? "N/A", detailTextColor),
+                              _pdfDetailItem("Gender", employeeData['gender'] ?? "", detailTextColor),
+                              _pdfDetailItem("Phone", employeeData['phone'] ?? "", detailTextColor),
+                              _pdfDetailItem("Role", employeeData['designation'] ?? employeeData['subject'] ?? "", detailTextColor),
                             ],
                           ),
                         ),
@@ -408,14 +408,14 @@ class AdminStudentIdCardPrintScreen extends StatelessWidget {
                           crossAxisAlignment: pw.CrossAxisAlignment.start,
                           children: [
                             pw.BarcodeWidget(
-                              data: studentData['admission'] ?? "0000",
+                              data: employeeData['employeeCode'] ?? "0000",
                               width: 70,
                               height: 25,
                               barcode: pw.Barcode.code128(),
                             ),
                             pw.SizedBox(height: 4),
                             pw.Text(
-                              studentData['admission'] ?? studentData['admNo'] ?? "",
+                              employeeData['employeeCode'] ?? "0000",
                               style: pw.TextStyle(fontSize: 8, fontWeight: pw.FontWeight.bold),
                             ),
                           ],
