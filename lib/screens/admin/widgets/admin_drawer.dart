@@ -1,1 +1,450 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/utils/profile_manager.dart';
+import '../../login/login_screen.dart' show LoginScreen;
+
+import '../screens/admin_attendance_screen.dart';
+import '../screens/admin_fees_screen.dart';
+import '../screens/admin_examinations_screen.dart';
+import '../screens/admin_hostel_screen.dart';
+import '../screens/admin_library_screen.dart';
+import '../screens/admin_transport_screen.dart';
+import '../screens/admin_events_screen.dart';
+import '../screens/admin_communications_screen.dart';
+import '../screens/admin_id_cards_screen.dart';
+import '../screens/admin_certificates_screen.dart';
+import '../screens/admin_reports_screen.dart';
+import '../screens/reports/holidays_list_report_screen.dart';
+import '../screens/reports/fee_structure_report_screen.dart';
+import '../screens/reports/fee_collection_summary_screen.dart';
+import '../screens/reports/fee_due_list_screen.dart';
+import '../screens/reports/fee_collection_by_date_screen.dart';
+import '../screens/reports/class_attendance_report_screen.dart';
+import '../screens/admin_invalid_info_screen.dart';
+import '../screens/admin_sms_screen.dart';
+import '../screens/admin_settings_screen.dart';
+import '../screens/admin_help_center_screen.dart';
+import '../screens/admin_chat_support_screen.dart';
+import '../screens/admin_system_updates_screen.dart';
+import '../screens/admin_video_tutorials_screen.dart';
+import '../screens/admin_about_us_screen.dart';
+import '../../teacher/screens/meetings_screen.dart';
+import '../../student/calendar/calendar_screen.dart';
+
+class AdminDrawer extends StatelessWidget {
+  final int? currentIndex;
+  final Function(int)? onTabSelected;
+
+  const AdminDrawer({
+    super.key,
+    this.currentIndex,
+    this.onTabSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      backgroundColor: Colors.white,
+      child: ListView(
+        padding: EdgeInsets.zero,
+        physics: const BouncingScrollPhysics(),
+        children: [
+          // Custom Header
+          Container(
+            padding: EdgeInsets.only(
+              top: MediaQuery.of(context).padding.top + 10,
+              left: 16,
+              right: 16,
+              bottom: 18,
+            ),
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [AppColors.primaryDark, AppColors.primaryDark],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Align(
+                  alignment: Alignment.topRight,
+                  child: IconButton(
+                    icon: const Icon(Icons.close, color: Colors.white, size: 22),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ),
+                Row(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 2),
+                      ),
+                      child: ValueListenableBuilder<String?>(
+                        valueListenable: ProfileManager().adminProfileImagePath,
+                        builder: (context, path, _) {
+                          return CircleAvatar(
+                            radius: 28,
+                            backgroundColor: Colors.white,
+                            backgroundImage: path != null ? FileImage(File(path)) : null,
+                            child: path == null ? const Icon(Icons.person, color: AppColors.primary, size: 36) : null,
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ValueListenableBuilder<String>(
+                            valueListenable: ProfileManager().adminName,
+                            builder: (context, name, _) {
+                              return Text(
+                                name,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            "Super Administrator",
+                            style: TextStyle(
+                              color: Colors.white.withValues(alpha: 0.85),
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                PopupMenuButton<String>(
+                  onSelected: (String school) {
+                    debugPrint("AdminDrawer selected school: $school");
+                    ProfileManager().selectedSchool.value = school;
+                  },
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                    const PopupMenuItem<String>(
+                      value: 'Ecstasy School 1',
+                      child: Text('Ecstasy School 1', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                    ),
+                    const PopupMenuItem<String>(
+                      value: 'Ecstasy School 2',
+                      child: Text('Ecstasy School 2', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                    ),
+                    const PopupMenuItem<String>(
+                      value: 'Ecstasy School 3',
+                      child: Text('Ecstasy School 3', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                    ),
+                  ],
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.white.withValues(alpha: 0.15)),
+                    ),
+                    child: ValueListenableBuilder<String>(
+                      valueListenable: ProfileManager().selectedSchool,
+                      builder: (context, selectedSchool, _) {
+                        return Row(
+                          children: [
+                            const Icon(Icons.school_outlined, color: Colors.white, size: 18),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                selectedSchool,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            Icon(
+                              Icons.keyboard_arrow_down,
+                              color: Colors.white.withValues(alpha: 0.7),
+                              size: 18,
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          
+          // MAIN Section
+          _buildDrawerSectionTitle("MAIN"),
+          _buildDrawerItem(Icons.grid_view_outlined, "Dashboard", currentIndex == 0, () {
+            if (onTabSelected != null) {
+              onTabSelected!(0);
+              Navigator.pop(context);
+            } else {
+              Navigator.pop(context);
+            }
+          }),
+          _buildDrawerItem(Icons.people_alt_outlined, "Students", currentIndex == 1, () {
+            if (onTabSelected != null) {
+              onTabSelected!(1);
+              Navigator.pop(context);
+            } else {
+              Navigator.pop(context);
+            }
+          }),
+          _buildDrawerItem(Icons.co_present_outlined, "Teachers", currentIndex == 2, () {
+            if (onTabSelected != null) {
+              onTabSelected!(2);
+              Navigator.pop(context);
+            } else {
+              Navigator.pop(context);
+            }
+          }),
+          _buildDrawerItem(Icons.corporate_fare_outlined, "Branches", currentIndex == 3, () {
+            if (onTabSelected != null) {
+              onTabSelected!(3);
+              Navigator.pop(context);
+            } else {
+              Navigator.pop(context);
+            }
+          }),
+          Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              leading: const Icon(Icons.groups_outlined, color: Color(0xFF757897)),
+              title: const Text(
+                "Meetings",
+                style: TextStyle(
+                  color: Color(0xFF1E2875),
+                  fontWeight: FontWeight.w500,
+                  fontSize: 13,
+                ),
+              ),
+              childrenPadding: const EdgeInsets.only(left: 32),
+              children: [
+                _buildDrawerSubItem("Schedule Online Meeting", () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const MeetingsScreen()));
+                }),
+                _buildDrawerSubItem("Calendar", () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const CalendarScreen()));
+                }),
+              ],
+            ),
+          ),
+          _buildDrawerItem(Icons.calendar_today_outlined, "Attendance", false, () {
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminAttendanceScreen()));
+          }),
+          _buildDrawerItem(Icons.currency_rupee, "Fees", false, () {
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminFeesScreen()));
+          }),
+          _buildDrawerItem(Icons.assignment_outlined, "Examination", false, () {
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminExaminationsScreen()));
+          }),
+          _buildDrawerItem(Icons.menu_book_outlined, "Library", false, () {
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminLibraryScreen()));
+          }),
+          _buildDrawerItem(Icons.directions_bus_outlined, "Transport", false, () {
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminTransportScreen()));
+          }),
+          _buildDrawerItem(Icons.bed_outlined, "Hostel", false, () {
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminHostelScreen()));
+          }),
+          _buildDrawerItem(Icons.event_outlined, "Events", false, () {
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEventsScreen()));
+          }),
+          _buildDrawerItem(Icons.campaign_outlined, "Communications", false, () {
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminCommunicationsScreen()));
+          }),
+          _buildDrawerItem(Icons.badge_outlined, "ID Card", false, () {
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminIDCardsScreen()));
+          }),
+          _buildDrawerItem(Icons.workspace_premium_outlined, "Certificates", false, () {
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminCertificatesScreen()));
+          }),
+          Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              leading: const Icon(Icons.assessment_outlined, color: Color(0xFF757897)),
+              title: const Text(
+                "Reports",
+                style: TextStyle(
+                  color: Color(0xFF1E2875),
+                  fontWeight: FontWeight.w500,
+                  fontSize: 13,
+                ),
+              ),
+              childrenPadding: const EdgeInsets.only(left: 32),
+              children: [
+                _buildDrawerSubItem("Reports Dashboard", () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminReportsScreen()));
+                }),
+                _buildDrawerSubItem("Holidays List", () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const HolidaysListReportScreen()));
+                }),
+                _buildDrawerSubItem("Fee Structure", () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const FeeStructureReportScreen()));
+                }),
+                _buildDrawerSubItem("Fee Collection", () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const FeeCollectionSummaryScreen()));
+                }),
+                _buildDrawerSubItem("Tuition Fee Due", () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const FeeDueListScreen(reportTitle: "Tuition Fee Due Students")));
+                }),
+                _buildDrawerSubItem("Transport Fee Due", () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const FeeDueListScreen(reportTitle: "Transport Fee Due Students")));
+                }),
+                _buildDrawerSubItem("Collection By Date", () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const FeeCollectionByDateScreen()));
+                }),
+                _buildDrawerSubItem("Attendance Report", () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const ClassAttendanceReportScreen()));
+                }),
+              ],
+            ),
+          ),
+          _buildDrawerItem(Icons.error_outline, "Invalid Info", false, () {
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminInvalidInfoScreen()));
+          }),
+          _buildDrawerItem(Icons.sms_outlined, "SMS", false, () {
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminSmsScreen()));
+          }),
+          _buildDrawerItem(Icons.settings_outlined, "Settings", false, () {
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminSettingsScreen()));
+          }),
+
+          const Divider(height: 20),
+
+          // SUPPORT Section
+          _buildDrawerSectionTitle("SUPPORT"),
+          _buildDrawerItem(Icons.help_outline, "Help Center", false, () {
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminHelpCenterScreen()));
+          }, showChevron: false),
+          _buildDrawerItem(Icons.headset_mic_outlined, "Chat Support", false, () {
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminChatSupportScreen()));
+          }, showChevron: false),
+          _buildDrawerItem(Icons.cloud_download_outlined, "System Updates", false, () {
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminSystemUpdatesScreen()));
+          }, showChevron: false),
+          _buildDrawerItem(Icons.play_circle_outline, "Video Tutorials", false, () {
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminVideoTutorialsScreen()));
+          }, showChevron: false),
+          _buildDrawerItem(Icons.info_outline, "About Us", false, () {
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminAboutUsScreen()));
+          }, showChevron: false),
+
+          const Divider(height: 20),
+          
+          ListTile(
+            leading: const Icon(Icons.logout, color: Colors.red),
+            title: const Text("Logout", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => LoginScreen()),
+              );
+            },
+          ),
+          const SizedBox(height: 20),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDrawerSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Text(
+        title.toUpperCase(),
+        style: const TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.bold,
+          color: Colors.grey,
+          letterSpacing: 1.0,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDrawerItem(
+    IconData icon,
+    String title,
+    bool selected,
+    VoidCallback onTap, {
+    bool showChevron = true,
+  }) {
+    return ListTile(
+      leading: Icon(icon, color: selected ? AppColors.primary : const Color(0xFF757897)),
+      title: Text(
+        title,
+        style: TextStyle(
+          color: selected ? AppColors.primary : const Color(0xFF1E2875),
+          fontWeight: selected ? FontWeight.bold : FontWeight.w500,
+          fontSize: 13,
+        ),
+      ),
+      trailing: showChevron
+          ? const Icon(Icons.chevron_right, size: 16, color: Colors.grey)
+          : null,
+      selected: selected,
+      onTap: onTap,
+      dense: true,
+    );
+  }
+
+  Widget _buildDrawerSubItem(String title, VoidCallback onTap) {
+    return ListTile(
+      title: Text(
+        title,
+        style: const TextStyle(
+          color: Color(0xFF1E2875),
+          fontWeight: FontWeight.w400,
+          fontSize: 12,
+        ),
+      ),
+      onTap: onTap,
+      dense: true,
+      visualDensity: const VisualDensity(vertical: -2),
+    );
+  }
+}
