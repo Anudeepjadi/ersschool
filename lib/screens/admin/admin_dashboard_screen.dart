@@ -23,6 +23,10 @@ import 'screens/admin_id_cards_screen.dart';
 import 'screens/admin_certificates_screen.dart';
 import 'screens/admin_reports_screen.dart';
 import 'screens/admin_class_details_screen.dart';
+import 'screens/admin_class_teachers_screen.dart';
+import 'screens/admin_assignments_screen.dart';
+import 'screens/admin_diary_screen.dart';
+import 'screens/admin_time_table_screen.dart';
 import 'screens/admin_settings_screen.dart';
 import 'screens/admin_help_center_screen.dart';
 import 'screens/admin_chat_support_screen.dart';
@@ -65,7 +69,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer(),
         onOpenProfile: () => _onTabChanged(4),
         onAddStudent: () {
-          Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminRegisterStudentScreen()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => const AdminRegisterStudentScreen()));
         },
         onAddTeacher: () {
           _onTabChanged(2);
@@ -245,13 +252,32 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             setState(() => currentIndex = 3);
             Navigator.pop(context);
           }),
-          _buildDrawerItem(Icons.class_outlined, "Classes", false, () {
-            Navigator.pop(context);
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (_) => const AdminClassDetailsScreen()));
-          }),
+          _buildDrawerExpansionItem(Icons.class_outlined, "Classes", [
+            _buildSubDrawerItem("Assignments", () {
+              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminAssignmentsScreen()));
+            }),
+            _buildSubDrawerItem("Attendance", () {
+              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminAttendanceScreen()));
+            }),
+            _buildSubDrawerItem("Class Details", () {
+              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminClassDetailsScreen()));
+            }),
+            _buildSubDrawerItem("Class Teachers", () {
+              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminClassTeachersScreen()));
+            }),
+            _buildSubDrawerItem("Diary", () {
+              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminDiaryScreen()));
+            }),
+            _buildSubDrawerItem("Time Table", () {
+              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminTimeTableScreen()));
+            }),
+          ]),
           _buildDrawerItem(Icons.calendar_today_outlined, "Attendance", false,
               () {
             Navigator.pop(context);
@@ -267,10 +293,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           }),
           _buildDrawerItem(Icons.assignment_outlined, "Examination", false, () {
             Navigator.pop(context);
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (_) => AdminExaminationsScreen()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => AdminExaminationsScreen()));
           }),
           _buildDrawerItem(Icons.menu_book_outlined, "Library", false, () {
             Navigator.pop(context);
@@ -428,6 +452,47 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       selected: selected,
       onTap: onTap,
       dense: true,
+    );
+  }
+
+  Widget _buildDrawerExpansionItem(
+    IconData icon,
+    String title,
+    List<Widget> children,
+  ) {
+    return Theme(
+      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+      child: ExpansionTile(
+        leading: Icon(icon, color: const Color(0xFF757897)),
+        title: Text(
+          title,
+          style: const TextStyle(
+            color: Color(0xFF1E2875),
+            fontWeight: FontWeight.w500,
+            fontSize: 13,
+          ),
+        ),
+        iconColor: AppColors.primary,
+        collapsedIconColor: Colors.grey,
+        childrenPadding: const EdgeInsets.only(left: 48),
+        children: children,
+      ),
+    );
+  }
+
+  Widget _buildSubDrawerItem(String title, VoidCallback onTap) {
+    return ListTile(
+      title: Text(
+        title,
+        style: const TextStyle(
+          color: Color(0xFF1E2875),
+          fontWeight: FontWeight.w500,
+          fontSize: 12,
+        ),
+      ),
+      onTap: onTap,
+      dense: true,
+      visualDensity: VisualDensity.compact,
     );
   }
 }
