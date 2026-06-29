@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../widgets/admin_app_bar.dart';
+import '../widgets/admin_bottom_nav_bar.dart';
 
 class AdminEventsScreen extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
@@ -106,6 +107,7 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FF),
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
       appBar: AdminAppBar(
         title: "Events",
         subtitle: "Manage school events and activities",
@@ -146,41 +148,40 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
       color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final double childWidth = (constraints.maxWidth - 24) / 4;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _buildSmallDropdown("Academic Year", _selectedYear, ['2026 - 27', '2025 - 26'], (v) => setState(() => _selectedYear = v!), childWidth),
-                    _buildSmallDropdown("Event Type", _selectedType, ['All Types', 'Sports', 'Academic', 'Meeting', 'Ceremony'], (v) => setState(() => _selectedType = v!), childWidth),
-                    _buildSmallDropdown("Month", _selectedMonth, ['Jun 2026', 'May 2026', 'Jul 2026'], (v) => setState(() => _selectedMonth = v!), childWidth),
-                    _buildSmallDropdown("Status", _selectedStatus, ['All Status', 'Upcoming', 'Ongoing', 'Completed', 'Cancelled'], (v) => setState(() => _selectedStatus = v!), childWidth),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Create Event — Coming soon!")),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF1E2875),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    elevation: 0,
-                  ),
-                  icon: const Icon(Icons.add, size: 18),
-                  label: const Text("Create Event", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                ),
-              ],
-            );
-          },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              child: Row(
+                children: [
+                  _buildSmallDropdown("Academic Year", _selectedYear, ['2026 - 27', '2025 - 26'], (v) => setState(() => _selectedYear = v!), 120),
+                  const SizedBox(width: 8),
+                  _buildSmallDropdown("Event Type", _selectedType, ['All Types', 'Sports', 'Academic', 'Meeting', 'Ceremony'], (v) => setState(() => _selectedType = v!), 120),
+                  const SizedBox(width: 8),
+                  _buildSmallDropdown("Month", _selectedMonth, ['Jun 2026', 'May 2026', 'Jul 2026'], (v) => setState(() => _selectedMonth = v!), 120),
+                  const SizedBox(width: 8),
+                  _buildSmallDropdown("Status", _selectedStatus, ['All Status', 'Upcoming', 'Ongoing', 'Completed', 'Cancelled'], (v) => setState(() => _selectedStatus = v!), 120),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            ElevatedButton.icon(
+              onPressed: () {
+                _showAddEventDialog(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF1E2875),
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                elevation: 0,
+              ),
+              icon: const Icon(Icons.add, size: 18),
+              label: const Text("Create Event", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+            ),
+          ],
         ),
       ),
     );
@@ -212,6 +213,43 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
               }).toList(),
               onChanged: onChanged,
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAddEventDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text('Add New Event'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const TextField(decoration: InputDecoration(labelText: 'Event Title', border: OutlineInputBorder())),
+            const SizedBox(height: 12),
+            const TextField(decoration: InputDecoration(labelText: 'Date & Time', border: OutlineInputBorder())),
+            const SizedBox(height: 12),
+            const TextField(decoration: InputDecoration(labelText: 'Venue', border: OutlineInputBorder())),
+            const SizedBox(height: 12),
+            DropdownButtonFormField<String>(
+              decoration: const InputDecoration(labelText: 'Event Type', border: OutlineInputBorder()),
+              items: ['Sports', 'Academic', 'Ceremony'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+              onChanged: (v) {},
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Event added successfully!')));
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1E2875), foregroundColor: Colors.white),
+            child: const Text('Save Event'),
           ),
         ],
       ),
@@ -515,15 +553,26 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
             children: [
               Text(title, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
               const SizedBox(height: 2),
-              Row(
+              Wrap(
+                spacing: 8,
+                runSpacing: 4,
                 children: [
-                  const Icon(Icons.access_time, size: 10, color: Colors.grey),
-                  const SizedBox(width: 4),
-                  Text(time, style: const TextStyle(fontSize: 10, color: Colors.grey)),
-                  const SizedBox(width: 8),
-                  const Icon(Icons.location_on_outlined, size: 10, color: Colors.grey),
-                  const SizedBox(width: 2),
-                  Text(venue, style: const TextStyle(fontSize: 10, color: Colors.grey)),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.access_time, size: 10, color: Colors.grey),
+                      const SizedBox(width: 4),
+                      Text(time, style: const TextStyle(fontSize: 10, color: Colors.grey)),
+                    ],
+                  ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.location_on_outlined, size: 10, color: Colors.grey),
+                      const SizedBox(width: 4),
+                      Text(venue, style: const TextStyle(fontSize: 10, color: Colors.grey)),
+                    ],
+                  ),
                 ],
               ),
             ],
@@ -612,80 +661,121 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          // Scrollable Table Grid
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: DataTable(
-              columnSpacing: 20,
-              headingRowHeight: 40,
-              dataRowMinHeight: 48,
-              dataRowMaxHeight: 48,
-              headingRowColor: WidgetStateProperty.all(const Color(0xFFF8FAFC)),
-              columns: const [
-                DataColumn(label: Text("Event Name", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)))),
-                DataColumn(label: Text("Type", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)))),
-                DataColumn(label: Text("Date & Time", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)))),
-                DataColumn(label: Text("Venue", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)))),
-                DataColumn(label: Text("Organized By", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)))),
-                DataColumn(label: Text("Status", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)))),
-                DataColumn(label: Text("Action", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)))),
-              ],
-              rows: filtered.map((e) {
-                final isUpcoming = e['status'] == 'Upcoming';
-                final isCompleted = e['status'] == 'Completed';
-                final isCancelled = e['status'] == 'Cancelled';
-                
-                Color statusColor = Colors.orange;
-                if (isUpcoming) {
-                  statusColor = Colors.green;
-                } else if (isCompleted) {
-                  statusColor = Colors.blue;
-                } else if (isCancelled) {
-                  statusColor = Colors.red;
-                }
+          // Event Cards List
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: filtered.length,
+            itemBuilder: (context, index) {
+              final e = filtered[index];
+              final isUpcoming = e['status'] == 'Upcoming';
+              final isCompleted = e['status'] == 'Completed';
+              final isCancelled = e['status'] == 'Cancelled';
+              
+              Color statusColor = Colors.orange;
+              if (isUpcoming) {
+                statusColor = Colors.green;
+              } else if (isCompleted) {
+                statusColor = Colors.blue;
+              } else if (isCancelled) {
+                statusColor = Colors.red;
+              }
 
-                return DataRow(
-                  cells: [
-                    DataCell(
-                      Row(
-                        children: [
-                          Icon(Icons.event_note_outlined, size: 14, color: statusColor),
-                          const SizedBox(width: 6),
-                          Text(e['name'], style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                        ],
+              return Container(
+                margin: const EdgeInsets.only(bottom: 12),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.grey.shade100),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: e['color'].withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(12),
                       ),
+                      child: Icon(Icons.event_note, color: e['color'], size: 20),
                     ),
-                    DataCell(Text(e['type'], style: const TextStyle(fontSize: 11, color: Color(0xFF757897)))),
-                    DataCell(
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(e['date'], style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                          Text(e['time'], style: const TextStyle(fontSize: 9, color: Colors.grey)),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  e['name'],
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF1E2875),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: statusColor.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  e['status'],
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                    color: statusColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            "${e['type']} | ${e['organizer']}",
+                            style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                          ),
+                          const SizedBox(height: 6),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Icon(Icons.calendar_today_outlined, size: 14, color: Colors.grey.shade500),
+                              const SizedBox(width: 4),
+                              Expanded(
+                                child: Text(
+                                  "${e['date']}, ${e['time']}",
+                                  style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Icon(Icons.location_on_outlined, size: 14, color: Colors.grey.shade500),
+                              const SizedBox(width: 4),
+                              Expanded(
+                                child: Text(
+                                  e['venue'],
+                                  style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ),
-                    DataCell(Text(e['venue'], style: const TextStyle(fontSize: 11, color: Color(0xFF757897)))),
-                    DataCell(Text(e['organizer'], style: const TextStyle(fontSize: 11, color: Color(0xFF757897)))),
-                    DataCell(
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                        decoration: BoxDecoration(
-                          color: statusColor.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          e['status'],
-                          style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: statusColor),
-                        ),
-                      ),
-                    ),
-                    DataCell(IconButton(icon: const Icon(Icons.more_vert, size: 16), onPressed: () {})),
                   ],
-                );
-              }).toList(),
-            ),
+                ),
+              );
+            },
           ),
           const SizedBox(height: 12),
           // Pagination row
@@ -781,3 +871,4 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
     );
   }
 }
+

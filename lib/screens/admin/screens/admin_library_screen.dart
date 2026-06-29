@@ -1,4 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import '../widgets/admin_app_bar.dart';
+import '../widgets/admin_bottom_nav_bar.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../../core/theme/app_colors.dart';
 
@@ -132,36 +134,8 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FF),
-      appBar: AppBar(
-        title: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Library Management",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white),
-            ),
-            Text(
-              "Track catalog, issuances, and returns",
-              style: TextStyle(fontSize: 12, color: Colors.white70),
-            ),
-          ],
-        ),
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
-        elevation: 0,
-        bottom: TabBar(
-          controller: _tabController,
-          indicatorColor: Colors.white,
-          indicatorWeight: 3,
-          labelColor: Colors.white,
-          unselectedLabelColor: Colors.white70,
-          labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-          tabs: const [
-            Tab(text: "Catalog & Stats"),
-            Tab(text: "Issued Register"),
-          ],
-        ),
-      ),
+      appBar: const AdminAppBar(title: "Library Management", subtitle: "Manage your account details"),
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
       body: TabBarView(
         controller: _tabController,
         children: [
@@ -170,8 +144,9 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: null,
         onPressed: () {},
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.primaryDark,
         icon: const Icon(Icons.add, color: Colors.white),
         label: const Text("Add Book", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
       ),
@@ -342,7 +317,7 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      "${log['rollNo']} • ${log['class']}",
+                      "${log['rollNo']} | ${log['class']}",
                       style: const TextStyle(fontSize: 11, color: Colors.grey),
                     ),
                     const Divider(height: 20),
@@ -645,3 +620,4 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
     );
   }
 }
+

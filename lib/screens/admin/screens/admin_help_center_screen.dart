@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../core/theme/app_colors.dart';
+import '../widgets/admin_app_bar.dart';
+import '../widgets/admin_bottom_nav_bar.dart';
 
 class AdminHelpCenterScreen extends StatefulWidget {
   const AdminHelpCenterScreen({super.key});
@@ -20,24 +21,8 @@ class _AdminHelpCenterScreenState extends State<AdminHelpCenterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FF),
-      appBar: AppBar(
-        title: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Help Center",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white),
-            ),
-            Text(
-              "Get help and support",
-              style: TextStyle(fontSize: 12, color: Colors.white70),
-            ),
-          ],
-        ),
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
-        elevation: 0,
-      ),
+      appBar: const AdminAppBar(title: "Help Center", subtitle: "Manage your account details"),
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.all(16),
@@ -143,7 +128,7 @@ class _AdminHelpCenterScreenState extends State<AdminHelpCenterScreen> {
             physics: const NeverScrollableScrollPhysics(),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              childAspectRatio: 2.2,
+              childAspectRatio: 1.8,
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
             ),
@@ -261,7 +246,7 @@ class _AdminHelpCenterScreenState extends State<AdminHelpCenterScreen> {
 
               return ListTile(
                 title: Text(tk['subject'], style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                subtitle: Text("ID: ${tk['id']} • Category: ${tk['category']}", style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                subtitle: Text("ID: ${tk['id']} | Category: ${tk['category']}", style: const TextStyle(fontSize: 11, color: Colors.grey)),
                 trailing: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -292,3 +277,4 @@ class _AdminHelpCenterScreenState extends State<AdminHelpCenterScreen> {
     );
   }
 }
+

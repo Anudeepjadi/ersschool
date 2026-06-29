@@ -3,13 +3,28 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../login/login_screen.dart';
+import '../../../core/utils/profile_manager.dart';
 import '../widgets/admin_app_bar.dart';
-import '../screens/admin_chat_support_screen.dart';
-
+import '../widgets/ai_bot_fab.dart';
+import '../screens/admin_attendance_screen.dart';
+import '../screens/admin_fees_screen.dart';
+import '../screens/admin_examinations_screen.dart';
+import '../screens/admin_library_screen.dart';
+import '../screens/admin_transport_screen.dart';
+import '../screens/admin_hostel_screen.dart';
+import '../screens/admin_events_screen.dart';
+import '../screens/admin_communications_screen.dart';
+import '../screens/admin_id_cards_screen.dart';
+import '../screens/admin_certificates_screen.dart';
+import '../screens/admin_reports_screen.dart';
+import '../screens/admin_invalid_info_screen.dart';
+import '../screens/admin_sms_screen.dart';
+import '../screens/admin_settings_screen.dart';
 class AdminMoreTab extends StatefulWidget {
-  final VoidCallback onOpenDrawer;
+  final VoidCallback? onOpenDrawer;
+  final VoidCallback? onOpenProfile;
 
-  const AdminMoreTab({super.key, required this.onOpenDrawer});
+  const AdminMoreTab({super.key, this.onOpenDrawer, this.onOpenProfile});
 
   @override
   State<AdminMoreTab> createState() => _AdminMoreTabState();
@@ -23,10 +38,20 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
   String _adminLocation = 'Hyderabad, Telangana, India';
   
   File? _selectedLocalImage;
-  String _networkImageUrl = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop';
+  String? _networkImageUrl;
   
   bool _tfaEnabled = true;
   final ImagePicker _imagePicker = ImagePicker();
+
+  @override
+  void initState() {
+    super.initState();
+    _adminName = ProfileManager().adminName.value;
+    final path = ProfileManager().adminProfileImagePath.value;
+    if (path != null) {
+      _selectedLocalImage = File(path);
+    }
+  }
 
   // Pick image helper
   Future<void> _pickImage(ImageSource source) async {
@@ -41,6 +66,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
         setState(() {
           _selectedLocalImage = File(image.path);
         });
+        ProfileManager().setAdminProfileImage(image.path);
         _showToast("Profile image updated successfully!");
       }
     } catch (e) {
@@ -190,8 +216,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                                 Navigator.pop(context);
                                 setState(() {
                                   _selectedLocalImage = null; // Clear picked
-                                  // Update network photo to another professional face for demonstration
-                                  _networkImageUrl = 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200&auto=format&fit=crop';
+                                  _networkImageUrl = null; // Removed demo image
                                 });
                                 _showToast("Photo captured successfully via simulated camera!");
                               },
@@ -279,6 +304,19 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                     _openSimulatedCamera();
                   },
                 ),
+                if (_selectedLocalImage != null)
+                  ListTile(
+                    leading: const Icon(Icons.delete_outline, color: Colors.red),
+                    title: const Text("Remove Photo", style: TextStyle(color: Colors.red)),
+                    onTap: () {
+                      Navigator.pop(context);
+                      setState(() {
+                        _selectedLocalImage = null;
+                        _networkImageUrl = null;
+                      });
+                      ProfileManager().setAdminProfileImage(null);
+                    },
+                  ),
               ],
             ),
           ),
@@ -375,6 +413,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                     _adminPhone = phoneCtrl.text;
                     _adminLocation = locCtrl.text;
                   });
+                  ProfileManager().setAdminName(nameCtrl.text.trim());
                   Navigator.pop(context);
                   _showToast("Admin profile details saved!");
                 },
@@ -396,16 +435,21 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
         title: 'Admin Profile',
         subtitle: 'Manage your account details',
         onOpenDrawer: widget.onOpenDrawer,
+        onProfileTap: widget.onOpenProfile,
       ),
-      floatingActionButton: _buildChatFab(),
+
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+        padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Avatar and Top details card
             _buildProfileHeaderCard(),
+            const SizedBox(height: 20),
+
+            // Admin Modules Grid
+            _buildAdminMenuGrid(),
             const SizedBox(height: 20),
 
             // Account Information
@@ -453,16 +497,134 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
           ],
         ),
       ),
+      floatingActionButton: const AiBotFab(),
+    );
+  }
+
+  // 1. Admin Modules Grid
+  Widget _buildAdminMenuGrid() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "Admin Modules",
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF1E2875),
+          ),
+        ),
+        const SizedBox(height: 10),
+        GridView.count(
+          crossAxisCount: 2,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          mainAxisSpacing: 12,
+          crossAxisSpacing: 12,
+          childAspectRatio: 2.8,
+          children: [
+            _buildGridItem(Icons.how_to_reg, "Attendance", Colors.blue, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminAttendanceScreen()));
+            }),
+            _buildGridItem(Icons.receipt_long, "Fees", Colors.green, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminFeesScreen()));
+            }),
+            _buildGridItem(Icons.assignment, "Examination", Colors.orange, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminExaminationsScreen()));
+            }),
+            _buildGridItem(Icons.menu_book, "Library", Colors.purple, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminLibraryScreen()));
+            }),
+            _buildGridItem(Icons.directions_bus, "Transport", Colors.indigo, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminTransportScreen()));
+            }),
+            _buildGridItem(Icons.bed, "Hostel", Colors.teal, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminHostelScreen()));
+            }),
+            _buildGridItem(Icons.event, "Events", Colors.pink, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEventsScreen()));
+            }),
+            _buildGridItem(Icons.campaign, "Communicate", Colors.cyan, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminCommunicationsScreen()));
+            }),
+            _buildGridItem(Icons.badge, "ID Card", Colors.brown, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminIDCardsScreen()));
+            }),
+            _buildGridItem(Icons.workspace_premium, "Certificates", Colors.amber, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminCertificatesScreen()));
+            }),
+            _buildGridItem(Icons.assessment, "Reports", Colors.red, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminReportsScreen()));
+            }),
+            _buildGridItem(Icons.error_outline, "Invalid Info", Colors.deepOrange, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminInvalidInfoScreen()));
+            }),
+            _buildGridItem(Icons.sms_outlined, "SMS", Colors.blueAccent, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminSmsScreen()));
+            }),
+            _buildGridItem(Icons.settings, "Settings", Colors.grey, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminSettingsScreen()));
+            }),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildGridItem(IconData icon, String label, Color color, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: color.withValues(alpha: 0.1),
+              blurRadius: 6,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const SizedBox(width: 12),
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.15),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, color: color, size: 20),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                label,
+                textAlign: TextAlign.left,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF1E2875),
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
   // 1. Profile Header Card
   Widget _buildProfileHeaderCard() {
-    ImageProvider avatarImage;
+    ImageProvider? avatarImage;
     if (_selectedLocalImage != null) {
       avatarImage = FileImage(_selectedLocalImage!);
-    } else {
-      avatarImage = NetworkImage(_networkImageUrl);
+    } else if (_networkImageUrl != null) {
+      avatarImage = NetworkImage(_networkImageUrl!);
     }
 
     return Container(
@@ -498,9 +660,12 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                   ],
                 ),
                 child: CircleAvatar(
-                  radius: 42,
+                  radius: 34,
+                  backgroundColor: Colors.grey.shade200,
                   backgroundImage: avatarImage,
-                  backgroundColor: Colors.grey.shade100,
+                  child: avatarImage == null
+                      ? Icon(Icons.person, size: 48, color: AppColors.primary)
+                      : null,
                 ),
               ),
               Positioned(
@@ -511,7 +676,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                   child: Container(
                     padding: const EdgeInsets.all(6),
                     decoration: const BoxDecoration(
-                      color: Color(0xFF4361EE),
+                      color: Color(0xFF0038FF),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
@@ -530,27 +695,51 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  _adminName,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1E2875),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        _adminName,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF1E2875),
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    OutlinedButton.icon(
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                        minimumSize: const Size(0, 26),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        side: const BorderSide(color: Color(0xFF0038FF)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                      ),
+                      onPressed: _openEditProfileDialog,
+                      icon: const Icon(Icons.edit, size: 12, color: Color(0xFF0038FF)),
+                      label: const Text(
+                        "Edit",
+                        style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF0038FF)),
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 4),
                 // Super Admin badge
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF4361EE).withValues(alpha: 0.1),
+                    color: const Color(0xFF0038FF).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: const Text(
                     "Super Administrator",
                     style: TextStyle(
                       fontSize: 10,
-                      color: Color(0xFF4361EE),
+                      color: Color(0xFF0038FF),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -561,9 +750,12 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                   children: [
                     const Icon(Icons.phone, size: 13, color: Colors.grey),
                     const SizedBox(width: 6),
-                    Text(
-                      _adminPhone,
-                      style: const TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.w500),
+                    Expanded(
+                      child: Text(
+                        _adminPhone,
+                        style: const TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.w500),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ],
                 ),
@@ -573,9 +765,12 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                   children: [
                     const Icon(Icons.email, size: 13, color: Colors.grey),
                     const SizedBox(width: 6),
-                    Text(
-                      _adminEmail,
-                      style: const TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.w500),
+                    Expanded(
+                      child: Text(
+                        _adminEmail,
+                        style: const TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.w500),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ],
                 ),
@@ -595,20 +790,6 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                   ],
                 ),
               ],
-            ),
-          ),
-          // Edit Profile Button
-          OutlinedButton.icon(
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-              side: const BorderSide(color: Color(0xFF4361EE)),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            ),
-            onPressed: _openEditProfileDialog,
-            icon: const Icon(Icons.edit, size: 14, color: Color(0xFF4361EE)),
-            label: const Text(
-              "Edit Profile",
-              style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF4361EE)),
             ),
           ),
         ],
@@ -647,7 +828,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       child: Row(
         children: [
-          Icon(icon, size: 18, color: const Color(0xFF4361EE)),
+          Icon(icon, size: 18, color: const Color(0xFF0038FF)),
           const SizedBox(width: 12),
           Text(
             label,
@@ -681,12 +862,12 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
             Icons.lock_outline,
             "Change Password",
             "Update your account password",
-            onTap: () => _showToast("Change password dialog — Coming soon!"),
+            onTap: () => _showChangePasswordDialog(context),
           ),
           const Divider(height: 1),
           SwitchListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            secondary: const Icon(Icons.security_outlined, color: Color(0xFF4361EE), size: 18),
+            secondary: const Icon(Icons.security_outlined, color: Color(0xFF0038FF), size: 18),
             title: const Text(
               "Two-Factor Authentication",
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
@@ -703,7 +884,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
             Icons.devices_outlined,
             "Active Sessions",
             "Manage your active login sessions",
-            onTap: () => _showToast("Active sessions list — Coming soon!"),
+            onTap: () => _showActiveSessionsDialog(context),
           ),
         ],
       ),
@@ -724,21 +905,21 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
             Icons.notifications_none_outlined,
             "Notification Settings",
             "Manage notification preferences",
-            onTap: () => _showToast("Notification configuration — Coming soon!"),
+            onTap: () => _showNotificationsDialog(context),
           ),
           const Divider(height: 1),
           _buildSettingsRow(
             Icons.palette_outlined,
             "Theme",
             "System Default",
-            onTap: () => _showToast("Theme selector — Coming soon!"),
+            onTap: () => _showThemeSelectorDialog(context),
           ),
           const Divider(height: 1),
           _buildSettingsRow(
             Icons.public,
             "Region & Time Zone",
             "Asia/Kolkata (IST)",
-            onTap: () => _showToast("Region selector — Coming soon!"),
+            onTap: () => _showRegionSelectorDialog(context),
           ),
         ],
       ),
@@ -747,7 +928,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
 
   Widget _buildSettingsRow(IconData icon, String title, String subtitle, {required VoidCallback onTap}) {
     return ListTile(
-      leading: Icon(icon, color: const Color(0xFF4361EE), size: 18),
+      leading: Icon(icon, color: const Color(0xFF0038FF), size: 18),
       title: Text(
         title,
         style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
@@ -758,6 +939,186 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
       ),
       trailing: const Icon(Icons.chevron_right, size: 16, color: Colors.grey),
       onTap: onTap,
+    );
+  }
+
+  // Dialog implementations
+  void _showChangePasswordDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text('Change Password'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const TextField(
+              obscureText: true,
+              decoration: InputDecoration(labelText: 'Current Password', border: OutlineInputBorder()),
+            ),
+            const SizedBox(height: 12),
+            const TextField(
+              obscureText: true,
+              decoration: InputDecoration(labelText: 'New Password', border: OutlineInputBorder()),
+            ),
+            const SizedBox(height: 12),
+            const TextField(
+              obscureText: true,
+              decoration: InputDecoration(labelText: 'Confirm New Password', border: OutlineInputBorder()),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              _showToast("Password updated successfully!");
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white),
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showActiveSessionsDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text('Active Sessions'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.phone_android, color: Colors.green),
+              title: const Text('iPhone 13 (Current)'),
+              subtitle: const Text('Active now'),
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.computer, color: Colors.grey),
+              title: const Text('MacBook Pro'),
+              subtitle: const Text('Last active: 2 hours ago'),
+              trailing: IconButton(
+                icon: const Icon(Icons.logout, color: Colors.red),
+                onPressed: () {
+                  Navigator.pop(ctx);
+                  _showToast("Session terminated.");
+                },
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Close')),
+        ],
+      ),
+    );
+  }
+
+  void _showNotificationsDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text('Notification Settings'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SwitchListTile(
+              title: const Text('Push Notifications'),
+              value: true,
+              onChanged: (v) {},
+            ),
+            SwitchListTile(
+              title: const Text('Email Alerts'),
+              value: false,
+              onChanged: (v) {},
+            ),
+            SwitchListTile(
+              title: const Text('SMS Updates'),
+              value: true,
+              onChanged: (v) {},
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Close')),
+        ],
+      ),
+    );
+  }
+
+  void _showThemeSelectorDialog(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (ctx) => Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Select Theme', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 20),
+            ListTile(
+              leading: const Icon(Icons.brightness_auto),
+              title: const Text('System Default'),
+              onTap: () {
+                ProfileManager().themeMode.value = ThemeMode.system;
+                Navigator.pop(ctx);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.light_mode),
+              title: const Text('Light Theme'),
+              onTap: () {
+                ProfileManager().themeMode.value = ThemeMode.light;
+                Navigator.pop(ctx);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.dark_mode),
+              title: const Text('Dark Theme'),
+              onTap: () {
+                ProfileManager().themeMode.value = ThemeMode.dark;
+                Navigator.pop(ctx);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showRegionSelectorDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text('Region & Time Zone'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: const Text('Asia/Kolkata (IST)'),
+              trailing: const Icon(Icons.check, color: AppColors.primary),
+              onTap: () => Navigator.pop(ctx),
+            ),
+            ListTile(
+              title: const Text('America/New_York (EST)'),
+              onTap: () => Navigator.pop(ctx),
+            ),
+            ListTile(
+              title: const Text('Europe/London (GMT)'),
+              onTap: () => Navigator.pop(ctx),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -810,42 +1171,6 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
           );
         },
       ),
-    );
-  }
-
-  // 6. CHATBOT FAB
-  Widget _buildChatFab() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.shade300,
-                blurRadius: 6,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: const Text(
-            "Hi! How can I help you?",
-            style: TextStyle(fontSize: 11, color: Color(0xFF1E2875)),
-          ),
-        ),
-        const SizedBox(height: 6),
-        FloatingActionButton(
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminChatSupportScreen()));
-          },
-          backgroundColor: AppColors.primary,
-          child: const Icon(Icons.smart_toy, color: Colors.white, size: 28),
-        ),
-      ],
     );
   }
 }

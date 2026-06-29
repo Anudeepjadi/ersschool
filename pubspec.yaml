@@ -15,6 +15,9 @@ dependencies:
   image_picker: ^1.1.2
   google_fonts: ^8.1.0
   fl_chart: ^0.69.0
+  shared_preferences: ^2.5.5
+  pdf: ^3.10.8
+  printing: ^5.11.1
 
 dev_dependencies:
   flutter_test:
@@ -28,6 +31,7 @@ flutter:
     - assets/images/loginscreenlogo.png
     - assets/images/student_profile.png
     - assets/images/student_welcome.png
+    - assets/images/school_bus.png
     - assets/animations/ers_animation.mp4
 
 flutter_icons:

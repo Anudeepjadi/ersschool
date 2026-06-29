@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/utils/profile_manager.dart';
 import '../login/login_screen.dart';
 import 'tabs/admin_home_tab.dart';
 import 'tabs/admin_students_tab.dart';
@@ -19,15 +21,21 @@ import 'screens/admin_communications_screen.dart';
 import 'screens/admin_id_cards_screen.dart';
 import 'screens/admin_certificates_screen.dart';
 import 'screens/admin_reports_screen.dart';
+import 'screens/admin_invalid_info_screen.dart';
+import 'screens/admin_sms_screen.dart';
 import 'screens/admin_settings_screen.dart';
 import 'screens/admin_help_center_screen.dart';
 import 'screens/admin_chat_support_screen.dart';
 import 'screens/admin_system_updates_screen.dart';
 import 'screens/admin_video_tutorials_screen.dart';
 import 'screens/admin_about_us_screen.dart';
+import 'screens/admin_employee_list_screen.dart';
+
+import 'widgets/admin_bottom_nav_bar.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
-  const AdminDashboardScreen({super.key});
+  final int initialIndex;
+  const AdminDashboardScreen({super.key, this.initialIndex = 0});
 
   @override
   State<AdminDashboardScreen> createState() => _AdminDashboardScreenState();
@@ -38,6 +46,12 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<AdminStudentsTabState> _studentsTabKey = GlobalKey<AdminStudentsTabState>();
   final GlobalKey<AdminTeachersTabState> _teachersTabKey = GlobalKey<AdminTeachersTabState>();
+
+  @override
+  void initState() {
+    super.initState();
+    currentIndex = widget.initialIndex;
+  }
 
   void _onTabChanged(int index) {
     setState(() {
@@ -63,52 +77,36 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             _teachersTabKey.currentState?.showAddTeacherBottomSheet();
           });
         },
+        onTabSelected: _onTabChanged,
       ),
-      AdminStudentsTab(key: _studentsTabKey),
-      AdminTeachersTab(key: _teachersTabKey),
-      const AdminBranchesTab(),
+      AdminStudentsTab(
+        key: _studentsTabKey,
+        onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer(),
+      ),
+      AdminTeachersTab(
+        key: _teachersTabKey,
+        onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer(),
+      ),
+      AdminBranchesTab(
+        onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer(),
+      ),
       AdminMoreTab(
         onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer(),
+        onOpenProfile: () => _onTabChanged(4),
       ),
     ];
 
     return Scaffold(
       key: _scaffoldKey,
       drawer: _buildDrawer(),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
+      bottomNavigationBar: AdminBottomNavBar(
         currentIndex: currentIndex,
-        selectedItemColor: AppColors.primary,
-        unselectedItemColor: const Color(0xFF757897),
-        selectedLabelStyle:
-            const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
-        unselectedLabelStyle:
-            const TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
-        onTap: _onTabChanged,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.grid_view_outlined),
-            label: "Dashboard",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.people_alt_outlined),
-            label: "Students",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.co_present_outlined),
-            label: "Teachers",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.corporate_fare_outlined),
-            label: "Branches",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.more_horiz),
-            label: "More",
-          ),
-        ],
+        onTabSelected: _onTabChanged,
       ),
-      body: tabs[currentIndex],
+      body: IndexedStack(
+        index: currentIndex,
+        children: tabs,
+      ),
     );
   }
 
@@ -129,7 +127,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             ),
             decoration: const BoxDecoration(
               gradient: LinearGradient(
-                colors: [AppColors.primary, Color(0xFF0038FF)],
+                colors: [AppColors.primaryDark, AppColors.primaryDark],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -151,11 +149,16 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                         shape: BoxShape.circle,
                         border: Border.all(color: Colors.white, width: 2),
                       ),
-                      child: const CircleAvatar(
-                        radius: 28,
-                        backgroundImage: NetworkImage(
-                          'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop',
-                        ),
+                      child: ValueListenableBuilder<String?>(
+                        valueListenable: ProfileManager().adminProfileImagePath,
+                        builder: (context, path, _) {
+                          return CircleAvatar(
+                            radius: 28,
+                            backgroundColor: Colors.white,
+                            backgroundImage: path != null ? FileImage(File(path)) : null,
+                            child: path == null ? const Icon(Icons.person, color: AppColors.primary, size: 36) : null,
+                          );
+                        },
                       ),
                     ),
                     const SizedBox(width: 14),
@@ -163,13 +166,18 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            "Admin User",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          ValueListenableBuilder<String>(
+                            valueListenable: ProfileManager().adminName,
+                            builder: (context, name, _) {
+                              return Text(
+                                name,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              );
+                            },
                           ),
                           const SizedBox(height: 2),
                           Text(
@@ -185,33 +193,60 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Colors.white.withValues(alpha: 0.15)),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.school_outlined, color: Colors.white, size: 18),
-                      const SizedBox(width: 8),
-                      const Expanded(
-                        child: Text(
-                          "Ecstasy School 1",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      Icon(
-                        Icons.keyboard_arrow_down,
-                        color: Colors.white.withValues(alpha: 0.7),
-                        size: 18,
-                      ),
-                    ],
+                PopupMenuButton<String>(
+                  onSelected: (String school) {
+                    debugPrint("AdminDashboardScreen drawer selected school: $school");
+                    ProfileManager().selectedSchool.value = school;
+                  },
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                    const PopupMenuItem<String>(
+                      value: 'Ecstasy School 1',
+                      child: Text('Ecstasy School 1', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                    ),
+                    const PopupMenuItem<String>(
+                      value: 'Ecstasy School 2',
+                      child: Text('Ecstasy School 2', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                    ),
+                    const PopupMenuItem<String>(
+                      value: 'Ecstasy School 3',
+                      child: Text('Ecstasy School 3', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                    ),
+                  ],
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.white.withValues(alpha: 0.15)),
+                    ),
+                    child: ValueListenableBuilder<String>(
+                      valueListenable: ProfileManager().selectedSchool,
+                      builder: (context, selectedSchool, _) {
+                        return Row(
+                          children: [
+                            const Icon(Icons.school_outlined, color: Colors.white, size: 18),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                selectedSchool,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            Icon(
+                              Icons.keyboard_arrow_down,
+                              color: Colors.white.withValues(alpha: 0.7),
+                              size: 18,
+                            ),
+                          ],
+                        );
+                      },
+                    ),
                   ),
                 ),
               ],
@@ -228,10 +263,44 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             setState(() => currentIndex = 1);
             Navigator.pop(context);
           }),
-          _buildDrawerItem(Icons.co_present_outlined, "Teachers", currentIndex == 2, () {
-            setState(() => currentIndex = 2);
-            Navigator.pop(context);
-          }),
+          Theme(
+            data: Theme.of(context).copyWith(
+              dividerColor: Colors.transparent,
+              visualDensity: VisualDensity.compact,
+            ),
+            child: ExpansionTile(
+              leading: Icon(Icons.co_present_outlined, color: currentIndex == 2 ? AppColors.primary : const Color(0xFF757897)),
+              title: Text(
+                "Employee",
+                style: TextStyle(
+                  color: currentIndex == 2 ? AppColors.primary : const Color(0xFF1E2875),
+                  fontWeight: currentIndex == 2 ? FontWeight.bold : FontWeight.w500,
+                  fontSize: 13,
+                ),
+              ),
+              trailing: Icon(
+                Icons.keyboard_arrow_down,
+                size: 16,
+                color: currentIndex == 2 ? AppColors.primary : Colors.grey,
+              ),
+              tilePadding: const EdgeInsets.symmetric(horizontal: 16),
+              childrenPadding: EdgeInsets.zero,
+              children: [
+                _buildDrawerSubItem("Employees", () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEmployeeListScreen(staffType: 'Employee')));
+                }),
+                _buildDrawerSubItem("Teachers", () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEmployeeListScreen(staffType: 'Teacher')));
+                }),
+                _buildDrawerSubItem("Attender/Aaya", () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEmployeeListScreen(staffType: 'Attender')));
+                }),
+              ],
+            ),
+          ),
           _buildDrawerItem(Icons.corporate_fare_outlined, "Branches", currentIndex == 3, () {
             setState(() => currentIndex = 3);
             Navigator.pop(context);
@@ -279,6 +348,14 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           _buildDrawerItem(Icons.assessment_outlined, "Reports", false, () {
             Navigator.pop(context);
             Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminReportsScreen()));
+          }),
+          _buildDrawerItem(Icons.error_outline, "Invalid Info", false, () {
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminInvalidInfoScreen()));
+          }),
+          _buildDrawerItem(Icons.sms_outlined, "SMS", false, () {
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminSmsScreen()));
           }),
           _buildDrawerItem(Icons.settings_outlined, "Settings", false, () {
             Navigator.pop(context);
@@ -341,6 +418,22 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           letterSpacing: 1.0,
         ),
       ),
+    );
+  }
+
+  Widget _buildDrawerSubItem(String title, VoidCallback onTap) {
+    return ListTile(
+      contentPadding: const EdgeInsets.only(left: 72),
+      title: Text(
+        title,
+        style: const TextStyle(
+          color: Color(0xFF1E2875),
+          fontWeight: FontWeight.w500,
+          fontSize: 12,
+        ),
+      ),
+      onTap: onTap,
+      dense: true,
     );
   }
 

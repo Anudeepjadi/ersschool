@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
-import '../dashboard/dashboard_screen.dart';
+import '../../core/utils/profile_manager.dart';
+import '../../core/data/app_data_store.dart';
+import '../student/dashboard/dashboard_screen.dart';
 import '../admin/admin_dashboard_screen.dart';
+import '../teacher/teacher_dashboard_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,54 +19,195 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
 
-  bool _isValidInput(String value) {
-    final cleanValue = value.trim();
-    // Allow 'admin' or email containing 'admin' for easy development testing
-    if (cleanValue.toLowerCase().contains('admin')) return true;
-    // Otherwise require 10-digit mobile number
-    return RegExp(r'^[0-9]{10}$').hasMatch(cleanValue);
-  }
-
   void _handleLogin() {
     if (_formKey.currentState!.validate()) {
-      if (_passwordController.text == '123456') {
-        final input = _idController.text.trim();
-        final isAdmin = input == '9876543210' || input.toLowerCase().contains('admin');
-        final role = isAdmin ? 'Admin' : 'Student';
+      final id = _idController.text.trim();
+      final password = _passwordController.text.trim();
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Welcome $role! Logging in...'),
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          ),
-        );
+      final role = AppDataStore.instance.authenticate(id, password);
 
-        Widget destination = isAdmin ? const AdminDashboardScreen() : const DashboardScreen();
-
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (_) => destination,
-          ),
-        );
+      if (role == 'admin') {
+        AppDataStore.instance.currentRole = 'admin';
+        _navigate(const AdminDashboardScreen(), 'Admin');
+      } else if (role == 'student') {
+        AppDataStore.instance.currentRole = 'student';
+        final loggedInStudent = AppDataStore.instance.students
+            .firstWhere((s) => (s['admission'] as String).toUpperCase() == id.toUpperCase());
+        AppDataStore.instance.currentUser = loggedInStudent;
+        
+        final name = loggedInStudent['name'] ?? 'Student';
+        final email = loggedInStudent['email'] ?? "${name.toLowerCase().replaceAll(' ', '')}@ecstasyschool.com";
+        ProfileManager().setStudentName(name);
+        ProfileManager().setStudentEmail(email);
+        
+        _navigate(const DashboardScreen(), 'Student');
+      } else if (role == 'teacher') {
+        AppDataStore.instance.currentRole = 'teacher';
+        AppDataStore.instance.currentUser = AppDataStore.instance.teachers
+            .firstWhere((t) => (t['employeeCode'] as String).toUpperCase() == id.toUpperCase());
+        _navigate(const TeacherDashboardScreen(), 'Teacher');
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Invalid password. Try "123456"'),
-            backgroundColor: AppColors.error,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          ),
+        _showError(
+          'Invalid credentials.\n'
+          '- Admin: ID = admin, Password = admin@123\n'
+          '- Student: ID = ECS00001, Password = ECS00001\n'
+          '- Teacher: ID = ECS00E01, Password = ECS00E01',
         );
       }
     }
   }
 
+  void _navigate(Widget destination, String role) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Welcome $role! Logging in...'),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => destination));
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: AppColors.error,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
+  }
+
+  void _showPasswordRecoveryDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: const Text('Password Recovery', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('Enter your registered email or mobile number to receive a reset link.'),
+              const SizedBox(height: 16),
+              TextFormField(
+                decoration: InputDecoration(
+                  hintText: 'Email or Mobile Number',
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Recovery link sent successfully!')),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              child: const Text('Send Link'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showGoogleLoginSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Choose an account',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'to continue to Ecstasy School ERP',
+                style: TextStyle(color: Colors.grey),
+              ),
+              const SizedBox(height: 20),
+              ListTile(
+                leading: const CircleAvatar(
+                  backgroundColor: AppColors.primary,
+                  child: Text('A', style: TextStyle(color: Colors.white)),
+                ),
+                title: const Text('admin@ecstasy.edu', style: TextStyle(fontWeight: FontWeight.bold)),
+                subtitle: const Text('Admin Account'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const AdminDashboardScreen()),
+                  );
+                },
+              ),
+              ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: Colors.orange.shade400,
+                  child: const Text('S', style: TextStyle(color: Colors.white)),
+                ),
+                title: const Text('student@ecstasy.edu', style: TextStyle(fontWeight: FontWeight.bold)),
+                subtitle: const Text('Student Account'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const DashboardScreen()),
+                  );
+                },
+              ),
+              ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: Colors.green.shade400,
+                  child: const Text('T', style: TextStyle(color: Colors.white)),
+                ),
+                title: const Text('teacher@ecstasy.edu', style: TextStyle(fontWeight: FontWeight.bold)),
+                subtitle: const Text('Teacher Account'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const TeacherDashboardScreen()),
+                  );
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryTextColor = isDark ? Colors.white : const Color(0xFF1E2875);
+    final secondaryTextColor = isDark ? Colors.grey.shade400 : const Color(0xFF757897);
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -73,7 +217,8 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(height: 20),
+
+                const SizedBox(height: 10),
                 
                 // 1. Logo
                 Center(
@@ -97,12 +242,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       color: AppColors.secondary.withValues(alpha: 0.5),
                     ),
                     const SizedBox(width: 8),
-                    const Text(
+                    Text(
                       "Smart School Management",
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF757897),
+                        color: secondaryTextColor,
                         letterSpacing: 0.5,
                       ),
                     ),
@@ -117,53 +262,50 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 32),
                 
                 // 2. Title Section
-                const Text(
+                Text(
                   'Welcome Back!',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 26,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF1E2875),
+                    color: primaryTextColor,
                   ),
                 ),
                 const SizedBox(height: 6),
-                const Text(
+                Text(
                   'Login to your account',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 14,
-                    color: Color(0xFF757897),
+                    color: secondaryTextColor,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 const SizedBox(height: 32),
 
-                // 3. Mobile Number Field (Outside Label)
+                // 3. User ID Field (Outside Label)
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      "Mobile Number",
+                    Text(
+                      "User ID",
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF1E2875),
+                        color: primaryTextColor,
                       ),
                     ),
                     const SizedBox(height: 8),
                     TextFormField(
                       controller: _idController,
-                      keyboardType: TextInputType.phone,
+                      keyboardType: TextInputType.text,
                       decoration: _buildInputDecoration(
-                        hintText: "Enter your mobile number",
-                        prefixIcon: Icons.smartphone_outlined,
+                        hintText: "Enter Admission No / Teacher Code / Admin ID",
+                        prefixIcon: Icons.person_outline,
                       ),
                       validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your mobile number';
-                        }
-                        if (!_isValidInput(value)) {
-                          return 'Enter a valid 10-digit mobile number';
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Please enter your User ID';
                         }
                         return null;
                       },
@@ -176,12 +318,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       "Password",
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF1E2875),
+                        color: primaryTextColor,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -219,15 +361,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: const Text('Password recovery is coming soon!'),
-                          behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                        ),
-                      );
-                    },
+                    onPressed: () => _showPasswordRecoveryDialog(context),
                     style: TextButton.styleFrom(
                       padding: EdgeInsets.zero,
                       minimumSize: Size.zero,
@@ -272,16 +406,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     Expanded(
                       child: Divider(
-                        color: Colors.grey.shade200,
+                        color: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
                         thickness: 1.5,
                       ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
                         "OR",
                         style: TextStyle(
-                          color: Color(0xFF757897),
+                          color: secondaryTextColor,
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
                         ),
@@ -289,7 +423,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     Expanded(
                       child: Divider(
-                        color: Colors.grey.shade200,
+                        color: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
                         thickness: 1.5,
                       ),
                     ),
@@ -299,32 +433,24 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 // 8. Login with Google Button
                 OutlinedButton(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: const Text('Google login is coming soon!'),
-                        behavior: SnackBarBehavior.floating,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                      ),
-                    );
-                  },
+                  onPressed: () => _showGoogleLoginSheet(context),
                   style: OutlinedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    side: BorderSide(color: Colors.grey.shade200, width: 1.5),
+                    backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+                    side: BorderSide(color: isDark ? Colors.grey.shade800 : Colors.grey.shade200, width: 1.5),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
-                  child: const Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      GoogleLogo(size: 20),
-                      SizedBox(width: 12),
+                      const GoogleLogo(size: 20),
+                      const SizedBox(width: 12),
                       Text(
                         "Login with Google",
                         style: TextStyle(
-                          color: Color(0xFF1E2875),
+                          color: primaryTextColor,
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
                         ),
@@ -356,7 +482,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               const Icon(Icons.school, size: 22, color: AppColors.primary),
                         ),
                         const SizedBox(width: 8),
-                        const Column(
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -365,7 +491,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               style: TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.w900,
-                                color: Color(0xFF1E2875),
+                                color: primaryTextColor,
                                 height: 1.0,
                               ),
                             ),
@@ -407,21 +533,22 @@ class _LoginScreenState extends State<LoginScreen> {
     required IconData prefixIcon,
     Widget? suffixIcon,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return InputDecoration(
       hintText: hintText,
       prefixIcon: Icon(prefixIcon, color: AppColors.primary, size: 22),
       suffixIcon: suffixIcon,
       hintStyle: TextStyle(
-        color: Colors.grey.shade400,
+        color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
         fontSize: 14,
         fontWeight: FontWeight.w500,
       ),
       filled: true,
-      fillColor: Colors.white,
+      fillColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: Colors.grey.shade200, width: 1.5),
+        borderSide: BorderSide(color: isDark ? Colors.grey.shade800 : Colors.grey.shade200, width: 1.5),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
@@ -506,3 +633,5 @@ class _GoogleLogoPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
+
+
