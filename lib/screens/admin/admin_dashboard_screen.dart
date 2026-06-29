@@ -43,9 +43,11 @@ class AdminDashboardScreen extends StatefulWidget {
 
 class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   int currentIndex = 0;
+  bool _isExamExpanded = false;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<AdminStudentsTabState> _studentsTabKey = GlobalKey<AdminStudentsTabState>();
   final GlobalKey<AdminTeachersTabState> _teachersTabKey = GlobalKey<AdminTeachersTabState>();
+  final GlobalKey<AdminExaminationsScreenState> _examinationsKey = GlobalKey<AdminExaminationsScreenState>();
 
   @override
   void initState() {
@@ -94,13 +96,18 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer(),
         onOpenProfile: () => _onTabChanged(4),
       ),
+      AdminExaminationsScreen(
+        key: _examinationsKey,
+        onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer(),
+        initialFeature: ExaminationFeature.menu,
+      ),
     ];
 
     return Scaffold(
       key: _scaffoldKey,
       drawer: _buildDrawer(),
       bottomNavigationBar: AdminBottomNavBar(
-        currentIndex: currentIndex,
+        currentIndex: currentIndex > 4 ? 4 : currentIndex,
         onTabSelected: _onTabChanged,
       ),
       body: IndexedStack(
@@ -278,10 +285,62 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             Navigator.pop(context);
             Navigator.push(context, MaterialPageRoute(builder: (_) => AdminFeesScreen()));
           }),
-          _buildDrawerItem(Icons.assignment_outlined, "Examination", false, () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => AdminExaminationsScreen()));
-          }),
+          Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              leading: const Icon(Icons.assignment_outlined, color: Color(0xFF757897)),
+              title: Text(
+                "Examination".tr,
+                style: const TextStyle(
+                  color: Color(0xFF1E2875),
+                  fontWeight: FontWeight.w500,
+                  fontSize: 13,
+                ),
+              ),
+              trailing: Icon(
+                _isExamExpanded ? Icons.keyboard_arrow_down : Icons.chevron_right,
+                size: 16,
+                color: Colors.grey,
+              ),
+              childrenPadding: const EdgeInsets.only(left: 12),
+              onExpansionChanged: (isExpanded) {
+                setState(() {
+                  _isExamExpanded = isExpanded;
+                });
+                if (isExpanded) {
+                  _onTabChanged(5);
+                  _examinationsKey.currentState?.selectFeature(ExaminationFeature.menu);
+                }
+              },
+              children: [
+                _buildDrawerSubItem("Exam Details", () {
+                  _onTabChanged(5);
+                  _examinationsKey.currentState?.selectFeature(ExaminationFeature.examDetails);
+                  Navigator.pop(context);
+                }),
+                _buildDrawerSubItem("Exam Timetable", () {
+                  _onTabChanged(5);
+                  _examinationsKey.currentState?.selectFeature(ExaminationFeature.examTimetable);
+                  Navigator.pop(context);
+                }),
+                _buildDrawerSubItem("Exam Hall Tickets", () {
+                  _onTabChanged(5);
+                  _examinationsKey.currentState?.selectFeature(ExaminationFeature.examHallTickets);
+                  Navigator.pop(context);
+                }),
+                _buildDrawerSubItem("Grade Report", () {
+                  _onTabChanged(5);
+                  _examinationsKey.currentState?.selectFeature(ExaminationFeature.gradeReport);
+                  Navigator.pop(context);
+                }),
+                _buildDrawerSubItem("Grade Report Custom", () {
+                  _onTabChanged(5);
+                  _examinationsKey.currentState?.selectFeature(ExaminationFeature.gradeReportCustom);
+                  Navigator.pop(context);
+                }),
+              ],
+            ),
+          ),
           _buildDrawerItem(Icons.menu_book_outlined, "Library", false, () {
             Navigator.pop(context);
             Navigator.push(context, MaterialPageRoute(builder: (_) => AdminLibraryScreen()));
@@ -407,6 +466,22 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           ? Icon(Icons.chevron_right, size: 16, color: Colors.grey)
           : null,
       selected: selected,
+      onTap: onTap,
+      dense: true,
+    );
+  }
+
+  Widget _buildDrawerSubItem(String title, VoidCallback onTap) {
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 48, vertical: 0),
+      title: Text(
+        title.tr,
+        style: const TextStyle(
+          color: Color(0xFF1E2875),
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
       onTap: onTap,
       dense: true,
     );
