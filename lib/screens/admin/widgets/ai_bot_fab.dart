@@ -76,7 +76,6 @@ class _AiBotFabState extends State<AiBotFab> with SingleTickerProviderStateMixin
           ),
         ),
         FloatingActionButton(
-          heroTag: 'ai_bot_fab_${identityHashCode(this)}',
           mini: true,
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminChatSupportScreen()));

@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-import '../../../core/theme/app_colors.dart';
+import 'dart:async';
 import '../widgets/admin_bottom_nav_bar.dart';
+import '../widgets/admin_app_bar.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminChatSupportScreen extends StatefulWidget {
-  const AdminChatSupportScreen({super.key});
+  final VoidCallback? onOpenDrawer;
+  final bool openBotChat;
+  const AdminChatSupportScreen({super.key, this.onOpenDrawer, this.openBotChat = false});
 
   @override
   State<AdminChatSupportScreen> createState() => _AdminChatSupportScreenState();
@@ -11,11 +15,16 @@ class AdminChatSupportScreen extends StatefulWidget {
 
 class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
   final TextEditingController _messageController = TextEditingController();
+  final ScrollController _chatScrollController = ScrollController();
   Map<String, dynamic>? _selectedChat;
   String _currentFilter = 'All';
 
+  // Store messages for each chat
+  final Map<String, List<Map<String, dynamic>>> _chatHistory = {};
+
   final List<Map<String, dynamic>> _chats = [
     {
+      'id': 'rahul_kumar',
       'title': 'Rahul Kumar',
       'subtitle': 'I need help downloading my hall ticket.',
       'type': 'student',
@@ -26,6 +35,7 @@ class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
       'role': 'Student - Class 8 A',
     },
     {
+      'id': 'ananya_sharma',
       'title': 'Ananya Sharma',
       'subtitle': 'Please help me update my profile information.',
       'type': 'student',
@@ -36,6 +46,7 @@ class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
       'role': 'Student - Class 7 B',
     },
     {
+      'id': 'id_card',
       'title': 'ID Card Issue',
       'subtitle': 'My ID card has incorrect information.',
       'type': 'topic',
@@ -45,52 +56,88 @@ class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
       'status': 'Open',
       'unread': false,
     },
-    {
-      'title': 'Fee Payment',
-      'subtitle': 'Payment failed but amount deducted from my account.',
-      'type': 'topic',
-      'icon': Icons.payment_outlined,
-      'color': Colors.orange,
-      'time': '20 May',
-      'status': 'Resolved',
-      'unread': false,
-    },
-    {
-      'title': 'Examination',
-      'subtitle': 'When will the semester results be declared?',
-      'type': 'topic',
-      'icon': Icons.assignment_outlined,
-      'color': Colors.green,
-      'time': '19 May',
-      'status': 'Closed',
-      'unread': false,
-    },
-    {
-      'title': 'Hostel Allocation',
-      'subtitle': 'I want to change my hostel room.',
-      'type': 'topic',
-      'icon': Icons.business_outlined,
-      'color': Colors.blue,
-      'time': '18 May',
-      'status': 'Open',
-      'unread': false,
-    },
-    {
-      'title': 'Transport',
-      'subtitle': 'Need information about bus timings.',
-      'type': 'topic',
-      'icon': Icons.directions_bus_outlined,
-      'color': Colors.redAccent,
-      'time': '17 May',
-      'status': 'Resolved',
-      'unread': false,
-    },
   ];
 
   @override
   void initState() {
     super.initState();
-    _selectedChat = _chats[0];
+    
+    // Initialize some mock history
+    _chatHistory['rahul_kumar'] = [
+      {'isUser': false, 'text': "Hello Rahul! 👋\n\nI'd be happy to help you with that.\nMay I know which examination hall ticket you want to download?", 'time': "10:31 AM"},
+      {'isUser': true, 'text': "It's for the Half Yearly Examination 2024-25.", 'time': "10:32 AM"},
+    ];
+
+    if (widget.openBotChat) {
+      _selectedChat = {
+        'id': 'bot',
+        'title': 'AI Assistant',
+        'subtitle': 'Hi, how can I help you?',
+        'type': 'bot',
+        'icon': Icons.smart_toy,
+        'color': Colors.blue,
+        'time': 'Now',
+        'status': 'Open',
+        'unread': false,
+        'name': 'AI Assistant',
+        'role': 'Support Bot',
+      };
+      _chatHistory['bot'] = [
+        {'isUser': false, 'text': "Hi! 👋\nHow can I help you today?", 'time': "Now"}
+      ];
+    } else {
+      _selectedChat = _chats[0];
+    }
+  }
+
+  void _sendMessage() {
+    final text = _messageController.text.trim();
+    if (text.isEmpty || _selectedChat == null) return;
+
+    final chatId = _selectedChat!['id'] ?? _selectedChat!['title'];
+    final now = DateTime.now();
+    final timeStr = "${now.hour}:${now.minute.toString().padLeft(2, '0')} ${now.hour >= 12 ? 'PM' : 'AM'}";
+
+    setState(() {
+      if (!_chatHistory.containsKey(chatId)) {
+        _chatHistory[chatId] = [];
+      }
+      _chatHistory[chatId]!.add({
+        'isUser': true,
+        'text': text,
+        'time': timeStr,
+      });
+      _messageController.clear();
+    });
+
+    _scrollToBottom();
+
+    // Mock bot response if it's the bot chat
+    if (_selectedChat!['type'] == 'bot') {
+      Timer(Duration(seconds: 1), () {
+        if (!mounted) return;
+        setState(() {
+          _chatHistory['bot']!.add({
+            'isUser': false,
+            'text': "I'm processing your request regarding: \"$text\". Since I'm in simulation mode, I'll just say: That's interesting!",
+            'time': timeStr,
+          });
+        });
+        _scrollToBottom();
+      });
+    }
+  }
+
+  void _scrollToBottom() {
+    Future.delayed(Duration(milliseconds: 100), () {
+      if (_chatScrollController.hasClients) {
+        _chatScrollController.animateTo(
+          _chatScrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
   }
 
   @override
@@ -102,14 +149,19 @@ class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
+      appBar: AdminAppBar(
+        title: "Chat Support",
+        subtitle: "Manage student and staff queries",
+        onOpenDrawer: widget.onOpenDrawer,
+      ),
+      bottomNavigationBar: AdminBottomNavBar(currentIndex: 4),
       body: SafeArea(
         child: isMobile 
             ? (_selectedChat == null ? sidebar : chatArea)
             : Row(
                 children: [
                   SizedBox(width: 320, child: sidebar),
-                  const VerticalDivider(width: 1, thickness: 1, color: Color(0xFFF0F0F0)),
+                  VerticalDivider(width: 1, thickness: 1, color: Color(0xFFF0F0F0)),
                   Expanded(child: chatArea),
                 ],
               ),
@@ -122,7 +174,7 @@ class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
       children: [
         // Search bar
         Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16.0),
           child: Row(
             children: [
               Expanded(
@@ -131,27 +183,28 @@ class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey.shade200),
                   ),
                   child: TextField(
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.search, color: Colors.grey, size: 20),
+                      prefixIcon: Icon(Icons.search, color: Colors.grey, size: 20),
                       hintText: "Search chats...",
-                      hintStyle: const TextStyle(fontSize: 13, color: Colors.grey),
+                      hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
                       border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                      contentPadding: EdgeInsets.symmetric(vertical: 12),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(width: 8),
-              const Icon(Icons.filter_alt_outlined, color: Colors.blue, size: 24),
+              SizedBox(width: 8),
+              Icon(Icons.filter_alt_outlined, color: Colors.blue, size: 24),
             ],
           ),
         ),
         
         // Tabs
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: EdgeInsets.symmetric(horizontal: 16.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -161,7 +214,7 @@ class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
             ],
           ),
         ),
-        const Divider(height: 1, color: Color(0xFFF0F0F0)),
+        Divider(height: 1, color: Color(0xFFF0F0F0)),
         
         // Chat List
         Expanded(
@@ -187,21 +240,21 @@ class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
         // Start New Chat Button
         InkWell(
           onTap: () {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Starting new chat...')));
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Starting new chat...'.tr)));
           },
           child: Container(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(16),
             color: Colors.white,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text("Can't find your conversation?", style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 8),
+                Text("Can't find your conversation?", style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold)),
+                SizedBox(height: 8),
                 Row(
                   children: [
-                    const Icon(Icons.chat_bubble_outline, color: Colors.blue, size: 16),
-                    const SizedBox(width: 8),
-                    Text("Start New Chat", style: TextStyle(fontSize: 14, color: Colors.blue.shade700, fontWeight: FontWeight.bold)),
+                    Icon(Icons.chat_bubble_outline, color: Colors.blue, size: 16),
+                    SizedBox(width: 8),
+                    Text("Start New Chat".tr, style: TextStyle(fontSize: 14, color: Colors.blue.shade700, fontWeight: FontWeight.bold)),
                   ],
                 ),
               ],
@@ -214,13 +267,9 @@ class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
 
   Widget _buildTab(String title, bool isSelected) {
     return GestureDetector(
-      onTap: () {
-        setState(() {
-          _currentFilter = title;
-        });
-      },
+      onTap: () => setState(() => _currentFilter = title),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
@@ -251,10 +300,10 @@ class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
         });
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFF8FAFF) : Colors.white,
-          border: const Border(bottom: BorderSide(color: Color(0xFFF5F5F5))),
+          color: isSelected ? Color(0xFFF8FAFF) : Colors.white,
+          border: Border(bottom: BorderSide(color: Color(0xFFF5F5F5))),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -290,7 +339,7 @@ class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
                   ),
               ],
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             // Content
             Expanded(
               child: Column(
@@ -301,7 +350,7 @@ class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
                     children: [
                       Text(
                         chat['title'],
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.black87),
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.black87),
                       ),
                       Text(
                         chat['time'],
@@ -309,7 +358,7 @@ class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -321,7 +370,7 @@ class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       _buildStatusPill(chat['status']),
                     ],
                   ),
@@ -338,18 +387,18 @@ class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
     Color bgColor;
     Color textColor;
     if (status == 'Open') {
-      bgColor = const Color(0xFFE6F0FF);
+      bgColor = Color(0xFFE6F0FF);
       textColor = Colors.blue.shade700;
     } else if (status == 'Resolved') {
-      bgColor = const Color(0xFFE6F9F0);
+      bgColor = Color(0xFFE6F9F0);
       textColor = Colors.green.shade700;
     } else {
-      bgColor = const Color(0xFFF0F0F0);
+      bgColor = Color(0xFFF0F0F0);
       textColor = Colors.grey.shade700;
     }
     
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(4),
@@ -363,59 +412,47 @@ class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
 
   Widget _buildChatArea() {
     if (_selectedChat == null) {
-      return const Center(child: Text("Select a chat"));
+      return Center(child: Text("Select a chat".tr));
     }
+
+    final chatId = _selectedChat!['id'] ?? _selectedChat!['title'];
+    final messages = _chatHistory[chatId] ?? [];
     
     return Column(
       children: [
         // Header
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-          decoration: const BoxDecoration(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          decoration: BoxDecoration(
             border: Border(bottom: BorderSide(color: Color(0xFFF0F0F0))),
           ),
           child: Row(
             children: [
               if (MediaQuery.of(context).size.width < 600)
                 IconButton(
-                  icon: const Icon(Icons.arrow_back),
+                  icon: Icon(Icons.arrow_back),
                   onPressed: () => setState(() => _selectedChat = null),
                   padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
+                  constraints: BoxConstraints(),
                 ),
               if (MediaQuery.of(context).size.width < 600)
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
               CircleAvatar(
                 radius: 20,
-                backgroundColor: Colors.grey.shade200,
-                child: Icon(Icons.person, color: Colors.grey.shade400),
+                backgroundColor: _selectedChat!['color']?.withValues(alpha: 0.1) ?? Colors.grey.shade200,
+                child: Icon(_selectedChat!['icon'] ?? Icons.person, color: _selectedChat!['color'] ?? Colors.grey.shade400, size: 20),
               ),
-              Positioned(
-                bottom: 0,
-                right: 0,
-                child: Container(
-                  width: 10,
-                  height: 10,
-                  decoration: BoxDecoration(
-                    color: Colors.green,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 2),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(_selectedChat!['name'] ?? _selectedChat!['title'], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                    Text(_selectedChat!['name'] ?? _selectedChat!['title'], style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                     Text(_selectedChat!['role'] ?? 'Topic', style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
                   ],
                 ),
               ),
-              const Icon(Icons.more_vert, color: Colors.grey),
-              const SizedBox(width: 16),
-              Text("Details", style: TextStyle(color: Colors.blue.shade700, fontWeight: FontWeight.bold, fontSize: 14)),
+              Icon(Icons.more_vert, color: Colors.grey),
             ],
           ),
         ),
@@ -423,55 +460,25 @@ class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
         // Chat Messages
         Expanded(
           child: Container(
-            color: const Color(0xFFFCFCFC), // Very light grey background
-            child: ListView(
-              padding: const EdgeInsets.all(20),
-              children: [
-                Center(child: Text("Today", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.black87))),
-                const SizedBox(height: 20),
-                
-                // User Message
-                _buildRightMessage("Hello, I need help downloading my hall ticket for the upcoming examination.", "10:30 AM"),
-                
-                // Agent Message
-                _buildLeftMessage("Hello Rahul! 👋\n\nI'd be happy to help you with that.\nMay I know which examination hall ticket you want to download?", "10:31 AM"),
-                
-                // User Message
-                _buildRightMessage("It's for the Half Yearly Examination 2024-25.", "10:32 AM"),
-                
-                // Agent Message
-                _buildLeftMessage("Thanks for the information.\nPlease give me a moment while I check this for you.", "10:32 AM"),
-                
-                // Agent Message
-                _buildLeftMessage("Great! You can download your hall ticket by following these steps:\n\n1. Go to Examinations > Hall Tickets\n2. Select Half Yearly Examination 2024-25\n3. Click on Download Hall Ticket\n\nLet me know if you face any issues.", "10:33 AM"),
-                
-                // User Message
-                _buildRightMessage("Thank you! I was able to download it.", "10:34 AM"),
-                
-                // Agent Message
-                _buildLeftMessage("You're welcome! 😊\nIf you need any more help, feel free to reach out anytime.", "10:34 AM"),
-                
-                // Survey
-                const SizedBox(height: 20),
-                _buildSurvey(),
-                
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Chat ID: #CS-10245", style: TextStyle(fontSize: 10, color: Colors.grey.shade500)),
-                    Text("10:34 AM", style: TextStyle(fontSize: 10, color: Colors.grey.shade500)),
-                  ],
-                ),
-              ],
+            color: Color(0xFFFCFCFC),
+            child: ListView.builder(
+              controller: _chatScrollController,
+              padding: EdgeInsets.all(20),
+              itemCount: messages.length,
+              itemBuilder: (context, index) {
+                final msg = messages[index];
+                return msg['isUser'] 
+                  ? _buildRightMessage(msg['text'], msg['time'])
+                  : _buildLeftMessage(msg['text'], msg['time']);
+              },
             ),
           ),
         ),
         
         // Input Area
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: const BoxDecoration(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
             color: Colors.white,
             border: Border(top: BorderSide(color: Color(0xFFF0F0F0))),
           ),
@@ -479,6 +486,8 @@ class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
             children: [
               Expanded(
                 child: TextField(
+                  controller: _messageController,
+                  onSubmitted: (_) => _sendMessage(),
                   decoration: InputDecoration(
                     hintText: "Type your message...",
                     hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
@@ -486,17 +495,17 @@ class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
                   ),
                 ),
               ),
-              Icon(Icons.attach_file, color: Colors.grey.shade500),
-              const SizedBox(width: 12),
-              Icon(Icons.sentiment_satisfied_alt, color: Colors.grey.shade500),
-              const SizedBox(width: 12),
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Colors.blue.shade700,
-                  borderRadius: BorderRadius.circular(8),
+              SizedBox(width: 12),
+              GestureDetector(
+                onTap: _sendMessage,
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade700,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(Icons.send, color: Colors.white, size: 18),
                 ),
-                child: const Icon(Icons.send, color: Colors.white, size: 18),
               ),
             ],
           ),
@@ -507,16 +516,16 @@ class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
 
   Widget _buildRightMessage(String text, String time) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
+      padding: EdgeInsets.only(bottom: 16.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Flexible(
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: const BoxDecoration(
-                color: Color(0xFFF2F8FF), // Light blue from image
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: Color(0xFFF2F8FF),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(16),
                   bottomLeft: Radius.circular(16),
@@ -525,23 +534,12 @@ class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
               ),
               child: Text(
                 text,
-                style: const TextStyle(fontSize: 13, color: Color(0xFF1E2875), fontWeight: FontWeight.w600, height: 1.4),
+                style: TextStyle(fontSize: 13, color: Color(0xFF1E2875), fontWeight: FontWeight.w600, height: 1.4),
               ),
             ),
           ),
-          const SizedBox(width: 8),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Row(
-                children: [
-                  Text(time, style: TextStyle(fontSize: 9, color: Colors.grey.shade600, fontWeight: FontWeight.bold)),
-                  const SizedBox(width: 4),
-                  Icon(Icons.done_all, size: 12, color: Colors.blue.shade400),
-                ],
-              ),
-            ],
-          ),
+          SizedBox(width: 8),
+          Text(time, style: TextStyle(fontSize: 9, color: Colors.grey.shade600, fontWeight: FontWeight.bold)),
         ],
       ),
     );
@@ -549,23 +547,23 @@ class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
 
   Widget _buildLeftMessage(String text, String time) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
+      padding: EdgeInsets.only(bottom: 16.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CircleAvatar(
             radius: 14,
-            backgroundColor: const Color(0xFFEEF2FF),
-            child: Icon(Icons.headset_mic, size: 14, color: Colors.blue.shade700),
+            backgroundColor: Color(0xFFEEF2FF),
+            child: Icon(_selectedChat?['icon'] ?? Icons.headset_mic, size: 14, color: Colors.blue.shade700),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Flexible(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  decoration: const BoxDecoration(
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  decoration: BoxDecoration(
                     color: Colors.white,
                     boxShadow: [
                       BoxShadow(color: Color(0x0A000000), blurRadius: 4, offset: Offset(0, 2)),
@@ -578,45 +576,16 @@ class _AdminChatSupportScreenState extends State<AdminChatSupportScreen> {
                   ),
                   child: Text(
                     text,
-                    style: const TextStyle(fontSize: 13, color: Colors.black87, fontWeight: FontWeight.w600, height: 1.4),
+                    style: TextStyle(fontSize: 13, color: Colors.black87, fontWeight: FontWeight.w600, height: 1.4),
                   ),
                 ),
-                const SizedBox(height: 6),
+                SizedBox(height: 6),
                 Text(time, style: TextStyle(fontSize: 9, color: Colors.grey.shade600, fontWeight: FontWeight.bold)),
               ],
             ),
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildSurvey() {
-    return Column(
-      children: [
-        const Text("How was your support experience?", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 16),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _buildSurveyOption(Icons.sentiment_dissatisfied, "Poor", Colors.grey.shade600, false),
-            const SizedBox(width: 32),
-            _buildSurveyOption(Icons.sentiment_satisfied, "Good", Colors.grey.shade600, false),
-            const SizedBox(width: 32),
-            _buildSurveyOption(Icons.sentiment_very_satisfied, "Excellent", Colors.green, true),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSurveyOption(IconData icon, String label, Color color, bool isFilled) {
-    return Column(
-      children: [
-        Icon(icon, size: 32, color: color),
-        const SizedBox(height: 8),
-        Text(label, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: color)),
-      ],
     );
   }
 }

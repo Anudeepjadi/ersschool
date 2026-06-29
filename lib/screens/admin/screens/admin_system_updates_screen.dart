@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
 import '../../../core/theme/app_colors.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminSystemUpdatesScreen extends StatefulWidget {
   const AdminSystemUpdatesScreen({super.key});
@@ -47,12 +48,12 @@ class _AdminSystemUpdatesScreenState extends State<AdminSystemUpdatesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FF),
-      appBar: const AdminAppBar(title: "System Updates", subtitle: "Manage your account details"),
-      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
+      backgroundColor: Color(0xFFF5F7FF),
+      appBar: AdminAppBar(title: "System Updates", subtitle: "Manage your account details"),
+      bottomNavigationBar: AdminBottomNavBar(currentIndex: 4),
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(16),
+        physics: BouncingScrollPhysics(),
+        padding: EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -69,7 +70,7 @@ class _AdminSystemUpdatesScreenState extends State<AdminSystemUpdatesScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Tabs Row
             SingleChildScrollView(
@@ -80,8 +81,8 @@ class _AdminSystemUpdatesScreenState extends State<AdminSystemUpdatesScreen> {
                   return GestureDetector(
                     onTap: () => setState(() => _activeTab = t),
                     child: Container(
-                      margin: const EdgeInsets.only(right: 8),
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                      margin: EdgeInsets.only(right: 8),
+                      padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                       decoration: BoxDecoration(
                         color: isSelected ? AppColors.primary : Colors.white,
                         borderRadius: BorderRadius.circular(20),
@@ -92,7 +93,7 @@ class _AdminSystemUpdatesScreenState extends State<AdminSystemUpdatesScreen> {
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
-                          color: isSelected ? Colors.white : const Color(0xFF757897),
+                          color: isSelected ? Colors.white : Color(0xFF757897),
                         ),
                       ),
                     ),
@@ -100,11 +101,11 @@ class _AdminSystemUpdatesScreenState extends State<AdminSystemUpdatesScreen> {
                 }).toList(),
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // System Status block
             _buildSystemStatusSection(),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Updates Logs list
             _buildUpdatesList(),
@@ -117,8 +118,8 @@ class _AdminSystemUpdatesScreenState extends State<AdminSystemUpdatesScreen> {
   Widget _buildStatCard(String label, String value, String subtext, Color color) {
     return Container(
       width: 130,
-      margin: const EdgeInsets.only(right: 12),
-      padding: const EdgeInsets.all(12),
+      margin: EdgeInsets.only(right: 12),
+      padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -127,10 +128,10 @@ class _AdminSystemUpdatesScreenState extends State<AdminSystemUpdatesScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
-          Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-          const SizedBox(height: 4),
+          Text(label, style: TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
+          SizedBox(height: 8),
+          Text(value, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+          SizedBox(height: 4),
           Text(subtext, style: TextStyle(fontSize: 9, color: color, fontWeight: FontWeight.w500)),
         ],
       ),
@@ -147,7 +148,7 @@ class _AdminSystemUpdatesScreenState extends State<AdminSystemUpdatesScreen> {
     ];
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -155,33 +156,31 @@ class _AdminSystemUpdatesScreenState extends State<AdminSystemUpdatesScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                "System Status",
+              Text("System Status".tr,
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
               ),
-              Text(
-                "All Systems Operational",
+              Text("All Systems Operational".tr,
                 style: TextStyle(fontSize: 11, color: Color(0xFF10B981), fontWeight: FontWeight.bold),
               )
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Column(
             children: services.map((s) {
               return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4.0),
+                padding: EdgeInsets.symmetric(vertical: 4.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(s['name']!, style: const TextStyle(fontSize: 12, color: Color(0xFF1E2875), fontWeight: FontWeight.bold)),
+                    Text(s['name']!, style: TextStyle(fontSize: 12, color: Color(0xFF1E2875), fontWeight: FontWeight.bold)),
                     Row(
                       children: [
-                        Container(width: 8, height: 8, decoration: const BoxDecoration(color: Color(0xFF10B981), shape: BoxShape.circle)),
-                        const SizedBox(width: 6),
-                        Text(s['status']!, style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                        Container(width: 8, height: 8, decoration: BoxDecoration(color: Color(0xFF10B981), shape: BoxShape.circle)),
+                        SizedBox(width: 6),
+                        Text(s['status']!, style: TextStyle(fontSize: 11, color: Colors.grey)),
                       ],
                     ),
                   ],
@@ -203,38 +202,37 @@ class _AdminSystemUpdatesScreenState extends State<AdminSystemUpdatesScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Padding(
+          Padding(
             padding: EdgeInsets.all(16.0),
-            child: Text(
-              "Recent Updates Log",
+            child: Text("Recent Updates Log".tr,
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
             ),
           ),
           ListView.separated(
             shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
+            physics: NeverScrollableScrollPhysics(),
             itemCount: _updates.length,
-            separatorBuilder: (context, index) => const Divider(height: 1),
+            separatorBuilder: (context, index) => Divider(height: 1),
             itemBuilder: (context, index) {
               final up = _updates[index];
               return ListTile(
-                title: Text(up['version'], style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                title: Text(up['version'], style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 4),
-                    Text(up['description'], style: const TextStyle(fontSize: 11, color: Colors.grey)),
-                    const SizedBox(height: 6),
+                    SizedBox(height: 4),
+                    Text(up['description'], style: TextStyle(fontSize: 11, color: Colors.grey)),
+                    SizedBox(height: 6),
                     Row(
                       children: (up['tags'] as List<String>).map((t) {
                         return Container(
-                          margin: const EdgeInsets.only(right: 6),
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          margin: EdgeInsets.only(right: 6),
+                          padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
                             color: AppColors.primary.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: Text(t, style: const TextStyle(fontSize: 8, fontWeight: FontWeight.bold, color: AppColors.primary)),
+                          child: Text(t, style: TextStyle(fontSize: 8, fontWeight: FontWeight.bold, color: AppColors.primary)),
                         );
                       }).toList(),
                     )
@@ -242,7 +240,7 @@ class _AdminSystemUpdatesScreenState extends State<AdminSystemUpdatesScreen> {
                 ),
                 trailing: Text(
                   up['date'],
-                  style: const TextStyle(fontSize: 10, color: Colors.grey),
+                  style: TextStyle(fontSize: 10, color: Colors.grey),
                 ),
               );
             },

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:ersschool/core/theme/app_colors.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
+import 'package:ersschool/core/data/app_data_store.dart';
+import 'package:ersschool/core/utils/profile_manager.dart';
 import '../widgets/admin_app_bar.dart';
-import '../widgets/admin_bottom_nav_bar.dart';
-import 'package:fl_chart/fl_chart.dart';
-import '../../../core/theme/app_colors.dart';
+import 'student_management/admin_student_id_card_print_screen.dart';
 
 class AdminIDCardsScreen extends StatefulWidget {
   const AdminIDCardsScreen({super.key});
@@ -12,143 +15,499 @@ class AdminIDCardsScreen extends StatefulWidget {
 }
 
 class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
-  final List<Map<String, dynamic>> _records = [
-    {'name': 'Rahul Kumar', 'type': 'Student', 'id': '101', 'dept': '8 - A', 'date': '20 Jun 2026', 'status': 'Approved'},
-    {'name': 'Ananya Sharma', 'type': 'Student', 'id': '102', 'dept': '8 - A', 'date': '20 Jun 2026', 'status': 'Approved'},
-    {'name': 'Aarav Singh', 'type': 'Student', 'id': '103', 'dept': '8 - A', 'date': '19 Jun 2026', 'status': 'Pending'},
-    {'name': 'Diya Patel', 'type': 'Student', 'id': '104', 'dept': '8 - A', 'date': '19 Jun 2026', 'status': 'Pending'},
-    {'name': 'Kabir Verma', 'type': 'Student', 'id': '105', 'dept': '8 - B', 'date': '18 Jun 2026', 'status': 'Approved'},
-    {'name': 'Ananya Sharma', 'type': 'Teacher', 'id': 'TCH125', 'dept': 'Mathematics', 'date': '18 Jun 2026', 'status': 'Approved'},
-  ];
+  String _selectedBranch = 'Ecstasy School 1 (ECS001)';
+  String _selectedYear = '2025-26';
+  String _selectedStatus = 'Only Active';
+  String _selectedClass = 'Grade 1';
+  String _selectedSection = 'All';
+  String _searchQuery = '';
+  bool _selectAll = false;
+  final ScrollController _scrollController = ScrollController();
+  int _currentPage = 1;
+  int _itemsPerPage = 25;
+
+  List<Map<String, dynamic>> get _students => AppDataStore.instance.students
+      .where((s) => s['school'] == ProfileManager().selectedSchool.value)
+      .toList();
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double fieldWidth = screenWidth > 600 ? 250 : screenWidth - 32;
+    double searchWidth = screenWidth > 600 ? 300 : screenWidth - 32;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FF),
-      appBar: const AdminAppBar(title: "ID Cards Management", subtitle: "Manage your account details"),
-      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
+      backgroundColor: Colors.white,
+      appBar: AdminAppBar(
+        title: "Student ID Cards".tr,
+        subtitle: "Generate student ID cards",
+      ),
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Stats Row
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  _buildStatCard("Total ID Cards", "1,245", "+12% this month", Colors.blue),
-                  _buildStatCard("Students", "1,042", "+10% this month", Colors.green),
-                  _buildStatCard("Teachers", "158", "+8% this month", Colors.orange),
-                  _buildStatCard("Staff", "45", "+5% this month", Colors.purple),
-                  _buildStatCard("Pending Requests", "38", "+8% this month", Colors.red),
-                ],
+            // Top Filters Row
+            Column(
+              children: [
+                Wrap(
+                  spacing: 16,
+                  runSpacing: 16,
+                  children: [
+                    SizedBox(width: fieldWidth, child: _buildFilterDropdown("Branch", _selectedBranch, ["All Branches", "Ecstasy School 1 (ECS001)", "Ecstasy School 2 (ECS002)", "Ecstasy (ECS003)", "Ecstasy (ECS004)"], (val) => setState(() => _selectedBranch = val!))),
+                    SizedBox(width: fieldWidth, child: _buildFilterDropdown("Academic Year", _selectedYear, ["2025-26"], (val) => setState(() => _selectedYear = val!))),
+                    SizedBox(width: fieldWidth, child: _buildFilterDropdown("Active / Inactive", _selectedStatus, ["All students", "Only Active", "Only Inactive"], (val) => setState(() => _selectedStatus = val!))),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Wrap(
+                  spacing: 16,
+                  runSpacing: 16,
+                  crossAxisAlignment: WrapCrossAlignment.end,
+                  children: [
+                    SizedBox(width: fieldWidth, child: _buildFilterDropdown("Class", _selectedClass, ["All", "L.K.G", "U.K.G", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5", "Grade 6", "Grade 7", "Grade 8", "Grade 9", "Class 10"], (val) => setState(() => _selectedClass = val!))),
+                    SizedBox(width: fieldWidth, child: _buildFilterDropdown("Section", _selectedSection, ["All", "A", "B", "C"], (val) => setState(() => _selectedSection = val!))),
+                    SizedBox(
+                      width: fieldWidth,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                          ),
+                          child: Text("Search".tr, style: const TextStyle(color: Colors.white)),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // Second Row (Search + Action Buttons)
+            Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 16,
+              runSpacing: 16,
+              children: [
+                SizedBox(
+                  width: searchWidth,
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: "Search students".tr,
+                      suffixIcon: const Icon(Icons.search, color: Colors.grey),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(4),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                    ),
+                    onChanged: (val) {
+                      setState(() {
+                        _searchQuery = val;
+                        _currentPage = 1;
+                      });
+                    },
+                  ),
+                ),
+                Wrap(
+                  spacing: 16,
+                  runSpacing: 16,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () => _showDownloadDialog(targetName: "selected students"),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                      ),
+                      child: Text("Download Selected ID Cards".tr, style: const TextStyle(color: Colors.white)),
+                    ),
+                    ElevatedButton(
+                      onPressed: () => _showDownloadDialog(targetName: "all students"),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.success, // green
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                      ),
+                      child: Text("Download All ID Cards".tr, style: const TextStyle(color: Colors.white)),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // DataTable
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey.shade300),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Scrollbar(
+                controller: _scrollController,
+                thumbVisibility: true,
+                child: SingleChildScrollView(
+                  controller: _scrollController,
+                  scrollDirection: Axis.horizontal,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 16.0),
+                    child: DataTable(
+                  headingRowColor: WidgetStateProperty.all(AppColors.primaryDark),
+                  dataRowColor: WidgetStateProperty.resolveWith<Color>((states) {
+                    return Colors.white;
+                  }),
+                  headingTextStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+                  dataTextStyle: const TextStyle(color: AppColors.primaryDark, fontSize: 13),
+                  columns: [
+                    DataColumn(
+                      label: Checkbox(
+                        value: _selectAll,
+                        onChanged: (val) {
+                          setState(() {
+                            _selectAll = val ?? false;
+                            for (var item in _filteredData) {
+                              item['selected'] = _selectAll;
+                            }
+                          });
+                        },
+                        checkColor: Colors.white,
+                        activeColor: AppColors.primary,
+                        side: const BorderSide(color: Colors.white),
+                      ),
+                    ),
+                    DataColumn(label: const Text("")), // Avatar placeholder
+                    DataColumn(label: Text("Student Name".tr)),
+                    DataColumn(label: Text("Father Name".tr)),
+                    DataColumn(label: Text("Mother Name".tr)),
+                    DataColumn(label: Text("Gender".tr)),
+                    DataColumn(label: Text("Class".tr)),
+                    DataColumn(label: Text("Section".tr)),
+                    DataColumn(label: Text("Mobile".tr)),
+                    DataColumn(label: Text("Mobile 2".tr)),
+                    DataColumn(label: Text("Address".tr)),
+                    DataColumn(label: const Text("")), // Action
+                  ],
+                  rows: _getPaginatedData().map((data) {
+                    final photoPath = data['photoPath'];
+                    return DataRow(
+                      cells: [
+                        DataCell(
+                          Checkbox(
+                            value: data['selected'] ?? false,
+                            onChanged: (val) {
+                              setState(() {
+                                data['selected'] = val ?? false;
+                              _selectAll = _filteredData.every((item) => item['selected'] == true);
+                            });
+                            },
+                            activeColor: AppColors.primary,
+                          ),
+                        ),
+                        DataCell(
+                          Container(
+                            width: 30,
+                            height: 30,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade300,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: photoPath != null && File(photoPath).existsSync()
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(4),
+                                    child: Image.file(File(photoPath), fit: BoxFit.cover),
+                                  )
+                                : const Icon(Icons.person, color: Colors.white, size: 20),
+                          ),
+                        ),
+                        DataCell(Text(data['name'] ?? "")),
+                        DataCell(Text(data['father'] ?? "")),
+                        DataCell(Text(data['mother'] ?? "")),
+                        DataCell(Text(data['gender'] ?? "")),
+                        DataCell(Text(data['class'] ?? "")),
+                        DataCell(Text(data['section'] ?? "A")),
+                        DataCell(Text(data['mobile'] ?? data['phone'] ?? "")),
+                        DataCell(Text(data['secondary_mobile'] ?? "")),
+                        DataCell(Text(data['address'] ?? "")),
+                        DataCell(
+                          InkWell(
+                            onTap: () => _showDownloadDialog(studentData: data),
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: const BoxDecoration(
+                                color: AppColors.success, // green
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(Icons.download, color: Colors.white, size: 16),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  }).toList(),
+                ),
+                  ),
+                ),
               ),
             ),
-            const SizedBox(height: 16),
-
-            // Previews of Student & Staff Cards
-            const Text(
-              "ID Card Previews",
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text("Scroll table horizontally: ".tr, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                IconButton(
+                  icon: const Icon(Icons.arrow_circle_left_outlined, color: AppColors.primary),
+                  onPressed: () { if (_scrollController.hasClients) _scrollController.animateTo(_scrollController.offset - 250, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut); },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.arrow_circle_right_outlined, color: AppColors.primary),
+                  onPressed: () { if (_scrollController.hasClients) _scrollController.animateTo(_scrollController.offset + 250, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut); },
+                ),
+              ],
             ),
-            const SizedBox(height: 12),
-            _buildCardPreviews(),
-            const SizedBox(height: 16),
 
-            // ID Card summary chart
-            _buildSummaryChart(),
-            const SizedBox(height: 16),
+            // Pagination Bar
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFDE6D2), // light orange
+                border: Border(
+                  left: BorderSide(color: Colors.grey.shade300),
+                  right: BorderSide(color: Colors.grey.shade300),
+                  bottom: BorderSide(color: Colors.grey.shade300),
+                ),
+                borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(4), bottomRight: Radius.circular(4)),
+              ),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade600,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Text(
+                        "Total Records: ${_filteredData.length}".tr,
+                        style: const TextStyle(color: Colors.white, fontSize: 10),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text("Items per page:".tr, style: const TextStyle(fontSize: 12, color: Colors.black54)),
+                        const SizedBox(width: 8),
+                        DropdownButton<int>(
+                          value: _itemsPerPage,
+                          underline: const SizedBox(),
+                          items: const [
+                            DropdownMenuItem(value: 25, child: Text("25", style: TextStyle(fontSize: 12))),
+                            DropdownMenuItem(value: 50, child: Text("50", style: TextStyle(fontSize: 12))),
+                          ],
+                          onChanged: (val) {
+                            if (val != null) setState(() { _itemsPerPage = val; _currentPage = 1; });
+                          },
+                        ),
+                        const SizedBox(width: 24),
+                        Text("$_currentPage - ${(_filteredData.length / _itemsPerPage).ceil() == 0 ? 1 : (_filteredData.length / _itemsPerPage).ceil()} of ${_filteredData.length}".tr, style: const TextStyle(fontSize: 12, color: Colors.black54)),
+                        const SizedBox(width: 16),
+                        InkWell(
+                          onTap: _currentPage > 1 ? () => setState(() => _currentPage = 1) : null,
+                          child: Icon(Icons.first_page, size: 20, color: _currentPage > 1 ? Colors.black87 : Colors.black26),
+                        ),
+                        const SizedBox(width: 8),
+                        InkWell(
+                          onTap: _currentPage > 1 ? () => setState(() => _currentPage--) : null,
+                          child: Icon(Icons.chevron_left, size: 20, color: _currentPage > 1 ? Colors.black87 : Colors.black26),
+                        ),
+                        const SizedBox(width: 8),
+                        InkWell(
+                          onTap: _currentPage < (_filteredData.length / _itemsPerPage).ceil() ? () => setState(() => _currentPage++) : null,
+                          child: Icon(Icons.chevron_right, size: 20, color: _currentPage < (_filteredData.length / _itemsPerPage).ceil() ? Colors.black87 : Colors.black26),
+                        ),
+                        const SizedBox(width: 8),
+                        InkWell(
+                          onTap: _currentPage < (_filteredData.length / _itemsPerPage).ceil() ? () => setState(() => _currentPage = (_filteredData.length / _itemsPerPage).ceil()) : null,
+                          child: Icon(Icons.last_page, size: 20, color: _currentPage < (_filteredData.length / _itemsPerPage).ceil() ? Colors.black87 : Colors.black26),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
 
-            // List table
-            _buildRecordsTable(),
+            const SizedBox(height: 24),
+            Center(
+              child: Text(
+                "V6.0 Developed by Ecstasy Consulting And Solutions Pvt Ltd.\nCopyright © 2026 All rights reserved",
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 10, color: Colors.grey),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildStatCard(String label, String value, String subtext, Color color) {
-    return Container(
-      width: 120,
-      margin: const EdgeInsets.only(right: 12),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade100),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
-          Text(value, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-          const SizedBox(height: 4),
-          Text(subtext, style: TextStyle(fontSize: 10, color: color, fontWeight: FontWeight.bold)),
-        ],
-      ),
-    );
+  List<Map<String, dynamic>> get _filteredData {
+    final students = _students;
+    if (_searchQuery.isEmpty) return students;
+    final query = _searchQuery.toLowerCase();
+    return students.where((student) {
+      return student.values.any((val) => val.toString().toLowerCase().contains(query));
+    }).toList();
   }
 
-  Widget _buildCardPreviews() {
+  List<Map<String, dynamic>> _getPaginatedData() {
+    final filtered = _filteredData;
+    int startIndex = (_currentPage - 1) * _itemsPerPage;
+    int endIndex = startIndex + _itemsPerPage;
+    if (startIndex >= filtered.length) return [];
+    if (endIndex > filtered.length) endIndex = filtered.length;
+    return filtered.sublist(startIndex, endIndex);
+  }
+
+  Widget _buildFilterDropdown(String label, String value, List<String> items, Function(String?) onChanged) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // 1. Student ID Card (Blue)
-        _buildIDCardLayout(
-          headerColor: AppColors.primary,
-          headerText: "ECSTASY SCHOOL 1",
-          subHeader: "Shaping Futures, Building Tomorrow",
-          roleText: "STUDENT",
-          name: "Rahul Kumar",
-          details: {
-            'Class': '8 - A',
-            'Roll No.': '101',
-            'DOB': '14 May 2010',
-            'Blood Group': 'B+',
-          },
-          idNumber: "ES1S2410101",
-        ),
-        const SizedBox(height: 16),
-        // 2. Staff ID Card (Green)
-        _buildIDCardLayout(
-          headerColor: const Color(0xFF10B981),
-          headerText: "ECSTASY SCHOOL 1",
-          subHeader: "Shaping Futures, Building Tomorrow",
-          roleText: "STAFF",
-          name: "Ananya Sharma",
-          details: {
-            'Designation': 'Mathematics Teacher',
-            'Employee ID': 'TCH125',
-            'Department': 'Academics',
-          },
-          idNumber: "ES1TCH125",
+        Text(label.tr, style: const TextStyle(fontSize: 12, color: Colors.black87)),
+        const SizedBox(height: 4),
+        Container(
+          height: 40,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(color: Colors.grey.shade300),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              isExpanded: true,
+              value: value,
+              icon: const Icon(Icons.keyboard_arrow_down, color: Colors.grey),
+              items: items.map((String item) {
+                return DropdownMenuItem<String>(
+                  value: item,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: Text(item, style: const TextStyle(fontSize: 13), overflow: TextOverflow.ellipsis),
+                  ),
+                );
+              }).toList(),
+              onChanged: onChanged,
+            ),
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildIDCardLayout({
-    required Color headerColor,
-    required String headerText,
-    required String subHeader,
-    required String roleText,
-    required String name,
-    required Map<String, String> details,
-    required String idNumber,
-  }) {
+  void _showDownloadDialog({String? targetName, Map<String, dynamic>? studentData}) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          titlePadding: const EdgeInsets.all(0),
+          contentPadding: const EdgeInsets.all(24),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+          title: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: const BoxDecoration(
+              color: AppColors.primary,
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Confirm download".tr,
+                  style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                InkWell(
+                  onTap: () => Navigator.pop(context),
+                  child: const Icon(Icons.close, color: Colors.white, size: 20),
+                ),
+              ],
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (studentData != null) _buildIdCardPreview(studentData),
+              if (studentData != null) const SizedBox(height: 16),
+              Text(
+                "Are you sure you want to download ID card for ${targetName ?? studentData?['name'] ?? ''} ?".tr,
+                style: const TextStyle(fontSize: 14, color: Colors.black87),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.grey.shade500,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+              ),
+              child: Text("No".tr, style: const TextStyle(color: Colors.white)),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context); // Close dialog
+                if (studentData != null) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AdminStudentIdCardPrintScreen(studentData: studentData),
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Batch download feature coming soon...".tr)),
+                  );
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.success,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+              ),
+              child: Text("Yes, Download".tr, style: const TextStyle(color: Colors.white)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildIdCardPreview(Map<String, dynamic> studentData) {
+    final photo = studentData['avatar'] ?? studentData['photoPath'];
+    final bool hasValidPhoto = photo != null && File(photo.toString()).existsSync();
+    final headerColor = Colors.blue.shade800;
+    
     return Container(
-      width: double.infinity,
+      width: 350, // Increased from 320 to 350 for better visibility
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.grey.shade200, width: 1.5),
         boxShadow: [
-          BoxShadow(color: Colors.grey.shade50, blurRadius: 4, offset: const Offset(0, 2)),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, 4)),
         ],
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           // Header banner
           Container(
@@ -165,8 +524,8 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(headerText, style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold)),
-                      Text(subHeader, style: const TextStyle(color: Colors.white70, fontSize: 8)),
+                      Text(ProfileManager().selectedSchool.value.toUpperCase(), style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold)),
+                      const Text("Shaping Futures, Building Tomorrow", style: TextStyle(color: Colors.white70, fontSize: 8)),
                     ],
                   ),
                 ),
@@ -177,18 +536,22 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
           Padding(
             padding: const EdgeInsets.all(14.0),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Profile Picture placeholder
                 Container(
-                  width: 70,
-                  height: 90,
+                  width: 80,
+                  height: 100,
                   decoration: BoxDecoration(
                     color: Colors.grey.shade100,
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(color: Colors.grey.shade300),
                   ),
-                  alignment: Alignment.center,
-                  child: Icon(Icons.person, size: 40, color: Colors.grey.shade400),
+                  child: hasValidPhoto
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.file(File(photo.toString()), fit: BoxFit.cover),
+                        )
+                      : const Icon(Icons.person, color: Colors.grey, size: 40),
                 ),
                 const SizedBox(width: 14),
                 // Card details
@@ -197,21 +560,16 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        name,
+                        studentData['name'] ?? "",
                         style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
                       ),
                       const SizedBox(height: 6),
-                      ...details.entries.map((e) {
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 2.0),
-                          child: Row(
-                            children: [
-                              Text("${e.key}: ", style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
-                              Text(e.value, style: const TextStyle(fontSize: 10, color: Color(0xFF1E2875), fontWeight: FontWeight.bold)),
-                            ],
-                          ),
-                        );
-                      }),
+                      _buildIdInfoRow("Class", "${studentData['class'] ?? ''} - ${studentData['section'] ?? 'A'}"),
+                      _buildIdInfoRow("Roll No.", studentData['roll']?.toString().replaceAll('Roll No: ', '') ?? "N/A"),
+                      _buildIdInfoRow("Gender", studentData['gender'] ?? ""),
+                      _buildIdInfoRow("Parent", studentData['mobile'] ?? studentData['phone'] ?? ""),
+                      _buildIdInfoRow("Email", studentData['email'] ?? ""),
+                      _buildIdInfoRow("Mother", studentData['mother'] ?? ""),
                     ],
                   ),
                 ),
@@ -225,7 +583,7 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
-                      roleText,
+                      "STUDENT",
                       style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: headerColor, letterSpacing: 0.5),
                     ),
                   ),
@@ -255,19 +613,26 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
                       }),
                     ),
                     const SizedBox(height: 4),
-                    Text(idNumber, style: const TextStyle(fontSize: 9, fontFamily: 'monospace', color: Colors.grey)),
+                    Text(studentData['admission'] ?? studentData['admNo'] ?? "", style: const TextStyle(fontSize: 9, fontFamily: 'monospace', color: Colors.grey)),
                   ],
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Container(
-                      width: 50,
-                      height: 1,
-                      color: Colors.grey.shade400,
+                    Image.asset(
+                      'assets/images/principal_signature.png',
+                      height: 30,
+                      width: 60,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) => Container(
+                        width: 50,
+                        height: 1,
+                        margin: const EdgeInsets.only(top: 15),
+                        color: Colors.grey.shade400,
+                      ),
                     ),
                     const SizedBox(height: 4),
-                    const Text("Principal Sign", style: TextStyle(fontSize: 8, color: Colors.grey, fontWeight: FontWeight.bold)),
+                    Text("Principal Sign".tr, style: const TextStyle(fontSize: 8, color: Colors.grey, fontWeight: FontWeight.bold)),
                   ],
                 ),
               ],
@@ -278,142 +643,25 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
     );
   }
 
-  Widget _buildSummaryChart() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
+  Widget _buildIdInfoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 2.0),
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "ID Cards Summary",
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+          SizedBox(
+            width: 50, // Fixed width for labels to keep alignment
+            child: Text("${label.tr}: ", style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
           ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                flex: 4,
-                child: SizedBox(
-                  height: 110,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      PieChart(
-                        PieChartData(
-                          sectionsSpace: 0,
-                          centerSpaceRadius: 30,
-                          sections: [
-                            PieChartSectionData(value: 83.7, color: const Color(0xFF3B82F6), radius: 10, showTitle: false),
-                            PieChartSectionData(value: 12.7, color: const Color(0xFF10B981), radius: 10, showTitle: false),
-                            PieChartSectionData(value: 3.6, color: const Color(0xFFF59E0B), radius: 10, showTitle: false),
-                          ],
-                        ),
-                      ),
-                      const Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text("1,245", style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                          Text("Total", style: TextStyle(fontSize: 8, color: Colors.grey)),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(width: 16),
-              const Expanded(
-                flex: 6,
-                child: Column(
-                  children: [
-                    _SummaryRow(Color(0xFF3B82F6), "Students", "1,042 (83.7%)"),
-                    SizedBox(height: 8),
-                    _SummaryRow(Color(0xFF10B981), "Teachers", "158 (12.7%)"),
-                    SizedBox(height: 8),
-                    _SummaryRow(Color(0xFFF59E0B), "Staff", "45 (3.6%)"),
-                  ],
-                ),
-              )
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRecordsTable() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(16.0),
+          Expanded(
             child: Text(
-              "Recent ID Card Logs",
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+              value, 
+              style: const TextStyle(fontSize: 10, color: Color(0xFF1E2875), fontWeight: FontWeight.bold),
+              softWrap: true, // Allow wrapping to prevent horizontal overflow
             ),
           ),
-          ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: _records.length,
-            separatorBuilder: (context, index) => const Divider(height: 1),
-            itemBuilder: (context, index) {
-              final rec = _records[index];
-              final isApproved = rec['status'] == 'Approved';
-              return ListTile(
-                title: Text(rec['name'], style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                subtitle: Text("ID: ${rec['id']} • Dept/Class: ${rec['dept']}", style: const TextStyle(fontSize: 11, color: Colors.grey)),
-                trailing: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(rec['type'], style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                    Text(
-                      rec['status'],
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                        color: isApproved ? const Color(0xFF10B981) : const Color(0xFFEF4444),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
         ],
       ),
-    );
-  }
-}
-
-class _SummaryRow extends StatelessWidget {
-  final Color color;
-  final String label;
-  final String val;
-  const _SummaryRow(this.color, this.label, this.val);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(margin: const EdgeInsets.only(top: 4), width: 8, height: 8, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-        ),
-        const SizedBox(width: 4),
-        Text(val, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-      ],
     );
   }
 }

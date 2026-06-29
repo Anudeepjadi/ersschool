@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminEventsScreen extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
@@ -106,34 +107,34 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FF),
-      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
+      backgroundColor: Color(0xFFF5F7FF),
+      bottomNavigationBar: AdminBottomNavBar(currentIndex: 4),
       appBar: AdminAppBar(
         title: "Events",
         subtitle: "Manage school events and activities",
         onOpenDrawer: widget.onOpenDrawer,
       ),
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(16),
+        physics: BouncingScrollPhysics(),
+        padding: EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // 1. Dropdown Filters + Create Button
             _buildFiltersAndCreateSection(),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // 2. Metric Stat Cards Row
             _buildMetricCardsRow(),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // 3. Calendar & Upcoming split section
             _buildCalendarAndUpcomingSplit(),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
 
             // 4. All Events List Section
             _buildAllEventsTableSection(),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
           ],
         ),
       ),
@@ -147,39 +148,39 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       color: Colors.white,
       child: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: EdgeInsets.all(12.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              physics: const BouncingScrollPhysics(),
+              physics: BouncingScrollPhysics(),
               child: Row(
                 children: [
                   _buildSmallDropdown("Academic Year", _selectedYear, ['2026 - 27', '2025 - 26'], (v) => setState(() => _selectedYear = v!), 120),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   _buildSmallDropdown("Event Type", _selectedType, ['All Types', 'Sports', 'Academic', 'Meeting', 'Ceremony'], (v) => setState(() => _selectedType = v!), 120),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   _buildSmallDropdown("Month", _selectedMonth, ['Jun 2026', 'May 2026', 'Jul 2026'], (v) => setState(() => _selectedMonth = v!), 120),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   _buildSmallDropdown("Status", _selectedStatus, ['All Status', 'Upcoming', 'Ongoing', 'Completed', 'Cancelled'], (v) => setState(() => _selectedStatus = v!), 120),
                 ],
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             ElevatedButton.icon(
               onPressed: () {
                 _showAddEventDialog(context);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF1E2875),
+                backgroundColor: Color(0xFF1E2875),
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                padding: const EdgeInsets.symmetric(vertical: 12),
+                padding: EdgeInsets.symmetric(vertical: 12),
                 elevation: 0,
               ),
-              icon: const Icon(Icons.add, size: 18),
-              label: const Text("Create Event", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+              icon: Icon(Icons.add, size: 18),
+              label: Text("Create Event".tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
             ),
           ],
         ),
@@ -190,9 +191,9 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
   Widget _buildSmallDropdown(String label, String value, List<String> items, ValueChanged<String?> onChanged, double width) {
     return Container(
       width: width,
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: const Color(0xFFF8FAFC),
+        color: Color(0xFFF8FAFC),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: Colors.grey.shade200),
       ),
@@ -200,14 +201,14 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(label, style: const TextStyle(fontSize: 8, color: Colors.grey, fontWeight: FontWeight.w500)),
-          const SizedBox(height: 2),
+          Text(label, style: TextStyle(fontSize: 8, color: Colors.grey, fontWeight: FontWeight.w500)),
+          SizedBox(height: 2),
           DropdownButtonHideUnderline(
             child: DropdownButton<String>(
               value: value,
               isDense: true,
               isExpanded: true,
-              style: const TextStyle(fontSize: 10, color: Color(0xFF1E2875), fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 10, color: Color(0xFF1E2875), fontWeight: FontWeight.bold),
               items: items.map((String item) {
                 return DropdownMenuItem<String>(value: item, child: Text(item, overflow: TextOverflow.ellipsis));
               }).toList(),
@@ -224,32 +225,32 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Add New Event'),
+        title: Text('Add New Event'.tr),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const TextField(decoration: InputDecoration(labelText: 'Event Title', border: OutlineInputBorder())),
-            const SizedBox(height: 12),
-            const TextField(decoration: InputDecoration(labelText: 'Date & Time', border: OutlineInputBorder())),
-            const SizedBox(height: 12),
-            const TextField(decoration: InputDecoration(labelText: 'Venue', border: OutlineInputBorder())),
-            const SizedBox(height: 12),
+            TextField(decoration: InputDecoration(labelText: 'Event Title', border: OutlineInputBorder())),
+            SizedBox(height: 12),
+            TextField(decoration: InputDecoration(labelText: 'Date & Time', border: OutlineInputBorder())),
+            SizedBox(height: 12),
+            TextField(decoration: InputDecoration(labelText: 'Venue', border: OutlineInputBorder())),
+            SizedBox(height: 12),
             DropdownButtonFormField<String>(
-              decoration: const InputDecoration(labelText: 'Event Type', border: OutlineInputBorder()),
+              decoration: InputDecoration(labelText: 'Event Type', border: OutlineInputBorder()),
               items: ['Sports', 'Academic', 'Ceremony'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
               onChanged: (v) {},
             ),
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: Text('Cancel'.tr)),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(ctx);
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Event added successfully!')));
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Event added successfully!'.tr)));
             },
-            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1E2875), foregroundColor: Colors.white),
-            child: const Text('Save Event'),
+            style: ElevatedButton.styleFrom(backgroundColor: Color(0xFF1E2875), foregroundColor: Colors.white),
+            child: Text('Save Event'.tr),
           ),
         ],
       ),
@@ -260,7 +261,7 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
   Widget _buildMetricCardsRow() {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      physics: const BouncingScrollPhysics(),
+      physics: BouncingScrollPhysics(),
       child: Row(
         children: [
           _buildMetricCard("Total Events", "24", "↑ 6 this month", Colors.purple),
@@ -276,8 +277,8 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
   Widget _buildMetricCard(String label, String value, String sub, Color color) {
     return Container(
       width: 125,
-      margin: const EdgeInsets.only(right: 12),
-      padding: const EdgeInsets.all(12),
+      margin: EdgeInsets.only(right: 12),
+      padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -291,7 +292,7 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
             children: [
               Text(
                 label,
-                style: const TextStyle(fontSize: 9, color: Colors.grey, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 9, color: Colors.grey, fontWeight: FontWeight.bold),
               ),
               Container(
                 width: 6,
@@ -300,12 +301,12 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             value,
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           Text(
             sub,
             style: TextStyle(fontSize: 9, color: color, fontWeight: FontWeight.bold),
@@ -325,7 +326,7 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(flex: 5, child: _buildCalendarView()),
-              const SizedBox(width: 16),
+              SizedBox(width: 16),
               Expanded(flex: 5, child: _buildUpcomingListPanel()),
             ],
           );
@@ -334,7 +335,7 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
           return Column(
             children: [
               _buildCalendarView(),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               _buildUpcomingListPanel(),
             ],
           );
@@ -345,7 +346,7 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
 
   Widget _buildCalendarView() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -357,26 +358,25 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                "Events Calendar",
+              Text("Events Calendar".tr,
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
               ),
               Row(
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.chevron_left, size: 20, color: Colors.grey),
+                    icon: Icon(Icons.chevron_left, size: 20, color: Colors.grey),
                     onPressed: () {},
                   ),
-                  const Text("Jun 2026", style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                  Text("Jun 2026".tr, style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
                   IconButton(
-                    icon: const Icon(Icons.chevron_right, size: 20, color: Colors.grey),
+                    icon: Icon(Icons.chevron_right, size: 20, color: Colors.grey),
                     onPressed: () {},
                   ),
                 ],
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           // Weekdays header
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -385,17 +385,17 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
                 child: Text(
                   d,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold),
                 ),
               );
             }).toList(),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           // Days grid representation
           GridView.builder(
             shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            physics: NeverScrollableScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 7,
               mainAxisSpacing: 4,
               crossAxisSpacing: 4,
@@ -405,7 +405,7 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
               // Simulating June 2026 starts on Monday (1st day index 1)
               final int dayNo = index - 0; // June 1st is Monday
               if (dayNo < 1 || dayNo > 30) {
-                return const SizedBox();
+                return SizedBox();
               }
               final isToday = dayNo == 20; // 20th highlight
               final hasEvent = dayNo == 20 || dayNo == 22 || dayNo == 25 || dayNo == 28 || dayNo == 15 || dayNo == 10 || dayNo == 5 || dayNo == 2;
@@ -421,9 +421,9 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
 
               return Container(
                 decoration: BoxDecoration(
-                  color: isToday ? const Color(0xFF1E2875) : Colors.transparent,
+                  color: isToday ? Color(0xFF1E2875) : Colors.transparent,
                   shape: BoxShape.circle,
-                  border: isToday ? Border.all(color: const Color(0xFF1E2875)) : null,
+                  border: isToday ? Border.all(color: Color(0xFF1E2875)) : null,
                 ),
                 alignment: Alignment.center,
                 child: Column(
@@ -436,12 +436,12 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
                         fontWeight: FontWeight.bold,
                         color: isToday 
                             ? Colors.white 
-                            : (hasEvent ? const Color(0xFF1E2875) : Colors.grey.shade700),
+                            : (hasEvent ? Color(0xFF1E2875) : Colors.grey.shade700),
                       ),
                     ),
                     if (hasEvent)
                       Container(
-                        margin: const EdgeInsets.only(top: 2),
+                        margin: EdgeInsets.only(top: 2),
                         width: 4,
                         height: 4,
                         decoration: BoxDecoration(color: dotColor, shape: BoxShape.circle),
@@ -451,7 +451,7 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
               );
             },
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           // Legend indicators
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -476,15 +476,15 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
           height: 8,
           decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
-        const SizedBox(width: 4),
-        Text(label, style: const TextStyle(fontSize: 9, color: Colors.grey, fontWeight: FontWeight.bold)),
+        SizedBox(width: 4),
+        Text(label, style: TextStyle(fontSize: 9, color: Colors.grey, fontWeight: FontWeight.bold)),
       ],
     );
   }
 
   Widget _buildUpcomingListPanel() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -496,28 +496,25 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                "Upcoming Events",
+              Text("Upcoming Events".tr,
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
               ),
-              Text(
-                "View All",
+              Text("View All".tr,
                 style: TextStyle(fontSize: 11, color: AppColors.primary, fontWeight: FontWeight.bold),
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           _buildUpcomingEventRow("20", "Jun", "Annual Sports Day", "09:00 AM - 04:00 PM", "Main Ground", "Sports", Colors.green),
-          const Divider(height: 16),
+          Divider(height: 16),
           _buildUpcomingEventRow("22", "Jun", "Science Exhibition", "10:00 AM - 01:00 PM", "Science Block", "Academic", Colors.blue),
-          const Divider(height: 16),
+          Divider(height: 16),
           _buildUpcomingEventRow("25", "Jun", "Parents Teacher Meeting", "11:00 AM - 02:00 PM", "Seminar Hall", "Meeting", Colors.purple),
-          const Divider(height: 16),
+          Divider(height: 16),
           _buildUpcomingEventRow("28", "Jun", "Investiture Ceremony", "09:30 AM - 12:00 PM", "Auditorium", "Ceremony", Colors.orange),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Center(
-            child: Text(
-              "View All Upcoming Events >",
+            child: Text("View All Upcoming Events >".tr,
               style: TextStyle(fontSize: 11, color: AppColors.primary, fontWeight: FontWeight.bold),
             ),
           ),
@@ -533,26 +530,26 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
         // Date block
         Container(
           width: 44,
-          padding: const EdgeInsets.symmetric(vertical: 6),
+          padding: EdgeInsets.symmetric(vertical: 6),
           decoration: BoxDecoration(
-            color: const Color(0xFFF1F5F9),
+            color: Color(0xFFF1F5F9),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Column(
             children: [
-              Text(day, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-              Text(month, style: const TextStyle(fontSize: 9, color: Colors.grey, fontWeight: FontWeight.bold)),
+              Text(day, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+              Text(month, style: TextStyle(fontSize: 9, color: Colors.grey, fontWeight: FontWeight.bold)),
             ],
           ),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: 12),
         // Content
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-              const SizedBox(height: 2),
+              Text(title, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+              SizedBox(height: 2),
               Wrap(
                 spacing: 8,
                 runSpacing: 4,
@@ -560,17 +557,17 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.access_time, size: 10, color: Colors.grey),
-                      const SizedBox(width: 4),
-                      Text(time, style: const TextStyle(fontSize: 10, color: Colors.grey)),
+                      Icon(Icons.access_time, size: 10, color: Colors.grey),
+                      SizedBox(width: 4),
+                      Text(time, style: TextStyle(fontSize: 10, color: Colors.grey)),
                     ],
                   ),
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.location_on_outlined, size: 10, color: Colors.grey),
-                      const SizedBox(width: 4),
-                      Text(venue, style: const TextStyle(fontSize: 10, color: Colors.grey)),
+                      Icon(Icons.location_on_outlined, size: 10, color: Colors.grey),
+                      SizedBox(width: 4),
+                      Text(venue, style: TextStyle(fontSize: 10, color: Colors.grey)),
                     ],
                   ),
                 ],
@@ -580,7 +577,7 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
         ),
         // Tag chip
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
           decoration: BoxDecoration(
             color: tagColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
@@ -604,7 +601,7 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
     }).toList();
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -613,24 +610,23 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "All Events",
+          Text("All Events".tr,
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           // Search & controls row
           Row(
             children: [
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF8FAFC),
+                    color: Color(0xFFF8FAFC),
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(color: Colors.grey.shade200),
                   ),
                   child: TextField(
                     onChanged: (v) => setState(() => _searchQuery = v),
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       hintText: "Search events by name...",
                       hintStyle: TextStyle(fontSize: 12, color: Colors.grey),
                       prefixIcon: Icon(Icons.search, size: 18, color: Colors.grey),
@@ -640,13 +636,13 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
                   ),
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               _buildIconButton(Icons.filter_list, "Filter"),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               _buildIconButton(Icons.file_download_outlined, "Export"),
             ],
           ),
-          const SizedBox(height: 14),
+          SizedBox(height: 14),
           // Tab bar indicators
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -660,11 +656,11 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           // Event Cards List
           ListView.builder(
             shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
+            physics: NeverScrollableScrollPhysics(),
             itemCount: filtered.length,
             itemBuilder: (context, index) {
               final e = filtered[index];
@@ -682,8 +678,8 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
               }
 
               return Container(
-                margin: const EdgeInsets.only(bottom: 12),
-                padding: const EdgeInsets.all(16),
+                margin: EdgeInsets.only(bottom: 12),
+                padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
@@ -693,14 +689,14 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(10),
+                      padding: EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         color: e['color'].withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(Icons.event_note, color: e['color'], size: 20),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -712,7 +708,7 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
                               Expanded(
                                 child: Text(
                                   e['name'],
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                     color: Color(0xFF1E2875),
@@ -720,7 +716,7 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
                                 ),
                               ),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
                                   color: statusColor.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(12),
@@ -736,17 +732,17 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 6),
+                          SizedBox(height: 6),
                           Text(
-                            "${e['type']} • ${e['organizer']}",
+                            "${e['type']} | ${e['organizer']}",
                             style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
                           ),
-                          const SizedBox(height: 6),
+                          SizedBox(height: 6),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Icon(Icons.calendar_today_outlined, size: 14, color: Colors.grey.shade500),
-                              const SizedBox(width: 4),
+                              SizedBox(width: 4),
                               Expanded(
                                 child: Text(
                                   "${e['date']}, ${e['time']}",
@@ -755,12 +751,12 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 4),
+                          SizedBox(height: 4),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Icon(Icons.location_on_outlined, size: 14, color: Colors.grey.shade500),
-                              const SizedBox(width: 4),
+                              SizedBox(width: 4),
                               Expanded(
                                 child: Text(
                                   e['venue'],
@@ -777,14 +773,14 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
               );
             },
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           // Pagination row
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 "Showing 1 to ${filtered.length} of ${filtered.length} entries",
-                style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.w500),
+                style: TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.w500),
               ),
               Row(
                 children: [
@@ -810,7 +806,7 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
         border: Border.all(color: Colors.grey.shade200),
       ),
       child: IconButton(
-        icon: Icon(icon, color: const Color(0xFF1E2875), size: 18),
+        icon: Icon(icon, color: Color(0xFF1E2875), size: 18),
         onPressed: () => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$label clicked"))),
       ),
     );
@@ -821,12 +817,12 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
     return GestureDetector(
       onTap: () => setState(() => _activeTab = label),
       child: Container(
-        margin: const EdgeInsets.only(right: 6),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        margin: EdgeInsets.only(right: 6),
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF1E2875) : Colors.transparent,
+          color: isSelected ? Color(0xFF1E2875) : Colors.transparent,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: isSelected ? const Color(0xFF1E2875) : Colors.grey.shade200),
+          border: Border.all(color: isSelected ? Color(0xFF1E2875) : Colors.grey.shade200),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -835,16 +831,16 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
               label,
               style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: isSelected ? Colors.white : Colors.grey.shade600),
             ),
-            const SizedBox(width: 4),
+            SizedBox(width: 4),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
               decoration: BoxDecoration(
-                color: isSelected ? Colors.white24 : const Color(0xFFF1F5F9),
+                color: isSelected ? Colors.white24 : Color(0xFFF1F5F9),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text(
                 "$count",
-                style: TextStyle(fontSize: 8, fontWeight: FontWeight.bold, color: isSelected ? Colors.white : const Color(0xFF1E2875)),
+                style: TextStyle(fontSize: 8, fontWeight: FontWeight.bold, color: isSelected ? Colors.white : Color(0xFF1E2875)),
               ),
             ),
           ],
@@ -855,13 +851,13 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
 
   Widget _buildPageButton(String text, {bool active = false}) {
     return Container(
-      margin: const EdgeInsets.only(left: 4),
+      margin: EdgeInsets.only(left: 4),
       width: 24,
       height: 24,
       decoration: BoxDecoration(
-        color: active ? const Color(0xFF1E2875) : Colors.transparent,
+        color: active ? Color(0xFF1E2875) : Colors.transparent,
         borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: active ? const Color(0xFF1E2875) : Colors.grey.shade200),
+        border: Border.all(color: active ? Color(0xFF1E2875) : Colors.grey.shade200),
       ),
       alignment: Alignment.center,
       child: Text(
@@ -871,3 +867,4 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
     );
   }
 }
+

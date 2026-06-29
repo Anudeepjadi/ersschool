@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
-import 'package:flutter/cupertino.dart';
 import 'dart:async';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class AiAssistantScreen extends StatefulWidget {
   const AiAssistantScreen({super.key});
@@ -49,10 +49,10 @@ class _AiAssistantScreenState extends State<AiAssistantScreen> {
 
     _messageController.clear();
     _scrollToBottom();
-    _focusNode.unfocus();
+    // _focusNode.unfocus(); // Keep keyboard open for next message
 
     // Simulate AI response delay
-    Timer(const Duration(milliseconds: 1500), () {
+    Timer(Duration(milliseconds: 1500), () {
       if (mounted) {
         setState(() {
           _isTyping = false;
@@ -87,7 +87,7 @@ class _AiAssistantScreenState extends State<AiAssistantScreen> {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
           _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 300),
+          duration: Duration(milliseconds: 300),
           curve: Curves.easeOut,
         );
       }
@@ -97,7 +97,7 @@ class _AiAssistantScreenState extends State<AiAssistantScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FF),
+      backgroundColor: Color(0xFFF5F7FF),
       appBar: AppBar(
         backgroundColor: AppColors.primaryDark,
         foregroundColor: Colors.white,
@@ -105,23 +105,21 @@ class _AiAssistantScreenState extends State<AiAssistantScreen> {
         title: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(6),
+              padding: EdgeInsets.all(6),
               decoration: BoxDecoration(
                 color: Colors.white.withValues(alpha: 0.2),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.smart_toy, color: Colors.white, size: 20),
+              child: Icon(Icons.smart_toy, color: Colors.white, size: 20),
             ),
-            const SizedBox(width: 12),
-            const Column(
+            SizedBox(width: 12),
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "AI Assistant",
+                Text("AI Assistant".tr,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
-                Text(
-                  "Powered by DeepMind",
+                Text("Powered by DeepMind".tr,
                   style: TextStyle(fontSize: 10, color: Colors.white70),
                 ),
               ],
@@ -130,11 +128,11 @@ class _AiAssistantScreenState extends State<AiAssistantScreen> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.info_outline),
+            icon: Icon(Icons.info_outline),
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text("Simulation Mode Active"),
+                SnackBar(
+                  content: Text("Simulation Mode Active".tr),
                   behavior: SnackBarBehavior.floating,
                 ),
               );
@@ -147,7 +145,7 @@ class _AiAssistantScreenState extends State<AiAssistantScreen> {
           Expanded(
             child: ListView.builder(
               controller: _scrollController,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
               itemCount: _messages.length + (_isTyping ? 1 : 0),
               itemBuilder: (context, index) {
                 if (index == _messages.length && _isTyping) {
@@ -170,32 +168,32 @@ class _AiAssistantScreenState extends State<AiAssistantScreen> {
 
   Widget _buildChatBubble(String text, bool isUser, String time) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
+      padding: EdgeInsets.only(bottom: 16),
       child: Row(
         mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           if (!isUser) ...[
             Container(
-              margin: const EdgeInsets.only(right: 8),
-              padding: const EdgeInsets.all(6),
+              margin: EdgeInsets.only(right: 8),
+              padding: EdgeInsets.all(6),
               decoration: BoxDecoration(
                 color: AppColors.primary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.smart_toy, color: AppColors.primary, size: 16),
+              child: Icon(Icons.smart_toy, color: AppColors.primary, size: 16),
             ),
           ],
           Flexible(
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
                 color: isUser ? AppColors.primary : Colors.white,
                 borderRadius: BorderRadius.only(
-                  topLeft: const Radius.circular(20),
-                  topRight: const Radius.circular(20),
-                  bottomLeft: isUser ? const Radius.circular(20) : const Radius.circular(4),
-                  bottomRight: isUser ? const Radius.circular(4) : const Radius.circular(20),
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                  bottomLeft: isUser ? Radius.circular(20) : Radius.circular(4),
+                  bottomRight: isUser ? Radius.circular(4) : Radius.circular(20),
                 ),
                 boxShadow: [
                   if (!isUser)
@@ -203,7 +201,7 @@ class _AiAssistantScreenState extends State<AiAssistantScreen> {
                       color: Colors.grey.withValues(alpha: 0.1),
                       spreadRadius: 1,
                       blurRadius: 5,
-                      offset: const Offset(0, 2),
+                      offset: Offset(0, 2),
                     ),
                 ],
               ),
@@ -211,7 +209,7 @@ class _AiAssistantScreenState extends State<AiAssistantScreen> {
                 crossAxisAlignment: isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                 children: [
                   _buildFormattedText(text, isUser),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   Text(
                     time,
                     style: TextStyle(
@@ -242,13 +240,13 @@ class _AiAssistantScreenState extends State<AiAssistantScreen> {
         // **bold**
         spans.add(TextSpan(
           text: match.group(1),
-          style: const TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ));
       } else if (match.group(2) != null) {
         // *italic*
         spans.add(TextSpan(
           text: match.group(2),
-          style: const TextStyle(fontStyle: FontStyle.italic),
+          style: TextStyle(fontStyle: FontStyle.italic),
         ));
       }
       start = match.end;
@@ -261,7 +259,7 @@ class _AiAssistantScreenState extends State<AiAssistantScreen> {
       text: TextSpan(
         style: TextStyle(
           fontSize: 14,
-          color: isUser ? Colors.white : const Color(0xFF1E2875),
+          color: isUser ? Colors.white : Color(0xFF1E2875),
           height: 1.4,
         ),
         children: spans,
@@ -271,22 +269,22 @@ class _AiAssistantScreenState extends State<AiAssistantScreen> {
 
   Widget _buildTypingIndicator() {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
+      padding: EdgeInsets.only(bottom: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
-            margin: const EdgeInsets.only(right: 8),
-            padding: const EdgeInsets.all(6),
+            margin: EdgeInsets.only(right: 8),
+            padding: EdgeInsets.all(6),
             decoration: BoxDecoration(
               color: AppColors.primary.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.smart_toy, color: AppColors.primary, size: 16),
+            child: Icon(Icons.smart_toy, color: AppColors.primary, size: 16),
           ),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: const BoxDecoration(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(20),
@@ -312,10 +310,10 @@ class _AiAssistantScreenState extends State<AiAssistantScreen> {
   Widget _buildDot(int index) {
     return TweenAnimationBuilder(
       tween: Tween<double>(begin: 0, end: 1),
-      duration: const Duration(milliseconds: 600),
+      duration: Duration(milliseconds: 600),
       builder: (context, value, child) {
         return Container(
-          margin: const EdgeInsets.symmetric(horizontal: 2),
+          margin: EdgeInsets.symmetric(horizontal: 2),
           width: 6,
           height: 6,
           decoration: BoxDecoration(
@@ -329,14 +327,14 @@ class _AiAssistantScreenState extends State<AiAssistantScreen> {
 
   Widget _buildMessageInput() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withValues(alpha: 0.1),
             blurRadius: 10,
-            offset: const Offset(0, -2),
+            offset: Offset(0, -2),
           ),
         ],
       ),
@@ -346,7 +344,7 @@ class _AiAssistantScreenState extends State<AiAssistantScreen> {
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF1F5F9),
+                  color: Color(0xFFF1F5F9),
                   borderRadius: BorderRadius.circular(24),
                 ),
                 child: TextField(
@@ -354,7 +352,7 @@ class _AiAssistantScreenState extends State<AiAssistantScreen> {
                   focusNode: _focusNode,
                   textInputAction: TextInputAction.send,
                   onSubmitted: (_) => _sendMessage(),
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     hintText: "Message AI Assistant...",
                     hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
                     border: InputBorder.none,
@@ -363,16 +361,16 @@ class _AiAssistantScreenState extends State<AiAssistantScreen> {
                 ),
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             GestureDetector(
               onTap: _sendMessage,
               child: Container(
-                padding: const EdgeInsets.all(12),
-                decoration: const BoxDecoration(
+                padding: EdgeInsets.all(12),
+                decoration: BoxDecoration(
                   color: AppColors.primary,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.send, color: Colors.white, size: 20),
+                child: Icon(Icons.send, color: Colors.white, size: 20),
               ),
             ),
           ],

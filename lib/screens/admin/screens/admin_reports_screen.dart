@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../../../core/theme/app_colors.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminReportsScreen extends StatefulWidget {
   const AdminReportsScreen({super.key});
@@ -24,12 +24,12 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FF),
-      appBar: const AdminAppBar(title: "Reports Dashboard", subtitle: "Manage your account details"),
-      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
+      backgroundColor: Color(0xFFF5F7FF),
+      appBar: AdminAppBar(title: "Reports Dashboard", subtitle: "Manage your account details"),
+      bottomNavigationBar: AdminBottomNavBar(currentIndex: 4),
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(16),
+        physics: BouncingScrollPhysics(),
+        padding: EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -46,15 +46,15 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Line chart & Donut charts
             _buildChartsSection(),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Popular Reports section
             _buildPopularReports(),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Recent Reports List
             _buildLogsTable(),
@@ -67,8 +67,8 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
   Widget _buildStatCard(String label, String value, String subtext, Color color) {
     return Container(
       width: 125,
-      margin: const EdgeInsets.only(right: 12),
-      padding: const EdgeInsets.all(12),
+      margin: EdgeInsets.only(right: 12),
+      padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -77,10 +77,10 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
-          Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-          const SizedBox(height: 4),
+          Text(label, style: TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
+          SizedBox(height: 8),
+          Text(value, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+          SizedBox(height: 4),
           Text(subtext, style: TextStyle(fontSize: 10, color: color, fontWeight: FontWeight.bold)),
         ],
       ),
@@ -89,7 +89,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
 
   Widget _buildChartsSection() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -97,11 +97,10 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Reports Analytics",
+          Text("Reports Analytics".tr,
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Row(
             children: [
               Expanded(
@@ -116,27 +115,27 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
                           sectionsSpace: 0,
                           centerSpaceRadius: 30,
                           sections: [
-                            PieChartSectionData(value: 40.8, color: const Color(0xFF3B82F6), radius: 10, showTitle: false),
-                            PieChartSectionData(value: 18.8, color: const Color(0xFF10B981), radius: 10, showTitle: false),
-                            PieChartSectionData(value: 14.6, color: const Color(0xFFF59E0B), radius: 10, showTitle: false),
-                            PieChartSectionData(value: 14, color: const Color(0xFF8B5CF6), radius: 10, showTitle: false),
-                            PieChartSectionData(value: 11.8, color: const Color(0xFF9CA3AF), radius: 10, showTitle: false),
+                            PieChartSectionData(value: 40.8, color: Color(0xFF3B82F6), radius: 10, showTitle: false),
+                            PieChartSectionData(value: 18.8, color: Color(0xFF10B981), radius: 10, showTitle: false),
+                            PieChartSectionData(value: 14.6, color: Color(0xFFF59E0B), radius: 10, showTitle: false),
+                            PieChartSectionData(value: 14, color: Color(0xFF8B5CF6), radius: 10, showTitle: false),
+                            PieChartSectionData(value: 11.8, color: Color(0xFF9CA3AF), radius: 10, showTitle: false),
                           ],
                         ),
                       ),
-                      const Column(
+                      Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text("1,256", style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                          Text("Total", style: TextStyle(fontSize: 8, color: Colors.grey)),
+                          Text("1,256".tr, style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                          Text("Total".tr, style: TextStyle(fontSize: 8, color: Colors.grey)),
                         ],
                       )
                     ],
                   ),
                 ),
               ),
-              const SizedBox(width: 8),
-              const Expanded(
+              SizedBox(width: 8),
+              Expanded(
                 flex: 6,
                 child: Column(
                   children: [
@@ -165,7 +164,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
     ];
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -173,21 +172,20 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Popular Reports Templates",
+          Text("Popular Reports Templates".tr,
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Column(
             children: items.map((it) {
               return Card(
                 elevation: 0,
-                color: const Color(0xFFF5F7FF),
+                color: Color(0xFFF5F7FF),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 child: ListTile(
                   leading: CircleAvatar(backgroundColor: it['color'].withValues(alpha: 0.1), child: Icon(it['icon'], color: it['color'])),
-                  title: Text(it['name'], style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                  trailing: const Icon(Icons.arrow_forward_ios, size: 12, color: Colors.grey),
+                  title: Text(it['name'], style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                  trailing: Icon(Icons.arrow_forward_ios, size: 12, color: Colors.grey),
                   onTap: () {},
                 ),
               );
@@ -207,31 +205,30 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Padding(
+          Padding(
             padding: EdgeInsets.all(16.0),
-            child: Text(
-              "Recent Generated Reports",
+            child: Text("Recent Generated Reports".tr,
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
             ),
           ),
           ListView.separated(
             shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
+            physics: NeverScrollableScrollPhysics(),
             itemCount: _reportsList.length,
-            separatorBuilder: (context, index) => const Divider(height: 1),
+            separatorBuilder: (context, index) => Divider(height: 1),
             itemBuilder: (context, index) {
               final rep = _reportsList[index];
               return ListTile(
-                title: Text(rep['name'], style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                subtitle: Text("Format: ${rep['format']} • Dept: ${rep['dept']}", style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                title: Text(rep['name'], style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                subtitle: Text("Format: ${rep['format']} | Dept: ${rep['dept']}", style: TextStyle(fontSize: 11, color: Colors.grey)),
                 trailing: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text(rep['type'], style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                    Text(rep['type'], style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
                     Text(
                       rep['date'],
-                      style: const TextStyle(fontSize: 10, color: Colors.grey),
+                      style: TextStyle(fontSize: 10, color: Colors.grey),
                     ),
                   ],
                 ),
@@ -255,14 +252,15 @@ class _RowItem extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(margin: const EdgeInsets.only(top: 4), width: 8, height: 8, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
-        const SizedBox(width: 8),
+        Container(margin: EdgeInsets.only(top: 4), width: 8, height: 8, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
+        SizedBox(width: 8),
         Expanded(
-          child: Text(label, style: const TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.bold)),
+          child: Text(label, style: TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.bold)),
         ),
-        const SizedBox(width: 4),
-        Text(val, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+        SizedBox(width: 4),
+        Text(val, style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
       ],
     );
   }
 }
+

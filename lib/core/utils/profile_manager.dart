@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileManager {
@@ -9,6 +8,11 @@ class ProfileManager {
 
   final ValueNotifier<String?> studentProfileImagePath = ValueNotifier<String?>(null);
   final ValueNotifier<String?> adminProfileImagePath = ValueNotifier<String?>(null);
+  final ValueNotifier<String?> teacherProfileImagePath = ValueNotifier<String?>(null);
+  final ValueNotifier<String> studentName = ValueNotifier<String>('Student Name');
+  final ValueNotifier<String> studentEmail = ValueNotifier<String>('student@school.com');
+  final ValueNotifier<String> adminName = ValueNotifier<String>('Admin User');
+  final ValueNotifier<String> teacherName = ValueNotifier<String>('Teacher Name');
   final ValueNotifier<String> selectedSchool = ValueNotifier<String>('Ecstasy School 1');
   final ValueNotifier<ThemeMode> themeMode = ValueNotifier<ThemeMode>(ThemeMode.system);
 
@@ -16,6 +20,11 @@ class ProfileManager {
     final prefs = await SharedPreferences.getInstance();
     studentProfileImagePath.value = prefs.getString('student_profile_image');
     adminProfileImagePath.value = prefs.getString('admin_profile_image');
+    teacherProfileImagePath.value = prefs.getString('teacher_profile_image');
+    studentName.value = prefs.getString('student_name') ?? 'Student Name';
+    studentEmail.value = prefs.getString('student_email') ?? 'student@school.com';
+    adminName.value = prefs.getString('admin_name') ?? 'Admin User';
+    teacherName.value = prefs.getString('teacher_name') ?? 'Teacher Name';
     
     final themeString = prefs.getString('theme_mode');
     if (themeString == 'light') {
@@ -54,5 +63,39 @@ class ProfileManager {
       await prefs.setString('admin_profile_image', path);
     }
     adminProfileImagePath.value = path;
+  }
+
+  Future<void> setTeacherProfileImage(String? path) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (path == null) {
+      await prefs.remove('teacher_profile_image');
+    } else {
+      await prefs.setString('teacher_profile_image', path);
+    }
+    teacherProfileImagePath.value = path;
+  }
+
+  Future<void> setStudentName(String name) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('student_name', name);
+    studentName.value = name;
+  }
+
+  Future<void> setStudentEmail(String email) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('student_email', email);
+    studentEmail.value = email;
+  }
+
+  Future<void> setAdminName(String name) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('admin_name', name);
+    adminName.value = name;
+  }
+
+  Future<void> setTeacherName(String name) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('teacher_name', name);
+    teacherName.value = name;
   }
 }
