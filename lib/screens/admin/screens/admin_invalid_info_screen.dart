@@ -5,6 +5,7 @@ import 'admin_invalid_fee_data_screen.dart';
 import 'admin_invalid_fee_totals_screen.dart';
 import 'admin_fee_not_gen_students_screen.dart';
 import 'admin_transaction_logs_screen.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminInvalidInfoScreen extends StatefulWidget {
   const AdminInvalidInfoScreen({super.key});
@@ -17,23 +18,22 @@ class _AdminInvalidInfoScreenState extends State<AdminInvalidInfoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FF),
-      appBar: const AdminAppBar(
+      backgroundColor: Color(0xFFF5F7FF),
+      appBar: AdminAppBar(
         title: "Invalid Info",
         subtitle: "Manage data discrepancies",
       ),
-      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
+      bottomNavigationBar: AdminBottomNavBar(currentIndex: 4),
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(16),
+        physics: BouncingScrollPhysics(),
+        padding: EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 8, bottom: 12),
-              child: Text(
-                "DATA DISCREPANCIES",
-                style: const TextStyle(
+              padding: EdgeInsets.only(left: 8, bottom: 12),
+              child: Text("DATA DISCREPANCIES".tr,
+                style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.bold,
                   color: Colors.grey,
@@ -49,16 +49,16 @@ class _AdminInvalidInfoScreenState extends State<AdminInvalidInfoScreen> {
               ),
               child: ListView(
                 shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
+                physics: NeverScrollableScrollPhysics(),
                 children: [
                   _buildMenuItem(
                     title: "Invalid Fee Data",
                     subtitle: "Correct individual record errors",
                     icon: Icons.error_outline,
-                    color: const Color(0xFFEF4444),
+                    color: Color(0xFFEF4444),
                     onTap: () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const AdminInvalidFeeDataScreen()),
+                      MaterialPageRoute(builder: (_) => AdminInvalidFeeDataScreen()),
                     ),
                   ),
                   _buildDivider(),
@@ -66,10 +66,10 @@ class _AdminInvalidInfoScreenState extends State<AdminInvalidInfoScreen> {
                     title: "Invalid Fee Totals",
                     subtitle: "Reconcile sum mismatch errors",
                     icon: Icons.difference_outlined,
-                    color: const Color(0xFFF59E0B),
+                    color: Color(0xFFF59E0B),
                     onTap: () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const AdminInvalidFeeTotalsScreen()),
+                      MaterialPageRoute(builder: (_) => AdminInvalidFeeTotalsScreen()),
                     ),
                   ),
                   _buildDivider(),
@@ -77,10 +77,10 @@ class _AdminInvalidInfoScreenState extends State<AdminInvalidInfoScreen> {
                     title: "Fee not Gen Students",
                     subtitle: "List students without generated fees",
                     icon: Icons.person_search_outlined,
-                    color: const Color(0xFF3B82F6),
+                    color: Color(0xFF3B82F6),
                     onTap: () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const AdminFeeNotGenStudentsScreen()),
+                      MaterialPageRoute(builder: (_) => AdminFeeNotGenStudentsScreen()),
                     ),
                   ),
                   _buildDivider(),
@@ -88,10 +88,10 @@ class _AdminInvalidInfoScreenState extends State<AdminInvalidInfoScreen> {
                     title: "Transaction Logs",
                     subtitle: "Review system operations history",
                     icon: Icons.receipt_long,
-                    color: const Color(0xFF10B981),
+                    color: Color(0xFF10B981),
                     onTap: () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const AdminTransactionLogsScreen()),
+                      MaterialPageRoute(builder: (_) => AdminTransactionLogsScreen()),
                     ),
                   ),
                 ],
@@ -112,16 +112,16 @@ class _AdminInvalidInfoScreenState extends State<AdminInvalidInfoScreen> {
   }) {
     return ListTile(
       leading: Container(
-        padding: const EdgeInsets.all(8),
+        padding: EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Icon(icon, color: color, size: 20),
       ),
       title: Text(
         title,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,
           color: Color(0xFF1E2875),
@@ -129,12 +129,12 @@ class _AdminInvalidInfoScreenState extends State<AdminInvalidInfoScreen> {
       ),
       subtitle: Text(
         subtitle,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 11,
           color: Colors.grey,
         ),
       ),
-      trailing: const Icon(Icons.chevron_right, size: 18, color: Colors.grey),
+      trailing: Icon(Icons.chevron_right, size: 18, color: Colors.grey),
       onTap: onTap,
     );
   }

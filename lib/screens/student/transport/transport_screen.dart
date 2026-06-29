@@ -5,6 +5,7 @@ import '../../admin/widgets/ai_bot_fab.dart';
 import '../../../widgets/scrollable_table_wrapper.dart';
 import '../../../core/utils/profile_manager.dart';
 import '../../../core/data/app_data_store.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class TransportScreen extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
@@ -22,8 +23,8 @@ class _TransportScreenState extends State<TransportScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
-      appBar: const StudentAppBar(
+      backgroundColor: Color(0xFFF8FAFC),
+      appBar: StudentAppBar(
         title: "Transport",
         subtitle: "View your transport details",
       ),
@@ -35,7 +36,7 @@ class _TransportScreenState extends State<TransportScreen> {
           ),
         ],
       ),
-      floatingActionButton: const AiBotFab(),
+      floatingActionButton: AiBotFab(),
     );
   }
 
@@ -63,7 +64,7 @@ class _TransportScreenState extends State<TransportScreen> {
 
   Widget _buildTabItem(int index, IconData icon, String label) {
     final bool isActive = _activeTab == index;
-    final Color color = isActive ? AppColors.primary : const Color(0xFF6B7280);
+    final Color color = isActive ? AppColors.primary : Color(0xFF6B7280);
     return Expanded(
       child: InkWell(
         onTap: () {
@@ -74,12 +75,12 @@ class _TransportScreenState extends State<TransportScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(icon, color: color, size: 18),
-                const SizedBox(width: 6),
+                SizedBox(width: 6),
                 Text(
                   label,
                   style: TextStyle(
@@ -90,13 +91,13 @@ class _TransportScreenState extends State<TransportScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
             Container(
               height: 3,
               width: double.infinity,
               decoration: BoxDecoration(
                 color: isActive ? AppColors.primary : Colors.transparent,
-                borderRadius: const BorderRadius.only(
+                borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(2),
                   topRight: Radius.circular(2),
                 ),
@@ -111,21 +112,21 @@ class _TransportScreenState extends State<TransportScreen> {
   Widget _buildBody() {
     if (_activeTab == 0) {
       return SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(16),
+        physics: BouncingScrollPhysics(),
+        padding: EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildStudentCard(),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             _buildLiveTrackingCard(),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             _buildTransportDetailsSection(),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             _buildAnnouncementsSection(),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             _buildQuickActionsSection(),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
           ],
         ),
       );
@@ -135,14 +136,13 @@ class _TransportScreenState extends State<TransportScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.lock_open, size: 48, color: Colors.grey.shade300),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             Text(
               _activeTab == 1 ? "Live Tracking Map" : "Route Map details",
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey.shade700),
             ),
-            const SizedBox(height: 4),
-            Text(
-              "This feature is currently under development.",
+            SizedBox(height: 4),
+            Text("This feature is currently under development.".tr,
               style: TextStyle(color: Colors.grey.shade400, fontSize: 12),
             ),
           ],
@@ -153,7 +153,7 @@ class _TransportScreenState extends State<TransportScreen> {
 
   Widget _buildStudentCard() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -162,7 +162,7 @@ class _TransportScreenState extends State<TransportScreen> {
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.015),
             blurRadius: 10,
-            offset: const Offset(0, 4),
+            offset: Offset(0, 4),
           ),
         ],
       ),
@@ -173,7 +173,7 @@ class _TransportScreenState extends State<TransportScreen> {
             height: 100,
             width: isWide ? 120 : double.infinity,
             decoration: BoxDecoration(
-              color: const Color(0xFFF8FAFC),
+              color: Color(0xFFF8FAFC),
               borderRadius: BorderRadius.circular(12),
             ),
             child: ClipRRect(
@@ -181,7 +181,7 @@ class _TransportScreenState extends State<TransportScreen> {
               child: Image.asset(
                 "assets/images/school_bus.png",
                 fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) => const Icon(
+                errorBuilder: (context, error, stackTrace) => Icon(
                   Icons.directions_bus,
                   size: 40,
                   color: Colors.orange,
@@ -209,22 +209,22 @@ class _TransportScreenState extends State<TransportScreen> {
                 children: [
                   Text(
                     sName,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF1E2875),
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFEEF2FF),
+                      color: Color(0xFFEEF2FF),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
                       sClass,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.primary,
                         fontSize: 9,
                         fontWeight: FontWeight.bold,
@@ -233,7 +233,7 @@ class _TransportScreenState extends State<TransportScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Row(
                 children: [
                   Expanded(
@@ -245,7 +245,7 @@ class _TransportScreenState extends State<TransportScreen> {
                       ],
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       children: [
@@ -265,7 +265,7 @@ class _TransportScreenState extends State<TransportScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 imageWidget,
-                const SizedBox(width: 16),
+                SizedBox(width: 16),
                 Expanded(child: detailsWidget),
               ],
             );
@@ -274,7 +274,7 @@ class _TransportScreenState extends State<TransportScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 imageWidget,
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 detailsWidget,
               ],
             );
@@ -286,12 +286,12 @@ class _TransportScreenState extends State<TransportScreen> {
 
   Widget _buildDetailItem(IconData icon, String label, String value) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
+      padding: EdgeInsets.only(bottom: 10),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: const Color(0xFF1E2875), size: 15),
-          const SizedBox(width: 8),
+          Icon(icon, color: Color(0xFF1E2875), size: 15),
+          SizedBox(width: 8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -306,7 +306,7 @@ class _TransportScreenState extends State<TransportScreen> {
                 ),
                 Text(
                   value,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Color(0xFF1E2875),
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
@@ -324,7 +324,7 @@ class _TransportScreenState extends State<TransportScreen> {
 
   Widget _buildLiveTrackingCard() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -333,7 +333,7 @@ class _TransportScreenState extends State<TransportScreen> {
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.015),
             blurRadius: 10,
-            offset: const Offset(0, 4),
+            offset: Offset(0, 4),
           ),
         ],
       ),
@@ -345,28 +345,25 @@ class _TransportScreenState extends State<TransportScreen> {
             children: [
               Row(
                 children: [
-                  const Text(
-                    "Live Tracking",
+                  Text("Live Tracking".tr,
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF1E2875),
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFECFDF5),
+                      color: Color(0xFFECFDF5),
                       borderRadius: BorderRadius.circular(6),
-                      border: Border.all(color: const Color(0xFFA7F3D0)),
+                      border: Border.all(color: Color(0xFFA7F3D0)),
                     ),
-                    child: const Row(
-                      children: [
+                    child: Row(children: [
                         Icon(Icons.fiber_manual_record, size: 6, color: Color(0xFF10B981)),
                         SizedBox(width: 3),
-                        Text(
-                          "Live",
+                        Text("Live".tr,
                           style: TextStyle(
                             color: Color(0xFF10B981),
                             fontSize: 8,
@@ -384,13 +381,12 @@ class _TransportScreenState extends State<TransportScreen> {
                     _activeTab = 1; // Switch to tracking map tab
                   });
                 },
-                icon: const Icon(Icons.map, size: 12, color: AppColors.primary),
-                label: const Text(
-                  "View on Map",
+                icon: Icon(Icons.map, size: 12, color: AppColors.primary),
+                label: Text("View on Map".tr,
                   style: TextStyle(color: AppColors.primary, fontSize: 11, fontWeight: FontWeight.bold),
                 ),
                 style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   side: BorderSide(color: Colors.grey.shade200),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -399,35 +395,32 @@ class _TransportScreenState extends State<TransportScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           Row(
             children: [
               Icon(Icons.access_time, size: 12, color: Colors.grey.shade400),
-              const SizedBox(width: 4),
-              Text(
-                "Last updated: Today, 09:41 AM",
+              SizedBox(width: 4),
+              Text("Last updated: Today, 09:41 AM".tr,
                 style: TextStyle(color: Colors.grey.shade400, fontSize: 10),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           _buildTrackingTimeline(),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           // Green Status Banner
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: const Color(0xFFECFDF5),
+              color: Color(0xFFECFDF5),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: const Color(0xFFD1FAE5)),
+              border: Border.all(color: Color(0xFFD1FAE5)),
             ),
-            child: const Row(
-              children: [
+            child: Row(children: [
                 Icon(Icons.check_circle, color: Color(0xFF10B981), size: 16),
                 SizedBox(width: 8),
                 Expanded(
-                  child: Text(
-                    "Your child has been picked up and is on the way to school.",
+                  child: Text("Your child has been picked up and is on the way to school.".tr,
                     style: TextStyle(
                       color: Color(0xFF10B981),
                       fontSize: 10,
@@ -452,15 +445,15 @@ class _TransportScreenState extends State<TransportScreen> {
             Icons.directions_bus,
             "Bus Started",
             "08:10 AM",
-            const Color(0xFF10B981),
+            Color(0xFF10B981),
             true,
           ),
-          _buildTimelineLine(const Color(0xFF10B981)),
+          _buildTimelineLine(Color(0xFF10B981)),
           _buildTimelineStep(
             Icons.location_on,
             "Green Park Stop",
             "Picked Up\n08:22 AM",
-            const Color(0xFF10B981),
+            Color(0xFF10B981),
             true,
           ),
           _buildTimelineLine(AppColors.primary),
@@ -498,7 +491,7 @@ class _TransportScreenState extends State<TransportScreen> {
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.all(6),
+            padding: EdgeInsets.all(6),
             decoration: BoxDecoration(
               color: isActive ? color.withValues(alpha: 0.12) : Colors.grey.shade50,
               shape: BoxShape.circle,
@@ -506,17 +499,17 @@ class _TransportScreenState extends State<TransportScreen> {
             ),
             child: Icon(icon, color: isActive ? color : Colors.grey.shade400, size: 16),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             title,
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.bold,
-              color: isActive ? const Color(0xFF1E2875) : Colors.grey.shade400,
+              color: isActive ? Color(0xFF1E2875) : Colors.grey.shade400,
             ),
           ),
-          const SizedBox(height: 2),
+          SizedBox(height: 2),
           Text(
             subtitle,
             textAlign: TextAlign.center,
@@ -537,7 +530,7 @@ class _TransportScreenState extends State<TransportScreen> {
 
   Widget _buildTimelineLine(Color color) {
     return Container(
-      margin: const EdgeInsets.only(top: 14),
+      margin: EdgeInsets.only(top: 14),
       width: 40,
       height: 2,
       color: color,
@@ -548,33 +541,32 @@ class _TransportScreenState extends State<TransportScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Transport Details",
+        Text("Transport Details".tr,
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.bold,
             color: Color(0xFF1E2875),
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         LayoutBuilder(
           builder: (context, constraints) {
             int crossAxisCount = constraints.maxWidth > 550 ? 4 : 2;
             return GridView.count(
               shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
+              physics: NeverScrollableScrollPhysics(),
               crossAxisCount: crossAxisCount,
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
               childAspectRatio: 2.3,
               children: [
-                _buildDetailGridItem(Icons.directions_bus, "Bus Type", "AC Bus", const Color(0xFF3B82F6)),
-                _buildDetailGridItem(Icons.event_seat, "Seat Number", "12", const Color(0xFF8B5CF6)),
-                _buildDetailGridItem(Icons.alt_route, "Total Stops", "14", const Color(0xFF10B981)),
-                _buildDetailGridItem(Icons.access_time, "Pickup Time", "08:20 AM", const Color(0xFFF59E0B)),
-                _buildDetailGridItem(Icons.school, "Drop Time (Est.)", "09:00 AM", const Color(0xFFEF4444)),
-                _buildDetailGridItem(Icons.straighten, "Distance (Approx.)", "18.6 km", const Color(0xFF06B6D4)),
-                _buildDetailGridItem(Icons.calendar_today, "Transport Validity", "31 Mar 2027", const Color(0xFFEC4899)),
+                _buildDetailGridItem(Icons.directions_bus, "Bus Type", "AC Bus", Color(0xFF3B82F6)),
+                _buildDetailGridItem(Icons.event_seat, "Seat Number", "12", Color(0xFF8B5CF6)),
+                _buildDetailGridItem(Icons.alt_route, "Total Stops", "14", Color(0xFF10B981)),
+                _buildDetailGridItem(Icons.access_time, "Pickup Time", "08:20 AM", Color(0xFFF59E0B)),
+                _buildDetailGridItem(Icons.school, "Drop Time (Est.)", "09:00 AM", Color(0xFFEF4444)),
+                _buildDetailGridItem(Icons.straighten, "Distance (Approx.)", "18.6 km", Color(0xFF06B6D4)),
+                _buildDetailGridItem(Icons.calendar_today, "Transport Validity", "31 Mar 2027", Color(0xFFEC4899)),
               ],
             );
           },
@@ -585,7 +577,7 @@ class _TransportScreenState extends State<TransportScreen> {
 
   Widget _buildDetailGridItem(IconData icon, String label, String value, Color color) {
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -594,14 +586,14 @@ class _TransportScreenState extends State<TransportScreen> {
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(6),
+            padding: EdgeInsets.all(6),
             decoration: BoxDecoration(
               color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(icon, color: color, size: 16),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -617,7 +609,7 @@ class _TransportScreenState extends State<TransportScreen> {
                 ),
                 Text(
                   value,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF1E2875),
@@ -638,8 +630,7 @@ class _TransportScreenState extends State<TransportScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              "Transport Announcements",
+            Text("Transport Announcements".tr,
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
@@ -649,11 +640,10 @@ class _TransportScreenState extends State<TransportScreen> {
             InkWell(
               onTap: () {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("All Announcements are up to date.")),
+                  SnackBar(content: Text("All Announcements are up to date.".tr)),
                 );
               },
-              child: const Text(
-                "View All",
+              child: Text("View All".tr,
                 style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.bold,
@@ -663,17 +653,17 @@ class _TransportScreenState extends State<TransportScreen> {
             ),
           ],
         ),
-        const SizedBox(height: 12),
-        _buildAnnouncementTile("Transport Timings Update", "From 20 Jun 2026, pickup time will be 10 minutes earlier.", "18 Jun 2026", const Color(0xFF10B981), const Color(0xFFECFDF5)),
-        _buildAnnouncementTile("Bus Route Change", "Route 12 will take a new route from 25 Jun 2026.", "15 Jun 2026", const Color(0xFFF59E0B), const Color(0xFFFEF3C7)),
+        SizedBox(height: 12),
+        _buildAnnouncementTile("Transport Timings Update", "From 20 Jun 2026, pickup time will be 10 minutes earlier.", "18 Jun 2026", Color(0xFF10B981), Color(0xFFECFDF5)),
+        _buildAnnouncementTile("Bus Route Change", "Route 12 will take a new route from 25 Jun 2026.", "15 Jun 2026", Color(0xFFF59E0B), Color(0xFFFEF3C7)),
       ],
     );
   }
 
   Widget _buildAnnouncementTile(String title, String desc, String date, Color color, Color bgColor) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(12),
+      margin: EdgeInsets.only(bottom: 8),
+      padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -683,14 +673,14 @@ class _TransportScreenState extends State<TransportScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: bgColor,
               shape: BoxShape.circle,
             ),
             child: Icon(Icons.campaign, color: color, size: 18),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -701,18 +691,18 @@ class _TransportScreenState extends State<TransportScreen> {
                     Expanded(
                       child: Text(
                         title,
-                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     Text(
                       date,
                       style: TextStyle(fontSize: 9, color: Colors.grey.shade400, fontWeight: FontWeight.w500),
                     ),
                   ],
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Text(
                   desc,
                   style: TextStyle(fontSize: 10, color: Colors.grey.shade500, height: 1.3),
@@ -729,22 +719,21 @@ class _TransportScreenState extends State<TransportScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Quick Actions",
+        Text("Quick Actions".tr,
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.bold,
             color: Color(0xFF1E2875),
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _buildQuickActionItem("Transport ID Card", Icons.badge, const Color(0xFFF5F3FF), const Color(0xFF7C3AED)),
-            _buildQuickActionItem("Report an Issue", Icons.report_problem, const Color(0xFFFEE2E2), const Color(0xFFEF4444)),
-            _buildQuickActionItem("Contact Transport", Icons.phone, const Color(0xFFECFDF5), const Color(0xFF10B981)),
-            _buildQuickActionItem("Transport Rules", Icons.article, const Color(0xFFEEF2FF), const Color(0xFF3B82F6)),
+            _buildQuickActionItem("Transport ID Card", Icons.badge, Color(0xFFF5F3FF), Color(0xFF7C3AED)),
+            _buildQuickActionItem("Report an Issue", Icons.report_problem, Color(0xFFFEE2E2), Color(0xFFEF4444)),
+            _buildQuickActionItem("Contact Transport", Icons.phone, Color(0xFFECFDF5), Color(0xFF10B981)),
+            _buildQuickActionItem("Transport Rules", Icons.article, Color(0xFFEEF2FF), Color(0xFF3B82F6)),
           ],
         ),
       ],
@@ -771,11 +760,11 @@ class _TransportScreenState extends State<TransportScreen> {
               ),
               child: Icon(icon, color: iconColor, size: 20),
             ),
-            const SizedBox(height: 6),
+            SizedBox(height: 6),
             Text(
               title,
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 10,
                 color: Color(0xFF1E2875),
                 fontWeight: FontWeight.w600,

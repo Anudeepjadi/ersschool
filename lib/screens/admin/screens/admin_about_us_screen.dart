@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminAboutUsScreen extends StatefulWidget {
   const AdminAboutUsScreen({super.key});
@@ -14,32 +15,32 @@ class _AdminAboutUsScreenState extends State<AdminAboutUsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const AdminAppBar(
+      appBar: AdminAppBar(
         title: "About Us",
         subtitle: "Know more about our mission, vision and values",
       ),
-      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
+      bottomNavigationBar: AdminBottomNavBar(currentIndex: 4),
       body: SingleChildScrollView(
         child: Container(
-          color: const Color(0xFFF9FAFB),
-          padding: const EdgeInsets.all(16),
+          color: Color(0xFFF9FAFB),
+          padding: EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildHero(),
-              const SizedBox(height: 32),
+              SizedBox(height: 32),
               _buildStatsRow(),
-              const SizedBox(height: 32),
+              SizedBox(height: 32),
               _buildMissionVisionRow(),
-              const SizedBox(height: 32),
+              SizedBox(height: 32),
               _buildCoreValues(),
-              const SizedBox(height: 32),
+              SizedBox(height: 32),
               _buildLeadership(),
-              const SizedBox(height: 32),
+              SizedBox(height: 32),
               _buildHistory(),
-              const SizedBox(height: 32),
+              SizedBox(height: 32),
               _buildGetInTouch(),
-              const SizedBox(height: 32),
+              SizedBox(height: 32),
             ],
           ),
         ),
@@ -52,16 +53,14 @@ class _AdminAboutUsScreenState extends State<AdminAboutUsScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Empowering Education,\nInspiring Futures",
+        Text("Empowering Education,\nInspiring Futures".tr,
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xFF1E2875), height: 1.3),
         ),
-        const SizedBox(height: 16),
-        Text(
-          "At Ecstasy School, we are committed to providing quality education through innovation, technology and a student-first approach.",
+        SizedBox(height: 16),
+        Text("At Ecstasy School, we are committed to providing quality education through innovation, technology and a student-first approach.".tr,
           style: TextStyle(fontSize: 14, color: Colors.grey.shade600, height: 1.5),
         ),
-        const SizedBox(height: 24),
+        SizedBox(height: 24),
         ClipRRect(
           borderRadius: BorderRadius.circular(16),
           child: Image.network(
@@ -80,17 +79,17 @@ class _AdminAboutUsScreenState extends State<AdminAboutUsScreen> {
       children: [
         Row(
           children: [
-            Expanded(child: _buildStatItem(Icons.school, "5,200+", "Students", const Color(0xFF0038FF))),
-            const SizedBox(width: 16),
-            Expanded(child: _buildStatItem(Icons.person, "320+", "Teachers", const Color(0xFF10B981))),
+            Expanded(child: _buildStatItem(Icons.school, "5,200+", "Students", Color(0xFF0038FF))),
+            SizedBox(width: 16),
+            Expanded(child: _buildStatItem(Icons.person, "320+", "Teachers", Color(0xFF10B981))),
           ],
         ),
-        const SizedBox(height: 20),
+        SizedBox(height: 20),
         Row(
           children: [
-            Expanded(child: _buildStatItem(Icons.domain, "15+", "Years", const Color(0xFFF59E0B))),
-            const SizedBox(width: 16),
-            Expanded(child: _buildStatItem(Icons.emoji_events, "45+", "Awards", const Color(0xFFEC4899))),
+            Expanded(child: _buildStatItem(Icons.domain, "15+", "Years", Color(0xFFF59E0B))),
+            SizedBox(width: 16),
+            Expanded(child: _buildStatItem(Icons.emoji_events, "45+", "Awards", Color(0xFFEC4899))),
           ],
         ),
       ],
@@ -101,9 +100,9 @@ class _AdminAboutUsScreenState extends State<AdminAboutUsScreen> {
     return Column(
       children: [
         Icon(icon, color: color, size: 32),
-        const SizedBox(height: 12),
-        Text(value, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-        const SizedBox(height: 4),
+        SizedBox(height: 12),
+        Text(value, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+        SizedBox(height: 4),
         Text(label, style: TextStyle(fontSize: 12, color: Colors.grey.shade600, fontWeight: FontWeight.bold)),
       ],
     );
@@ -115,33 +114,33 @@ class _AdminAboutUsScreenState extends State<AdminAboutUsScreen> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Icon(Icons.track_changes, color: Color(0xFF0038FF), size: 32),
-            const SizedBox(width: 16),
+            Icon(Icons.track_changes, color: Color(0xFF0038FF), size: 32),
+            SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("Our Mission", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                  const SizedBox(height: 8),
-                  Text("To deliver a world-class education that nurtures curiosity, builds character and empowers every student to achieve their full potential.", style: TextStyle(fontSize: 12, color: Colors.grey.shade600, height: 1.5)),
+                  Text("Our Mission".tr, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                  SizedBox(height: 8),
+                  Text("To deliver a world-class education that nurtures curiosity, builds character and empowers every student to achieve their full potential.".tr, style: TextStyle(fontSize: 12, color: Colors.grey.shade600, height: 1.5)),
                 ],
               ),
             ),
           ],
         ),
-        const SizedBox(height: 24),
+        SizedBox(height: 24),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Icon(Icons.remove_red_eye, color: Color(0xFF0038FF), size: 32),
-            const SizedBox(width: 16),
+            Icon(Icons.remove_red_eye, color: Color(0xFF0038FF), size: 32),
+            SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("Our Vision", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                  const SizedBox(height: 8),
-                  Text("To be a global leader in education, recognized for academic excellence, innovation and the holistic development of students.", style: TextStyle(fontSize: 12, color: Colors.grey.shade600, height: 1.5)),
+                  Text("Our Vision".tr, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                  SizedBox(height: 8),
+                  Text("To be a global leader in education, recognized for academic excellence, innovation and the holistic development of students.".tr, style: TextStyle(fontSize: 12, color: Colors.grey.shade600, height: 1.5)),
                 ],
               ),
             ),
@@ -158,22 +157,22 @@ class _AdminAboutUsScreenState extends State<AdminAboutUsScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text("Our Core Values", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-            TextButton(onPressed: () {}, child: const Text("Learn More", style: TextStyle(fontSize: 12, color: Color(0xFF0038FF), fontWeight: FontWeight.bold))),
+            Text("Our Core Values".tr, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+            TextButton(onPressed: () {}, child: Text("Learn More".tr, style: TextStyle(fontSize: 12, color: Color(0xFF0038FF), fontWeight: FontWeight.bold))),
           ],
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          physics: const BouncingScrollPhysics(),
+          physics: BouncingScrollPhysics(),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(width: 140, child: _buildCoreValueItem(Icons.person, "Integrity", "We act with honesty, transparency and strong ethics.", const Color(0xFF0038FF))),
-              SizedBox(width: 140, child: _buildCoreValueItem(Icons.diamond, "Excellence", "We strive for the highest standards in everything we do.", const Color(0xFF10B981))),
-              SizedBox(width: 140, child: _buildCoreValueItem(Icons.lightbulb, "Innovation", "We embrace new ideas and technology.", const Color(0xFFF59E0B))),
-              SizedBox(width: 140, child: _buildCoreValueItem(Icons.group, "Collaboration", "We believe in the power of teamwork.", const Color(0xFF8B5CF6))),
-              SizedBox(width: 140, child: _buildCoreValueItem(Icons.favorite, "Empathy", "We care for our students and staff.", const Color(0xFFEC4899))),
+              SizedBox(width: 140, child: _buildCoreValueItem(Icons.person, "Integrity", "We act with honesty, transparency and strong ethics.", Color(0xFF0038FF))),
+              SizedBox(width: 140, child: _buildCoreValueItem(Icons.diamond, "Excellence", "We strive for the highest standards in everything we do.", Color(0xFF10B981))),
+              SizedBox(width: 140, child: _buildCoreValueItem(Icons.lightbulb, "Innovation", "We embrace new ideas and technology.", Color(0xFFF59E0B))),
+              SizedBox(width: 140, child: _buildCoreValueItem(Icons.group, "Collaboration", "We believe in the power of teamwork.", Color(0xFF8B5CF6))),
+              SizedBox(width: 140, child: _buildCoreValueItem(Icons.favorite, "Empathy", "We care for our students and staff.", Color(0xFFEC4899))),
             ],
           ),
         ),
@@ -183,13 +182,13 @@ class _AdminAboutUsScreenState extends State<AdminAboutUsScreen> {
 
   Widget _buildCoreValueItem(IconData icon, String title, String desc, Color color) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
+      padding: EdgeInsets.symmetric(horizontal: 8),
       child: Column(
         children: [
           Icon(icon, color: color, size: 28),
-          const SizedBox(height: 12),
-          Text(title, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-          const SizedBox(height: 8),
+          SizedBox(height: 12),
+          Text(title, style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+          SizedBox(height: 8),
           Text(desc, textAlign: TextAlign.center, style: TextStyle(fontSize: 11, color: Colors.grey, height: 1.4)),
         ],
       ),
@@ -203,14 +202,14 @@ class _AdminAboutUsScreenState extends State<AdminAboutUsScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text("Leadership Team", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-            TextButton(onPressed: () {}, child: const Text("View All", style: TextStyle(fontSize: 12, color: Color(0xFF0038FF), fontWeight: FontWeight.bold))),
+            Text("Leadership Team".tr, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+            TextButton(onPressed: () {}, child: Text("View All".tr, style: TextStyle(fontSize: 12, color: Color(0xFF0038FF), fontWeight: FontWeight.bold))),
           ],
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          physics: const BouncingScrollPhysics(),
+          physics: BouncingScrollPhysics(),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -227,16 +226,16 @@ class _AdminAboutUsScreenState extends State<AdminAboutUsScreen> {
 
   Widget _buildLeaderProfile(String name, String role, String desc) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
+      padding: EdgeInsets.symmetric(horizontal: 8),
       child: Column(
         children: [
-          Text(name, textAlign: TextAlign.center, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-          const SizedBox(height: 4),
+          Text(name, textAlign: TextAlign.center, style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+          SizedBox(height: 4),
           Text(role, textAlign: TextAlign.center, style: TextStyle(fontSize: 11, color: Colors.grey.shade600, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(desc, textAlign: TextAlign.center, style: TextStyle(fontSize: 11, color: Colors.grey, height: 1.4)),
-          const SizedBox(height: 8),
-          const Text("in", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF0077B5))),
+          SizedBox(height: 8),
+          Text("in".tr, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF0077B5))),
         ],
       ),
     );
@@ -249,11 +248,11 @@ class _AdminAboutUsScreenState extends State<AdminAboutUsScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text("Our History", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-            TextButton(onPressed: () {}, child: const Text("Read More", style: TextStyle(fontSize: 12, color: Color(0xFF0038FF), fontWeight: FontWeight.bold))),
+            Text("Our History".tr, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+            TextButton(onPressed: () {}, child: Text("Read More".tr, style: TextStyle(fontSize: 12, color: Color(0xFF0038FF), fontWeight: FontWeight.bold))),
           ],
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         Column(
           children: [
             _buildTimelineItem("2009", "Foundation", "Ecstasy School was established with a vision to transform education.", true),
@@ -262,9 +261,9 @@ class _AdminAboutUsScreenState extends State<AdminAboutUsScreen> {
             _buildTimelineItem("2024", "Excellence", "Continuing our journey of excellence and impacting more lives.", false),
           ],
         ),
-        const SizedBox(height: 24),
+        SizedBox(height: 24),
         Container(
-          padding: const EdgeInsets.all(24),
+          padding: EdgeInsets.all(24),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
@@ -273,14 +272,13 @@ class _AdminAboutUsScreenState extends State<AdminAboutUsScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text("“", style: TextStyle(fontSize: 60, color: Color(0xFF0038FF), height: 0.8)),
-              const Text(
-                "Education is the most powerful weapon which you can use to change the world.",
+              Text("“".tr, style: TextStyle(fontSize: 60, color: Color(0xFF0038FF), height: 0.8)),
+              Text("Education is the most powerful weapon which you can use to change the world.".tr,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875), height: 1.5),
               ),
-              const SizedBox(height: 16),
-              Text("— Nelson Mandela", style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
+              SizedBox(height: 16),
+              Text("— Nelson Mandela".tr, style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
             ],
           ),
         ),
@@ -294,34 +292,34 @@ class _AdminAboutUsScreenState extends State<AdminAboutUsScreen> {
       children: [
         Column(
           children: [
-            Icon(Icons.business, color: isFirst ? const Color(0xFF0038FF) : Colors.transparent, size: 24),
+            Icon(Icons.business, color: isFirst ? Color(0xFF0038FF) : Colors.transparent, size: 24),
             Container(
               width: 12,
               height: 12,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: const Color(0xFF0038FF), width: 2),
-                color: isFirst ? const Color(0xFF0038FF) : Colors.white,
+                border: Border.all(color: Color(0xFF0038FF), width: 2),
+                color: isFirst ? Color(0xFF0038FF) : Colors.white,
               ),
             ),
             if (year != "2024") Container(width: 2, height: 60, color: Colors.grey.shade300),
           ],
         ),
-        const SizedBox(width: 16),
+        SizedBox(width: 16),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
-                  Text(year, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                  const SizedBox(width: 16),
+                  Text(year, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                  SizedBox(width: 16),
                   Text(title, style: TextStyle(fontSize: 12, color: Colors.grey.shade600, fontWeight: FontWeight.bold)),
                 ],
               ),
-              const SizedBox(height: 6),
+              SizedBox(height: 6),
               Text(desc, style: TextStyle(fontSize: 11, color: Colors.grey, height: 1.4)),
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
             ],
           ),
         ),
@@ -333,16 +331,16 @@ class _AdminAboutUsScreenState extends State<AdminAboutUsScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("Get in Touch", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-        const SizedBox(height: 8),
+        Text("Get in Touch".tr, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+        SizedBox(height: 8),
         Text("We're here to help you with any questions or information you need.", style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
-        const SizedBox(height: 20),
+        SizedBox(height: 20),
         Column(
           children: [
             _buildContactItem(Icons.phone, "+91 98765 43210", "Mon - Sat, 9 AM - 6 PM"),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             _buildContactItem(Icons.email, "info@ecstasyschool.edu", "We reply within 24 hours"),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             _buildContactItem(Icons.location_on, "123 Education Street,", "New Delhi, India - 110001"),
           ],
         ),
@@ -355,20 +353,20 @@ class _AdminAboutUsScreenState extends State<AdminAboutUsScreen> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
-          padding: const EdgeInsets.all(10),
+          padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: const Color(0xFF0038FF).withValues(alpha: 0.1),
+            color: Color(0xFF0038FF).withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
-          child: Icon(icon, color: const Color(0xFF0038FF), size: 20),
+          child: Icon(icon, color: Color(0xFF0038FF), size: 20),
         ),
-        const SizedBox(width: 16),
+        SizedBox(width: 16),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-              const SizedBox(height: 4),
+              Text(title, style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+              SizedBox(height: 4),
               Text(subtitle, style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
             ],
           ),

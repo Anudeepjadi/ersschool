@@ -10,6 +10,7 @@ import 'tabs/fee_tab.dart';
 import 'tabs/exams_tab.dart';
 import 'tabs/more_tab.dart';
 import '../../admin/widgets/ai_bot_fab.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -61,11 +62,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
         type: BottomNavigationBarType.fixed,
         currentIndex: currentIndex,
         selectedItemColor: AppColors.primary,
-        unselectedItemColor: const Color(0xFF757897),
-        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
-        unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
+        unselectedItemColor: Color(0xFF757897),
+        selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
+        unselectedLabelStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
         onTap: _onTabChanged,
-        items: const [
+        items: [
           BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home), label: "Home"),
           BottomNavigationBarItem(icon: Icon(Icons.person_outline), activeIcon: Icon(Icons.person), label: "My Info"),
           BottomNavigationBarItem(icon: Icon(Icons.menu_book_outlined), activeIcon: Icon(Icons.menu_book), label: "Class"),
@@ -75,7 +76,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ],
       ),
       body: tabs[currentIndex],
-      floatingActionButton: const AiBotFab(),
+      floatingActionButton: AiBotFab(),
     );
   }
 
@@ -84,7 +85,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       backgroundColor: Colors.white,
       child: ListView(
         padding: EdgeInsets.zero,
-        physics: const BouncingScrollPhysics(),
+        physics: BouncingScrollPhysics(),
         children: [
           // Unified Custom Header matching Admin Dashboard
           Container(
@@ -94,7 +95,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               right: 16,
               bottom: 18,
             ),
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [AppColors.primaryDark, AppColors.primaryDark],
                 begin: Alignment.topLeft,
@@ -107,7 +108,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Align(
                   alignment: Alignment.topRight,
                   child: IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white, size: 22),
+                    icon: Icon(Icons.close, color: Colors.white, size: 22),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ),
@@ -125,12 +126,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             radius: 28,
                             backgroundColor: Colors.white,
                             backgroundImage: path != null ? FileImage(File(path)) : null,
-                            child: path == null ? const Icon(Icons.person, color: AppColors.primary, size: 36) : null,
+                            child: path == null ? Icon(Icons.person, color: AppColors.primary, size: 36) : null,
                           );
                         },
                       ),
                     ),
-                    const SizedBox(width: 14),
+                    SizedBox(width: 14),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -140,7 +141,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             builder: (context, studentName, _) {
                               return Text(
                                 studentName,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -148,7 +149,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               );
                             },
                           ),
-                          const SizedBox(height: 2),
+                          SizedBox(height: 2),
                           ValueListenableBuilder<String>(
                             valueListenable: ProfileManager().studentEmail,
                             builder: (context, studentEmail, _) {
@@ -195,20 +196,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
             Navigator.pop(context);
           }),
           
-          const Divider(height: 20),
+          Divider(height: 20),
           
           ListTile(
-            leading: const Icon(Icons.logout, color: Colors.red),
-            title: const Text("Logout", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+            leading: Icon(Icons.logout, color: Colors.red),
+            title: Text("Logout".tr, style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
             onTap: () {
               Navigator.pop(context);
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (_) => const LoginScreen()),
+                MaterialPageRoute(builder: (_) => LoginScreen()),
               );
             },
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
         ],
       ),
     );
@@ -216,10 +217,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _buildDrawerSectionTitle(String title) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Text(
         title.toUpperCase(),
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 10,
           fontWeight: FontWeight.bold,
           color: Colors.grey,
@@ -237,17 +238,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
     bool showChevron = true,
   }) {
     return ListTile(
-      leading: Icon(icon, color: selected ? AppColors.primary : const Color(0xFF757897)),
+      leading: Icon(icon, color: selected ? AppColors.primary : Color(0xFF757897)),
       title: Text(
         title,
         style: TextStyle(
-          color: selected ? AppColors.primary : const Color(0xFF1E2875),
+          color: selected ? AppColors.primary : Color(0xFF1E2875),
           fontWeight: selected ? FontWeight.bold : FontWeight.w500,
           fontSize: 13,
         ),
       ),
       trailing: showChevron
-          ? const Icon(Icons.chevron_right, size: 16, color: Colors.grey)
+          ? Icon(Icons.chevron_right, size: 16, color: Colors.grey)
           : null,
       selected: selected,
       onTap: onTap,

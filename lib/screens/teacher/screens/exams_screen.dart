@@ -3,6 +3,7 @@ import '../../../widgets/scrollable_table_wrapper.dart';
 import '../widgets/stat_card.dart';
 import '../widgets/quick_actions.dart';
 import '../../../core/data/app_data_store.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class ExamItem {
   final String name;
@@ -99,7 +100,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
     ExamResultItem(name: "Mid Term Exam", term: "Term 1", className: "Class 9", subject: "Science", publishedDate: "15 May 2024"),
   ];
 
-  int _conductedExamsCount = 4;
+  final int _conductedExamsCount = 4;
 
   void _showCreateExamDialog() {
     final nameController = TextEditingController();
@@ -115,38 +116,38 @@ class _ExamsScreenState extends State<ExamsScreen> {
       builder: (context) {
         return AlertDialog(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          title: const Text("Create New Exam"),
+          title: Text("Create New Exam".tr),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextField(
                   controller: nameController,
-                  decoration: const InputDecoration(labelText: "Exam Name (e.g. Unit Test - II)"),
+                  decoration: InputDecoration(labelText: "Exam Name (e.g. Unit Test - II)"),
                 ),
                 TextField(
                   controller: termController,
-                  decoration: const InputDecoration(labelText: "Term (e.g. Term 1, Term 2)"),
+                  decoration: InputDecoration(labelText: "Term (e.g. Term 1, Term 2)"),
                 ),
                 TextField(
                   controller: classController,
-                  decoration: const InputDecoration(labelText: "Class Name (e.g. Class 8)"),
+                  decoration: InputDecoration(labelText: "Class Name (e.g. Class 8)"),
                 ),
                 TextField(
                   controller: subjectController,
-                  decoration: const InputDecoration(labelText: "Subject"),
+                  decoration: InputDecoration(labelText: "Subject"),
                 ),
                 TextField(
                   controller: dateController,
-                  decoration: const InputDecoration(labelText: "Date (e.g. 15 June 2024)"),
+                  decoration: InputDecoration(labelText: "Date (e.g. 15 June 2024)"),
                 ),
                 TextField(
                   controller: timeController,
-                  decoration: const InputDecoration(labelText: "Time (e.g. 10:00 AM)"),
+                  decoration: InputDecoration(labelText: "Time (e.g. 10:00 AM)"),
                 ),
                 TextField(
                   controller: durationController,
-                  decoration: const InputDecoration(labelText: "Duration (e.g. 1h 30m)"),
+                  decoration: InputDecoration(labelText: "Duration (e.g. 1h 30m)"),
                 ),
               ],
             ),
@@ -154,7 +155,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text("Cancel"),
+              child: Text("Cancel".tr),
             ),
             ElevatedButton(
               onPressed: () {
@@ -179,7 +180,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
                   );
                 }
               },
-              child: const Text("Create"),
+              child: Text("Create".tr),
             ),
           ],
         );
@@ -194,46 +195,46 @@ class _ExamsScreenState extends State<ExamsScreen> {
         return AlertDialog(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           title: Text("$examName - $subject ($className)"),
-          content: const Column(
+          content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Performance Report:", style: TextStyle(fontWeight: FontWeight.bold)),
+              Text("Performance Report:".tr, style: TextStyle(fontWeight: FontWeight.bold)),
               SizedBox(height: 12),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Text("Average Score:"), Text("78.5%", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue))],
+                children: [Text("Average Score:".tr), Text("78.5%".tr, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue))],
               ),
               SizedBox(height: 4),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Text("Highest Score:"), Text("98.0%", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green))],
+                children: [Text("Highest Score:".tr), Text("98.0%".tr, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green))],
               ),
               SizedBox(height: 4),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Text("Lowest Score:"), Text("45.0%", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red))],
+                children: [Text("Lowest Score:".tr), Text("45.0%".tr, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red))],
               ),
               SizedBox(height: 4),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Text("Passing Percentage:"), Text("92.3%", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.purple))],
+                children: [Text("Passing Percentage:".tr), Text("92.3%".tr, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.purple))],
               ),
             ],
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text("Close"),
+              child: Text("Close".tr),
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Downloading detailed analysis...")),
+                  SnackBar(content: Text("Downloading detailed analysis...".tr)),
                 );
               },
-              child: const Text("Download PDF"),
+              child: Text("Download PDF".tr),
             ),
           ],
         );
@@ -249,13 +250,13 @@ class _ExamsScreenState extends State<ExamsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Material(
+          Material(
             color: Colors.white,
             elevation: 1,
             child: TabBar(
               isScrollable: true,
               tabAlignment: TabAlignment.start,
-              labelPadding: const EdgeInsets.symmetric(horizontal: 12),
+              labelPadding: EdgeInsets.symmetric(horizontal: 12),
               dividerColor: Colors.transparent,
               labelColor: Colors.blue,
               unselectedLabelColor: Colors.grey,
@@ -289,17 +290,16 @@ class _ExamsScreenState extends State<ExamsScreen> {
         children: [
           // ── All Classes Overview Grid ────────────────────────────────────
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+            padding: EdgeInsets.fromLTRB(16, 16, 16, 4),
             child: Row(
               children: [
-                const Text(
-                  'Overview',
+                Text('Overview'.tr,
                   style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF1B263B)),
                 ),
-                const Spacer(),
+                Spacer(),
                 Text(
                   '${_availableClasses.length} Classes',
                   style: TextStyle(fontSize: 12, color: Colors.grey[600]),
@@ -311,9 +311,9 @@ class _ExamsScreenState extends State<ExamsScreen> {
             height: 148,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               itemCount: _availableClasses.length,
-              separatorBuilder: (_, __) => const SizedBox(width: 10),
+              separatorBuilder: (_, __) => SizedBox(width: 10),
               itemBuilder: (context, index) {
                 final clsName = _availableClasses[index];
                 final isSelected = clsName == selectedClass;
@@ -341,9 +341,9 @@ class _ExamsScreenState extends State<ExamsScreen> {
                     });
                   },
                   child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
+                    duration: Duration(milliseconds: 200),
                     width: 130,
-                    padding: const EdgeInsets.all(10),
+                    padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
@@ -352,7 +352,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
                         width: isSelected ? 2 : 1,
                       ),
                       boxShadow: isSelected
-                          ? [BoxShadow(color: Colors.blue.withValues(alpha: 0.15), blurRadius: 8, offset: const Offset(0, 3))]
+                          ? [BoxShadow(color: Colors.blue.withValues(alpha: 0.15), blurRadius: 8, offset: Offset(0, 3))]
                           : [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 4)],
                     ),
                     child: Column(
@@ -362,7 +362,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
                           children: [
                             Container(
                               height: 32,
-                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                              padding: EdgeInsets.symmetric(horizontal: 8),
                               decoration: BoxDecoration(
                                 color: color.withValues(alpha: 0.12),
                                 borderRadius: BorderRadius.circular(8),
@@ -377,29 +377,29 @@ class _ExamsScreenState extends State<ExamsScreen> {
                                 ),
                               ),
                             ),
-                            const Spacer(),
+                            Spacer(),
                             if (isSelected)
                               Icon(Icons.check_circle, color: Colors.blue[700], size: 14),
                           ],
                         ),
-                        const SizedBox(height: 6),
+                        SizedBox(height: 6),
                         Text(
                           clsName,
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 11,
                               color: Color(0xFF1B263B)),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        const SizedBox(height: 2),
+                        SizedBox(height: 2),
                         Text(
                           '$totalSts students',
                           style: TextStyle(
                               fontSize: 10,
                               color: Colors.grey[600]),
                         ),
-                        const SizedBox(height: 2),
+                        SizedBox(height: 2),
                         Text(
                           '${boysSts}B · ${girlsSts}G',
                           style: TextStyle(
@@ -407,20 +407,20 @@ class _ExamsScreenState extends State<ExamsScreen> {
                               color: color,
                               fontWeight: FontWeight.w500),
                         ),
-                        const Spacer(),
+                        Spacer(),
                         Row(
                           children: [
                             Expanded(
                               child: Text(
                                 teacherName,
-                                style: const TextStyle(
+                                style: TextStyle(
                                     fontSize: 9, color: Colors.grey),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                              padding: EdgeInsets.symmetric(horizontal: 4, vertical: 1),
                               decoration: BoxDecoration(
                                 color: color.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(4),
@@ -444,12 +444,12 @@ class _ExamsScreenState extends State<ExamsScreen> {
           ),
           
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             child: Row(
               children: [
                 Text(
                   '$selectedClass — Overview',
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF1B263B)),
@@ -463,7 +463,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
             height: 140,
             child: ListView(
               scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
               children: [
                 StatCard(
                   title: "Upcoming Exams",
@@ -496,17 +496,17 @@ class _ExamsScreenState extends State<ExamsScreen> {
               ],
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
 
           // 3. Upcoming Exams Table
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   "Upcoming Exams (${_upcomingExams.length})",
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF1B263B),
@@ -514,16 +514,16 @@ class _ExamsScreenState extends State<ExamsScreen> {
                 ),
                 TextButton(
                   onPressed: () => widget.onSubTabSelected?.call(1),
-                  child: const Text("View All", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
+                  child: Text("View All".tr, style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
 
           _buildExamsTable(_upcomingExams),
 
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
 
           // 4. Quick Actions
           QuickActionsBar(
@@ -534,7 +534,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
               QuickActionItem(title: "Generate Syllabus", icon: Icons.menu_book, onTap: () {}),
             ],
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
         ],
       ),
     );
@@ -542,7 +542,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
 
   Widget _buildExamsTable(List<ExamItem> exams) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      padding: EdgeInsets.symmetric(horizontal: 16.0),
       child: Container(
         decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), border: Border.all(color: Colors.grey[200]!)),
         child: ScrollableTableWrapper(
@@ -551,31 +551,30 @@ class _ExamsScreenState extends State<ExamsScreen> {
             child: Column(
           children: [
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: EdgeInsets.all(12),
               color: Colors.grey[50],
-              child: const Row(
-                children: [
-                  Expanded(flex: 2, child: Text("Name", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11))),
-                  Expanded(flex: 1, child: Text("Term", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11))),
-                  Expanded(flex: 2, child: Text("Subject", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11))),
-                  Expanded(flex: 2, child: Text("Date", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11))),
-                  Expanded(flex: 1, child: Text("Time", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11))),
-                  Expanded(flex: 1, child: Text("Duration", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11), textAlign: TextAlign.right)),
+              child: Row(children: [
+                  Expanded(flex: 2, child: Text("Name".tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11))),
+                  Expanded(flex: 1, child: Text("Term".tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11))),
+                  Expanded(flex: 2, child: Text("Subject".tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11))),
+                  Expanded(flex: 2, child: Text("Date".tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11))),
+                  Expanded(flex: 1, child: Text("Time".tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11))),
+                  Expanded(flex: 1, child: Text("Duration".tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11), textAlign: TextAlign.right)),
                 ],
               ),
             ),
-            const Divider(height: 1),
+            Divider(height: 1),
             ...exams.map((e) => Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
               decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey[100]!))),
               child: Row(
                 children: [
-                  Expanded(flex: 2, child: Text(e.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11))),
-                  Expanded(flex: 1, child: Text(e.term, style: const TextStyle(fontSize: 11))),
-                  Expanded(flex: 2, child: Text(e.subject, style: const TextStyle(fontSize: 11))),
-                  Expanded(flex: 2, child: Text(e.date, style: const TextStyle(fontSize: 11))),
-                  Expanded(flex: 1, child: Text(e.time, style: const TextStyle(fontSize: 11))),
-                  Expanded(flex: 1, child: Text(e.duration, style: const TextStyle(fontSize: 11), textAlign: TextAlign.right)),
+                  Expanded(flex: 2, child: Text(e.name, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11))),
+                  Expanded(flex: 1, child: Text(e.term, style: TextStyle(fontSize: 11))),
+                  Expanded(flex: 2, child: Text(e.subject, style: TextStyle(fontSize: 11))),
+                  Expanded(flex: 2, child: Text(e.date, style: TextStyle(fontSize: 11))),
+                  Expanded(flex: 1, child: Text(e.time, style: TextStyle(fontSize: 11))),
+                  Expanded(flex: 1, child: Text(e.duration, style: TextStyle(fontSize: 11), textAlign: TextAlign.right)),
                 ],
               ),
             )),
@@ -593,29 +592,29 @@ class _ExamsScreenState extends State<ExamsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   "Exam Schedule (${_upcomingExams.length})",
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1B263B)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1B263B)),
                 ),
                 ElevatedButton.icon(
                   onPressed: _showCreateExamDialog,
-                  icon: const Icon(Icons.add, size: 16),
-                  label: const Text("New Exam", style: TextStyle(fontSize: 12)),
+                  icon: Icon(Icons.add, size: 16),
+                  label: Text("New Exam".tr, style: TextStyle(fontSize: 12)),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF1B263B),
+                    backgroundColor: Color(0xFF1B263B),
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   ),
                 ),
               ],
             ),
           ),
           _buildExamsList(_upcomingExams),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
           QuickActionsBar(
             actions: [
               QuickActionItem(title: "Calendar View", icon: Icons.calendar_today, onTap: () {}),
@@ -633,15 +632,14 @@ class _ExamsScreenState extends State<ExamsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
+          Padding(
             padding: EdgeInsets.all(16.0),
-            child: Text(
-              "Recent Exam Results",
+            child: Text("Recent Exam Results".tr,
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1B263B)),
             ),
           ),
           _buildResultsList(_recentResults),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
           QuickActionsBar(
             actions: [
               QuickActionItem(title: "Enter Marks", icon: Icons.edit_note, onTap: () {}),
@@ -656,7 +654,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
 
   Widget _buildExamsList(List<ExamItem> exams) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      padding: EdgeInsets.symmetric(horizontal: 16.0),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -665,38 +663,38 @@ class _ExamsScreenState extends State<ExamsScreen> {
         ),
         child: ListView.separated(
           shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
+          physics: NeverScrollableScrollPhysics(),
           itemCount: exams.length,
-          separatorBuilder: (context, index) => const Divider(height: 1, color: Colors.grey),
+          separatorBuilder: (context, index) => Divider(height: 1, color: Colors.grey),
           itemBuilder: (context, index) {
             final exam = exams[index];
             return Padding(
-              padding: const EdgeInsets.all(12.0),
+              padding: EdgeInsets.all(12.0),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(8),
+                    padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: Colors.blue[50],
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(Icons.assignment_outlined, color: Colors.blue[800], size: 20),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           exam.name,
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1B263B)),
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1B263B)),
                         ),
                         Text(
                           exam.term,
                           style: TextStyle(color: Colors.grey[500], fontSize: 10),
                         ),
-                        const SizedBox(height: 8),
+                        SizedBox(height: 8),
                         Wrap(
                           spacing: 8,
                           runSpacing: 4,
@@ -713,28 +711,28 @@ class _ExamsScreenState extends State<ExamsScreen> {
                     children: [
                       Row(
                         children: [
-                          const Icon(Icons.calendar_today, size: 10, color: Colors.grey),
-                          const SizedBox(width: 4),
-                          Text(exam.date, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+                          Icon(Icons.calendar_today, size: 10, color: Colors.grey),
+                          SizedBox(width: 4),
+                          Text(exam.date, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
                         ],
                       ),
-                      const SizedBox(height: 2),
+                      SizedBox(height: 2),
                       Row(
                         children: [
-                          const Icon(Icons.access_time, size: 10, color: Colors.grey),
-                          const SizedBox(width: 4),
-                          Text(exam.time, style: const TextStyle(fontSize: 10, color: Colors.grey)),
+                          Icon(Icons.access_time, size: 10, color: Colors.grey),
+                          SizedBox(width: 4),
+                          Text(exam.time, style: TextStyle(fontSize: 10, color: Colors.grey)),
                         ],
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4),
                       Text(
                         exam.duration,
                         style: TextStyle(color: Colors.grey[600], fontSize: 10, fontWeight: FontWeight.w600),
                       ),
                     ],
                   ),
-                  const SizedBox(width: 8),
-                  const Icon(Icons.more_vert, color: Colors.grey, size: 20),
+                  SizedBox(width: 8),
+                  Icon(Icons.more_vert, color: Colors.grey, size: 20),
                 ],
               ),
             );
@@ -746,7 +744,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
 
   Widget _buildResultsList(List<ExamResultItem> results) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      padding: EdgeInsets.symmetric(horizontal: 16.0),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -755,31 +753,31 @@ class _ExamsScreenState extends State<ExamsScreen> {
         ),
         child: ListView.separated(
           shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
+          physics: NeverScrollableScrollPhysics(),
           itemCount: results.length,
-          separatorBuilder: (context, index) => const Divider(height: 1, color: Colors.grey),
+          separatorBuilder: (context, index) => Divider(height: 1, color: Colors.grey),
           itemBuilder: (context, index) {
             final result = results[index];
             return Padding(
-              padding: const EdgeInsets.all(12.0),
+              padding: EdgeInsets.all(12.0),
               child: Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(8),
+                    padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: Colors.green[50],
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(Icons.task_alt, color: Colors.green[800], size: 20),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           "${result.name} - ${result.subject}",
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1B263B)),
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1B263B)),
                         ),
                         Text(
                           "${result.className} | Published: ${result.publishedDate}",
@@ -790,9 +788,9 @@ class _ExamsScreenState extends State<ExamsScreen> {
                   ),
                   TextButton(
                     onPressed: () => _showReportDialog(result.name, result.subject, result.className),
-                    child: const Text("View Report", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                    child: Text("View Report".tr, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
                   ),
-                  const Icon(Icons.more_vert, color: Colors.grey, size: 20),
+                  Icon(Icons.more_vert, color: Colors.grey, size: 20),
                 ],
               ),
             );
@@ -804,7 +802,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
 
   Widget _buildSmallChip(String prefix, String label, Color color) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(4),
@@ -813,7 +811,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text("$prefix: ", style: TextStyle(color: color, fontSize: 9, fontWeight: FontWeight.bold)),
-          Text(label, style: const TextStyle(color: Colors.black87, fontSize: 9, fontWeight: FontWeight.w500)),
+          Text(label, style: TextStyle(color: Colors.black87, fontSize: 9, fontWeight: FontWeight.w500)),
         ],
       ),
     );

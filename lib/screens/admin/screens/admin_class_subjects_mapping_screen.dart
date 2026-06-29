@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
 import '../../../core/data/app_data_store.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminClassSubjectsMappingScreen extends StatefulWidget {
   const AdminClassSubjectsMappingScreen({super.key});
@@ -57,7 +58,7 @@ class _AdminClassSubjectsMappingScreenState
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Text(
           editIndex != null ? 'Edit Mapping' : 'Add Class-Subject Mapping',
-          style: const TextStyle(
+          style: TextStyle(
               fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
         ),
         content: Column(mainAxisSize: MainAxisSize.min, children: [
@@ -72,7 +73,7 @@ class _AdminClassSubjectsMappingScreenState
                   ),
                 )
               : DropdownButtonFormField<String>(
-                  value: _classOptions.contains(_classCtrl.text)
+                  initialValue: _classOptions.contains(_classCtrl.text)
                       ? _classCtrl.text
                       : null,
                   decoration: InputDecoration(
@@ -86,7 +87,7 @@ class _AdminClassSubjectsMappingScreenState
                       .toList(),
                   onChanged: (v) => _classCtrl.text = v ?? '',
                 ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           // Subject dropdown (from Subjects)
           _subjectOptions.isEmpty
               ? TextField(
@@ -98,7 +99,7 @@ class _AdminClassSubjectsMappingScreenState
                   ),
                 )
               : DropdownButtonFormField<String>(
-                  value: _subjectOptions.contains(_subjectCtrl.text)
+                  initialValue: _subjectOptions.contains(_subjectCtrl.text)
                       ? _subjectCtrl.text
                       : null,
                   decoration: InputDecoration(
@@ -112,14 +113,14 @@ class _AdminClassSubjectsMappingScreenState
                       .toList(),
                   onChanged: (v) => _subjectCtrl.text = v ?? '',
                 ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           TextField(
             controller: _teacherCtrl,
             decoration: InputDecoration(
               labelText: 'Teacher',
               border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10)),
-              contentPadding: const EdgeInsets.symmetric(
+              contentPadding: EdgeInsets.symmetric(
                   horizontal: 12, vertical: 10),
             ),
           ),
@@ -127,10 +128,10 @@ class _AdminClassSubjectsMappingScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Cancel')),
+              child: Text('Cancel'.tr)),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF0891B2),
+                backgroundColor: Color(0xFF0891B2),
                 foregroundColor: Colors.white),
             onPressed: () {
               if (_classCtrl.text.isEmpty) return;
@@ -150,7 +151,7 @@ class _AdminClassSubjectsMappingScreenState
                 content: Text(editIndex != null
                     ? 'Mapping updated'
                     : 'Mapping added'),
-                backgroundColor: const Color(0xFF0891B2),
+                backgroundColor: Color(0xFF0891B2),
                 behavior: SnackBarBehavior.floating,
               ));
             },
@@ -167,14 +168,14 @@ class _AdminClassSubjectsMappingScreenState
       builder: (ctx) => AlertDialog(
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Delete Mapping',
+        title: Text('Delete Mapping'.tr,
             style:
                 TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
-        content: const Text('Are you sure?'),
+        content: Text('Are you sure?'.tr),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Cancel')),
+              child: Text('Cancel'.tr)),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red, foregroundColor: Colors.white),
@@ -183,7 +184,7 @@ class _AdminClassSubjectsMappingScreenState
               setState(() {});
               Navigator.pop(ctx);
             },
-            child: const Text('Delete'),
+            child: Text('Delete'.tr),
           ),
         ],
       ),
@@ -198,51 +199,30 @@ class _AdminClassSubjectsMappingScreenState
           title: 'Class Subjects Mapping',
           subtitle: 'Map subjects to classes'),
       bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showDialog(),
+        backgroundColor: const Color(0xFF0891B2),
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
       body: Column(children: [
-        Container(
-          color: Colors.white,
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          child: Center(
-            child: Column(children: [
-              const Text('Class Subjects Mapping',
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFFB45309))),
-              const SizedBox(height: 12),
-              ElevatedButton.icon(
-                onPressed: () => _showDialog(),
-                icon: const Icon(Icons.add, size: 16),
-                label: const Text('Add New'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF0891B2),
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8)),
-                ),
-              ),
-            ]),
-          ),
-        ),
         // ── Table header ─────────────────────────────────────────────────────
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          color: const Color(0xFF2D3748),
-          child: const Row(children: [
+          color: const Color(0xFF1E2875),
+          child: Row(children: [
             Expanded(
-                child: Text('Class  /  Subject  /  Teacher',
-                    style: TextStyle(
+                child: Text('Class  /  Subject  /  Teacher'.tr,
+                    style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 13))),
-            SizedBox(width: 76),
+            const SizedBox(width: 76),
           ]),
         ),
 
         Expanded(
           child: _mappings.isEmpty
-              ? const Center(
-                  child: Text('No mappings added yet.',
+              ? Center(child: Text('No mappings added yet.'.tr,
                       style: TextStyle(color: Colors.grey)))
               : ListView.separated(
                   padding: EdgeInsets.zero,
@@ -253,7 +233,7 @@ class _AdminClassSubjectsMappingScreenState
                     final m = _mappings[i];
                     return Container(
                       color: Colors.white,
-                      padding: const EdgeInsets.symmetric(
+                      padding: EdgeInsets.symmetric(
                           horizontal: 16, vertical: 10),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -266,26 +246,26 @@ class _AdminClassSubjectsMappingScreenState
                                 // Class badge + Subject name on one line
                                 Row(children: [
                                   Container(
-                                    padding: const EdgeInsets.symmetric(
+                                    padding: EdgeInsets.symmetric(
                                         horizontal: 8, vertical: 2),
                                     decoration: BoxDecoration(
-                                      color: const Color(0xFF1E2875)
+                                      color: Color(0xFF1E2875)
                                           .withValues(alpha: 0.08),
                                       borderRadius: BorderRadius.circular(6),
                                     ),
                                     child: Text(
                                       m['class'] ?? '',
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                           fontSize: 11,
                                           fontWeight: FontWeight.bold,
                                           color: Color(0xFF1E2875)),
                                     ),
                                   ),
-                                  const SizedBox(width: 8),
+                                  SizedBox(width: 8),
                                   Expanded(
                                     child: Text(
                                       m['subject'] ?? '',
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                           fontSize: 13,
                                           fontWeight: FontWeight.w600,
                                           color: Color(0xFFB45309)),
@@ -294,15 +274,15 @@ class _AdminClassSubjectsMappingScreenState
                                     ),
                                   ),
                                 ]),
-                                const SizedBox(height: 4),
+                                SizedBox(height: 4),
                                 // Teacher name below
                                 Row(children: [
-                                  const Icon(Icons.person_outline,
+                                  Icon(Icons.person_outline,
                                       size: 13, color: Colors.grey),
-                                  const SizedBox(width: 4),
+                                  SizedBox(width: 4),
                                   Text(
                                     m['teacher'] ?? '',
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                         fontSize: 12, color: Colors.grey),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -318,14 +298,14 @@ class _AdminClassSubjectsMappingScreenState
                               child: Container(
                                 width: 32,
                                 height: 32,
-                                decoration: const BoxDecoration(
+                                decoration: BoxDecoration(
                                     color: Color(0xFF2563EB),
                                     shape: BoxShape.circle),
-                                child: const Icon(Icons.edit,
+                                child: Icon(Icons.edit,
                                     color: Colors.white, size: 16),
                               ),
                             ),
-                            const SizedBox(width: 8),
+                            SizedBox(width: 8),
                             InkWell(
                               onTap: () => _delete(i),
                               child: Container(
@@ -346,25 +326,25 @@ class _AdminClassSubjectsMappingScreenState
                 ),
         ),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          color: const Color(0xFFFEF3C7),
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          color: Color(0xFFFEF3C7),
           child: Row(children: [
-            const Text('Items per page:',
+            Text('Items per page:'.tr,
                 style: TextStyle(fontSize: 12, color: Colors.black54)),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Container(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey.shade400),
                   borderRadius: BorderRadius.circular(4),
                   color: Colors.white),
-              child: const Text('10', style: TextStyle(fontSize: 12)),
+              child: Text('10'.tr, style: TextStyle(fontSize: 12)),
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: 16),
             Text('1 - ${_mappings.length} of ${_mappings.length}',
                 style:
-                    const TextStyle(fontSize: 12, color: Colors.black54)),
+                    TextStyle(fontSize: 12, color: Colors.black54)),
           ]),
         ),
       ]),

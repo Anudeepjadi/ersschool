@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class MoreScreen extends StatelessWidget {
   final Function(String) onOptionSelected;
@@ -11,22 +12,21 @@ class MoreScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
+      padding: EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
 
-          const Text(
-            "Quick Portals",
+          Text("Quick Portals".tr,
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1B263B)),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           // Grid of options
           GridView(
             shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            physics: NeverScrollableScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 12,
               mainAxisSpacing: 12,
@@ -67,10 +67,10 @@ class MoreScreen extends StatelessWidget {
                   showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                      title: const Text("Help Desk"),
-                      content: const Text("Need assistance? Email support@schoolerp.com or contact the school office (Ext 102)."),
+                      title: Text("Help Desk".tr),
+                      content: Text("Need assistance? Email support@schoolerp.com or contact the school office (Ext 102).".tr),
                       actions: [
-                        TextButton(onPressed: () => Navigator.pop(context), child: const Text("OK"))
+                        TextButton(onPressed: () => Navigator.pop(context), child: Text("OK".tr))
                       ],
                     ),
                   );
@@ -78,10 +78,10 @@ class MoreScreen extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           // Account section
           _sectionTitle('Account Options'),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           _buildTile(
             context,
             icon: Icons.notifications_outlined,
@@ -115,11 +115,11 @@ class MoreScreen extends StatelessWidget {
             onTap: () => _showComingSoon(context, 'Language Settings'),
           ),
 
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
 
           // Support section
           _sectionTitle('Support & Info'),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           _buildTile(
             context,
             icon: Icons.info_outline,
@@ -153,12 +153,12 @@ class MoreScreen extends StatelessWidget {
             onTap: () => _showComingSoon(context, 'Privacy Policy'),
           ),
 
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
 
           // Logout
           _buildLogoutButton(context),
 
-          const SizedBox(height: 30),
+          SizedBox(height: 30),
         ],
       ),
     );
@@ -168,7 +168,7 @@ class MoreScreen extends StatelessWidget {
   Widget _sectionTitle(String title) {
     return Text(
       title,
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 13,
         fontWeight: FontWeight.bold,
         color: Colors.grey,
@@ -187,7 +187,7 @@ class MoreScreen extends StatelessWidget {
     required VoidCallback onTap,
   }) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 10),
+      margin: EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
@@ -195,14 +195,14 @@ class MoreScreen extends StatelessWidget {
           BoxShadow(
             color: Colors.grey.shade100,
             blurRadius: 4,
-            offset: const Offset(0, 1),
+            offset: Offset(0, 1),
           ),
         ],
       ),
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         leading: Container(
-          padding: const EdgeInsets.all(8),
+          padding: EdgeInsets.all(8),
           decoration: BoxDecoration(
             color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(10),
@@ -211,7 +211,7 @@ class MoreScreen extends StatelessWidget {
         ),
         title: Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 14,
             color: Color(0xFF1E2875),
@@ -221,7 +221,7 @@ class MoreScreen extends StatelessWidget {
           subtitle,
           style: TextStyle(fontSize: 11, color: Colors.grey.shade500),
         ),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 13, color: Colors.grey),
+        trailing: Icon(Icons.arrow_forward_ios, size: 13, color: Colors.grey),
         onTap: onTap,
       ),
     );
@@ -237,12 +237,12 @@ class MoreScreen extends StatelessWidget {
             context: context,
             builder: (ctx) => AlertDialog(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-              title: const Text('Logout', style: TextStyle(fontWeight: FontWeight.bold)),
-              content: const Text('Are you sure you want to logout?'),
+              title: Text('Logout'.tr, style: TextStyle(fontWeight: FontWeight.bold)),
+              content: Text('Are you sure you want to logout?'.tr),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(ctx),
-                  child: const Text('Cancel'),
+                  child: Text('Cancel'.tr),
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
@@ -253,20 +253,19 @@ class MoreScreen extends StatelessWidget {
                     Navigator.pop(ctx);
                     onOptionSelected("Logout");
                   },
-                  child: const Text('Logout', style: TextStyle(color: Colors.white)),
+                  child: Text('Logout'.tr, style: TextStyle(color: Colors.white)),
                 ),
               ],
             ),
           );
         },
-        icon: const Icon(Icons.logout, color: Colors.white),
-        label: const Text(
-          'Logout',
+        icon: Icon(Icons.logout, color: Colors.white),
+        label: Text('Logout'.tr,
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
         ),
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.red,
-          padding: const EdgeInsets.symmetric(vertical: 14),
+          padding: EdgeInsets.symmetric(vertical: 14),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
           elevation: 0,
         ),
@@ -280,26 +279,24 @@ class MoreScreen extends StatelessWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text(feature, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+        title: Text(feature, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Settings & details for $feature'),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: Colors.grey.shade100,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Row(
-                children: [
+              child: Row(children: [
                   Icon(Icons.info_outline, color: Colors.blue, size: 20),
                   SizedBox(width: 8),
                   Expanded(
-                    child: Text(
-                      'This is dummy data representing the active status of this module.',
+                    child: Text('This is dummy data representing the active status of this module.'.tr,
                       style: TextStyle(fontSize: 12, color: Colors.black87),
                     ),
                   ),
@@ -311,7 +308,7 @@ class MoreScreen extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Close'),
+            child: Text('Close'.tr),
           ),
           ElevatedButton(
             onPressed: () {
@@ -325,7 +322,7 @@ class MoreScreen extends StatelessWidget {
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
-            child: const Text('Save Changes'),
+            child: Text('Save Changes'.tr),
           ),
         ],
       ),
@@ -335,34 +332,34 @@ class MoreScreen extends StatelessWidget {
   void _showThemeSelectorDialog(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (ctx) => Padding(
-        padding: const EdgeInsets.all(24.0),
+        padding: EdgeInsets.all(24.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Select Theme', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 20),
+            Text('Select Theme'.tr, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            SizedBox(height: 20),
             ListTile(
-              leading: const Icon(Icons.brightness_auto),
-              title: const Text('System Default'),
+              leading: Icon(Icons.brightness_auto),
+              title: Text('System Default'.tr),
               onTap: () {
                 // ProfileManager().themeMode.value = ThemeMode.system;
                 Navigator.pop(ctx);
               },
             ),
             ListTile(
-              leading: const Icon(Icons.light_mode),
-              title: const Text('Light Theme'),
+              leading: Icon(Icons.light_mode),
+              title: Text('Light Theme'.tr),
               onTap: () {
                 // ProfileManager().themeMode.value = ThemeMode.light;
                 Navigator.pop(ctx);
               },
             ),
             ListTile(
-              leading: const Icon(Icons.dark_mode),
-              title: const Text('Dark Theme'),
+              leading: Icon(Icons.dark_mode),
+              title: Text('Dark Theme'.tr),
               onTap: () {
                 // ProfileManager().themeMode.value = ThemeMode.dark;
                 Navigator.pop(ctx);
@@ -380,16 +377,15 @@ class MoreScreen extends StatelessWidget {
       applicationName: 'Ecstasy School ERP',
       applicationVersion: '1.0.0',
       applicationIcon: Container(
-        padding: const EdgeInsets.all(8),
+        padding: EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: Colors.blue.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
         ),
-        child: const Icon(Icons.school, color: Colors.blue, size: 32),
+        child: Icon(Icons.school, color: Colors.blue, size: 32),
       ),
-      children: const [
-        Text(
-          'A comprehensive school management app for Ecstasy School staff and teachers.',
+      children: [
+        Text('A comprehensive school management app for Ecstasy School staff and teachers.'.tr,
         ),
       ],
     );
@@ -407,7 +403,7 @@ class MoreScreen extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(12),
+        padding: EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
@@ -416,7 +412,7 @@ class MoreScreen extends StatelessWidget {
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.02),
               blurRadius: 4,
-              offset: const Offset(0, 1),
+              offset: Offset(0, 1),
             )
           ],
         ),
@@ -425,19 +421,19 @@ class MoreScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: const EdgeInsets.all(6),
+              padding: EdgeInsets.all(6),
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: color, size: 20),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               title,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1B263B)),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1B263B)),
             ),
-            const SizedBox(height: 2),
+            SizedBox(height: 2),
             Text(
               description,
               maxLines: 2,

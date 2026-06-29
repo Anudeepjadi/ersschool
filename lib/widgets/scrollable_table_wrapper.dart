@@ -33,7 +33,7 @@ class _ScrollableTableWrapperState extends State<ScrollableTableWrapper> {
   void _scrollLeft() {
     _controller.animateTo(
       (_controller.position.pixels - 200).clamp(0.0, _controller.position.maxScrollExtent),
-      duration: const Duration(milliseconds: 300),
+      duration: Duration(milliseconds: 300),
       curve: Curves.easeInOut,
     );
   }
@@ -41,7 +41,7 @@ class _ScrollableTableWrapperState extends State<ScrollableTableWrapper> {
   void _scrollRight() {
     _controller.animateTo(
       (_controller.position.pixels + 200).clamp(0.0, _controller.position.maxScrollExtent),
-      duration: const Duration(milliseconds: 300),
+      duration: Duration(milliseconds: 300),
       curve: Curves.easeInOut,
     );
   }
@@ -60,7 +60,7 @@ class _ScrollableTableWrapperState extends State<ScrollableTableWrapper> {
         SingleChildScrollView(
           controller: _controller,
           scrollDirection: Axis.horizontal,
-          physics: const BouncingScrollPhysics(),
+          physics: BouncingScrollPhysics(),
           child: widget.child,
         ),
         if (_canScrollLeft)
@@ -70,17 +70,17 @@ class _ScrollableTableWrapperState extends State<ScrollableTableWrapper> {
             bottom: 0,
             child: Center(
               child: Container(
-                margin: const EdgeInsets.only(left: 4),
+                margin: EdgeInsets.only(left: 4),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.white.withValues(alpha: 0.95),
-                  boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(1, 1))],
+                  boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(1, 1))],
                 ),
                 child: IconButton(
-                  icon: const Icon(Icons.chevron_left, color: AppColors.primary),
+                  icon: Icon(Icons.chevron_left, color: AppColors.primary),
                   onPressed: _scrollLeft,
                   iconSize: 20,
-                  constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+                  constraints: BoxConstraints(minWidth: 36, minHeight: 36),
                   padding: EdgeInsets.zero,
                 ),
               ),
@@ -93,17 +93,17 @@ class _ScrollableTableWrapperState extends State<ScrollableTableWrapper> {
             bottom: 0,
             child: Center(
               child: Container(
-                margin: const EdgeInsets.only(right: 4),
+                margin: EdgeInsets.only(right: 4),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.white.withValues(alpha: 0.95),
-                  boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(-1, 1))],
+                  boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(-1, 1))],
                 ),
                 child: IconButton(
-                  icon: const Icon(Icons.chevron_right, color: AppColors.primary),
+                  icon: Icon(Icons.chevron_right, color: AppColors.primary),
                   onPressed: _scrollRight,
                   iconSize: 20,
-                  constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+                  constraints: BoxConstraints(minWidth: 36, minHeight: 36),
                   padding: EdgeInsets.zero,
                 ),
               ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import '../widgets/admin_bottom_nav_bar.dart';
 import '../../../core/theme/app_colors.dart';
 import '../widgets/admin_app_bar.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminInvalidFeeDataScreen extends StatefulWidget {
   const AdminInvalidFeeDataScreen({super.key});
@@ -56,7 +58,7 @@ class _AdminInvalidFeeDataScreenState extends State<AdminInvalidFeeDataScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Discrepancy ${_invalidRecords[index]['id']} resolved successfully!'),
-        backgroundColor: const Color(0xFF10B981),
+        backgroundColor: Color(0xFF10B981),
         behavior: SnackBarBehavior.floating,
       ),
     );
@@ -65,21 +67,22 @@ class _AdminInvalidFeeDataScreenState extends State<AdminInvalidFeeDataScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FF),
-      appBar: const AdminAppBar(
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
+      backgroundColor: Color(0xFFF5F7FF),
+      appBar: AdminAppBar(
         title: "Invalid Fee Data",
         subtitle: "Audit and resolve student fee configuration anomalies",
         showSchoolSelector: false,
       ),
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(16),
+        physics: BouncingScrollPhysics(),
+        padding: EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Warning Alert Panel
             Container(
-              padding: const EdgeInsets.all(14),
+              padding: EdgeInsets.all(14),
               decoration: BoxDecoration(
                 color: Colors.red.shade50,
                 borderRadius: BorderRadius.circular(12),
@@ -87,19 +90,17 @@ class _AdminInvalidFeeDataScreenState extends State<AdminInvalidFeeDataScreen> {
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.warning_amber_rounded, color: Colors.red, size: 24),
-                  const SizedBox(width: 12),
+                  Icon(Icons.warning_amber_rounded, color: Colors.red, size: 24),
+                  SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text(
-                          "Fee Configurations Requiring Attention",
+                      children: [
+                        Text("Fee Configurations Requiring Attention".tr,
                           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF991B1B)),
                         ),
                         SizedBox(height: 2),
-                        Text(
-                          "The following records have inconsistencies that prevent accurate invoice generation and billing cycles. Please audit and resolve them.",
+                        Text("The following records have inconsistencies that prevent accurate invoice generation and billing cycles. Please audit and resolve them.".tr,
                           style: TextStyle(fontSize: 11, color: Color(0xFF7F1D1D)),
                         ),
                       ],
@@ -108,19 +109,19 @@ class _AdminInvalidFeeDataScreenState extends State<AdminInvalidFeeDataScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             ListView.separated(
               shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
+              physics: NeverScrollableScrollPhysics(),
               itemCount: _invalidRecords.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 12),
+              separatorBuilder: (context, index) => SizedBox(height: 12),
               itemBuilder: (context, index) {
                 final item = _invalidRecords[index];
                 final isResolved = item['status'] == 'Resolved';
 
                 return Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(16),
@@ -129,7 +130,7 @@ class _AdminInvalidFeeDataScreenState extends State<AdminInvalidFeeDataScreen> {
                       BoxShadow(
                         color: Colors.grey.shade50,
                         blurRadius: 4,
-                        offset: const Offset(0, 2),
+                        offset: Offset(0, 2),
                       ),
                     ],
                   ),
@@ -140,7 +141,7 @@ class _AdminInvalidFeeDataScreenState extends State<AdminInvalidFeeDataScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
                               color: isResolved ? Colors.green.shade50 : Colors.orange.shade50,
                               borderRadius: BorderRadius.circular(8),
@@ -156,28 +157,28 @@ class _AdminInvalidFeeDataScreenState extends State<AdminInvalidFeeDataScreen> {
                           ),
                           Text(
                             item['school'],
-                            style: const TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10),
                       Text(
                         item['issue'],
-                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4),
                       Text(
                         "Student: ${item['name']} (${item['class']})",
-                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF757897)),
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF757897)),
                       ),
-                      const SizedBox(height: 6),
+                      SizedBox(height: 6),
                       Text(
                         item['details'],
                         style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
                       ),
-                      const SizedBox(height: 12),
-                      const Divider(height: 1),
-                      const SizedBox(height: 12),
+                      SizedBox(height: 12),
+                      Divider(height: 1),
+                      SizedBox(height: 12),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -188,7 +189,7 @@ class _AdminInvalidFeeDataScreenState extends State<AdminInvalidFeeDataScreen> {
                                 size: 16,
                                 color: isResolved ? Colors.green : Colors.orange,
                               ),
-                              const SizedBox(width: 6),
+                              SizedBox(width: 6),
                               Text(
                                 item['status'],
                                 style: TextStyle(
@@ -206,13 +207,13 @@ class _AdminInvalidFeeDataScreenState extends State<AdminInvalidFeeDataScreen> {
                                 backgroundColor: AppColors.primary,
                                 foregroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                                padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                                 elevation: 0,
                               ),
-                              child: const Text("Fix & Reconcile", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                              child: Text("Fix & Reconcile".tr, style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
                             )
                           else
-                            const Icon(Icons.check_circle_outline, color: Colors.green, size: 24),
+                            Icon(Icons.check_circle_outline, color: Colors.green, size: 24),
                         ],
                       )
                     ],

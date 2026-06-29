@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/profile_manager.dart';
 import '../../my_info/my_info_screen.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class StudentAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -32,12 +33,12 @@ class StudentAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: leading ?? 
           (onOpenDrawer != null
               ? IconButton(
-                  icon: const Icon(Icons.menu, size: 26, color: Colors.white),
+                  icon: Icon(Icons.menu, size: 26, color: Colors.white),
                   onPressed: onOpenDrawer,
                 )
               : (Navigator.canPop(context)
                   ? IconButton(
-                      icon: const Icon(Icons.arrow_back, size: 24, color: Colors.white),
+                      icon: Icon(Icons.arrow_back, size: 24, color: Colors.white),
                       onPressed: () => Navigator.pop(context),
                     )
                   : null)),
@@ -47,7 +48,7 @@ class StudentAppBar extends StatelessWidget implements PreferredSizeWidget {
         children: [
           Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 18,
               color: Colors.white,
@@ -55,7 +56,7 @@ class StudentAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           Text(
             subtitle,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 11,
               color: Colors.white70,
             ),
@@ -68,8 +69,8 @@ class StudentAppBar extends StatelessWidget implements PreferredSizeWidget {
           alignment: Alignment.center,
           children: [
             PopupMenuButton<String>(
-              icon: const Icon(Icons.notifications_none_outlined, color: Colors.white, size: 24),
-              offset: const Offset(0, 45),
+              icon: Icon(Icons.notifications_none_outlined, color: Colors.white, size: 24),
+              offset: Offset(0, 45),
               color: Colors.white,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
@@ -77,31 +78,31 @@ class StudentAppBar extends StatelessWidget implements PreferredSizeWidget {
                   value: 'notices',
                   child: Row(
                     children: [
-                      Container(padding: const EdgeInsets.all(8), decoration: BoxDecoration(color: const Color(0xFFF0F4FF), borderRadius: BorderRadius.circular(8)), child: const Icon(Icons.campaign_outlined, color: Color(0xFF0038FF), size: 20)),
-                      const SizedBox(width: 12),
-                      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [const Text("Important Notices", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875))), Text("3 new notices", style: TextStyle(fontSize: 11, color: Colors.grey.shade600))]),
+                      Container(padding: EdgeInsets.all(8), decoration: BoxDecoration(color: Color(0xFFF0F4FF), borderRadius: BorderRadius.circular(8)), child: Icon(Icons.campaign_outlined, color: Color(0xFF0038FF), size: 20)),
+                      SizedBox(width: 12),
+                      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text("Important Notices".tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875))), Text("3 new notices".tr, style: TextStyle(fontSize: 11, color: Colors.grey.shade600))]),
                     ],
                   ),
                 ),
-                const PopupMenuDivider(),
+                PopupMenuDivider(),
                 PopupMenuItem<String>(
                   value: 'events',
                   child: Row(
                     children: [
-                      Container(padding: const EdgeInsets.all(8), decoration: BoxDecoration(color: const Color(0xFF10B981).withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)), child: const Icon(Icons.event, color: Color(0xFF10B981), size: 20)),
-                      const SizedBox(width: 12),
-                      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [const Text("Upcoming Events", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875))), Text("Science Fair tomorrow", style: TextStyle(fontSize: 11, color: Colors.grey.shade600))]),
+                      Container(padding: EdgeInsets.all(8), decoration: BoxDecoration(color: Color(0xFF10B981).withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)), child: Icon(Icons.event, color: Color(0xFF10B981), size: 20)),
+                      SizedBox(width: 12),
+                      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text("Upcoming Events".tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875))), Text("Science Fair tomorrow".tr, style: TextStyle(fontSize: 11, color: Colors.grey.shade600))]),
                     ],
                   ),
                 ),
-                const PopupMenuDivider(),
+                PopupMenuDivider(),
                 PopupMenuItem<String>(
                   value: 'exams',
                   child: Row(
                     children: [
-                      Container(padding: const EdgeInsets.all(8), decoration: BoxDecoration(color: const Color(0xFFF59E0B).withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)), child: const Icon(Icons.assignment_outlined, color: Color(0xFFF59E0B), size: 20)),
-                      const SizedBox(width: 12),
-                      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [const Text("Exams", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875))), Text("Math Test on Friday", style: TextStyle(fontSize: 11, color: Colors.grey.shade600))]),
+                      Container(padding: EdgeInsets.all(8), decoration: BoxDecoration(color: Color(0xFFF59E0B).withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)), child: Icon(Icons.assignment_outlined, color: Color(0xFFF59E0B), size: 20)),
+                      SizedBox(width: 12),
+                      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text("Exams".tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875))), Text("Math Test on Friday".tr, style: TextStyle(fontSize: 11, color: Colors.grey.shade600))]),
                     ],
                   ),
                 ),
@@ -111,14 +112,13 @@ class StudentAppBar extends StatelessWidget implements PreferredSizeWidget {
               right: 6,
               top: 8,
               child: Container(
-                padding: const EdgeInsets.all(3),
-                decoration: const BoxDecoration(
+                padding: EdgeInsets.all(3),
+                decoration: BoxDecoration(
                   color: Colors.red,
                   shape: BoxShape.circle,
                 ),
-                constraints: const BoxConstraints(minWidth: 14, minHeight: 14),
-                child: const Text(
-                  "5",
+                constraints: BoxConstraints(minWidth: 14, minHeight: 14),
+                child: Text("5".tr,
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold),
                 ),
@@ -128,10 +128,10 @@ class StudentAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         // User profile photo
         Padding(
-          padding: const EdgeInsets.only(right: 16, left: 4),
+          padding: EdgeInsets.only(right: 16, left: 4),
           child: GestureDetector(
             onTap: onProfileTap ?? () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const MyInfoScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (_) => MyInfoScreen()));
             },
             child: Container(
               decoration: BoxDecoration(
@@ -145,7 +145,7 @@ class StudentAppBar extends StatelessWidget implements PreferredSizeWidget {
                     radius: 15,
                     backgroundColor: Colors.white,
                     backgroundImage: path != null ? FileImage(File(path)) : null,
-                    child: path == null ? const Icon(Icons.person, color: AppColors.primary, size: 20) : null,
+                    child: path == null ? Icon(Icons.person, color: AppColors.primary, size: 20) : null,
                   );
                 },
               ),
@@ -157,5 +157,5 @@ class StudentAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(48); // Account for toolbar only
+  Size get preferredSize => Size.fromHeight(48); // Account for toolbar only
 }
