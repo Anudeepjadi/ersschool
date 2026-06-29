@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/utils/profile_manager.dart';
 import '../login/login_screen.dart';
+import '../class/tabs/timetable_screen.dart';
+import '../class/tabs/diary_screen.dart';
+import '../class/tabs/assignments_screen.dart';
 import 'tabs/admin_home_tab.dart';
 import 'tabs/admin_students_tab.dart';
 import 'tabs/admin_teachers_tab.dart';
@@ -27,6 +30,11 @@ import 'screens/admin_chat_support_screen.dart';
 import 'screens/admin_system_updates_screen.dart';
 import 'screens/admin_video_tutorials_screen.dart';
 import 'screens/admin_about_us_screen.dart';
+import 'screens/admin_class_details_screen.dart';
+import 'screens/admin_time_table_screen.dart';
+import 'screens/admin_diary_screen.dart';
+import 'screens/admin_assignments_screen.dart';
+import 'screens/admin_class_teachers_screen.dart';
 
 import 'widgets/admin_bottom_nav_bar.dart';
 
@@ -44,6 +52,14 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   final GlobalKey<AdminStudentsTabState> _studentsTabKey = GlobalKey<AdminStudentsTabState>();
   final GlobalKey<AdminTeachersTabState> _teachersTabKey = GlobalKey<AdminTeachersTabState>();
 
+  final List<GlobalKey<NavigatorState>> _navigatorKeys = [
+    GlobalKey<NavigatorState>(),
+    GlobalKey<NavigatorState>(),
+    GlobalKey<NavigatorState>(),
+    GlobalKey<NavigatorState>(),
+    GlobalKey<NavigatorState>(),
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -51,9 +67,13 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   }
 
   void _onTabChanged(int index) {
-    setState(() {
-      currentIndex = index;
-    });
+    if (currentIndex == index) {
+      _navigatorKeys[index].currentState?.popUntil((route) => route.isFirst);
+    } else {
+      setState(() {
+        currentIndex = index;
+      });
+    }
   }
 
   @override
@@ -92,16 +112,39 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       ),
     ];
 
-    return Scaffold(
-      key: _scaffoldKey,
-      drawer: _buildDrawer(),
-      bottomNavigationBar: AdminBottomNavBar(
-        currentIndex: currentIndex,
-        onTabSelected: _onTabChanged,
-      ),
-      body: IndexedStack(
-        index: currentIndex,
-        children: tabs,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        final isFirstRouteInCurrentTab = !await _navigatorKeys[currentIndex].currentState!.maybePop();
+        if (isFirstRouteInCurrentTab) {
+          if (currentIndex != 0) {
+            setState(() => currentIndex = 0);
+          } else {
+            Navigator.of(context).pop();
+          }
+        }
+      },
+      child: Scaffold(
+        key: _scaffoldKey,
+        drawer: _buildDrawer(),
+        bottomNavigationBar: AdminBottomNavBar(
+          currentIndex: currentIndex,
+          onTabSelected: _onTabChanged,
+        ),
+        body: IndexedStack(
+          index: currentIndex,
+          children: tabs.asMap().entries.map((entry) {
+            return Navigator(
+              key: _navigatorKeys[entry.key],
+              onGenerateRoute: (settings) {
+                return MaterialPageRoute(
+                  builder: (context) => entry.value,
+                );
+              },
+            );
+          }).toList(),
+        ),
       ),
     );
   }
@@ -223,65 +266,103 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             setState(() => currentIndex = 0);
             Navigator.pop(context);
           }),
+          
           _buildDrawerItem(Icons.people_alt_outlined, "Students", currentIndex == 1, () {
             setState(() => currentIndex = 1);
             Navigator.pop(context);
           }),
-          _buildDrawerItem(Icons.co_present_outlined, "Teachers", currentIndex == 2, () {
+
+          _buildExpansionTile(
+            icon: Icons.menu_book_outlined,
+            title: "Class",
+            isBlue: true,
+            children: [
+              _buildSubItem("Class Details", () {
+                _navigatorKeys[currentIndex].currentState?.push( MaterialPageRoute(builder: (_) => const AdminClassDetailsScreen()));
+              }),
+              _buildSubItem("Class Timetable", () {
+                _navigatorKeys[currentIndex].currentState?.push( MaterialPageRoute(builder: (_) => const AdminTimeTableScreen()));
+              }),
+              _buildSubItem("Class Attendance", () {
+                _navigatorKeys[currentIndex].currentState?.push( MaterialPageRoute(builder: (_) => const AdminAttendanceScreen()));
+              }),
+              _buildSubItem("Class Dairy", () {
+                _navigatorKeys[currentIndex].currentState?.push( MaterialPageRoute(builder: (_) => const AdminDiaryScreen()));
+              }),
+              _buildSubItem("Assignments", () {
+                _navigatorKeys[currentIndex].currentState?.push( MaterialPageRoute(builder: (_) => const AdminAssignmentsScreen()));
+              }),
+              _buildSubItem("Class Teachers", () {
+                _navigatorKeys[currentIndex].currentState?.push( MaterialPageRoute(builder: (_) => const AdminClassTeachersScreen()));
+              }),
+            ],
+          ),
+
+          _buildDrawerItem(Icons.badge_outlined, "Employee", currentIndex == 2, () {
             setState(() => currentIndex = 2);
             Navigator.pop(context);
           }),
+
+          _buildDrawerItem(Icons.groups_outlined, "Meetings", false, () {
+            Navigator.pop(context);
+          }),
+
+          _buildDrawerItem(Icons.assignment_outlined, "Examination", false, () {
+            Navigator.pop(context);
+            _navigatorKeys[currentIndex].currentState?.push( MaterialPageRoute(builder: (_) => const AdminExaminationsScreen()));
+          }),
+
+          _buildDrawerItem(Icons.directions_bus_outlined, "Transport", false, () {
+            Navigator.pop(context);
+            _navigatorKeys[currentIndex].currentState?.push( MaterialPageRoute(builder: (_) => const AdminTransportScreen()));
+          }),
+
+          _buildDrawerItem(Icons.assessment_outlined, "Reports", false, () {
+            Navigator.pop(context);
+            _navigatorKeys[currentIndex].currentState?.push( MaterialPageRoute(builder: (_) => const AdminReportsScreen()));
+          }),
+
           _buildDrawerItem(Icons.corporate_fare_outlined, "Branches", currentIndex == 3, () {
             setState(() => currentIndex = 3);
             Navigator.pop(context);
           }),
+
           _buildDrawerItem(Icons.calendar_today_outlined, "Attendance", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminAttendanceScreen()));
+            _navigatorKeys[currentIndex].currentState?.push( MaterialPageRoute(builder: (_) => const AdminAttendanceScreen()));
           }),
           _buildDrawerItem(Icons.currency_rupee, "Fees", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminFeesScreen()));
-          }),
-          _buildDrawerItem(Icons.assignment_outlined, "Examination", false, () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminExaminationsScreen()));
+            _navigatorKeys[currentIndex].currentState?.push( MaterialPageRoute(builder: (_) => const AdminFeesScreen()));
           }),
           _buildDrawerItem(Icons.menu_book_outlined, "Library", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminLibraryScreen()));
-          }),
-          _buildDrawerItem(Icons.directions_bus_outlined, "Transport", false, () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminTransportScreen()));
+            _navigatorKeys[currentIndex].currentState?.push( MaterialPageRoute(builder: (_) => const AdminLibraryScreen()));
           }),
           _buildDrawerItem(Icons.bed_outlined, "Hostel", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminHostelScreen()));
+            _navigatorKeys[currentIndex].currentState?.push( MaterialPageRoute(builder: (_) => const AdminHostelScreen()));
           }),
           _buildDrawerItem(Icons.event_outlined, "Events", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEventsScreen()));
+            _navigatorKeys[currentIndex].currentState?.push( MaterialPageRoute(builder: (_) => const AdminEventsScreen()));
           }),
           _buildDrawerItem(Icons.campaign_outlined, "Communications", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminCommunicationsScreen()));
+            _navigatorKeys[currentIndex].currentState?.push( MaterialPageRoute(builder: (_) => const AdminCommunicationsScreen()));
           }),
           _buildDrawerItem(Icons.badge_outlined, "ID Card", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminIDCardsScreen()));
+            _navigatorKeys[currentIndex].currentState?.push( MaterialPageRoute(builder: (_) => const AdminIDCardsScreen()));
           }),
           _buildDrawerItem(Icons.workspace_premium_outlined, "Certificates", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminCertificatesScreen()));
+            _navigatorKeys[currentIndex].currentState?.push( MaterialPageRoute(builder: (_) => const AdminCertificatesScreen()));
           }),
-          _buildDrawerItem(Icons.assessment_outlined, "Reports", false, () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminReportsScreen()));
-          }),
+
           _buildDrawerItem(Icons.settings_outlined, "Settings", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminSettingsScreen()));
+            _navigatorKeys[currentIndex].currentState?.push( MaterialPageRoute(builder: (_) => const AdminSettingsScreen()));
           }),
 
           const Divider(height: 20),
@@ -290,23 +371,23 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           _buildDrawerSectionTitle("SUPPORT"),
           _buildDrawerItem(Icons.help_outline, "Help Center", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminHelpCenterScreen()));
+            _navigatorKeys[currentIndex].currentState?.push( MaterialPageRoute(builder: (_) => const AdminHelpCenterScreen()));
           }, showChevron: false),
           _buildDrawerItem(Icons.headset_mic_outlined, "Chat Support", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminChatSupportScreen()));
+            _navigatorKeys[currentIndex].currentState?.push( MaterialPageRoute(builder: (_) => const AdminChatSupportScreen()));
           }, showChevron: false),
           _buildDrawerItem(Icons.cloud_download_outlined, "System Updates", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminSystemUpdatesScreen()));
+            _navigatorKeys[currentIndex].currentState?.push( MaterialPageRoute(builder: (_) => const AdminSystemUpdatesScreen()));
           }, showChevron: false),
           _buildDrawerItem(Icons.play_circle_outline, "Video Tutorials", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminVideoTutorialsScreen()));
+            _navigatorKeys[currentIndex].currentState?.push( MaterialPageRoute(builder: (_) => const AdminVideoTutorialsScreen()));
           }, showChevron: false),
           _buildDrawerItem(Icons.info_outline, "About Us", false, () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminAboutUsScreen()));
+            _navigatorKeys[currentIndex].currentState?.push( MaterialPageRoute(builder: (_) => const AdminAboutUsScreen()));
           }, showChevron: false),
 
           const Divider(height: 20),
@@ -365,6 +446,52 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           : null,
       selected: selected,
       onTap: onTap,
+      dense: true,
+    );
+  }
+
+  Widget _buildExpansionTile({
+    required IconData icon,
+    required String title,
+    required List<Widget> children,
+    bool isBlue = false,
+  }) {
+    final Color color = isBlue ? const Color(0xFF4154F1) : const Color(0xFF757897);
+    final Color textColor = isBlue ? const Color(0xFF4154F1) : const Color(0xFF1E2875);
+
+    return Theme(
+      data: Theme.of(context).copyWith(
+        dividerColor: Colors.transparent,
+        iconTheme: IconThemeData(color: color),
+      ),
+      child: ExpansionTile(
+        leading: Icon(icon, color: color),
+        iconColor: color,
+        collapsedIconColor: color,
+        title: Text(
+          title,
+          style: TextStyle(
+            color: textColor,
+            fontWeight: isBlue ? FontWeight.w600 : FontWeight.w500,
+            fontSize: 13,
+          ),
+        ),
+        children: children,
+      ),
+    );
+  }
+
+  Widget _buildSubItem(String title, VoidCallback onTap) {
+    return ListTile(
+      contentPadding: const EdgeInsets.only(left: 72),
+      title: Text(
+        title,
+        style: const TextStyle(color: Color(0xFF899BB1), fontSize: 13, fontWeight: FontWeight.w400),
+      ),
+      onTap: () {
+        Navigator.pop(context);
+        onTap();
+      },
       dense: true,
     );
   }
