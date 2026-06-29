@@ -29,6 +29,7 @@ import 'screens/admin_chat_support_screen.dart';
 import 'screens/admin_system_updates_screen.dart';
 import 'screens/admin_video_tutorials_screen.dart';
 import 'screens/admin_about_us_screen.dart';
+import 'screens/admin_employee_list_screen.dart';
 
 import 'widgets/admin_bottom_nav_bar.dart';
 
@@ -262,10 +263,44 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             setState(() => currentIndex = 1);
             Navigator.pop(context);
           }),
-          _buildDrawerItem(Icons.co_present_outlined, "Teachers", currentIndex == 2, () {
-            setState(() => currentIndex = 2);
-            Navigator.pop(context);
-          }),
+          Theme(
+            data: Theme.of(context).copyWith(
+              dividerColor: Colors.transparent,
+              visualDensity: VisualDensity.compact,
+            ),
+            child: ExpansionTile(
+              leading: Icon(Icons.co_present_outlined, color: currentIndex == 2 ? AppColors.primary : const Color(0xFF757897)),
+              title: Text(
+                "Employee",
+                style: TextStyle(
+                  color: currentIndex == 2 ? AppColors.primary : const Color(0xFF1E2875),
+                  fontWeight: currentIndex == 2 ? FontWeight.bold : FontWeight.w500,
+                  fontSize: 13,
+                ),
+              ),
+              trailing: Icon(
+                Icons.keyboard_arrow_down,
+                size: 16,
+                color: currentIndex == 2 ? AppColors.primary : Colors.grey,
+              ),
+              tilePadding: const EdgeInsets.symmetric(horizontal: 16),
+              childrenPadding: EdgeInsets.zero,
+              children: [
+                _buildDrawerSubItem("Employees", () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEmployeeListScreen(staffType: 'Employee')));
+                }),
+                _buildDrawerSubItem("Teachers", () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEmployeeListScreen(staffType: 'Teacher')));
+                }),
+                _buildDrawerSubItem("Attender/Aaya", () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEmployeeListScreen(staffType: 'Attender')));
+                }),
+              ],
+            ),
+          ),
           _buildDrawerItem(Icons.corporate_fare_outlined, "Branches", currentIndex == 3, () {
             setState(() => currentIndex = 3);
             Navigator.pop(context);
@@ -383,6 +418,22 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           letterSpacing: 1.0,
         ),
       ),
+    );
+  }
+
+  Widget _buildDrawerSubItem(String title, VoidCallback onTap) {
+    return ListTile(
+      contentPadding: const EdgeInsets.only(left: 72),
+      title: Text(
+        title,
+        style: const TextStyle(
+          color: Color(0xFF1E2875),
+          fontWeight: FontWeight.w500,
+          fontSize: 12,
+        ),
+      ),
+      onTap: onTap,
+      dense: true,
     );
   }
 
