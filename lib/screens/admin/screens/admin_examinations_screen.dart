@@ -44,10 +44,10 @@ class AdminExaminationsScreen extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
   final ExaminationFeature initialFeature;
   final bool openDrawer;
-  AdminExaminationsScreen({
-    super.key, 
-    this.onOpenDrawer, 
-    this.initialFeature = ExaminationFeature.menu, 
+  const AdminExaminationsScreen({
+    super.key,
+    this.onOpenDrawer,
+    this.initialFeature = ExaminationFeature.menu,
     this.openDrawer = false,
   });
 
