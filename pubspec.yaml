@@ -38,7 +38,8 @@ flutter:
     - assets/images/student_welcome.png
     - assets/images/school_bus.png
     - assets/animations/ers_animation.mp4
-
+    - assets/images/principal_signature_v2.png
+    
 flutter_icons:
   android: true
   ios: true

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../widgets/admin_app_bar.dart';
 import '../../widgets/admin_drawer.dart';
 import '../../widgets/admin_bottom_nav_bar.dart';
@@ -14,7 +15,7 @@ class _FeeStructureReportScreenState extends State<FeeStructureReportScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String selectedBranch = 'Ecstasy School 1 (ECS001)';
   String selectedYear = '2025-26';
-  String selectedClass = 'Grade 1';
+  String selectedClass = 'LKG';
 
   final List<String> branches = [
     'Ecstasy School 1 (ECS001)',
@@ -29,16 +30,7 @@ class _FeeStructureReportScreenState extends State<FeeStructureReportScreen> {
     '2025-26',
   ];
 
-  final List<String> classes = [
-    'Grade 1',
-    'Grade 2',
-    'Grade 3',
-    'Grade 4',
-    'batch1',
-    'Grade 5',
-    'Grade 6',
-    'grade 7',
-  ];
+  final List<String> classes = ['LKG', 'UKG', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'];
 
   @override
   Widget build(BuildContext context) {
@@ -57,17 +49,7 @@ class _FeeStructureReportScreenState extends State<FeeStructureReportScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Center(
-              child: Text(
-                "Fee Structure for Class",
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.brown,
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
+
             
             _buildFilters(),
             const SizedBox(height: 20),
@@ -88,32 +70,30 @@ class _FeeStructureReportScreenState extends State<FeeStructureReportScreen> {
   }
 
   Widget _buildFilters() {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(child: _buildDropdown("Branch", selectedBranch, branches, (v) => setState(() => selectedBranch = v!))),
-            const SizedBox(width: 8),
-            Expanded(child: _buildDropdown("Academic Year", selectedYear, years, (v) => setState(() => selectedYear = v!))),
-            const SizedBox(width: 8),
-            Expanded(child: _buildDropdown("Class", selectedClass, classes, (v) => setState(() => selectedClass = v!))),
-          ],
-        ),
-        const SizedBox(height: 12),
-        Align(
-          alignment: Alignment.centerRight,
-          child: ElevatedButton(
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          SizedBox(width: 160, child: _buildDropdown("Branch", selectedBranch, branches, (v) => setState(() => selectedBranch = v!))),
+          const SizedBox(width: 8),
+          SizedBox(width: 120, child: _buildDropdown("Academic Year", selectedYear, years, (v) => setState(() => selectedYear = v!))),
+          const SizedBox(width: 8),
+          SizedBox(width: 100, child: _buildDropdown("Class", selectedClass, classes, (v) => setState(() => selectedClass = v!))),
+          const SizedBox(width: 12),
+          ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFBC5314),
+              backgroundColor: AppColors.primary,
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-              minimumSize: const Size(120, 44),
+              minimumSize: const Size(80, 38),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
             ),
-            child: const Text("Get Fee Details", style: TextStyle(fontWeight: FontWeight.bold)),
+            child: const Text("Get Fee Details", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11)),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -169,12 +149,12 @@ class _FeeStructureReportScreenState extends State<FeeStructureReportScreen> {
 
   Widget _buildMainFeeTable() {
     final List<Map<String, String>> data = [
-      {'branch': 'Ecstasy School 1 (ECS001)', 'year': '2025-26', 'class': 'Grade 1', 'type': 'Registration Fee', 'amount': '3,000.00'},
-      {'branch': 'Ecstasy School 1 (ECS001)', 'year': '2025-26', 'class': 'Grade 1', 'type': 'Activity Fee', 'amount': '6,000.00'},
-      {'branch': 'Ecstasy School 1 (ECS001)', 'year': '2025-26', 'class': 'Grade 1', 'type': 'Tuition Fee', 'amount': '38,000.00'},
-      {'branch': 'Ecstasy School 1 (ECS001)', 'year': '2025-26', 'class': 'Grade 1', 'type': 'books fee', 'amount': '11,000.00'},
-      {'branch': 'Ecstasy School 1 (ECS001)', 'year': '2025-26', 'class': 'Grade 1', 'type': 'residential', 'amount': '4,000.00'},
-      {'branch': 'Ecstasy School 1 (ECS001)', 'year': '2025-26', 'class': 'Grade 1', 'type': 'hostel', 'amount': '5,000.00'},
+      {'branch': selectedBranch, 'year': selectedYear, 'class': selectedClass, 'type': 'Registration Fee', 'amount': '3,000.00'},
+      {'branch': selectedBranch, 'year': selectedYear, 'class': selectedClass, 'type': 'Activity Fee', 'amount': '6,000.00'},
+      {'branch': selectedBranch, 'year': selectedYear, 'class': selectedClass, 'type': 'Tuition Fee', 'amount': '38,000.00'},
+      {'branch': selectedBranch, 'year': selectedYear, 'class': selectedClass, 'type': 'books fee', 'amount': '11,000.00'},
+      {'branch': selectedBranch, 'year': selectedYear, 'class': selectedClass, 'type': 'residential', 'amount': '4,000.00'},
+      {'branch': selectedBranch, 'year': selectedYear, 'class': selectedClass, 'type': 'hostel', 'amount': '5,000.00'},
     ];
 
     return Table(

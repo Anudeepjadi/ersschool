@@ -11,9 +11,17 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
-class AdminStudentIdCardPrintScreen extends StatelessWidget {
-  final Map<String, dynamic> studentData;
-  const AdminStudentIdCardPrintScreen({super.key, required this.studentData});
+class AdminStudentIdCardPrintScreen extends StatefulWidget {
+  final List<Map<String, dynamic>> studentsData;
+  const AdminStudentIdCardPrintScreen({super.key, required this.studentsData});
+
+  @override
+  State<AdminStudentIdCardPrintScreen> createState() => _AdminStudentIdCardPrintScreenState();
+}
+
+class _AdminStudentIdCardPrintScreenState extends State<AdminStudentIdCardPrintScreen> {
+  final PageController _pageController = PageController();
+  int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +36,31 @@ class AdminStudentIdCardPrintScreen extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 40),
-            Center(
-              child: _buildProfessionalIdCard(),
+            SizedBox(
+              height: 480,
+              child: PageView.builder(
+                controller: _pageController,
+                itemCount: widget.studentsData.length,
+                onPageChanged: (index) {
+                  setState(() {
+                    _currentIndex = index;
+                  });
+                },
+                itemBuilder: (context, index) {
+                  return Center(
+                    child: _buildProfessionalIdCard(widget.studentsData[index]),
+                  );
+                },
+              ),
             ),
+            if (widget.studentsData.length > 1)
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child: Text(
+                  '${_currentIndex + 1} of ${widget.studentsData.length}',
+                  style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
+                ),
+              ),
             const SizedBox(height: 40),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -42,8 +72,8 @@ class AdminStudentIdCardPrintScreen extends StatelessWidget {
                   _actionButton(Icons.print, "Print Card", AppColors.primaryDark, () async {
                     try {
                       await Printing.layoutPdf(
-                        onLayout: (PdfPageFormat format) => _generatePdf(format, studentData),
-                        name: 'ID_Card_${studentData['name'] ?? 'student'}',
+                        onLayout: (PdfPageFormat format) => _generatePdf(format, widget.studentsData),
+                        name: 'ID_Cards',
                       );
                     } catch (e) {
                       if (!context.mounted) return;
@@ -54,10 +84,10 @@ class AdminStudentIdCardPrintScreen extends StatelessWidget {
                   }),
                   _actionButton(Icons.share, "Share PDF", Colors.green.shade700, () async {
                     try {
-                      final pdfBytes = await _generatePdf(PdfPageFormat.a4, studentData);
+                      final pdfBytes = await _generatePdf(PdfPageFormat.a4, widget.studentsData);
                       await Printing.sharePdf(
                         bytes: pdfBytes,
-                        filename: "ID_Card_${studentData['admission'] ?? studentData['name']}.pdf",
+                        filename: "ID_Cards.pdf",
                       );
                     } catch (e) {
                       if (!context.mounted) return;
@@ -76,7 +106,7 @@ class AdminStudentIdCardPrintScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProfessionalIdCard() {
+  Widget _buildProfessionalIdCard(Map<String, dynamic> studentData) {
     final photo = studentData['avatar'] ?? studentData['photoPath'];
     final bool hasValidPhoto = photo != null && File(photo.toString()).existsSync();
     const headerColor = Color(0xFF1E40AF); // Deeper blue
@@ -178,8 +208,7 @@ class AdminStudentIdCardPrintScreen extends StatelessWidget {
                       _detailItem("Roll No.", studentData['roll']?.toString().replaceAll('Roll No: ', '') ?? "N/A"),
                       _detailItem("Gender", studentData['gender'] ?? ""),
                       _detailItem("Parent", studentData['mobile'] ?? studentData['phone'] ?? ""),
-                      _detailItem("Email", studentData['email'] ?? ""),
-                      _detailItem("Mother", studentData['mother'] ?? ""),
+                      _detailItem("Admission", studentData['admission'] ?? studentData['admNo'] ?? ""),
                     ],
                   ),
                 ),
@@ -220,7 +249,7 @@ class AdminStudentIdCardPrintScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Image.asset(
-                      'assets/images/principal_signature.png',
+                      'assets/images/principal_signature_v2.png',
                       height: 50,
                       width: 90,
                       fit: BoxFit.contain,
@@ -254,7 +283,7 @@ class AdminStudentIdCardPrintScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            width: 75, // Fixed label width for perfect vertical alignment
+            width: 65, // Fixed label width for perfect vertical alignment
             child: Text(
               "${label.tr}:",
               style: const TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.bold),
@@ -288,7 +317,7 @@ class AdminStudentIdCardPrintScreen extends StatelessWidget {
     );
   }
 
-  Future<Uint8List> _generatePdf(PdfPageFormat format, Map<String, dynamic> studentData) async {
+  Future<Uint8List> _generatePdf(PdfPageFormat format, List<Map<String, dynamic>> studentsData) async {
     final pdf = pw.Document();
     final headerColor = PdfColor.fromInt(0xFF1E40AF);
     final detailTextColor = PdfColor.fromInt(0xFF1E2875);
@@ -296,20 +325,21 @@ class AdminStudentIdCardPrintScreen extends StatelessWidget {
     // Load assets
     pw.ImageProvider? signatureImage;
     try {
-      final signatureBytes = await rootBundle.load('assets/images/principal_signature.png');
+      final signatureBytes = await rootBundle.load('assets/images/principal_signature_v2.png');
       signatureImage = pw.MemoryImage(signatureBytes.buffer.asUint8List());
     } catch (_) {}
 
-    pw.ImageProvider? studentPhoto;
-    final photo = studentData['avatar'] ?? studentData['photoPath'];
-    if (photo != null && File(photo.toString()).existsSync()) {
-      studentPhoto = pw.MemoryImage(File(photo.toString()).readAsBytesSync());
-    }
+    for (var studentData in studentsData) {
+      pw.ImageProvider? studentPhoto;
+      final photo = studentData['avatar'] ?? studentData['photoPath'];
+      if (photo != null && File(photo.toString()).existsSync()) {
+        studentPhoto = pw.MemoryImage(File(photo.toString()).readAsBytesSync());
+      }
 
-    pdf.addPage(
-      pw.Page(
-        pageFormat: PdfPageFormat.a4,
-        build: (pw.Context context) {
+      pdf.addPage(
+        pw.Page(
+          pageFormat: PdfPageFormat.a4,
+          build: (pw.Context context) {
           return pw.Center(
             child: pw.Container(
               width: 320,
@@ -439,6 +469,7 @@ class AdminStudentIdCardPrintScreen extends StatelessWidget {
         },
       ),
     );
+    }
 
     return pdf.save();
   }
@@ -449,7 +480,7 @@ class AdminStudentIdCardPrintScreen extends StatelessWidget {
       child: pw.Row(
         children: [
           pw.SizedBox(
-            width: 55,
+            width: 45,
             child: pw.Text("${label.tr}:", style: pw.TextStyle(fontSize: 10, color: PdfColors.grey700, fontWeight: pw.FontWeight.bold)),
           ),
           pw.Expanded(

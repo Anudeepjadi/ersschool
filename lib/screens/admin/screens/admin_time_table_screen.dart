@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -15,7 +18,7 @@ class AdminTimeTableScreen extends StatefulWidget {
 
 class _AdminTimeTableScreenState extends State<AdminTimeTableScreen> {
   String _selectedBranch = 'Ecstasy School 1 (ECS001)';
-  String _selectedClass = 'Grade 1';
+  String _selectedClass = 'LKG';
   String _selectedSection = 'A';
   final List<String> _days = [
     'Monday',
@@ -30,14 +33,40 @@ class _AdminTimeTableScreenState extends State<AdminTimeTableScreen> {
   @override
   void initState() {
     super.initState();
-    _getDetails();
+    _loadDetails();
   }
 
-  void _getDetails() {
-    setState(() {
+  Future<void> _loadDetails() async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = 'timetable_${_selectedBranch}_${_selectedClass}_$_selectedSection';
+    final savedData = prefs.getString(key);
+    
+    if (savedData != null) {
+      final Map<String, dynamic> decoded = jsonDecode(savedData);
+      setState(() {
+        _timetable = {};
+        decoded.forEach((k, v) {
+          _timetable[k] = List<Map<String, dynamic>>.from(v.map((e) => Map<String, dynamic>.from(e)));
+        });
+      });
+    } else {
+      setState(() {
+        _timetable = _getDefaultTimetable();
+      });
+      _saveDetails();
+    }
+  }
+
+  Future<void> _saveDetails() async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = 'timetable_${_selectedBranch}_${_selectedClass}_$_selectedSection';
+    await prefs.setString(key, jsonEncode(_timetable));
+  }
+
+  Map<String, List<Map<String, dynamic>>> _getDefaultTimetable() {
       if (_selectedBranch == 'Ecstasy School 1 (ECS001)') {
-        if (_selectedClass == 'Grade 1' && _selectedSection == 'A') {
-          _timetable = {
+        if (_selectedClass == 'LKG' && _selectedSection == 'A') {
+          return {
             'Monday': [
               {
                 'time': '09:00 AM - 09:30 AM',
@@ -131,7 +160,7 @@ class _AdminTimeTableScreenState extends State<AdminTimeTableScreen> {
             ],
           };
         } else {
-          _timetable = {
+          return {
             'Monday': [
               {
                 'time': '09:00 AM - 10:00 AM',
@@ -156,7 +185,7 @@ class _AdminTimeTableScreenState extends State<AdminTimeTableScreen> {
           };
         }
       } else if (_selectedBranch == 'Ecstasy School 2 (ECS002)') {
-        _timetable = {
+        return {
           'Monday': [
             {
               'time': '09:00 AM - 10:00 AM',
@@ -180,7 +209,7 @@ class _AdminTimeTableScreenState extends State<AdminTimeTableScreen> {
           ],
         };
       } else {
-        _timetable = {
+        return {
           'Monday': [],
           'Tuesday': [],
           'Wednesday': [],
@@ -189,7 +218,6 @@ class _AdminTimeTableScreenState extends State<AdminTimeTableScreen> {
           'Saturday': []
         };
       }
-    });
   }
 
   Future<void> _printTimetable() async {
@@ -244,8 +272,9 @@ class _AdminTimeTableScreenState extends State<AdminTimeTableScreen> {
                                   spacing: 10,
                                   runSpacing: 5,
                                   children: periods.map((p) {
-                                    if (p['subject'].isEmpty)
+                                    if (p['subject'].isEmpty) {
                                       return pw.SizedBox();
+                                    }
                                     return pw.Container(
                                       padding: const pw.EdgeInsets.all(5),
                                       decoration: pw.BoxDecoration(
@@ -285,9 +314,10 @@ class _AdminTimeTableScreenState extends State<AdminTimeTableScreen> {
         },
       );
     } catch (e) {
-      if (mounted)
+      if (mounted) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text("Error printing: $e")));
+      }
     }
   }
 
@@ -380,33 +410,35 @@ class _AdminTimeTableScreenState extends State<AdminTimeTableScreen> {
                     'Ecstasy School 2 (ECS002)',
                     'Ecstasy School 3 (ECS003)'
                   ],
-                  onChanged: (v) => setState(() => _selectedBranch = v!)),
+                  onChanged: (v) {
+                    setState(() => _selectedBranch = v!);
+                    _loadDetails();
+                  }),
               const SizedBox(height: 12),
               Row(children: [
                 Expanded(
                     child: _buildDropdown(
                         label: "Class",
                         value: _selectedClass,
-                        items: [
-                          'Grade 1',
-                          'Grade 2',
-                          'Grade 3',
-                          'Grade 4',
-                          'Grade 5'
-                        ],
-                        onChanged: (v) => setState(() => _selectedClass = v!))),
+                        items: ['LKG', 'UKG', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'],
+                        onChanged: (v) {
+                          setState(() => _selectedClass = v!);
+                          _loadDetails();
+                        })),
                 const SizedBox(width: 12),
                 Expanded(
                     child: _buildDropdown(
                         label: "Section",
                         value: _selectedSection,
                         items: ['A', 'B', 'C', 'D'],
-                        onChanged: (v) =>
-                            setState(() => _selectedSection = v!))),
+                        onChanged: (v) {
+                          setState(() => _selectedSection = v!);
+                          _loadDetails();
+                        })),
               ]),
               const SizedBox(height: 16),
               ElevatedButton(
-                  onPressed: _getDetails,
+                  onPressed: _loadDetails,
                   style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF1E2875),
                       foregroundColor: Colors.white,
@@ -432,7 +464,7 @@ class _AdminTimeTableScreenState extends State<AdminTimeTableScreen> {
             child: _buildDropdown(
                 label: "Class",
                 value: _selectedClass,
-                items: ['Grade 1', 'Grade 2', 'Grade 3', 'Grade 4', 'Grade 5'],
+                items: ['LKG', 'UKG', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'],
                 onChanged: (v) => setState(() => _selectedClass = v!))),
         const SizedBox(width: 12),
         Expanded(
@@ -443,7 +475,7 @@ class _AdminTimeTableScreenState extends State<AdminTimeTableScreen> {
                 onChanged: (v) => setState(() => _selectedSection = v!))),
         const SizedBox(width: 12),
         ElevatedButton(
-            onPressed: _getDetails,
+            onPressed: _loadDetails,
             style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF1E2875),
                 foregroundColor: Colors.white,
@@ -503,7 +535,7 @@ class _AdminTimeTableScreenState extends State<AdminTimeTableScreen> {
               border: Border(bottom: BorderSide(color: Colors.grey.shade300))),
           child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Container(
-                width: 80,
+                width: 110,
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                     border:
@@ -631,7 +663,7 @@ class _AdminTimeTableScreenState extends State<AdminTimeTableScreen> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: const BoxDecoration(
-                    color: Colors.orange,
+                    color: AppColors.primary,
                     borderRadius:
                         BorderRadius.vertical(top: Radius.circular(8))),
                 child: Row(
@@ -726,11 +758,15 @@ class _AdminTimeTableScreenState extends State<AdminTimeTableScreen> {
                     };
                     setState(() {
                       if (period == null) {
-                        _timetable[selectedDay]?.add(newData);
+                        if (_timetable[selectedDay] == null) {
+                          _timetable[selectedDay] = [];
+                        }
+                        _timetable[selectedDay]!.add(newData);
                       } else {
                         _timetable[day]![index!] = newData;
                       }
                     });
+                    _saveDetails();
                     Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
@@ -789,6 +825,7 @@ class _AdminTimeTableScreenState extends State<AdminTimeTableScreen> {
                           setState(() {
                             _timetable[day]?.removeAt(index);
                           });
+                          _saveDetails();
                           Navigator.pop(context);
                         },
                         style: ElevatedButton.styleFrom(

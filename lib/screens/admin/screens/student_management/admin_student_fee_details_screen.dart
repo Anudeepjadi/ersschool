@@ -19,7 +19,7 @@ class _AdminStudentFeeDetailsScreenState extends State<AdminStudentFeeDetailsScr
   final ScrollController _scrollController2 = ScrollController();
 
   String _selectedYear = "2025-26";
-  String _selectedClass = "Grade 1";
+  String _selectedClass = "All";
 
   @override
   void dispose() {
@@ -65,7 +65,7 @@ class _AdminStudentFeeDetailsScreenState extends State<AdminStudentFeeDetailsScr
               crossAxisAlignment: WrapCrossAlignment.end,
               children: [
                 _buildTopDropdown("Academic Year", _selectedYear, ["All", "2024-25", "2025-26"], (v) => setState(() => _selectedYear = v!)),
-                _buildTopDropdown("Class", _selectedClass, ["All", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "batch1", "Grade 5", "Grade 6", "grade 7"], (v) => setState(() => _selectedClass = v!)),
+                _buildTopDropdown("Class", _selectedClass, ['All', 'LKG', 'UKG', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'], (v) => setState(() => _selectedClass = v!)),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 2), // Small offset for alignment with dropdowns
                   child: Row(

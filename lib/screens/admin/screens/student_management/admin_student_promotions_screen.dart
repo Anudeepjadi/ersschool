@@ -29,12 +29,12 @@ class _AdminStudentPromotionsScreenState extends State<AdminStudentPromotionsScr
   bool _selectAll = false;
 
   final List<Map<String, dynamic>> _dummyData = [
-    {'admission': 'T2500032', 'name': 'Yanda Chandraditya', 'gender': 'Male', 'year': '2025-26', 'class': 'Grade 1', 'section': 'B', 'selected': false, 'promoteYear': '2026-27', 'promoteClass': 'Grade 2 - B'},
-    {'admission': 'O2600045', 'name': 'Sri Vardhan', 'gender': 'Male', 'year': '2025-26', 'class': 'Grade 1', 'section': 'A', 'selected': false, 'promoteYear': '2026-27', 'promoteClass': 'Grade 2 - A'},
-    {'admission': 'O2600046', 'name': 'Deepthi', 'gender': 'Female', 'year': '2025-26', 'class': 'Grade 1', 'section': 'A', 'selected': false, 'promoteYear': '2026-27', 'promoteClass': 'Grade 2 - A'},
-    {'admission': 'O2600047', 'name': 'Priya', 'gender': 'Female', 'year': '2025-26', 'class': 'Grade 1', 'section': 'A', 'selected': false, 'promoteYear': '2026-27', 'promoteClass': 'Grade 2 - A'},
-    {'admission': 'O2600048', 'name': 'Deepthi', 'gender': 'Female', 'year': '2025-26', 'class': 'Grade 1', 'section': 'A', 'selected': false, 'promoteYear': '2026-27', 'promoteClass': 'Grade 2 - A'},
-    {'admission': 'O2600049', 'name': 'Suresh', 'gender': 'Male', 'year': '2025-26', 'class': 'Grade 1', 'section': 'A', 'selected': false, 'promoteYear': '2026-27', 'promoteClass': 'Grade 2 - A'},
+    {'admission': 'T2500032', 'name': 'Yanda Chandraditya', 'gender': 'Male', 'year': '2025-26', 'class': 'LKG', 'section': 'B', 'selected': false, 'promoteYear': '2026-27', 'promoteClass': 'Grade 2 - B'},
+    {'admission': 'O2600045', 'name': 'Sri Vardhan', 'gender': 'Male', 'year': '2025-26', 'class': 'LKG', 'section': 'A', 'selected': false, 'promoteYear': '2026-27', 'promoteClass': 'Grade 2 - A'},
+    {'admission': 'O2600046', 'name': 'Deepthi', 'gender': 'Female', 'year': '2025-26', 'class': 'LKG', 'section': 'A', 'selected': false, 'promoteYear': '2026-27', 'promoteClass': 'Grade 2 - A'},
+    {'admission': 'O2600047', 'name': 'Priya', 'gender': 'Female', 'year': '2025-26', 'class': 'LKG', 'section': 'A', 'selected': false, 'promoteYear': '2026-27', 'promoteClass': 'Grade 2 - A'},
+    {'admission': 'O2600048', 'name': 'Deepthi', 'gender': 'Female', 'year': '2025-26', 'class': 'LKG', 'section': 'A', 'selected': false, 'promoteYear': '2026-27', 'promoteClass': 'Grade 2 - A'},
+    {'admission': 'O2600049', 'name': 'Suresh', 'gender': 'Male', 'year': '2025-26', 'class': 'LKG', 'section': 'A', 'selected': false, 'promoteYear': '2026-27', 'promoteClass': 'Grade 2 - A'},
   ];
 
   @override
@@ -92,7 +92,7 @@ class _AdminStudentPromotionsScreenState extends State<AdminStudentPromotionsScr
                     children: [
                       SizedBox(
                         width: fieldWidth,
-                        child: _buildFilterDropdown("Class", _selectedClass, ["All", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "batch1", "Grade 5", "Grade 6", "grade 7"], (val) {
+                        child: _buildFilterDropdown("Class", _selectedClass, ['All', 'LKG', 'UKG', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'], (val) {
                           setState(() => _selectedClass = val!);
                         }),
                       ),

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../widgets/admin_app_bar.dart';
 import '../../widgets/admin_drawer.dart';
 import '../../widgets/admin_bottom_nav_bar.dart';
-
+import '../admin_attendance_screen.dart';
 class ClassAttendanceReportScreen extends StatefulWidget {
   const ClassAttendanceReportScreen({super.key});
 
@@ -12,8 +13,9 @@ class ClassAttendanceReportScreen extends StatefulWidget {
 
 class _ClassAttendanceReportScreenState extends State<ClassAttendanceReportScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final ScrollController _scrollController = ScrollController();
   String selectedBranch = 'Ecstasy School 1 (ECS001)';
-  String selectedClass = 'Grade 1';
+  String selectedClass = 'LKG';
   String selectedSection = 'A';
   String selectedMonth = 'Jun-2025';
 
@@ -23,16 +25,7 @@ class _ClassAttendanceReportScreenState extends State<ClassAttendanceReportScree
     'Ecstasy (ECS003)',
     'Ecstasy (ECS004)',
   ];
-  final List<String> classes = [
-    'Grade 1',
-    'Grade 2',
-    'Grade 3',
-    'Grade 4',
-    'batch1',
-    'Grade 5',
-    'Grade 6',
-    'grade 7',
-  ];
+  final List<String> classes = ['LKG', 'UKG', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'];
   final List<String> sections = ['A', 'B', 'C', 'D'];
   final List<String> months = [
     'Jun-2025',
@@ -48,22 +41,35 @@ class _ClassAttendanceReportScreenState extends State<ClassAttendanceReportScree
     'Apr-2026',
   ];
 
-  final List<Map<String, String>> _attendanceData = [
-    {'name': 'Deepthi', 'father': '', 'class': 'Grade 1', 'section': 'A', 'month': 'Jun - 2026', 'attendance': '3 / 3'},
-    {'name': 'Priya', 'father': '', 'class': 'Grade 1', 'section': 'A', 'month': 'Jun - 2026', 'attendance': '3 / 3'},
-    {'name': 'suresh', 'father': '', 'class': 'Grade 1', 'section': 'A', 'month': 'Jun - 2026', 'attendance': '3 / 3'},
-    {'name': 'Rimsa', 'father': '', 'class': 'Grade 1', 'section': 'A', 'month': 'Jun - 2026', 'attendance': '3 / 3'},
-    {'name': 'tony', 'father': '', 'class': 'Grade 1', 'section': 'A', 'month': 'Jun - 2026', 'attendance': '3 / 3'},
-    {'name': 'lakshmi', 'father': '', 'class': 'Grade 1', 'section': 'A', 'month': 'Jun - 2026', 'attendance': '3 / 3'},
-    {'name': 'Vijaya', 'father': '', 'class': 'Grade 1', 'section': 'A', 'month': 'Jun - 2026', 'attendance': '3 / 3'},
-    {'name': 'phani', 'father': '', 'class': 'Grade 1', 'section': 'A', 'month': 'Jun - 2026', 'attendance': '3 / 3'},
-    {'name': 'vinitha', 'father': '', 'class': 'Grade 1', 'section': 'A', 'month': 'Jun - 2026', 'attendance': '3 / 3'},
-    {'name': 'raju', 'father': '', 'class': 'Grade 1', 'section': 'A', 'month': 'Jun - 2026', 'attendance': '3 / 3'},
-    {'name': 'dhurandhar', 'father': '', 'class': 'Grade 1', 'section': 'A', 'month': 'Jun - 2026', 'attendance': '3 / 3'},
-    {'name': 'MadiviliNaresh', 'father': '', 'class': 'Grade 1', 'section': 'A', 'month': 'Jun - 2026', 'attendance': '3 / 3'},
-    {'name': 'ECSTASY SOLUTIONS PVT LTD', 'father': '', 'class': 'Grade 1', 'section': 'A', 'month': 'Jun - 2026', 'attendance': '3 / 3'},
-    {'name': 'Deepthi', 'father': '', 'class': 'Grade 1', 'section': 'A', 'month': 'Jun - 2026', 'attendance': '2 / 3'},
-  ];
+  List<Map<String, String>> get _attendanceData {
+    return AdminAttendanceScreen.students.map((student) {
+      final isPresent = student['isPresent'] as bool;
+      final fatherName = student['father']?.toString() ?? '';
+
+      return {
+        'name': student['name'] as String,
+        'father': fatherName,
+        'class': selectedClass,
+        'section': selectedSection,
+        'month': selectedMonth,
+        'attendance': isPresent ? '3 / 3' : '2 / 3',
+      };
+    }).toList();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    AdminAttendanceScreen.loadStudents().then((_) {
+      if (mounted) setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,13 +91,7 @@ class _ClassAttendanceReportScreenState extends State<ClassAttendanceReportScree
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Center(
-                    child: Text(
-                      "Class Attendance Report",
-                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.brown),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
+
                   _buildFilters(),
                   const SizedBox(height: 20),
                   const Text("Class: Grade 1 - A", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black87)),
@@ -108,40 +108,43 @@ class _ClassAttendanceReportScreenState extends State<ClassAttendanceReportScree
   }
 
   Widget _buildFilters() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Expanded(
-          flex: 3,
-          child: _buildBodyDropdown("Branch", selectedBranch, branches, (v) => setState(() => selectedBranch = v!)),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          flex: 2,
-          child: _buildBodyDropdown("Class", selectedClass, classes, (v) => setState(() => selectedClass = v!)),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          flex: 2,
-          child: _buildBodyDropdown("Section", selectedSection, sections, (v) => setState(() => selectedSection = v!)),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          flex: 3,
-          child: _buildBodyDropdown("Month", selectedMonth, months, (v) => setState(() => selectedMonth = v!)),
-        ),
-        const SizedBox(width: 8),
-        ElevatedButton(
-          onPressed: () {},
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFFBC5314),
-            foregroundColor: Colors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-            minimumSize: const Size(80, 36),
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          SizedBox(
+            width: 180,
+            child: _buildBodyDropdown("Branch", selectedBranch, branches, (v) => setState(() => selectedBranch = v!)),
           ),
-          child: const Text("Get Data", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
-        ),
-      ],
+          const SizedBox(width: 8),
+          SizedBox(
+            width: 120,
+            child: _buildBodyDropdown("Class", selectedClass, classes, (v) => setState(() => selectedClass = v!)),
+          ),
+          const SizedBox(width: 8),
+          SizedBox(
+            width: 100,
+            child: _buildBodyDropdown("Section", selectedSection, sections, (v) => setState(() => selectedSection = v!)),
+          ),
+          const SizedBox(width: 8),
+          SizedBox(
+            width: 120,
+            child: _buildBodyDropdown("Month", selectedMonth, months, (v) => setState(() => selectedMonth = v!)),
+          ),
+          const SizedBox(width: 12),
+          ElevatedButton(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+              minimumSize: const Size(80, 36),
+            ),
+            child: const Text("Get Data", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
     );
   }
 
@@ -174,9 +177,15 @@ class _ClassAttendanceReportScreenState extends State<ClassAttendanceReportScree
   }
 
   Widget _buildDataTable() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: DataTable(
+    return Scrollbar(
+      controller: _scrollController,
+      thumbVisibility: true,
+      thickness: 6,
+      radius: const Radius.circular(8),
+      child: SingleChildScrollView(
+        controller: _scrollController,
+        scrollDirection: Axis.horizontal,
+        child: DataTable(
         headingRowColor: WidgetStateProperty.all(const Color(0xFF001A40)),
         columnSpacing: 60,
         horizontalMargin: 12,
@@ -213,7 +222,7 @@ class _ClassAttendanceReportScreenState extends State<ClassAttendanceReportScree
           ],
         )).toList(),
       ),
-    );
+    ));
   }
 
   Widget _buildPaginationFooter() {

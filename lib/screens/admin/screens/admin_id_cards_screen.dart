@@ -19,7 +19,7 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
   String _selectedBranch = 'Ecstasy School 1 (ECS001)';
   String _selectedYear = '2025-26';
   String _selectedStatus = 'Only Active';
-  String _selectedClass = 'Grade 1';
+  String _selectedClass = 'LKG';
   String _selectedSection = 'All';
   String _searchQuery = '';
   bool _selectAll = false;
@@ -66,7 +66,7 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
                   runSpacing: 16,
                   crossAxisAlignment: WrapCrossAlignment.end,
                   children: [
-                    SizedBox(width: fieldWidth, child: _buildFilterDropdown("Class", _selectedClass, ["All", "L.K.G", "U.K.G", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5", "Grade 6", "Grade 7", "Grade 8", "Grade 9", "Class 10"], (val) => setState(() => _selectedClass = val!))),
+                    SizedBox(width: fieldWidth, child: _buildFilterDropdown("Class", _selectedClass, ['LKG', 'UKG', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'], (val) => setState(() => _selectedClass = val!))),
                     SizedBox(width: fieldWidth, child: _buildFilterDropdown("Section", _selectedSection, ["All", "A", "B", "C"], (val) => setState(() => _selectedSection = val!))),
                     SizedBox(
                       width: fieldWidth,
@@ -121,7 +121,14 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
                   runSpacing: 16,
                   children: [
                     ElevatedButton(
-                      onPressed: () => _showDownloadDialog(targetName: "selected students"),
+                      onPressed: () {
+                        final selected = _filteredData.where((e) => e['selected'] == true).toList();
+                        if (selected.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("No students selected".tr)));
+                          return;
+                        }
+                        _showDownloadDialog(studentsData: selected);
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
                         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -130,7 +137,13 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
                       child: Text("Download Selected ID Cards".tr, style: const TextStyle(color: Colors.white)),
                     ),
                     ElevatedButton(
-                      onPressed: () => _showDownloadDialog(targetName: "all students"),
+                      onPressed: () {
+                        if (_filteredData.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("No students available".tr)));
+                          return;
+                        }
+                        _showDownloadDialog(studentsData: _filteredData);
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.success, // green
                         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -237,7 +250,7 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
                         DataCell(Text(data['address'] ?? "")),
                         DataCell(
                           InkWell(
-                            onTap: () => _showDownloadDialog(studentData: data),
+                            onTap: () => _showDownloadDialog(studentsData: [data]),
                             child: Container(
                               padding: const EdgeInsets.all(4),
                               decoration: const BoxDecoration(
@@ -414,7 +427,7 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
     );
   }
 
-  void _showDownloadDialog({String? targetName, Map<String, dynamic>? studentData}) {
+  void _showDownloadDialog({required List<Map<String, dynamic>> studentsData}) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -445,10 +458,12 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (studentData != null) _buildIdCardPreview(studentData),
-              if (studentData != null) const SizedBox(height: 16),
+              if (studentsData.length == 1) _buildIdCardPreview(studentsData.first),
+              if (studentsData.length == 1) const SizedBox(height: 16),
               Text(
-                "Are you sure you want to download ID card for ${targetName ?? studentData?['name'] ?? ''} ?".tr,
+                studentsData.length == 1
+                    ? "Are you sure you want to download ID card for ${studentsData.first['name']}?".tr
+                    : "Are you sure you want to download ID cards for ${studentsData.length} students?".tr,
                 style: const TextStyle(fontSize: 14, color: Colors.black87),
                 textAlign: TextAlign.center,
               ),
@@ -467,18 +482,12 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
             ElevatedButton(
               onPressed: () {
                 Navigator.pop(context); // Close dialog
-                if (studentData != null) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AdminStudentIdCardPrintScreen(studentData: studentData),
-                    ),
-                  );
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Batch download feature coming soon...".tr)),
-                  );
-                }
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AdminStudentIdCardPrintScreen(studentsData: studentsData),
+                  ),
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.success,
@@ -583,8 +592,7 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
                       _buildIdInfoRow("Roll No.", studentData['roll']?.toString().replaceAll('Roll No: ', '') ?? "N/A"),
                       _buildIdInfoRow("Gender", studentData['gender'] ?? ""),
                       _buildIdInfoRow("Parent", studentData['mobile'] ?? studentData['phone'] ?? ""),
-                      _buildIdInfoRow("Email", studentData['email'] ?? ""),
-                      _buildIdInfoRow("Mother", studentData['mother'] ?? ""),
+                      _buildIdInfoRow("Admission", studentData['admission'] ?? studentData['admNo'] ?? ""),
                     ],
                   ),
                 ),
@@ -620,7 +628,7 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Image.asset(
-                      'assets/images/principal_signature.png',
+                      'assets/images/principal_signature_v2.png',
                       height: 50,
                       width: 90,
                       fit: BoxFit.contain,
@@ -650,7 +658,7 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            width: 75, // Fixed width for labels to keep alignment
+            width: 65, // Fixed width for labels to keep alignment
             child: Text("${label.tr}:", style: const TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.bold)),
           ),
           Expanded(

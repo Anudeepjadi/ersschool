@@ -48,7 +48,7 @@ class _AdminBranchesTabState extends State<AdminBranchesTab> {
             _branches.where((b) => b['status'] == 'Active').length;
 
         return Scaffold(
-          backgroundColor: Color(0xFFF5F7FF),
+          backgroundColor: const Color(0xFFF5F7FF),
           appBar: AdminAppBar(
             title: "Branches",
             subtitle: "Manage school branches and locations",

@@ -85,7 +85,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
   DateTime? _startDate;
   DateTime? _endDate;
 
-  final List<String> _classes = ["All Classes", "Class 8", "Class 9", "Class 10"];
+  final List<String> _classes = ["All Classes", 'LKG', 'UKG', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'];
   final List<String> _students = ["All Students", "Aarav Sharma", "Ananya Verma", "Vivaan Mehta"];
   final List<String> _subjects = ["All Subjects", "Mathematics", "Science", "English"];
   final List<String> _reportTypes = ["Attendance", "Examinations", "Assignments", "Class Participation"];

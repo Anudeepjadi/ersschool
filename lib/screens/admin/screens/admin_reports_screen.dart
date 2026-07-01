@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import '../../../core/theme/app_colors.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'package:ersschool/core/localization/language_manager.dart';
+import '../widgets/admin_drawer.dart';
+import 'reports/holidays_list_report_screen.dart';
+import 'reports/fee_structure_report_screen.dart';
+import 'reports/fee_collection_summary_screen.dart';
+import 'reports/fee_due_list_screen.dart';
+import 'reports/fee_collection_by_date_screen.dart';
+import 'reports/class_attendance_report_screen.dart';
 
 class AdminReportsScreen extends StatefulWidget {
   const AdminReportsScreen({super.key});
@@ -12,254 +18,94 @@ class AdminReportsScreen extends StatefulWidget {
 }
 
 class _AdminReportsScreenState extends State<AdminReportsScreen> {
-  final List<Map<String, dynamic>> _reportsList = [
-    {'name': 'Monthly Attendance Report - Jun 2026', 'type': 'Attendance', 'dept': 'Administration', 'format': 'PDF', 'status': 'Generated', 'date': '20 Jun 2026'},
-    {'name': 'Class 10 - Term 1 Result Analysis', 'type': 'Examination', 'dept': 'Academics', 'format': 'Excel', 'status': 'Generated', 'date': '19 Jun 2026'},
-    {'name': 'Fee Collection Report - May 2026', 'type': 'Finance', 'dept': 'Accounts', 'format': 'PDF', 'status': 'Generated', 'date': '18 Jun 2026'},
-    {'name': 'Student Performance Summary', 'type': 'Academic', 'dept': 'Academics', 'format': 'PDF', 'status': 'Generated', 'date': '17 Jun 2026'},
-    {'name': 'Transport Usage Report - Jun 2026', 'type': 'Transport', 'dept': 'Transport', 'format': 'Excel', 'status': 'Generated', 'date': '16 Jun 2026'},
-    {'name': 'Library Usage Statistics', 'type': 'Library', 'dept': 'Library', 'format': 'Excel', 'status': 'Generated', 'date': '15 Jun 2026'},
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  final List<Map<String, dynamic>> _reports = [
+    {
+      'title': 'Holidays List',
+      'icon': Icons.event_available,
+      'screen': const HolidaysListReportScreen(),
+    },
+    {
+      'title': 'Fee Structure',
+      'icon': Icons.account_balance_wallet,
+      'screen': const FeeStructureReportScreen(),
+    },
+    {
+      'title': 'Fee Collection',
+      'icon': Icons.payments,
+      'screen': const FeeCollectionSummaryScreen(),
+    },
+    {
+      'title': 'Tuition Fee Due',
+      'icon': Icons.money_off,
+      'screen': const FeeDueListScreen(reportTitle: "Tuition Fee Due Students"),
+    },
+    {
+      'title': 'Transport Fee Due',
+      'icon': Icons.directions_bus,
+      'screen': const FeeDueListScreen(reportTitle: "Transport Fee Due Students"),
+    },
+    {
+      'title': 'Collection By Date',
+      'icon': Icons.date_range,
+      'screen': const FeeCollectionByDateScreen(),
+    },
+    {
+      'title': 'Attendance Report',
+      'icon': Icons.co_present,
+      'screen': const ClassAttendanceReportScreen(),
+    },
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF5F7FF),
-      appBar: AdminAppBar(title: "Reports Dashboard", subtitle: "Manage your account details"),
-      bottomNavigationBar: AdminBottomNavBar(currentIndex: 4),
-      body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Stats Row
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  _buildStatCard("Total Reports", "1,256", "+18% this year", Colors.blue),
-                  _buildStatCard("Generated", "1,102", "+15% this year", Colors.green),
-                  _buildStatCard("Scheduled", "68", "+8% this year", Colors.orange),
-                  _buildStatCard("Downloaded", "2,856", "+22% this year", Colors.purple),
-                  _buildStatCard("Shared", "654", "+10% this year", Colors.teal),
-                ],
+      key: _scaffoldKey,
+      drawer: const AdminDrawer(),
+      backgroundColor: const Color(0xFFF5F7FF),
+      appBar: AdminAppBar(
+        title: "Reports",
+        subtitle: "Select a report to view",
+        onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer(),
+      ),
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
+      body: ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: _reports.length,
+        itemBuilder: (context, index) {
+          final item = _reports[index];
+          return Card(
+            elevation: 0,
+            color: Colors.white,
+            margin: const EdgeInsets.only(bottom: 12),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: BorderSide(color: Colors.grey.shade200)),
+            child: ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              leading: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(item['icon'], color: AppColors.primary),
               ),
-            ),
-            SizedBox(height: 16),
-
-            // Line chart & Donut charts
-            _buildChartsSection(),
-            SizedBox(height: 16),
-
-            // Popular Reports section
-            _buildPopularReports(),
-            SizedBox(height: 16),
-
-            // Recent Reports List
-            _buildLogsTable(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildStatCard(String label, String value, String subtext, Color color) {
-    return Container(
-      width: 125,
-      margin: EdgeInsets.only(right: 12),
-      padding: EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade100),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(label, style: TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
-          SizedBox(height: 8),
-          Text(value, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-          SizedBox(height: 4),
-          Text(subtext, style: TextStyle(fontSize: 10, color: color, fontWeight: FontWeight.bold)),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildChartsSection() {
-    return Container(
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Reports Analytics".tr,
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
-          ),
-          SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                flex: 4,
-                child: SizedBox(
-                  height: 110,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      PieChart(
-                        PieChartData(
-                          sectionsSpace: 0,
-                          centerSpaceRadius: 30,
-                          sections: [
-                            PieChartSectionData(value: 40.8, color: Color(0xFF3B82F6), radius: 10, showTitle: false),
-                            PieChartSectionData(value: 18.8, color: Color(0xFF10B981), radius: 10, showTitle: false),
-                            PieChartSectionData(value: 14.6, color: Color(0xFFF59E0B), radius: 10, showTitle: false),
-                            PieChartSectionData(value: 14, color: Color(0xFF8B5CF6), radius: 10, showTitle: false),
-                            PieChartSectionData(value: 11.8, color: Color(0xFF9CA3AF), radius: 10, showTitle: false),
-                          ],
-                        ),
-                      ),
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text("1,256".tr, style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                          Text("Total".tr, style: TextStyle(fontSize: 8, color: Colors.grey)),
-                        ],
-                      )
-                    ],
-                  ),
+              title: Text(
+                item['title'],
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF1E2875),
                 ),
               ),
-              SizedBox(width: 8),
-              Expanded(
-                flex: 6,
-                child: Column(
-                  children: [
-                    _RowItem(Color(0xFF3B82F6), "Academic Reports", "512 (40.8%)"),
-                    SizedBox(height: 6),
-                    _RowItem(Color(0xFF10B981), "Attendance Reports", "236 (18.8%)"),
-                    SizedBox(height: 6),
-                    _RowItem(Color(0xFFF59E0B), "Finance Reports", "184 (14.6%)"),
-                    SizedBox(height: 6),
-                    _RowItem(Color(0xFF8B5CF6), "Examination Reports", "176 (14%)"),
-                  ],
-                ),
-              )
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPopularReports() {
-    final List<Map<String, dynamic>> items = [
-      {'name': 'Student Performance Summary', 'icon': Icons.menu_book, 'color': Colors.blue},
-      {'name': 'Fee Collection Overview', 'icon': Icons.currency_rupee, 'color': Colors.green},
-      {'name': 'Attendance Summary Logs', 'icon': Icons.checklist, 'color': Colors.orange},
-    ];
-
-    return Container(
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Popular Reports Templates".tr,
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
-          ),
-          SizedBox(height: 12),
-          Column(
-            children: items.map((it) {
-              return Card(
-                elevation: 0,
-                color: Color(0xFFF5F7FF),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                child: ListTile(
-                  leading: CircleAvatar(backgroundColor: it['color'].withValues(alpha: 0.1), child: Icon(it['icon'], color: it['color'])),
-                  title: Text(it['name'], style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                  trailing: Icon(Icons.arrow_forward_ios, size: 12, color: Colors.grey),
-                  onTap: () {},
-                ),
-              );
-            }).toList(),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _buildLogsTable() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text("Recent Generated Reports".tr,
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (_) => item['screen']));
+              },
             ),
-          ),
-          ListView.separated(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: _reportsList.length,
-            separatorBuilder: (context, index) => Divider(height: 1),
-            itemBuilder: (context, index) {
-              final rep = _reportsList[index];
-              return ListTile(
-                title: Text(rep['name'], style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                subtitle: Text("Format: ${rep['format']} | Dept: ${rep['dept']}", style: TextStyle(fontSize: 11, color: Colors.grey)),
-                trailing: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(rep['type'], style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                    Text(
-                      rep['date'],
-                      style: TextStyle(fontSize: 10, color: Colors.grey),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        ],
+          );
+        },
       ),
-    );
-  }
-}
-
-class _RowItem extends StatelessWidget {
-  final Color color;
-  final String label;
-  final String val;
-  const _RowItem(this.color, this.label, this.val);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(margin: EdgeInsets.only(top: 4), width: 8, height: 8, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
-        SizedBox(width: 8),
-        Expanded(
-          child: Text(label, style: TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.bold)),
-        ),
-        SizedBox(width: 4),
-        Text(val, style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-      ],
     );
   }
 }

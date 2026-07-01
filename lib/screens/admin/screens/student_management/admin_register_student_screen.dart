@@ -129,7 +129,10 @@ class _AdminRegisterStudentScreenState extends State<AdminRegisterStudentScreen>
                     children: [
                       _buildDropdownField("Branch", _formData['branch'] ?? "Ecstasy School 1 (ECS001)", items: ["Ecstasy School 1 (ECS001)", "Ecstay School 2 (ECS002)", "Ecstasy (ECS003)", "Ecstasy (ECS004)"], onChanged: (v) => setState(() => _formData['branch'] = v)),
                       _buildDropdownField("Academic Year", _formData['academic_year'] ?? "2025-26", items: ["2025-26", "2026-27"], onChanged: (v) => setState(() => _formData['academic_year'] = v)),
-                      _buildDropdownField("Study Class", _formData['class'] ?? "Grade 1", items: ["Passed out", "L.K.G", "U.K.G", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5", "Grade 6", "Grade 7", "Grade 8", "Grade 9", "Class 10"], onChanged: (v) => setState(() => _formData['class'] = v)),
+                      _buildDropdownField("Study Class", _formData['class'] ?? "Class 1", items: ["Passed out", "LKG", "UKG", "Class 1", "Class 2", "Class 3", "Class 4", "Class 5", "Class 6", "Class 7", "Class 8", "Class 9", "Class 10"], onChanged: (v) => setState(() => _formData['class'] = v)),
+                      _buildDropdownField("First Language", _formData['first_language'] ?? "English", items: ["English", "Hindi", "Telugu", "Tamil", "Kannada", "Malayalam", "Marathi", "Sanskrit", "French", "None"], onChanged: (v) => setState(() => _formData['first_language'] = v)),
+                      _buildDropdownField("Second Language", _formData['second_language'] ?? "Hindi", items: ["English", "Hindi", "Telugu", "Tamil", "Kannada", "Malayalam", "Marathi", "Sanskrit", "French", "None"], onChanged: (v) => setState(() => _formData['second_language'] = v)),
+                      _buildDropdownField("Third Language", _formData['third_language'] ?? "Telugu", items: ["English", "Hindi", "Telugu", "Tamil", "Kannada", "Malayalam", "Marathi", "Sanskrit", "French", "None"], onChanged: (v) => setState(() => _formData['third_language'] = v)),
                       _buildTextField("Admission Date", hint: "dd/mm/yyyy", icon: Icons.calendar_month, initialValue: _formData['admission_date'], onTap: () => _selectDate('admission_date')),
                       Padding(
                         padding: const EdgeInsets.only(top: 8),

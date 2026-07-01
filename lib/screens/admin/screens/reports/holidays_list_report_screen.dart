@@ -40,17 +40,7 @@ class _HolidaysListReportScreenState extends State<HolidaysListReportScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            const Center(
-              child: Text(
-                "Holidays List",
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.brown,
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
+
             _buildHolidaysTable(holidays),
           ],
         ),

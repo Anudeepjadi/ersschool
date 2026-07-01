@@ -3,6 +3,7 @@ import '../../../core/theme/app_colors.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
+import '../widgets/admin_drawer.dart';
 
 enum MeetingsFeature {
   menu,
@@ -115,6 +116,7 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
       bottomNavigationBar: widget.onOpenDrawer == null 
           ? AdminBottomNavBar(currentIndex: 4) 
           : null,
+      drawer: const AdminDrawer(),
       appBar: AdminAppBar(
         title: _getFeatureTitle(),
         subtitle: _getFeatureSubtitle(),
@@ -308,73 +310,62 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
           ),
           const SizedBox(height: 16),
 
-          // Dates & Timings row
+          // Dates & Timings - stacked vertically to avoid overflow
+          _buildFormDatePicker(
+            label: "Start Date",
+            date: _startDate,
+            onTap: () async {
+              final date = await showDatePicker(
+                context: context,
+                initialDate: _startDate,
+                firstDate: DateTime(2025),
+                lastDate: DateTime(2030),
+              );
+              if (date != null) {
+                setState(() => _startDate = date);
+              }
+            },
+          ),
+          const SizedBox(height: 8),
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Start Date Picker
-                    _buildFormDatePicker(
-                      label: "Start Date",
-                      date: _startDate,
-                      onTap: () async {
-                        final date = await showDatePicker(
-                          context: context,
-                          initialDate: _startDate,
-                          firstDate: DateTime(2025),
-                          lastDate: DateTime(2030),
-                        );
-                        if (date != null) {
-                          setState(() => _startDate = date);
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    // End Date Picker
-                    _buildFormDatePicker(
-                      label: "End Date",
-                      date: _endDate,
-                      onTap: () async {
-                        final date = await showDatePicker(
-                          context: context,
-                          initialDate: _endDate,
-                          firstDate: DateTime(2025),
-                          lastDate: DateTime(2030),
-                        );
-                        if (date != null) {
-                          setState(() => _endDate = date);
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 24),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("HH", style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        Expanded(child: _buildTimeDropdown('start')),
-                      ],
-                    ),
-                    const SizedBox(height: 28),
-                    Text("HH", style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        Expanded(child: _buildTimeDropdown('end')),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+              Expanded(child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text("Start Time", style: TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 4),
+                  _buildTimeDropdown('start'),
+                ],
+              )),
+            ],
+          ),
+          const SizedBox(height: 16),
+          _buildFormDatePicker(
+            label: "End Date",
+            date: _endDate,
+            onTap: () async {
+              final date = await showDatePicker(
+                context: context,
+                initialDate: _endDate,
+                firstDate: DateTime(2025),
+                lastDate: DateTime(2030),
+              );
+              if (date != null) {
+                setState(() => _endDate = date);
+              }
+            },
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Expanded(child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text("End Time", style: TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 4),
+                  _buildTimeDropdown('end'),
+                ],
+              )),
             ],
           ),
           const SizedBox(height: 24),
@@ -634,77 +625,84 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
           ),
           const SizedBox(height: 16),
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFEAB308),
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                  Expanded(
+                    child: Wrap(
+                      spacing: 4,
+                      runSpacing: 4,
+                      children: [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFEAB308),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _calendarMonth = DateTime(_calendarMonth.year, _calendarMonth.month - 1);
+                            });
+                          },
+                          child: Text("< Previous".tr, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF10B981),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _calendarMonth = DateTime(2026, 6);
+                            });
+                          },
+                          child: Text("Current Month".tr, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFEAB308),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _calendarMonth = DateTime(_calendarMonth.year, _calendarMonth.month + 1);
+                            });
+                          },
+                          child: Text("Next >".tr, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+                        ),
+                      ],
                     ),
-                    onPressed: () {
-                      setState(() {
-                        _calendarMonth = DateTime(_calendarMonth.year, _calendarMonth.month - 1);
-                      });
-                    },
-                    child: Text("< Previous".tr, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
                   ),
-                  const SizedBox(width: 4),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF10B981),
+                      backgroundColor: const Color(0xFFC2410C),
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     ),
                     onPressed: () {
                       setState(() {
-                        _calendarMonth = DateTime(2026, 6);
+                        _previousFeature = MeetingsFeature.calendar;
+                        _selectedFeature = MeetingsFeature.schedule;
+                        _titleController.clear();
+                        _descriptionController.clear();
                       });
                     },
-                    child: Text("Current Month".tr, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
-                  ),
-                  const SizedBox(width: 4),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFEAB308),
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _calendarMonth = DateTime(_calendarMonth.year, _calendarMonth.month + 1);
-                      });
-                    },
-                    child: Text("Next >".tr, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+                    child: Text("Add New".tr, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
                   ),
                 ],
               ),
+              const SizedBox(height: 8),
               Text(
                 "${months[month - 1].tr} $year",
                 style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFC2410C),
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                ),
-                onPressed: () {
-                  setState(() {
-                    _previousFeature = MeetingsFeature.calendar;
-                    _selectedFeature = MeetingsFeature.schedule;
-                    _titleController.clear();
-                    _descriptionController.clear();
-                  });
-                },
-                child: Text("Add New".tr, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
               ),
             ],
           ),
@@ -716,13 +714,13 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
               TableRow(
                 decoration: BoxDecoration(color: Colors.grey.shade50),
                 children: [
-                  _buildWeekHeaderCell("Sunday"),
-                  _buildWeekHeaderCell("Monday"),
-                  _buildWeekHeaderCell("Tuesday"),
-                  _buildWeekHeaderCell("Wednesday"),
-                  _buildWeekHeaderCell("Thursday"),
-                  _buildWeekHeaderCell("Friday"),
-                  _buildWeekHeaderCell("Saturday"),
+                  _buildWeekHeaderCell("Sun"),
+                  _buildWeekHeaderCell("Mon"),
+                  _buildWeekHeaderCell("Tue"),
+                  _buildWeekHeaderCell("Wed"),
+                  _buildWeekHeaderCell("Thu"),
+                  _buildWeekHeaderCell("Fri"),
+                  _buildWeekHeaderCell("Sat"),
                 ],
               ),
               ...List.generate(weeksCount, (weekIdx) {
@@ -801,11 +799,17 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
 
   Widget _buildWeekHeaderCell(String day) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: Text(
-        day.tr,
-        style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.black54),
+        day,
+        style: const TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.bold,
+          color: Colors.black54,
+        ),
         textAlign: TextAlign.center,
+        overflow: TextOverflow.ellipsis,
+        maxLines: 1,
       ),
     );
   }

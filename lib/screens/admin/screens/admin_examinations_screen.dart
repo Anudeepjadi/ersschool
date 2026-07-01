@@ -2,34 +2,14 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/data/app_data_store.dart';
-import '../../../core/utils/profile_manager.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
 import '../../../widgets/scrollable_table_wrapper.dart';
 import 'admin_hall_ticket_print_screen.dart';
-import '../../login/login_screen.dart';
-import '../admin_dashboard_screen.dart';
+import '../widgets/admin_drawer.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 
 // Sibling sub-screens imports
-import 'admin_attendance_screen.dart';
-import 'admin_fees_screen.dart';
-import 'admin_hostel_screen.dart';
-import 'admin_library_screen.dart';
-import 'admin_transport_screen.dart';
-import 'admin_events_screen.dart';
-import 'admin_communications_screen.dart';
-import 'admin_id_cards_screen.dart';
-import 'admin_certificates_screen.dart';
-import 'admin_reports_screen.dart';
-import 'admin_invalid_info_screen.dart';
-import 'admin_sms_screen.dart';
-import 'admin_settings_screen.dart';
-import 'admin_help_center_screen.dart';
-import 'admin_chat_support_screen.dart';
-import 'admin_system_updates_screen.dart';
-import 'admin_video_tutorials_screen.dart';
-import 'admin_about_us_screen.dart';
 
 enum ExaminationFeature {
   menu,
@@ -44,19 +24,12 @@ class AdminExaminationsScreen extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
   final ExaminationFeature initialFeature;
   final bool openDrawer;
-  const AdminExaminationsScreen({
-    super.key,
-    this.onOpenDrawer,
-    this.initialFeature = ExaminationFeature.menu,
-    this.openDrawer = false,
-  final bool openDrawer;
-  final ExaminationFeature initialFeature;
 
   const AdminExaminationsScreen({
     super.key,
     this.onOpenDrawer,
-    this.openDrawer = false,
     this.initialFeature = ExaminationFeature.menu,
+    this.openDrawer = false,
   });
 
   @override
@@ -67,11 +40,10 @@ class AdminExaminationsScreen extends StatefulWidget {
 class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late ExaminationFeature _selectedFeature;
-  bool _isExamExpanded = true;
 
   // Filter selection states
   String _selectedBranch = 'Ecstasy School 1';
-  String _selectedClass = 'Grade 1';
+  String _selectedClass = 'LKG';
   String _selectedExam = 'SA1';
   String _selectedYear = '2025-26';
   String _selectedSection = 'A';
@@ -99,14 +71,7 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
     'Ecstasy School 2',
     'Ecstasy School 3'
   ];
-  final List<String> _classes = [
-    'Grade 1',
-    'Class 6',
-    'Class 7',
-    'Class 8',
-    'Class 9',
-    'Class 10'
-  ];
+  final List<String> _classes = ['LKG', 'UKG', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'];
   final List<String> _exams = ['SA1', 'SA2', 'Unit Test 1', 'Unit Test 2'];
   final List<String> _subjects = [
     'Telugu',
@@ -274,7 +239,7 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
       bottomNavigationBar: widget.onOpenDrawer == null
           ? AdminBottomNavBar(currentIndex: 4)
           : null,
-      drawer: _buildDrawer(),
+      drawer: const AdminDrawer(),
       appBar: AdminAppBar(
         title: _getFeatureTitle(),
         subtitle: _getFeatureSubtitle(),
@@ -1032,7 +997,7 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
         'gender': 'Female',
         'roll': 'ECS00021',
         'admission': 'ECS00021',
-        'class': 'Grade 1',
+        'class': 'LKG',
         'section': 'A',
         'school': 'Ecstasy School 1'
       },
@@ -1041,7 +1006,7 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
         'gender': 'Female',
         'roll': 'ECS00022',
         'admission': 'ECS00022',
-        'class': 'Grade 1',
+        'class': 'LKG',
         'section': 'A',
         'school': 'Ecstasy School 1'
       },
@@ -1050,7 +1015,7 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
         'gender': 'Male',
         'roll': 'ECS00023',
         'admission': 'ECS00023',
-        'class': 'Grade 1',
+        'class': 'LKG',
         'section': 'A',
         'school': 'Ecstasy School 1'
       },
@@ -1059,7 +1024,7 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
         'gender': 'Male',
         'roll': 'ECS00024',
         'admission': 'ECS00024',
-        'class': 'Grade 1',
+        'class': 'LKG',
         'section': 'A',
         'school': 'Ecstasy School 1'
       },
@@ -1068,7 +1033,7 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
         'gender': 'Male',
         'roll': 'ECS00025',
         'admission': 'ECS00025',
-        'class': 'Grade 1',
+        'class': 'LKG',
         'section': 'A',
         'school': 'Ecstasy School 1'
       },
@@ -1077,7 +1042,7 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
         'gender': 'Male',
         'roll': 'ECS00026',
         'admission': 'ECS00026',
-        'class': 'Grade 1',
+        'class': 'LKG',
         'section': 'A',
         'school': 'Ecstasy School 1'
       },
@@ -1086,7 +1051,7 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
         'gender': 'Male',
         'roll': 'ECS00027',
         'admission': 'ECS00027',
-        'class': 'Grade 1',
+        'class': 'LKG',
         'section': 'A',
         'school': 'Ecstasy School 1'
       },
@@ -1095,7 +1060,7 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
         'gender': 'Female',
         'roll': 'ECS00028',
         'admission': 'ECS00028',
-        'class': 'Grade 1',
+        'class': 'LKG',
         'section': 'A',
         'school': 'Ecstasy School 1'
       },
@@ -1104,7 +1069,7 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
         'gender': 'Female',
         'roll': 'ECS00029',
         'admission': 'ECS00029',
-        'class': 'Grade 1',
+        'class': 'LKG',
         'section': 'A',
         'school': 'Ecstasy School 1'
       },
@@ -1113,7 +1078,7 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
         'gender': 'Male',
         'roll': 'ECS00030',
         'admission': 'ECS00030',
-        'class': 'Grade 1',
+        'class': 'LKG',
         'section': 'A',
         'school': 'Ecstasy School 1'
       },
@@ -1122,7 +1087,7 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
         'gender': 'Male',
         'roll': 'ECS00031',
         'admission': 'ECS00031',
-        'class': 'Grade 1',
+        'class': 'LKG',
         'section': 'A',
         'school': 'Ecstasy School 1'
       },
@@ -1131,7 +1096,7 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
         'gender': 'Male',
         'roll': 'ECS00032',
         'admission': 'ECS00032',
-        'class': 'Grade 1',
+        'class': 'LKG',
         'section': 'A',
         'school': 'Ecstasy School 1'
       },
@@ -1140,7 +1105,7 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
         'gender': 'Female',
         'roll': 'ECS00033',
         'admission': 'ECS00033',
-        'class': 'Grade 1',
+        'class': 'LKG',
         'section': 'A',
         'school': 'Ecstasy School 1'
       },
@@ -1536,84 +1501,84 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
         'admission': '02600046',
         'name': 'Deepthi',
         'gender': 'Female',
-        'class': 'Grade 1'
+        'class': 'LKG'
       },
       {
         'admission': '02600047',
         'name': 'Priya',
         'gender': 'Female',
-        'class': 'Grade 1'
+        'class': 'LKG'
       },
       {
         'admission': '02600048',
         'name': 'Deepthi',
         'gender': 'Female',
-        'class': 'Grade 1'
+        'class': 'LKG'
       },
       {
         'admission': '02600049',
         'name': 'suresh',
         'gender': 'Male',
-        'class': 'Grade 1'
+        'class': 'LKG'
       },
       {
         'admission': '02600050',
         'name': 'Rimsa',
         'gender': 'Female',
-        'class': 'Grade 1'
+        'class': 'LKG'
       },
       {
         'admission': '02600051',
         'name': 'tony',
         'gender': 'Male',
-        'class': 'Grade 1'
+        'class': 'LKG'
       },
       {
         'admission': '02600055',
         'name': 'lakshmi',
         'gender': 'Male',
-        'class': 'Grade 1'
+        'class': 'LKG'
       },
       {
         'admission': '02600057',
         'name': 'Vijaya',
         'gender': 'Male',
-        'class': 'Grade 1'
+        'class': 'LKG'
       },
       {
         'admission': '02600060',
         'name': 'phani',
         'gender': 'Male',
-        'class': 'Grade 1'
+        'class': 'LKG'
       },
       {
         'admission': '02600061',
         'name': 'vinitha',
         'gender': 'Female',
-        'class': 'Grade 1'
+        'class': 'LKG'
       },
       {
         'admission': '02600074',
         'name': 'dhurandarrr',
         'gender': 'Male',
-        'class': 'Grade 1'
+        'class': 'LKG'
       },
       {
         'admission': '02600075',
         'name': 'MadiviliNaresh',
         'gender': 'Male',
-        'class': 'Grade 1'
+        'class': 'LKG'
       },
       {
         'admission': '02600078',
         'name': 'ECSTASY SOLUTIONS PVT LTD',
         'gender': 'Male',
-        'class': 'Grade 1'
+        'class': 'LKG'
       },
     ];
 
     List<Map<String, String>> currentGradeList = [];
-    if (_selectedClass == 'Grade 1') {
+    if (_selectedClass == 'LKG') {
       currentGradeList = mockGradeStudents;
     } else {
       currentGradeList = AppDataStore.instance.students
@@ -1935,391 +1900,4 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
     );
   }
 
-  Widget _buildDrawer() {
-    return Drawer(
-      backgroundColor: Colors.white,
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          DrawerHeader(
-            decoration: const BoxDecoration(
-              color: Color(0xFF001C7F),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 25,
-                      backgroundColor: Colors.white,
-                      child: Icon(Icons.person,
-                          color: Color(0xFF001C7F), size: 30),
-                    ),
-                    const SizedBox(width: 12),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Admin User".tr,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          "Super Administrator".tr,
-                          style: const TextStyle(
-                            color: Colors.white70,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                PopupMenuButton<String>(
-                  onSelected: (String value) {
-                    ProfileManager().selectedSchool.value = value;
-                  },
-                  color: Colors.white,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  itemBuilder: (BuildContext context) =>
-                      <PopupMenuEntry<String>>[
-                    PopupMenuItem<String>(
-                      value: 'Ecstasy School 1',
-                      child: Text('Ecstasy School 1'.tr,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF1E2875))),
-                    ),
-                    PopupMenuItem<String>(
-                      value: 'Ecstasy School 2',
-                      child: Text('Ecstasy School 2'.tr,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF1E2875))),
-                    ),
-                    PopupMenuItem<String>(
-                      value: 'Ecstasy School 3',
-                      child: Text('Ecstasy School 3'.tr,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF1E2875))),
-                    ),
-                  ],
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.15)),
-                    ),
-                    child: ValueListenableBuilder<String>(
-                      valueListenable: ProfileManager().selectedSchool,
-                      builder: (context, selectedSchool, _) {
-                        return Row(
-                          children: [
-                            const Icon(Icons.school_outlined,
-                                color: Colors.white, size: 18),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                selectedSchool,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                            Icon(
-                              Icons.keyboard_arrow_down,
-                              color: Colors.white.withValues(alpha: 0.7),
-                              size: 18,
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          _buildDrawerSectionTitle("MAIN"),
-          _buildDrawerItem(Icons.grid_view_outlined, "Dashboard", false, () {
-            Navigator.pop(context);
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                  builder: (_) => AdminDashboardScreen(initialIndex: 0)),
-              (route) => false,
-            );
-          }),
-          _buildDrawerItem(Icons.people_alt_outlined, "Students", false, () {
-            Navigator.pop(context);
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                  builder: (_) => AdminDashboardScreen(initialIndex: 1)),
-              (route) => false,
-            );
-          }),
-          _buildDrawerItem(Icons.co_present_outlined, "Teachers", false, () {
-            Navigator.pop(context);
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                  builder: (_) => AdminDashboardScreen(initialIndex: 2)),
-              (route) => false,
-            );
-          }),
-          _buildDrawerItem(Icons.corporate_fare_outlined, "Branches", false,
-              () {
-            Navigator.pop(context);
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                  builder: (_) => AdminDashboardScreen(initialIndex: 3)),
-              (route) => false,
-            );
-          }),
-          _buildDrawerItem(Icons.calendar_today_outlined, "Attendance", false,
-              () {
-            Navigator.pop(context);
-            Navigator.push(context,
-                MaterialPageRoute(builder: (_) => AdminAttendanceScreen()));
-          }),
-          _buildDrawerItem(Icons.currency_rupee, "Fees", false, () {
-            Navigator.pop(context);
-            Navigator.push(
-                context, MaterialPageRoute(builder: (_) => AdminFeesScreen()));
-          }),
-          Theme(
-            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-            child: ExpansionTile(
-              initiallyExpanded: true,
-              leading: const Icon(Icons.assignment_outlined,
-                  color: AppColors.primary),
-              title: Text(
-                "Examination".tr,
-                style: const TextStyle(
-                  color: AppColors.primary,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 13,
-                ),
-              ),
-              trailing: Icon(
-                _isExamExpanded
-                    ? Icons.keyboard_arrow_down
-                    : Icons.chevron_right,
-                size: 16,
-                color: AppColors.primary,
-              ),
-              childrenPadding: const EdgeInsets.only(left: 12),
-              onExpansionChanged: (isExpanded) {
-                setState(() {
-                  _isExamExpanded = isExpanded;
-                });
-              },
-              children: [
-                _buildDrawerSubItem("Exam Details", () {
-                  Navigator.pop(context);
-                  setState(() {
-                    _selectedFeature = ExaminationFeature.examDetails;
-                  });
-                }),
-                _buildDrawerSubItem("Exam Timetable", () {
-                  Navigator.pop(context);
-                  setState(() {
-                    _selectedFeature = ExaminationFeature.examTimetable;
-                  });
-                }),
-                _buildDrawerSubItem("Exam Hall Tickets", () {
-                  Navigator.pop(context);
-                  setState(() {
-                    _selectedFeature = ExaminationFeature.examHallTickets;
-                  });
-                }),
-                _buildDrawerSubItem("Grade Report", () {
-                  Navigator.pop(context);
-                  setState(() {
-                    _selectedFeature = ExaminationFeature.gradeReport;
-                  });
-                }),
-                _buildDrawerSubItem("Grade Report Custom", () {
-                  Navigator.pop(context);
-                  setState(() {
-                    _selectedFeature = ExaminationFeature.gradeReportCustom;
-                  });
-                }),
-              ],
-            ),
-          ),
-          _buildDrawerItem(Icons.menu_book_outlined, "Library", false, () {
-            Navigator.pop(context);
-            Navigator.push(context,
-                MaterialPageRoute(builder: (_) => AdminLibraryScreen()));
-          }),
-          _buildDrawerItem(Icons.directions_bus_outlined, "Transport", false,
-              () {
-            Navigator.pop(context);
-            Navigator.push(context,
-                MaterialPageRoute(builder: (_) => AdminTransportScreen()));
-          }),
-          _buildDrawerItem(Icons.bed_outlined, "Hostel", false, () {
-            Navigator.pop(context);
-            Navigator.push(context,
-                MaterialPageRoute(builder: (_) => AdminHostelScreen()));
-          }),
-          _buildDrawerItem(Icons.event_outlined, "Events", false, () {
-            Navigator.pop(context);
-            Navigator.push(context,
-                MaterialPageRoute(builder: (_) => AdminEventsScreen()));
-          }),
-          _buildDrawerItem(Icons.campaign_outlined, "Communications", false,
-              () {
-            Navigator.pop(context);
-            Navigator.push(context,
-                MaterialPageRoute(builder: (_) => AdminCommunicationsScreen()));
-          }),
-          _buildDrawerItem(Icons.badge_outlined, "ID Card", false, () {
-            Navigator.pop(context);
-            Navigator.push(context,
-                MaterialPageRoute(builder: (_) => AdminIDCardsScreen()));
-          }),
-          _buildDrawerItem(
-              Icons.workspace_premium_outlined, "Certificates", false, () {
-            Navigator.pop(context);
-            Navigator.push(context,
-                MaterialPageRoute(builder: (_) => AdminCertificatesScreen()));
-          }),
-          _buildDrawerItem(Icons.assessment_outlined, "Reports", false, () {
-            Navigator.pop(context);
-            Navigator.push(context,
-                MaterialPageRoute(builder: (_) => AdminReportsScreen()));
-          }),
-          _buildDrawerItem(Icons.error_outline, "Invalid Info", false, () {
-            Navigator.pop(context);
-            Navigator.push(context,
-                MaterialPageRoute(builder: (_) => AdminInvalidInfoScreen()));
-          }),
-          _buildDrawerItem(Icons.sms_outlined, "SMS", false, () {
-            Navigator.pop(context);
-            Navigator.push(
-                context, MaterialPageRoute(builder: (_) => AdminSmsScreen()));
-          }),
-          _buildDrawerItem(Icons.settings_outlined, "Settings", false, () {
-            Navigator.pop(context);
-            Navigator.push(context,
-                MaterialPageRoute(builder: (_) => AdminSettingsScreen()));
-          }),
-          const Divider(height: 20),
-          _buildDrawerSectionTitle("SUPPORT"),
-          _buildDrawerItem(Icons.help_outline, "Help Center", false, () {
-            Navigator.pop(context);
-            Navigator.push(context,
-                MaterialPageRoute(builder: (_) => AdminHelpCenterScreen()));
-          }, showChevron: false),
-          _buildDrawerItem(Icons.headset_mic_outlined, "Chat Support", false,
-              () {
-            Navigator.pop(context);
-            Navigator.push(context,
-                MaterialPageRoute(builder: (_) => AdminChatSupportScreen()));
-          }, showChevron: false),
-          _buildDrawerItem(
-              Icons.cloud_download_outlined, "System Updates", false, () {
-            Navigator.pop(context);
-            Navigator.push(context,
-                MaterialPageRoute(builder: (_) => AdminSystemUpdatesScreen()));
-          }, showChevron: false),
-          _buildDrawerItem(Icons.play_circle_outline, "Video Tutorials", false,
-              () {
-            Navigator.pop(context);
-            Navigator.push(context,
-                MaterialPageRoute(builder: (_) => AdminVideoTutorialsScreen()));
-          }, showChevron: false),
-          _buildDrawerItem(Icons.info_outline, "About Us", false, () {
-            Navigator.pop(context);
-            Navigator.push(context,
-                MaterialPageRoute(builder: (_) => AdminAboutUsScreen()));
-          }, showChevron: false),
-          const Divider(height: 20),
-          _buildDrawerItem(Icons.logout, "Logout", false, () {
-            Navigator.pop(context);
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (_) => LoginScreen()),
-              (route) => false,
-            );
-          }, showChevron: false),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDrawerSectionTitle(String title) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Text(
-        title.toUpperCase(),
-        style: const TextStyle(
-          fontSize: 10,
-          fontWeight: FontWeight.bold,
-          color: Colors.grey,
-          letterSpacing: 1.0,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDrawerItem(
-    IconData icon,
-    String title,
-    bool selected,
-    VoidCallback onTap, {
-    bool showChevron = true,
-  }) {
-    return ListTile(
-      leading: Icon(icon,
-          color: selected ? AppColors.primary : const Color(0xFF757897)),
-      title: Text(
-        title,
-        style: TextStyle(
-          color: selected ? AppColors.primary : const Color(0xFF1E2875),
-          fontWeight: selected ? FontWeight.bold : FontWeight.w500,
-          fontSize: 13,
-        ),
-      ),
-      trailing: showChevron
-          ? const Icon(Icons.chevron_right, size: 16, color: Colors.grey)
-          : null,
-      selected: selected,
-      onTap: onTap,
-      dense: true,
-    );
-  }
-
-  Widget _buildDrawerSubItem(String title, VoidCallback onTap) {
-    return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 48, vertical: 0),
-      title: Text(
-        title.tr,
-        style: const TextStyle(
-          color: Color(0xFF1E2875),
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-      onTap: onTap,
-      dense: true,
-    );
-  }
 }

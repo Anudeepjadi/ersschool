@@ -44,13 +44,7 @@ class _FeeCollectionSummaryScreenState extends State<FeeCollectionSummaryScreen>
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            const Center(
-              child: Text(
-                "Fee Collection Report",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.brown),
-              ),
-            ),
-            const SizedBox(height: 16),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

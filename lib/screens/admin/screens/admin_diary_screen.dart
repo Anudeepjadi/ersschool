@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
@@ -13,7 +15,7 @@ class AdminDiaryScreen extends StatefulWidget {
 
 class _AdminDiaryScreenState extends State<AdminDiaryScreen> {
   String _selectedBranch = 'Ecstasy School 1 (ECS001)';
-  String _selectedClass = 'Grade 1';
+  String _selectedClass = 'LKG';
   String _selectedSection = 'A';
   DateTime _selectedDate = DateTime(2026, 6, 24);
   final GlobalKey _dateKey = GlobalKey();
@@ -28,31 +30,50 @@ class _AdminDiaryScreenState extends State<AdminDiaryScreen> {
   }
 
   void _showDatePicker() {
-    Future.delayed(const Duration(milliseconds: 100), () => showCustomDatePicker(
-      context: context,
-      anchorKey: _dateKey,
-      initialDate: _selectedDate,
-      onDateSelected: (date) {
-        setState(() {
-          _selectedDate = date;
-          _fetchDiaryData(); // Refetch when date changes
-        });
-      },
-    ));
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (!mounted) return;
+      showCustomDatePicker(
+        context: context,
+        anchorKey: _dateKey,
+        initialDate: _selectedDate,
+        onDateSelected: (date) {
+          setState(() {
+            _selectedDate = date;
+            _fetchDiaryData(); // Refetch when date changes
+          });
+        },
+      );
+    });
   }
 
-  void _fetchDiaryData() {
+  Future<void> _fetchDiaryData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = 'diary_${_selectedBranch}_${_selectedClass}_${_selectedSection}_${_selectedDate.toIso8601String().split('T')[0]}';
+    final savedData = prefs.getString(key);
+
     setState(() {
-      // Mock: Load different data based on school/date
-      if (_selectedBranch == 'Ecstasy School 1 (ECS001)' && _selectedClass == 'Grade 1' && _selectedSection == 'A') {
-        _diaryEntries = [
-          {'subject': 'Mathematics', 'message': 'Solve exercise 5.1 questions'},
-          {'subject': 'English', 'message': 'Read Chapter 3 and write summary'},
-        ];
+      if (savedData != null) {
+        final List<dynamic> decoded = jsonDecode(savedData);
+        _diaryEntries = decoded.map((e) => Map<String, String>.from(e as Map)).toList();
       } else {
-        _diaryEntries = [];
+        // Mock: Load different data based on school/date
+        if (_selectedBranch == 'Ecstasy School 1 (ECS001)' && _selectedClass == 'LKG' && _selectedSection == 'A') {
+          _diaryEntries = [
+            {'subject': 'Mathematics', 'message': 'Solve exercise 5.1 questions'},
+            {'subject': 'English', 'message': 'Read Chapter 3 and write summary'},
+          ];
+        } else {
+          _diaryEntries = [];
+        }
+        _saveDiaryData();
       }
     });
+  }
+
+  Future<void> _saveDiaryData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = 'diary_${_selectedBranch}_${_selectedClass}_${_selectedSection}_${_selectedDate.toIso8601String().split('T')[0]}';
+    await prefs.setString(key, jsonEncode(_diaryEntries));
   }
 
   void _showAddDiaryDialog() {
@@ -131,6 +152,7 @@ class _AdminDiaryScreenState extends State<AdminDiaryScreen> {
                     'message': textController.text,
                   });
                 });
+                _saveDiaryData();
                 
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -145,6 +167,129 @@ class _AdminDiaryScreenState extends State<AdminDiaryScreen> {
       ),
     );
     });
+  }
+
+  void _showEditDiaryDialog(int index) {
+    final entry = _diaryEntries[index];
+    final subjectController = TextEditingController(text: entry['subject']);
+    final textController = TextEditingController(text: entry['message']);
+
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (!mounted) return;
+      showDialog(
+        context: context,
+        builder: (context) => StatefulBuilder(
+          builder: (context, setModalState) => AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          titlePadding: EdgeInsets.zero,
+          title: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: const BoxDecoration(
+              color: Colors.orange,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text("Edit Dairy", style: TextStyle(color: Colors.white, fontSize: 18)),
+                GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: const Icon(Icons.close, color: Colors.white, size: 20),
+                ),
+              ],
+            ),
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Date: ${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}", 
+                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                const SizedBox(height: 16),
+                const Text("Subject", style: TextStyle(fontSize: 12, color: Color(0xFF1E2875))),
+                const SizedBox(height: 4),
+                TextField(
+                  controller: subjectController,
+                  decoration: InputDecoration(
+                    isDense: true,
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(4)),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Text("Dairy Text", style: TextStyle(fontSize: 12, color: Color(0xFF1E2875))),
+                const SizedBox(height: 4),
+                TextField(
+                  controller: textController,
+                  maxLines: 5,
+                  decoration: InputDecoration(
+                    isDense: true,
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(4)),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.blueGrey, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))),
+              child: const Text("Cancel"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (subjectController.text.isEmpty || textController.text.isEmpty) return;
+                
+                setState(() {
+                  _diaryEntries[index] = {
+                    'subject': subjectController.text,
+                    'message': textController.text,
+                  };
+                });
+                _saveDiaryData();
+                
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Dairy entry updated successfully!")),
+                );
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1E2875), foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))),
+              child: const Text("Update"),
+            ),
+          ],
+        ),
+      ),
+    );
+    });
+  }
+
+  void _deleteDiaryEntry(int index) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Delete Dairy Entry"),
+        content: const Text("Are you sure you want to delete this entry?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () {
+              setState(() {
+                _diaryEntries.removeAt(index);
+              });
+              _saveDiaryData();
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Dairy entry deleted successfully!")),
+              );
+            },
+            child: const Text("Delete", style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -233,7 +378,7 @@ class _AdminDiaryScreenState extends State<AdminDiaryScreen> {
                   child: _buildDropdown(
                     label: "Class",
                     value: _selectedClass,
-                    items: ['Grade 1', 'Grade 2', 'Grade 3', 'Grade 4', 'Grade 5'],
+                    items: ['LKG', 'UKG', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'],
                     onChanged: (v) => setState(() => _selectedClass = v!),
                   ),
                 ),
@@ -281,7 +426,7 @@ class _AdminDiaryScreenState extends State<AdminDiaryScreen> {
             child: _buildDropdown(
               label: "Class",
               value: _selectedClass,
-              items: ['Grade 1', 'Grade 2', 'Grade 3', 'Grade 4', 'Grade 5'],
+              items: ['LKG', 'UKG', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'],
               onChanged: (v) => setState(() => _selectedClass = v!),
             ),
           ),
@@ -433,8 +578,9 @@ class _AdminDiaryScreenState extends State<AdminDiaryScreen> {
             padding: const EdgeInsets.symmetric(vertical: 12),
             child: const Row(
               children: [
-                Expanded(flex: 1, child: Center(child: Text("Subject", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)))),
-                Expanded(flex: 2, child: Center(child: Text("Message", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)))),
+                Expanded(flex: 3, child: Center(child: Text("Subject", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)))),
+                Expanded(flex: 4, child: Center(child: Text("Message", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)))),
+                Expanded(flex: 2, child: Center(child: Text("Action", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)))),
               ],
             ),
           ),
@@ -455,8 +601,34 @@ class _AdminDiaryScreenState extends State<AdminDiaryScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   child: Row(
                     children: [
-                      Expanded(flex: 1, child: Center(child: Text(entry['subject']!, style: const TextStyle(fontSize: 12, color: Colors.black87)))),
-                      Expanded(flex: 2, child: Center(child: Text(entry['message']!, style: const TextStyle(fontSize: 12, color: Colors.black87)))),
+                      Expanded(flex: 3, child: Padding(padding: const EdgeInsets.symmetric(horizontal: 4), child: Text(entry['subject']!, style: const TextStyle(fontSize: 12, color: Colors.black87), textAlign: TextAlign.center))),
+                      Expanded(flex: 4, child: Padding(padding: const EdgeInsets.symmetric(horizontal: 4), child: Text(entry['message']!, style: const TextStyle(fontSize: 12, color: Colors.black87), textAlign: TextAlign.center))),
+                      Expanded(
+                        flex: 2,
+                        child: Wrap(
+                          alignment: WrapAlignment.center,
+                          spacing: 4,
+                          runSpacing: 4,
+                          children: [
+                            InkWell(
+                              onTap: () => _showEditDiaryDialog(index),
+                              child: Container(
+                                padding: const EdgeInsets.all(6),
+                                decoration: BoxDecoration(color: Colors.blue.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(4)),
+                                child: const Icon(Icons.edit, size: 14, color: Colors.blue),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () => _deleteDiaryEntry(index),
+                              child: Container(
+                                padding: const EdgeInsets.all(6),
+                                decoration: BoxDecoration(color: Colors.red.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(4)),
+                                child: const Icon(Icons.delete, size: 14, color: Colors.red),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 );

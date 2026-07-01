@@ -31,6 +31,10 @@ class AdminBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (MediaQuery.of(context).size.width > 800) {
+      return const SizedBox.shrink();
+    }
+
     return Theme(
       data: Theme.of(context).copyWith(
         splashColor: Colors.transparent,

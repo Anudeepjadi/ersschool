@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../widgets/admin_app_bar.dart';
 import '../../widgets/admin_drawer.dart';
 import '../../widgets/admin_bottom_nav_bar.dart';
@@ -13,6 +14,7 @@ class FeeDueListScreen extends StatefulWidget {
 
 class _FeeDueListScreenState extends State<FeeDueListScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final ScrollController _scrollController = ScrollController();
   String selectedBranch = 'Ecstasy School 1 (ECS001)';
   String selectedYear = '2025-26';
   String selectedClass = 'All';
@@ -31,13 +33,7 @@ class _FeeDueListScreenState extends State<FeeDueListScreen> {
     '2025-26',
   ];
 
-  final List<String> classes = [
-    'All',
-    'Grade 1',
-    'Grade 2',
-    'Grade 3',
-    'Grade 4',
-  ];
+  final List<String> classes = ['All', 'LKG', 'UKG', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'];
 
   final List<String> terms = [
     'All',
@@ -67,6 +63,12 @@ class _FeeDueListScreenState extends State<FeeDueListScreen> {
   ];
 
   @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
@@ -86,13 +88,7 @@ class _FeeDueListScreenState extends State<FeeDueListScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Center(
-                    child: Text(
-                      widget.reportTitle,
-                      style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.brown),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
+
                   _buildFilters(),
                   const SizedBox(height: 16),
                   _buildSearchAndActions(),
@@ -109,38 +105,32 @@ class _FeeDueListScreenState extends State<FeeDueListScreen> {
   }
 
   Widget _buildFilters() {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(child: _buildBodyDropdown("Branch", selectedBranch, branches, (v) => setState(() => selectedBranch = v!))),
-            const SizedBox(width: 16),
-            Expanded(child: _buildBodyDropdown("Academic Year", selectedYear, years, (v) => setState(() => selectedYear = v!))),
-            const Spacer(),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Expanded(child: _buildBodyDropdown("Class", selectedClass, classes, (v) => setState(() => selectedClass = v!))),
-            const SizedBox(width: 16),
-            Expanded(child: _buildBodyDropdown("Term", selectedTerm, terms, (v) => setState(() => selectedTerm = v!))),
-            const SizedBox(width: 16),
-            ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFBC5314),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                minimumSize: const Size(80, 36),
-              ),
-              child: const Text("Search", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          SizedBox(width: 160, child: _buildBodyDropdown("Branch", selectedBranch, branches, (v) => setState(() => selectedBranch = v!))),
+          const SizedBox(width: 8),
+          SizedBox(width: 120, child: _buildBodyDropdown("Academic Year", selectedYear, years, (v) => setState(() => selectedYear = v!))),
+          const SizedBox(width: 8),
+          SizedBox(width: 100, child: _buildBodyDropdown("Class", selectedClass, classes, (v) => setState(() => selectedClass = v!))),
+          const SizedBox(width: 8),
+          SizedBox(width: 100, child: _buildBodyDropdown("Term", selectedTerm, terms, (v) => setState(() => selectedTerm = v!))),
+          const SizedBox(width: 12),
+          ElevatedButton(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+              minimumSize: const Size(60, 38),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
             ),
-            const Spacer(),
-          ],
-        ),
-      ],
+            child: const Text("Search", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
     );
   }
 
@@ -173,10 +163,14 @@ class _FeeDueListScreenState extends State<FeeDueListScreen> {
   }
 
   Widget _buildSearchAndActions() {
-    return Row(
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      alignment: WrapAlignment.spaceBetween,
+      crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         SizedBox(
-          width: 250,
+          width: 200,
           child: TextField(
             decoration: InputDecoration(
               hintText: "Search",
@@ -188,10 +182,14 @@ class _FeeDueListScreenState extends State<FeeDueListScreen> {
             ),
           ),
         ),
-        const Spacer(),
-        _buildButton("Export to Excel", Colors.black87),
-        const SizedBox(width: 8),
-        _buildButton("Send SMS to all due Students", const Color(0xFFBC5314)),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            _buildButton("Export to Excel", Colors.black87),
+            _buildButton("Send SMS to all due Students", AppColors.primary),
+          ],
+        ),
       ],
     );
   }
@@ -212,9 +210,15 @@ class _FeeDueListScreenState extends State<FeeDueListScreen> {
   }
 
   Widget _buildDataTable() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: DataTable(
+    return Scrollbar(
+      controller: _scrollController,
+      thumbVisibility: true,
+      thickness: 6,
+      radius: const Radius.circular(8),
+      child: SingleChildScrollView(
+        controller: _scrollController,
+        scrollDirection: Axis.horizontal,
+        child: DataTable(
         headingRowColor: WidgetStateProperty.all(const Color(0xFF001A40)),
         columnSpacing: 20,
         horizontalMargin: 12,
@@ -261,7 +265,7 @@ class _FeeDueListScreenState extends State<FeeDueListScreen> {
           ],
         )).toList(),
       ),
-    );
+    ));
   }
 
   Widget _buildPaginationFooter() {

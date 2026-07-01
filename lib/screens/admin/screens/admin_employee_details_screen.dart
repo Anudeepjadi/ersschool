@@ -48,7 +48,7 @@ class _AdminEmployeeDetailsScreenState extends State<AdminEmployeeDetailsScreen>
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => AdminEmployeeIdCardPrintScreen(employeeData: widget.employee),
+                              builder: (context) => AdminEmployeeIdCardPrintScreen(employeesData: [widget.employee]),
                             ),
                           );
                         }),

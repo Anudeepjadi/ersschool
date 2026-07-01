@@ -740,7 +740,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Image.asset(
-                      'assets/images/principal_signature.png',
+                      'assets/images/principal_signature_v2.png',
                       height: 30,
                       width: 60,
                       fit: BoxFit.contain,
