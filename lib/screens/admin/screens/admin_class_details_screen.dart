@@ -13,10 +13,10 @@ class AdminClassDetailsScreen extends StatefulWidget {
 
 class _AdminClassDetailsScreenState extends State<AdminClassDetailsScreen> {
   String _selectedBranch = 'Ecstasy School 1 (ECS001)';
-  String _selectedClass = 'Grade 1';
+  String _selectedClass = 'LKG';
   String _selectedSection = 'A';
 
-  String _displayClass = 'Grade 1';
+  String _displayClass = 'LKG';
   String _displaySection = 'A';
   String _displayTeacher = '';
   String _displaySubjects = 'Telugu, Maths, Science, Social, Art work, Physics';
@@ -31,7 +31,7 @@ class _AdminClassDetailsScreenState extends State<AdminClassDetailsScreen> {
   List<Map<String, String>> _generateMockData(
       String branch, String className, String section) {
     if (branch == 'Ecstasy School 1 (ECS001)') {
-      if (className == 'Grade 1' && section == 'A') {
+      if (className == 'LKG' && section == 'A') {
         return [
           {
             'roll': '1',
@@ -240,13 +240,7 @@ class _AdminClassDetailsScreenState extends State<AdminClassDetailsScreen> {
                   child: _buildDropdown(
                       label: "Class",
                       value: _selectedClass,
-                      items: [
-                        'Grade 1',
-                        'Grade 2',
-                        'Grade 3',
-                        'Grade 4',
-                        'Grade 5'
-                      ],
+                      items: ['LKG', 'UKG', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'],
                       onChanged: (v) => setState(() => _selectedClass = v!))),
               const SizedBox(width: 12),
               Expanded(
@@ -285,7 +279,7 @@ class _AdminClassDetailsScreenState extends State<AdminClassDetailsScreen> {
             child: _buildDropdown(
                 label: "Class",
                 value: _selectedClass,
-                items: ['Grade 1', 'Grade 2', 'Grade 3', 'Grade 4', 'Grade 5'],
+                items: ['LKG', 'UKG', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'],
                 onChanged: (v) => setState(() => _selectedClass = v!))),
         const SizedBox(width: 12),
         Expanded(

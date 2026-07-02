@@ -5,22 +5,9 @@ import '../../../core/utils/profile_manager.dart';
 import '../../login/login_screen.dart' show LoginScreen;
 
 import '../screens/admin_attendance_screen.dart';
-import '../screens/admin_fees_screen.dart';
 import '../screens/admin_examinations_screen.dart';
-import '../screens/admin_hostel_screen.dart';
-import '../screens/admin_library_screen.dart';
-import '../screens/admin_transport_screen.dart';
-import '../screens/admin_events_screen.dart';
-import '../screens/admin_communications_screen.dart';
+
 import '../screens/admin_id_cards_screen.dart';
-import '../screens/admin_certificates_screen.dart';
-import '../screens/admin_reports_screen.dart';
-import '../screens/reports/holidays_list_report_screen.dart';
-import '../screens/reports/fee_structure_report_screen.dart';
-import '../screens/reports/fee_collection_summary_screen.dart';
-import '../screens/reports/fee_due_list_screen.dart';
-import '../screens/reports/fee_collection_by_date_screen.dart';
-import '../screens/reports/class_attendance_report_screen.dart';
 import '../screens/admin_invalid_info_screen.dart';
 import '../screens/admin_sms_screen.dart';
 import '../screens/admin_settings_screen.dart';
@@ -29,8 +16,34 @@ import '../screens/admin_chat_support_screen.dart';
 import '../screens/admin_system_updates_screen.dart';
 import '../screens/admin_video_tutorials_screen.dart';
 import '../screens/admin_about_us_screen.dart';
-import '../../teacher/screens/meetings_screen.dart';
-import '../../student/calendar/calendar_screen.dart';
+import '../screens/admin_meetings_screen.dart';
+
+
+import '../screens/student_management/admin_student_list_screen.dart';
+import '../screens/student_management/admin_register_student_screen.dart';
+import '../screens/student_management/admin_student_promotions_screen.dart';
+import '../screens/student_management/admin_student_siblings_screen.dart';
+import '../screens/admin_employee_list_screen.dart';
+
+import '../screens/admin_employee_id_cards_screen.dart';
+import '../screens/admin_assignments_screen.dart';
+import '../screens/admin_class_details_screen.dart';
+import '../screens/admin_class_teachers_screen.dart';
+import '../screens/admin_diary_screen.dart';
+import '../screens/admin_time_table_screen.dart';
+
+import '../screens/reports/holidays_list_report_screen.dart';
+import '../screens/reports/fee_structure_report_screen.dart';
+import '../screens/reports/fee_collection_summary_screen.dart';
+import '../screens/reports/fee_due_list_screen.dart';
+import '../screens/reports/fee_collection_by_date_screen.dart';
+import '../screens/reports/class_attendance_report_screen.dart';
+import '../screens/transport/admin_vehicle_details_screen.dart';
+import '../screens/transport/admin_drivers_list_screen.dart';
+import '../screens/transport/admin_transport_students_route_screen.dart';
+import '../screens/transport/admin_transport_students_class_screen.dart';
+
+import '../admin_dashboard_screen.dart';
 
 class AdminDrawer extends StatelessWidget {
   final int? currentIndex;
@@ -41,6 +54,19 @@ class AdminDrawer extends StatelessWidget {
     this.currentIndex,
     this.onTabSelected,
   });
+
+  void _navigateOrChangeTab(BuildContext context, int index) {
+    if (onTabSelected != null) {
+      onTabSelected!(index);
+      Navigator.pop(context);
+    } else {
+      Navigator.pushAndRemoveUntil(
+        context, 
+        MaterialPageRoute(builder: (_) => AdminDashboardScreen(initialIndex: index)),
+        (route) => false
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -189,163 +215,382 @@ class AdminDrawer extends StatelessWidget {
           // MAIN Section
           _buildDrawerSectionTitle("MAIN"),
           _buildDrawerItem(Icons.grid_view_outlined, "Dashboard", currentIndex == 0, () {
-            if (onTabSelected != null) {
-              onTabSelected!(0);
-              Navigator.pop(context);
-            } else {
-              Navigator.pop(context);
-            }
+            _navigateOrChangeTab(context, 0);
           }),
-          _buildDrawerItem(Icons.people_alt_outlined, "Students", currentIndex == 1, () {
-            if (onTabSelected != null) {
-              onTabSelected!(1);
-              Navigator.pop(context);
-            } else {
-              Navigator.pop(context);
-            }
-          }),
-          _buildDrawerItem(Icons.co_present_outlined, "Teachers", currentIndex == 2, () {
-            if (onTabSelected != null) {
-              onTabSelected!(2);
-              Navigator.pop(context);
-            } else {
-              Navigator.pop(context);
-            }
-          }),
-          _buildDrawerItem(Icons.corporate_fare_outlined, "Branches", currentIndex == 3, () {
-            if (onTabSelected != null) {
-              onTabSelected!(3);
-              Navigator.pop(context);
-            } else {
-              Navigator.pop(context);
-            }
-          }),
+          
+
+
           Theme(
             data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
             child: ExpansionTile(
-              leading: const Icon(Icons.groups_outlined, color: Color(0xFF757897)),
-              title: const Text(
-                "Meetings",
-                style: TextStyle(
-                  color: Color(0xFF1E2875),
-                  fontWeight: FontWeight.w500,
-                  fontSize: 13,
-                ),
-              ),
-              childrenPadding: const EdgeInsets.only(left: 32),
+              leading: const Icon(Icons.people_alt_outlined, color: Color(0xFF757897)),
+              title: const Text("Students", style: TextStyle(
+                color: Color(0xFF1E2875),
+                fontWeight: FontWeight.w500,
+                fontSize: 13,
+              )),
+              tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+              childrenPadding: EdgeInsets.zero,
               children: [
-                _buildDrawerSubItem("Schedule Online Meeting", () {
+                _buildDrawerSubItem("Students List", false, () {
                   Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => const MeetingsScreen()));
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminStudentListScreen()));
                 }),
-                _buildDrawerSubItem("Calendar", () {
+                _buildDrawerSubItem("Register New Student", false, () {
                   Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => const CalendarScreen()));
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminRegisterStudentScreen()));
+                }),
+                _buildDrawerSubItem("Student Promotions", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminStudentPromotionsScreen()));
+                }),
+                _buildDrawerSubItem("Student Siblings", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminStudentSiblingsScreen()));
+                }),
+                _buildDrawerSubItem("Student ID Cards", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminIDCardsScreen()));
                 }),
               ],
             ),
           ),
-          _buildDrawerItem(Icons.calendar_today_outlined, "Attendance", false, () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminAttendanceScreen()));
-          }),
-          _buildDrawerItem(Icons.currency_rupee, "Fees", false, () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminFeesScreen()));
-          }),
-          _buildDrawerItem(Icons.assignment_outlined, "Examination", false, () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminExaminationsScreen()));
-          }),
-          _buildDrawerItem(Icons.menu_book_outlined, "Library", false, () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminLibraryScreen()));
-          }),
-          _buildDrawerItem(Icons.directions_bus_outlined, "Transport", false, () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminTransportScreen()));
-          }),
-          _buildDrawerItem(Icons.bed_outlined, "Hostel", false, () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminHostelScreen()));
-          }),
-          _buildDrawerItem(Icons.event_outlined, "Events", false, () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEventsScreen()));
-          }),
-          _buildDrawerItem(Icons.campaign_outlined, "Communications", false, () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminCommunicationsScreen()));
-          }),
-          _buildDrawerItem(Icons.badge_outlined, "ID Card", false, () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminIDCardsScreen()));
-          }),
-          _buildDrawerItem(Icons.workspace_premium_outlined, "Certificates", false, () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminCertificatesScreen()));
-          }),
+
+          Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              leading: const Icon(Icons.people_outline, color: Color(0xFF757897)),
+              title: const Text("Employee", style: TextStyle(
+                color: Color(0xFF1E2875),
+                fontWeight: FontWeight.w500,
+                fontSize: 13,
+              )),
+              tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+              childrenPadding: EdgeInsets.zero,
+              children: [
+                _buildDrawerSubItem("Employees List", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEmployeeListScreen(staffType: 'Employee')));
+                }),
+                _buildDrawerSubItem("Teachers List", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEmployeeListScreen(staffType: 'Teacher')));
+                }),
+                _buildDrawerSubItem("Attender/Aaya List", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEmployeeListScreen(staffType: 'Attender')));
+                }),
+                _buildDrawerSubItem("Employee ID Cards", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEmployeeIDCardsScreen()));
+                }),
+              ],
+            ),
+          ),
+
+          Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              leading: const Icon(Icons.corporate_fare_outlined, color: Color(0xFF757897)),
+              title: const Text("Branches", style: TextStyle(
+                color: Color(0xFF1E2875),
+                fontWeight: FontWeight.w500,
+                fontSize: 13,
+              )),
+              tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+              childrenPadding: EdgeInsets.zero,
+              children: [
+                _buildDrawerSubItem("Branches List", false, () {
+                  _navigateOrChangeTab(context, 3);
+                }),
+              ],
+            ),
+          ),
+
+          Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              leading: const Icon(Icons.class_outlined, color: Color(0xFF757897)),
+              title: const Text("Classes", style: TextStyle(
+                color: Color(0xFF1E2875),
+                fontWeight: FontWeight.w500,
+                fontSize: 13,
+              )),
+              tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+              childrenPadding: EdgeInsets.zero,
+              children: [
+                _buildDrawerSubItem("Assignments", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminAssignmentsScreen()));
+                }),
+                _buildDrawerSubItem("Attendance", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminAttendanceScreen()));
+                }),
+                _buildDrawerSubItem("Class Details", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminClassDetailsScreen()));
+                }),
+                _buildDrawerSubItem("Class Teachers", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminClassTeachersScreen()));
+                }),
+                _buildDrawerSubItem("Diary", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminDiaryScreen()));
+                }),
+                _buildDrawerSubItem("Time Table", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminTimeTableScreen()));
+                }),
+              ],
+            ),
+          ),
+          
+          Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              leading: const Icon(Icons.calendar_today_outlined, color: Color(0xFF757897)),
+              title: const Text("Attendance", style: TextStyle(
+                color: Color(0xFF1E2875),
+                fontWeight: FontWeight.w500,
+                fontSize: 13,
+              )),
+              tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+              childrenPadding: EdgeInsets.zero,
+              children: [
+                _buildDrawerSubItem("Attendance View", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminAttendanceScreen()));
+                }),
+              ],
+            ),
+          ),
+          
+          Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              leading: const Icon(Icons.video_camera_front_outlined, color: Color(0xFF757897)),
+              title: const Text("Meetings", style: TextStyle(
+                color: Color(0xFF1E2875),
+                fontWeight: FontWeight.w500,
+                fontSize: 13,
+              )),
+              tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+              childrenPadding: EdgeInsets.zero,
+              children: [
+                _buildDrawerSubItem("Schedule Online Meeting", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(
+                    builder: (_) => const AdminMeetingsScreen(initialFeature: MeetingsFeature.schedule),
+                  ));
+                }),
+                _buildDrawerSubItem("Calendar", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(
+                    builder: (_) => const AdminMeetingsScreen(initialFeature: MeetingsFeature.calendar),
+                  ));
+                }),
+              ],
+            ),
+          ),
+          
+
+          Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              leading: const Icon(Icons.assignment_outlined, color: Color(0xFF757897)),
+              title: const Text("Examination", style: TextStyle(
+                color: Color(0xFF1E2875),
+                fontWeight: FontWeight.w500,
+                fontSize: 13,
+              )),
+              tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+              childrenPadding: EdgeInsets.zero,
+              children: [
+                _buildDrawerSubItem("Exam Details", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminExaminationsScreen(initialFeature: ExaminationFeature.examDetails)));
+                }),
+                _buildDrawerSubItem("Exam Timetable", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminExaminationsScreen(initialFeature: ExaminationFeature.examTimetable)));
+                }),
+                _buildDrawerSubItem("Exam Hall Tickets", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminExaminationsScreen(initialFeature: ExaminationFeature.examHallTickets)));
+                }),
+                _buildDrawerSubItem("Grade Report", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminExaminationsScreen(initialFeature: ExaminationFeature.gradeReport)));
+                }),
+                _buildDrawerSubItem("Grade Report Custom", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminExaminationsScreen(initialFeature: ExaminationFeature.gradeReportCustom)));
+                }),
+              ],
+            ),
+          ),
+
+          Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              leading: const Icon(Icons.directions_bus_outlined, color: Color(0xFF757897)),
+              title: const Text("Transport", style: TextStyle(
+                color: Color(0xFF1E2875),
+                fontWeight: FontWeight.w500,
+                fontSize: 13,
+              )),
+              tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+              childrenPadding: EdgeInsets.zero,
+              children: [
+                _buildDrawerSubItem("Vehicle Details", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminVehicleDetailsScreen()));
+                }),
+                _buildDrawerSubItem("Drivers", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminDriversListScreen()));
+                }),
+                _buildDrawerSubItem("Students by Route", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminTransportStudentsRouteScreen()));
+                }),
+                _buildDrawerSubItem("Students by Class", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminTransportStudentsClassScreen()));
+                }),
+              ],
+            ),
+          ),
+
+          Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              leading: const Icon(Icons.badge_outlined, color: Color(0xFF757897)),
+              title: const Text("ID Card", style: TextStyle(
+                color: Color(0xFF1E2875),
+                fontWeight: FontWeight.w500,
+                fontSize: 13,
+              )),
+              tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+              childrenPadding: EdgeInsets.zero,
+              children: [
+                _buildDrawerSubItem("Student ID Cards", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminIDCardsScreen()));
+                }),
+                _buildDrawerSubItem("Employee ID Cards", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEmployeeIDCardsScreen()));
+                }),
+              ],
+            ),
+          ),
+
+          
+          // Reports Item
           Theme(
             data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
             child: ExpansionTile(
               leading: const Icon(Icons.assessment_outlined, color: Color(0xFF757897)),
-              title: const Text(
-                "Reports",
-                style: TextStyle(
-                  color: Color(0xFF1E2875),
-                  fontWeight: FontWeight.w500,
-                  fontSize: 13,
-                ),
-              ),
-              childrenPadding: const EdgeInsets.only(left: 32),
+              title: const Text("Reports", style: TextStyle(
+                color: Color(0xFF1E2875),
+                fontWeight: FontWeight.w500,
+                fontSize: 13,
+              )),
+              tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+              childrenPadding: EdgeInsets.zero,
               children: [
-                _buildDrawerSubItem("Reports Dashboard", () {
-                  Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminReportsScreen()));
-                }),
-                _buildDrawerSubItem("Holidays List", () {
+
+                _buildDrawerSubItem("Holidays List", false, () {
                   Navigator.pop(context);
                   Navigator.push(context, MaterialPageRoute(builder: (_) => const HolidaysListReportScreen()));
                 }),
-                _buildDrawerSubItem("Fee Structure", () {
+                _buildDrawerSubItem("Fee Structure", false, () {
                   Navigator.pop(context);
                   Navigator.push(context, MaterialPageRoute(builder: (_) => const FeeStructureReportScreen()));
                 }),
-                _buildDrawerSubItem("Fee Collection", () {
+                _buildDrawerSubItem("Fee Collection", false, () {
                   Navigator.pop(context);
                   Navigator.push(context, MaterialPageRoute(builder: (_) => const FeeCollectionSummaryScreen()));
                 }),
-                _buildDrawerSubItem("Tuition Fee Due", () {
+                _buildDrawerSubItem("Tuition Fee Due", false, () {
                   Navigator.pop(context);
                   Navigator.push(context, MaterialPageRoute(builder: (_) => const FeeDueListScreen(reportTitle: "Tuition Fee Due Students")));
                 }),
-                _buildDrawerSubItem("Transport Fee Due", () {
+                _buildDrawerSubItem("Transport Fee Due", false, () {
                   Navigator.pop(context);
                   Navigator.push(context, MaterialPageRoute(builder: (_) => const FeeDueListScreen(reportTitle: "Transport Fee Due Students")));
                 }),
-                _buildDrawerSubItem("Collection By Date", () {
+                _buildDrawerSubItem("Collection By Date", false, () {
                   Navigator.pop(context);
                   Navigator.push(context, MaterialPageRoute(builder: (_) => const FeeCollectionByDateScreen()));
                 }),
-                _buildDrawerSubItem("Attendance Report", () {
+                _buildDrawerSubItem("Attendance Report", false, () {
                   Navigator.pop(context);
                   Navigator.push(context, MaterialPageRoute(builder: (_) => const ClassAttendanceReportScreen()));
                 }),
               ],
             ),
           ),
-          _buildDrawerItem(Icons.error_outline, "Invalid Info", false, () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminInvalidInfoScreen()));
-          }),
-          _buildDrawerItem(Icons.sms_outlined, "SMS", false, () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminSmsScreen()));
-          }),
-          _buildDrawerItem(Icons.settings_outlined, "Settings", false, () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminSettingsScreen()));
-          }),
+          Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              leading: const Icon(Icons.error_outline, color: Color(0xFF757897)),
+              title: const Text("Invalid Info", style: TextStyle(
+                color: Color(0xFF1E2875),
+                fontWeight: FontWeight.w500,
+                fontSize: 13,
+              )),
+              tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+              childrenPadding: EdgeInsets.zero,
+              children: [
+                _buildDrawerSubItem("Invalid Info List", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminInvalidInfoScreen()));
+                }),
+              ],
+            ),
+          ),
+          Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              leading: const Icon(Icons.sms_outlined, color: Color(0xFF757897)),
+              title: const Text("SMS", style: TextStyle(
+                color: Color(0xFF1E2875),
+                fontWeight: FontWeight.w500,
+                fontSize: 13,
+              )),
+              tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+              childrenPadding: EdgeInsets.zero,
+              children: [
+                _buildDrawerSubItem("SMS Settings", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminSmsScreen()));
+                }),
+              ],
+            ),
+          ),
+          Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              leading: const Icon(Icons.settings_outlined, color: Color(0xFF757897)),
+              title: const Text("Settings", style: TextStyle(
+                color: Color(0xFF1E2875),
+                fontWeight: FontWeight.w500,
+                fontSize: 13,
+              )),
+              tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+              childrenPadding: EdgeInsets.zero,
+              children: [
+                _buildDrawerSubItem("App Settings", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminSettingsScreen()));
+                }),
+              ],
+            ),
+          ),
 
           const Divider(height: 20),
 
@@ -381,7 +626,7 @@ class AdminDrawer extends StatelessWidget {
               Navigator.pop(context);
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (_) => LoginScreen()),
+                MaterialPageRoute(builder: (_) => const LoginScreen()),
               );
             },
           ),
@@ -414,7 +659,7 @@ class AdminDrawer extends StatelessWidget {
     bool showChevron = true,
   }) {
     return ListTile(
-      leading: Icon(icon, color: selected ? AppColors.primary : const Color(0xFF757897)),
+      leading: Icon(icon, color: selected ? AppColors.primary : const Color(0xFF757897), size: 22),
       title: Text(
         title,
         style: TextStyle(
@@ -427,24 +672,35 @@ class AdminDrawer extends StatelessWidget {
           ? const Icon(Icons.chevron_right, size: 16, color: Colors.grey)
           : null,
       selected: selected,
+      selectedTileColor: AppColors.primary.withValues(alpha: 0.08),
       onTap: onTap,
       dense: true,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+      minLeadingWidth: 24,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
     );
   }
 
-  Widget _buildDrawerSubItem(String title, VoidCallback onTap) {
+  Widget _buildDrawerSubItem(String title, bool isSelected, VoidCallback onTap) {
     return ListTile(
+      leading: const Icon(Icons.circle, size: 5, color: Color(0xFF9098B1)),
       title: Text(
         title,
-        style: const TextStyle(
-          color: Color(0xFF1E2875),
-          fontWeight: FontWeight.w400,
-          fontSize: 12,
+        style: TextStyle(
+          color: isSelected ? AppColors.primary : const Color(0xFF1E2875),
+          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+          fontSize: 12.5,
         ),
       ),
       onTap: onTap,
       dense: true,
+      selected: isSelected,
+      selectedTileColor: AppColors.primary.withValues(alpha: 0.08),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+      minLeadingWidth: 24,
       visualDensity: const VisualDensity(vertical: -2),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
     );
   }
+
 }

@@ -4,6 +4,7 @@ import '../widgets/admin_app_bar.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
 import '../../../widgets/custom_date_picker.dart';
 import '../../../widgets/app_footer.dart';
+import '../../../core/theme/app_colors.dart';
 
 class AdminAssignmentsScreen extends StatefulWidget {
   const AdminAssignmentsScreen({super.key});
@@ -14,9 +15,9 @@ class AdminAssignmentsScreen extends StatefulWidget {
 
 class _AdminAssignmentsScreenState extends State<AdminAssignmentsScreen> {
   String _selectedBranch = 'Ecstasy School 1 (ECS001)';
-  String _selectedClass = 'Grade 1';
+  String _selectedClass = 'LKG';
   String _selectedSection = 'A';
-  String _displayClass = 'Grade 1';
+  String _displayClass = 'LKG';
   String _displaySection = 'A';
   List<Map<String, String>> _assignments = [];
 
@@ -30,7 +31,7 @@ class _AdminAssignmentsScreenState extends State<AdminAssignmentsScreen> {
     setState(() {
       _displayClass = _selectedClass;
       _displaySection = _selectedSection;
-      if (_selectedBranch == 'Ecstasy School 1 (ECS001)' && _selectedClass == 'Grade 1' && _selectedSection == 'A') {
+      if (_selectedBranch == 'Ecstasy School 1 (ECS001)' && _selectedClass == 'LKG' && _selectedSection == 'A') {
         _assignments = [{'title': 'Creative activity', 'description': 'Complete creative art integration work using cardboard, paper and other props and color the same.', 'assignDate': '4/3/2026', 'dueDate': '9/3/2026'}];
       } else if (_selectedBranch == 'Ecstasy School 2 (ECS002)') {
         _assignments = [{'title': 'Maths Homework', 'description': 'Solve problems from page 45 of the textbook.', 'assignDate': '10/3/2026', 'dueDate': '15/3/2026'}];
@@ -58,7 +59,7 @@ class _AdminAssignmentsScreenState extends State<AdminAssignmentsScreen> {
           builder: (context, setModalState) => AlertDialog(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           titlePadding: EdgeInsets.zero,
-          title: Container(padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12), decoration: const BoxDecoration(color: Colors.orange, borderRadius: BorderRadius.vertical(top: Radius.circular(8))), child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [const Text("Class Assignment", style: TextStyle(color: Colors.white, fontSize: 18)), GestureDetector(onTap: () => Navigator.pop(context), child: const Icon(Icons.close, color: Colors.white, size: 20))])),
+          title: Container(padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12), decoration: const BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.vertical(top: Radius.circular(8))), child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [const Text("Class Assignment", style: TextStyle(color: Colors.white, fontSize: 18)), GestureDetector(onTap: () => Navigator.pop(context), child: const Icon(Icons.close, color: Colors.white, size: 20))])),
           content: SizedBox(
             width: double.maxFinite,
             child: SingleChildScrollView(
@@ -80,7 +81,7 @@ class _AdminAssignmentsScreenState extends State<AdminAssignmentsScreen> {
                 }),
                 const SizedBox(height: 16),
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  ElevatedButton.icon(onPressed: () async { try { FilePickerResult? result = await FilePicker.pickFiles(); if (result != null) setModalState(() => selectedFileName = result.files.first.name); } catch (e) { ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error picking file"))); } }, icon: const Icon(Icons.attach_file, size: 16), label: const Text("Attachment"), style: ElevatedButton.styleFrom(backgroundColor: Colors.blue, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)))),
+                  ElevatedButton.icon(onPressed: () async { try { FilePickerResult? result = await FilePicker.pickFiles(); if (result != null) setModalState(() => selectedFileName = result.files.first.name); } catch (e) { if (!context.mounted) return; ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Error picking file"))); } }, icon: const Icon(Icons.attach_file, size: 16), label: const Text("Attachment"), style: ElevatedButton.styleFrom(backgroundColor: Colors.blue, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)))),
                   if (selectedFileName != null) Padding(padding: const EdgeInsets.only(top: 8.0), child: Text("Selected: $selectedFileName", style: const TextStyle(fontSize: 11, color: Colors.blue, fontWeight: FontWeight.w500))),
                 ]),
               ],
@@ -98,7 +99,7 @@ class _AdminAssignmentsScreenState extends State<AdminAssignmentsScreen> {
   }
 
   Widget _buildDateColumn(String label, DateTime date, GlobalKey key, Function(DateTime) onSelected) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [Text(label, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)), const SizedBox(height: 4), GestureDetector(onTap: () { Future.delayed(const Duration(milliseconds: 100), () => showCustomDatePicker(context: context, anchorKey: key, initialDate: date, onDateSelected: onSelected)); }, child: Container(key: key, padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10), decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(4)), child: Row(children: [Expanded(child: Text("${date.day}/${date.month}/${date.year}", style: const TextStyle(fontSize: 12))), const Icon(Icons.calendar_month, size: 18, color: Colors.black54)])))]);
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [Text(label, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)), const SizedBox(height: 4), GestureDetector(onTap: () { Future.delayed(const Duration(milliseconds: 100), () { if (!mounted) return; showCustomDatePicker(context: context, anchorKey: key, initialDate: date, onDateSelected: onSelected); }); }, child: Container(key: key, padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10), decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(4)), child: Row(children: [Expanded(child: Text("${date.day}/${date.month}/${date.year}", style: const TextStyle(fontSize: 12))), const Icon(Icons.calendar_month, size: 18, color: Colors.black54)])))]);
   }
 
   Widget _buildCompletedRow(bool value, Function(bool) onChanged) {
@@ -147,9 +148,9 @@ class _AdminAssignmentsScreenState extends State<AdminAssignmentsScreen> {
   Widget _buildFilters() {
     return LayoutBuilder(builder: (context, constraints) {
       if (constraints.maxWidth < 600) {
-        return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [_buildDropdown(label: "Branch", value: _selectedBranch, items: ['Ecstasy School 1 (ECS001)', 'Ecstasy School 2 (ECS002)', 'Ecstasy School 3 (ECS003)'], onChanged: (v) => setState(() => _selectedBranch = v!)), const SizedBox(height: 12), Row(children: [Expanded(child: _buildDropdown(label: "Class", value: _selectedClass, items: ['Grade 1', 'Grade 2', 'Grade 3', 'Grade 4', 'Grade 5'], onChanged: (v) => setState(() => _selectedClass = v!))), const SizedBox(width: 12), Expanded(child: _buildDropdown(label: "Section", value: _selectedSection, items: ['A', 'B', 'C', 'D'], onChanged: (v) => setState(() => _selectedSection = v!)))]), const SizedBox(height: 16), ElevatedButton(onPressed: _fetchAssignments, style: ElevatedButton.styleFrom(backgroundColor: Colors.orange.shade800, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 12), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))), child: const Text("Get Data"))]);
+        return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [_buildDropdown(label: "Branch", value: _selectedBranch, items: ['Ecstasy School 1 (ECS001)', 'Ecstasy School 2 (ECS002)', 'Ecstasy School 3 (ECS003)'], onChanged: (v) => setState(() => _selectedBranch = v!)), const SizedBox(height: 12), Row(children: [Expanded(child: _buildDropdown(label: "Class", value: _selectedClass, items: ['LKG', 'UKG', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'], onChanged: (v) => setState(() => _selectedClass = v!))), const SizedBox(width: 12), Expanded(child: _buildDropdown(label: "Section", value: _selectedSection, items: ['A', 'B', 'C', 'D'], onChanged: (v) => setState(() => _selectedSection = v!)))]), const SizedBox(height: 16), ElevatedButton(onPressed: _fetchAssignments, style: ElevatedButton.styleFrom(backgroundColor: Colors.orange.shade800, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 12), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))), child: const Text("Get Data"))]);
       }
-      return Row(crossAxisAlignment: CrossAxisAlignment.end, children: [Expanded(flex: 2, child: _buildDropdown(label: "Branch", value: _selectedBranch, items: ['Ecstasy School 1 (ECS001)', 'Ecstasy School 2 (ECS002)', 'Ecstasy School 3 (ECS003)'], onChanged: (v) => setState(() => _selectedBranch = v!))), const SizedBox(width: 8), Expanded(child: _buildDropdown(label: "Class", value: _selectedClass, items: ['Grade 1', 'Grade 2', 'Grade 3', 'Grade 4', 'Grade 5'], onChanged: (v) => setState(() => _selectedClass = v!))), const SizedBox(width: 8), Expanded(child: _buildDropdown(label: "Section", value: _selectedSection, items: ['A', 'B', 'C', 'D'], onChanged: (v) => setState(() => _selectedSection = v!))), const SizedBox(width: 8), ElevatedButton(onPressed: _fetchAssignments, style: ElevatedButton.styleFrom(backgroundColor: Colors.orange.shade800, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))), child: const Text("Get Data"))]);
+      return Row(crossAxisAlignment: CrossAxisAlignment.end, children: [Expanded(flex: 2, child: _buildDropdown(label: "Branch", value: _selectedBranch, items: ['Ecstasy School 1 (ECS001)', 'Ecstasy School 2 (ECS002)', 'Ecstasy School 3 (ECS003)'], onChanged: (v) => setState(() => _selectedBranch = v!))), const SizedBox(width: 8), Expanded(child: _buildDropdown(label: "Class", value: _selectedClass, items: ['LKG', 'UKG', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'], onChanged: (v) => setState(() => _selectedClass = v!))), const SizedBox(width: 8), Expanded(child: _buildDropdown(label: "Section", value: _selectedSection, items: ['A', 'B', 'C', 'D'], onChanged: (v) => setState(() => _selectedSection = v!))), const SizedBox(width: 8), ElevatedButton(onPressed: _fetchAssignments, style: ElevatedButton.styleFrom(backgroundColor: Colors.orange.shade800, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))), child: const Text("Get Data"))]);
     });
   }
 

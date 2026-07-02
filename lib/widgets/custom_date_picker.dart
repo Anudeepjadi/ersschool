@@ -43,6 +43,7 @@ class CustomDatePicker extends StatelessWidget {
             // Use microtask to avoid MouseTracker conflict during event handling
             Future.microtask(() {
               onDateSelected(date);
+              if (!context.mounted) return;
               if (Navigator.canPop(context)) {
                 Navigator.pop(context);
               }

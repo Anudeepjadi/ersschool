@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'core/theme/app_theme.dart';
 import 'core/utils/profile_manager.dart';
 import 'core/localization/language_manager.dart';
@@ -26,8 +27,8 @@ class ERPApp extends StatelessWidget {
               title: "Ecstasy School ERP",
               theme: AppTheme.lightTheme,
               darkTheme: AppTheme.darkTheme,
-              themeMode: themeMode,
-              home: SplashScreen(),
+              themeMode: kIsWeb ? ThemeMode.light : themeMode,
+              home: const SplashScreen(),
             );
           },
         );

@@ -1,38 +1,15 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import '../../core/theme/app_colors.dart';
-import '../../core/utils/profile_manager.dart';
-import '../login/login_screen.dart';
 import 'tabs/admin_home_tab.dart';
 import 'tabs/admin_students_tab.dart';
 import 'tabs/admin_teachers_tab.dart';
 import 'tabs/admin_branches_tab.dart';
 import 'tabs/admin_more_tab.dart';
+import 'widgets/admin_drawer.dart';
 
 // Import all sub-screens
 import 'screens/student_management/admin_register_student_screen.dart';
-import 'screens/admin_attendance_screen.dart';
-import 'screens/admin_fees_screen.dart';
-import 'screens/admin_examinations_screen.dart';
-import 'screens/admin_hostel_screen.dart';
-import 'screens/admin_library_screen.dart';
-import 'screens/admin_transport_screen.dart';
-import 'screens/admin_events_screen.dart';
-import 'screens/admin_communications_screen.dart';
-import 'screens/admin_id_cards_screen.dart';
-import 'screens/admin_certificates_screen.dart';
-import 'screens/admin_reports_screen.dart';
-import 'screens/admin_class_details_screen.dart';
-import 'screens/admin_class_teachers_screen.dart';
-import 'screens/admin_assignments_screen.dart';
-import 'screens/admin_diary_screen.dart';
-import 'screens/admin_time_table_screen.dart';
-import 'screens/admin_invalid_info_screen.dart';
-import 'screens/admin_sms_screen.dart';
-import 'screens/admin_settings_screen.dart';
-import 'screens/admin_help_center_screen.dart';
-import 'screens/admin_employee_list_screen.dart';
 import 'screens/admin_register_employee_screen.dart';
+<<<<<<< HEAD
 import 'screens/admin_chat_support_screen.dart';
 import 'screens/admin_system_updates_screen.dart';
 import 'screens/admin_video_tutorials_screen.dart';
@@ -40,6 +17,8 @@ import 'screens/admin_about_us_screen.dart';
 import 'screens/student_management/admin_student_list_screen.dart';
 import 'screens/student_management/admin_student_promotions_screen.dart';
 import 'screens/student_management/admin_student_siblings_screen.dart';
+=======
+>>>>>>> Anudeep
 
 import 'widgets/admin_bottom_nav_bar.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
@@ -78,10 +57,13 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (_) => const AdminRegisterStudentScreen()));
+                  builder: (_) => AdminRegisterStudentScreen()));
         },
         onAddTeacher: () {
-          _onTabChanged(2);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => const AdminRegisterEmployeeScreen()));
         },
       ),
       AdminStudentsTab(
@@ -101,7 +83,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
 
     return Scaffold(
       key: _scaffoldKey,
-      drawer: _buildDrawer(),
+      drawer: AdminDrawer(
+        currentIndex: currentIndex,
+        onTabSelected: _onTabChanged,
+      ),
       bottomNavigationBar: AdminBottomNavBar(
         currentIndex: currentIndex,
         onTabSelected: _onTabChanged,
@@ -113,6 +98,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     );
   }
 
+<<<<<<< HEAD
   Widget _buildDrawer() {
     return Drawer(
       backgroundColor: Colors.white,
@@ -411,4 +397,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       visualDensity: VisualDensity.compact,
     );
   }
+=======
+>>>>>>> Anudeep
 }

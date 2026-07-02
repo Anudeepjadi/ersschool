@@ -52,7 +52,7 @@ class _AdminStudentDetailsScreenState extends State<AdminStudentDetailsScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => AdminStudentIdCardPrintScreen(studentData: widget.student!),
+                                builder: (context) => AdminStudentIdCardPrintScreen(studentsData: [widget.student!]),
                               ),
                             );
                           }
@@ -97,6 +97,9 @@ class _AdminStudentDetailsScreenState extends State<AdminStudentDetailsScreen> {
                       _buildDetailRow("Class & Section", "${widget.student?['class'] ?? 'N/A'} - ${widget.student?['section'] ?? 'A'}"),
                       _buildDetailRow("Branch", widget.student?['branch'] ?? "Ecstasy School 1 (ECS001)"),
                       _buildDetailRow("Admission Date", widget.student?['admission_date'] ?? "N/A"),
+                      _buildDetailRow("First Language", widget.student?['first_language'] ?? "English"),
+                      _buildDetailRow("Second Language", widget.student?['second_language'] ?? "Hindi"),
+                      _buildDetailRow("Third Language", widget.student?['third_language'] ?? "Telugu"),
                       _buildDetailRow("Transport", "${widget.student?['transport_type'] ?? 'N/A'} (${widget.student?['transport_route'] ?? 'No route'})"),
                     ],
                   ),

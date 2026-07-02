@@ -100,7 +100,7 @@ class _AdminHallTicketPrintScreenState extends State<AdminHallTicketPrintScreen>
   Widget build(BuildContext context) {
     final Map<String, dynamic> student = widget.student;
     final String schoolName = student['school'] ?? 'Ecstasy School 1';
-    final String classAndSec = "${student['class'] ?? 'Grade 1'} - ${student['section'] ?? 'A'}";
+    final String classAndSec = "${student['class'] ?? 'LKG'} - ${student['section'] ?? 'A'}";
 
     // Mock subject dates for selected examination
     final List<Map<String, String>> timetable = [
@@ -194,26 +194,40 @@ class _AdminHallTicketPrintScreenState extends State<AdminHallTicketPrintScreen>
                     // School Letterhead
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              schoolName.toUpperCase().tr,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w800,
-                                color: Color(0xFF1E2875),
-                                letterSpacing: 0.5,
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  schoolName.toUpperCase().tr,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w800,
+                                    color: Color(0xFF1E2875),
+                                    letterSpacing: 0.5,
+                                  ),
+                                  maxLines: 1,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              "Affiliated to State Board | School Code: ${schoolName.contains('1') ? 'ECS001' : schoolName.contains('2') ? 'ECS002' : 'ECS003'}".tr,
-                              style: const TextStyle(fontSize: 10, color: Colors.grey),
-                            ),
-                          ],
+                              const SizedBox(height: 2),
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "Affiliated to State Board | School Code: ${schoolName.contains('1') ? 'ECS001' : schoolName.contains('2') ? 'ECS002' : 'ECS003'}".tr,
+                                  style: const TextStyle(fontSize: 10, color: Colors.grey),
+                                  maxLines: 1,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
+                        const SizedBox(width: 12),
                         // Logo Placeholder
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
@@ -376,11 +390,19 @@ class _AdminHallTicketPrintScreenState extends State<AdminHallTicketPrintScreen>
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: Text(row['date']!, style: const TextStyle(fontSize: 11, color: Colors.black87)),
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(row['date']!, style: const TextStyle(fontSize: 11, color: Colors.black87), maxLines: 1),
+                                ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: Text(row['time']!.tr, style: const TextStyle(fontSize: 11, color: Colors.black87)),
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(row['time']!.tr, style: const TextStyle(fontSize: 11, color: Colors.black87), maxLines: 1),
+                                ),
                               ),
                             ],
                           );
@@ -406,12 +428,14 @@ class _AdminHallTicketPrintScreenState extends State<AdminHallTicketPrintScreen>
                     const SizedBox(height: 40),
 
                     // Signatures
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    Wrap(
+                      alignment: WrapAlignment.spaceBetween,
+                      runSpacing: 20,
+                      spacing: 12,
                       children: [
                         Column(
                           children: [
-                            Container(width: 100, height: 1, color: Colors.grey.shade400),
+                            Container(width: 80, height: 1, color: Colors.grey.shade400),
                             const SizedBox(height: 6),
                             Text(
                               "Signature of Candidate".tr,
@@ -421,7 +445,7 @@ class _AdminHallTicketPrintScreenState extends State<AdminHallTicketPrintScreen>
                         ),
                         Column(
                           children: [
-                            Container(width: 100, height: 1, color: Colors.grey.shade400),
+                            Container(width: 80, height: 1, color: Colors.grey.shade400),
                             const SizedBox(height: 6),
                             Text(
                               "Signature of Invigilator".tr,
@@ -432,19 +456,25 @@ class _AdminHallTicketPrintScreenState extends State<AdminHallTicketPrintScreen>
                         Column(
                           children: [
                             Container(
-                              height: 25,
+                              height: 40,
                               alignment: Alignment.bottomCenter,
-                              child: const Text(
-                                "EXSTAGE",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  fontStyle: FontStyle.italic,
-                                  color: Color(0xFF0038FF),
+                              child: Image.asset(
+                                'assets/images/principal_signature_v2.png',
+                                height: 40,
+                                width: 80,
+                                fit: BoxFit.contain,
+                                errorBuilder: (context, error, stackTrace) => const Text(
+                                  "EXSTAGE",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    fontStyle: FontStyle.italic,
+                                    color: Color(0xFF0038FF),
+                                  ),
                                 ),
                               ),
                             ),
-                            Container(width: 100, height: 1, color: Colors.grey.shade400),
+                            Container(width: 80, height: 1, color: Colors.grey.shade400),
                             const SizedBox(height: 6),
                             Text(
                               "Principal Signature".tr,

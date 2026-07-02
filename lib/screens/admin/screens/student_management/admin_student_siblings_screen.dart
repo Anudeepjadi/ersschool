@@ -24,7 +24,7 @@ class _AdminStudentSiblingsScreenState extends State<AdminStudentSiblingsScreen>
   String _selectedBranch = 'Ecstasy School 1 (ECS001)';
   String _selectedYear = '2025-26';
   String _selectedStatus = 'Only Active';
-  String _selectedClass = 'Grade 1';
+  String _selectedClass = 'LKG';
   String _selectedSection = 'All';
   String _searchQuery = '';
 
@@ -122,7 +122,7 @@ class _AdminStudentSiblingsScreenState extends State<AdminStudentSiblingsScreen>
                     runSpacing: 16,
                     crossAxisAlignment: WrapCrossAlignment.end,
                     children: [
-                      SizedBox(width: fieldWidth, child: _buildFilterDropdown("Class", _selectedClass, ["All", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "batch1", "Grade 5", "Grade 6", "grade 7"], (val) => setState(() => _selectedClass = val!))),
+                      SizedBox(width: fieldWidth, child: _buildFilterDropdown("Class", _selectedClass, ['All', 'LKG', 'UKG', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'], (val) => setState(() => _selectedClass = val!))),
                       SizedBox(width: fieldWidth, child: _buildFilterDropdown("Section", _selectedSection, ["All", "A", "B", "C"], (val) => setState(() => _selectedSection = val!))),
                       SizedBox(
                         width: fieldWidth,

@@ -7,19 +7,19 @@ import '../../../core/utils/profile_manager.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/ai_bot_fab.dart';
 import '../screens/admin_attendance_screen.dart';
-import '../screens/admin_fees_screen.dart';
 import '../screens/admin_examinations_screen.dart';
-import '../screens/admin_library_screen.dart';
 import '../screens/admin_transport_screen.dart';
-import '../screens/admin_hostel_screen.dart';
-import '../screens/admin_events_screen.dart';
-import '../screens/admin_communications_screen.dart';
 import '../screens/admin_id_cards_screen.dart';
-import '../screens/admin_certificates_screen.dart';
 import '../screens/admin_reports_screen.dart';
 import '../screens/admin_invalid_info_screen.dart';
 import '../screens/admin_sms_screen.dart';
 import '../screens/admin_settings_screen.dart';
+import '../screens/admin_classes_screen.dart';
+import '../screens/admin_meetings_screen.dart';
+import 'admin_students_tab.dart';
+import 'admin_teachers_tab.dart';
+import 'admin_branches_tab.dart';
+import '../screens/admin_employee_id_cards_screen.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 class AdminMoreTab extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
@@ -42,8 +42,10 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
   String? _networkImageUrl;
   
   bool _tfaEnabled = true;
+  bool _pushNotificationsEnabled = true;
+  bool _emailAlertsEnabled = false;
+  bool _smsUpdatesEnabled = true;
   final ImagePicker _imagePicker = ImagePicker();
-
   @override
   void initState() {
     super.initState();
@@ -426,7 +428,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF5F7FF),
+      backgroundColor: const Color(0xFFF5F7FF),
       appBar: AdminAppBar(
         title: 'Admin Profile',
         subtitle: 'Manage your account details',
@@ -515,36 +517,40 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
           crossAxisSpacing: 12,
           childAspectRatio: 2.8,
           children: [
+            _buildGridItem(Icons.people_alt, "Students", Colors.teal, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminStudentsTab()));
+            }),
+            _buildGridItem(Icons.people_outline, "Employee", Colors.indigo, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminTeachersTab()));
+            }),
+            _buildGridItem(Icons.corporate_fare, "Branches", Colors.deepPurple, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminBranchesTab()));
+            }),
+            _buildGridItem(Icons.class_, "Classes", Colors.amber, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminClassesScreen()));
+            }),
+            _buildGridItem(Icons.video_camera_front, "Meetings", Colors.redAccent, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminMeetingsScreen(initialFeature: MeetingsFeature.schedule)));
+            }),
             _buildGridItem(Icons.how_to_reg, "Attendance", Colors.blue, () {
               Navigator.push(context, MaterialPageRoute(builder: (_) => AdminAttendanceScreen()));
             }),
-            _buildGridItem(Icons.receipt_long, "Fees", Colors.green, () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => AdminFeesScreen()));
-            }),
+
             _buildGridItem(Icons.assignment, "Examination", Colors.orange, () {
               Navigator.push(context, MaterialPageRoute(builder: (_) => AdminExaminationsScreen()));
             }),
-            _buildGridItem(Icons.menu_book, "Library", Colors.purple, () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => AdminLibraryScreen()));
-            }),
+
             _buildGridItem(Icons.directions_bus, "Transport", Colors.indigo, () {
               Navigator.push(context, MaterialPageRoute(builder: (_) => AdminTransportScreen()));
             }),
-            _buildGridItem(Icons.bed, "Hostel", Colors.teal, () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => AdminHostelScreen()));
-            }),
-            _buildGridItem(Icons.event, "Events", Colors.pink, () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => AdminEventsScreen()));
-            }),
-            _buildGridItem(Icons.campaign, "Communicate", Colors.cyan, () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => AdminCommunicationsScreen()));
-            }),
-            _buildGridItem(Icons.badge, "ID Card", Colors.brown, () {
+
+            _buildGridItem(Icons.badge, "Student ID Cards", Colors.brown, () {
               Navigator.push(context, MaterialPageRoute(builder: (_) => AdminIDCardsScreen()));
             }),
-            _buildGridItem(Icons.workspace_premium, "Certificates", Colors.amber, () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => AdminCertificatesScreen()));
+            _buildGridItem(Icons.badge_outlined, "Employee ID Cards", Colors.brown.shade400, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEmployeeIDCardsScreen()));
             }),
+
             _buildGridItem(Icons.assessment, "Reports", Colors.red, () {
               Navigator.push(context, MaterialPageRoute(builder: (_) => AdminReportsScreen()));
             }),
@@ -590,18 +596,24 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
               ),
               child: Icon(icon, color: color, size: 20),
             ),
-            SizedBox(width: 12),
+            SizedBox(width: 8),
             Expanded(
-              child: Text(
-                label,
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF1E2875),
+              child: Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    label,
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1E2875),
+                    ),
+                    maxLines: 1,
+                  ),
                 ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
@@ -1013,25 +1025,38 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Text('Notification Settings'.tr),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SwitchListTile(
-              title: Text('Push Notifications'.tr),
-              value: true,
-              onChanged: (v) {},
-            ),
-            SwitchListTile(
-              title: Text('Email Alerts'.tr),
-              value: false,
-              onChanged: (v) {},
-            ),
-            SwitchListTile(
-              title: Text('SMS Updates'.tr),
-              value: true,
-              onChanged: (v) {},
-            ),
-          ],
+        content: StatefulBuilder(
+          builder: (context, setModalState) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SwitchListTile(
+                  title: Text('Push Notifications'.tr),
+                  value: _pushNotificationsEnabled,
+                  onChanged: (v) {
+                    setModalState(() => _pushNotificationsEnabled = v);
+                    setState(() => _pushNotificationsEnabled = v);
+                  },
+                ),
+                SwitchListTile(
+                  title: Text('Email Alerts'.tr),
+                  value: _emailAlertsEnabled,
+                  onChanged: (v) {
+                    setModalState(() => _emailAlertsEnabled = v);
+                    setState(() => _emailAlertsEnabled = v);
+                  },
+                ),
+                SwitchListTile(
+                  title: Text('SMS Updates'.tr),
+                  value: _smsUpdatesEnabled,
+                  onChanged: (v) {
+                    setModalState(() => _smsUpdatesEnabled = v);
+                    setState(() => _smsUpdatesEnabled = v);
+                  },
+                ),
+              ],
+            );
+          }
         ),
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx), child: Text('Close'.tr)),

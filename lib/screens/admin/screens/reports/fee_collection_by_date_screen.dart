@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../widgets/admin_app_bar.dart';
 import '../../widgets/admin_drawer.dart';
 import '../../widgets/admin_bottom_nav_bar.dart';
@@ -12,6 +13,7 @@ class FeeCollectionByDateScreen extends StatefulWidget {
 
 class _FeeCollectionByDateScreenState extends State<FeeCollectionByDateScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final ScrollController _scrollController = ScrollController();
   String selectedBranch = 'Ecstasy School 1 (ECS001)';
   DateTime startDate = DateTime(2026, 6, 29);
   DateTime endDate = DateTime(2026, 6, 29);
@@ -22,6 +24,12 @@ class _FeeCollectionByDateScreenState extends State<FeeCollectionByDateScreen> {
     'Ecstasy (ECS003)',
     'Ecstasy (ECS004)',
   ];
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,13 +47,7 @@ class _FeeCollectionByDateScreenState extends State<FeeCollectionByDateScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            const Center(
-              child: Text(
-                "Fee Collection By Date",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.brown),
-              ),
-            ),
-            const SizedBox(height: 20),
+
             _buildFilters(),
             const SizedBox(height: 16),
             Text(
@@ -97,7 +99,7 @@ class _FeeCollectionByDateScreenState extends State<FeeCollectionByDateScreen> {
         ElevatedButton(
           onPressed: () {},
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFFBC5314),
+            backgroundColor: AppColors.primary,
             foregroundColor: Colors.white,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
             minimumSize: const Size(80, 36),
@@ -200,9 +202,15 @@ class _FeeCollectionByDateScreenState extends State<FeeCollectionByDateScreen> {
   }
 
   Widget _buildDataTable() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: DataTable(
+    return Scrollbar(
+      controller: _scrollController,
+      thumbVisibility: true,
+      thickness: 6,
+      radius: const Radius.circular(8),
+      child: SingleChildScrollView(
+        controller: _scrollController,
+        scrollDirection: Axis.horizontal,
+        child: DataTable(
         headingRowColor: WidgetStateProperty.all(const Color(0xFF001A40)),
         columnSpacing: 20,
         horizontalMargin: 12,
@@ -221,6 +229,6 @@ class _FeeCollectionByDateScreenState extends State<FeeCollectionByDateScreen> {
         ],
         rows: const [],
       ),
-    );
+    ));
   }
 }

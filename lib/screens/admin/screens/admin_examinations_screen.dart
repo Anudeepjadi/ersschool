@@ -2,13 +2,20 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/data/app_data_store.dart';
-import '../../../core/utils/profile_manager.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
 import '../../../widgets/scrollable_table_wrapper.dart';
 import 'admin_hall_ticket_print_screen.dart';
+<<<<<<< HEAD
 import 'package:ersschool/core/localization/language_manager.dart';
 
+=======
+import '../widgets/admin_drawer.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
+
+// Sibling sub-screens imports
+
+>>>>>>> Anudeep
 enum ExaminationFeature {
   menu,
   examDetails,
@@ -37,10 +44,14 @@ class AdminExaminationsScreen extends StatefulWidget {
 class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late ExaminationFeature _selectedFeature;
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> Anudeep
   // Filter selection states
   String _selectedBranch = 'Ecstasy School 1';
-  String _selectedClass = 'Grade 1';
+  String _selectedClass = 'LKG';
   String _selectedExam = 'SA1';
   String _selectedYear = '2025-26';
   String _selectedSection = 'A';
@@ -62,8 +73,17 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
   final TextEditingController _searchController = TextEditingController();
 
   // Dropdown options
+<<<<<<< HEAD
   final List<String> _branches = ['Ecstasy School 1', 'Ecstasy School 2', 'Ecstasy School 3'];
   final List<String> _classes = ['Grade 1', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'];
+=======
+  final List<String> _branches = [
+    'Ecstasy School 1',
+    'Ecstasy School 2',
+    'Ecstasy School 3'
+  ];
+  final List<String> _classes = ['LKG', 'UKG', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'];
+>>>>>>> Anudeep
   final List<String> _exams = ['SA1', 'SA2', 'Unit Test 1', 'Unit Test 2'];
   final List<String> _subjects = ['Telugu', 'English', 'Hindi', 'Maths', 'Science', 'Social', 'Art work'];
 
@@ -143,7 +163,14 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: const Color(0xFFF5F7FF),
+<<<<<<< HEAD
       bottomNavigationBar: widget.onOpenDrawer == null ? AdminBottomNavBar(currentIndex: 4) : null,
+=======
+      bottomNavigationBar: widget.onOpenDrawer == null
+          ? AdminBottomNavBar(currentIndex: 4)
+          : null,
+      drawer: const AdminDrawer(),
+>>>>>>> Anudeep
       appBar: AdminAppBar(
         title: _getFeatureTitle(),
         subtitle: _getFeatureSubtitle(),
@@ -396,8 +423,128 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
 
   Widget _buildExamHallTicketsView() {
     final List<Map<String, dynamic>> fallbackStudents = [
+<<<<<<< HEAD
       {'name': 'Deepthi', 'gender': 'Female', 'roll': 'ECS00021', 'admission': 'ECS00021', 'class': 'Grade 1', 'section': 'A', 'school': 'Ecstasy School 1'},
       {'name': 'tony', 'gender': 'Male', 'roll': 'ECS00031', 'admission': 'ECS00031', 'class': 'Grade 1', 'section': 'A', 'school': 'Ecstasy School 1'},
+=======
+      {
+        'name': 'Deepthi',
+        'gender': 'Female',
+        'roll': 'ECS00021',
+        'admission': 'ECS00021',
+        'class': 'LKG',
+        'section': 'A',
+        'school': 'Ecstasy School 1'
+      },
+      {
+        'name': 'Deepthi',
+        'gender': 'Female',
+        'roll': 'ECS00022',
+        'admission': 'ECS00022',
+        'class': 'LKG',
+        'section': 'A',
+        'school': 'Ecstasy School 1'
+      },
+      {
+        'name': 'dhurandarrr',
+        'gender': 'Male',
+        'roll': 'ECS00023',
+        'admission': 'ECS00023',
+        'class': 'LKG',
+        'section': 'A',
+        'school': 'Ecstasy School 1'
+      },
+      {
+        'name': 'ECSTASY SOLUTIONS PVT LTD',
+        'gender': 'Male',
+        'roll': 'ECS00024',
+        'admission': 'ECS00024',
+        'class': 'LKG',
+        'section': 'A',
+        'school': 'Ecstasy School 1'
+      },
+      {
+        'name': 'lakshmi',
+        'gender': 'Male',
+        'roll': 'ECS00025',
+        'admission': 'ECS00025',
+        'class': 'LKG',
+        'section': 'A',
+        'school': 'Ecstasy School 1'
+      },
+      {
+        'name': 'MadiviliNaresh',
+        'gender': 'Male',
+        'roll': 'ECS00026',
+        'admission': 'ECS00026',
+        'class': 'LKG',
+        'section': 'A',
+        'school': 'Ecstasy School 1'
+      },
+      {
+        'name': 'phani',
+        'gender': 'Male',
+        'roll': 'ECS00027',
+        'admission': 'ECS00027',
+        'class': 'LKG',
+        'section': 'A',
+        'school': 'Ecstasy School 1'
+      },
+      {
+        'name': 'Priya',
+        'gender': 'Female',
+        'roll': 'ECS00028',
+        'admission': 'ECS00028',
+        'class': 'LKG',
+        'section': 'A',
+        'school': 'Ecstasy School 1'
+      },
+      {
+        'name': 'Rimsa',
+        'gender': 'Female',
+        'roll': 'ECS00029',
+        'admission': 'ECS00029',
+        'class': 'LKG',
+        'section': 'A',
+        'school': 'Ecstasy School 1'
+      },
+      {
+        'name': 'suresh',
+        'gender': 'Male',
+        'roll': 'ECS00030',
+        'admission': 'ECS00030',
+        'class': 'LKG',
+        'section': 'A',
+        'school': 'Ecstasy School 1'
+      },
+      {
+        'name': 'tony',
+        'gender': 'Male',
+        'roll': 'ECS00031',
+        'admission': 'ECS00031',
+        'class': 'LKG',
+        'section': 'A',
+        'school': 'Ecstasy School 1'
+      },
+      {
+        'name': 'Vijaya',
+        'gender': 'Male',
+        'roll': 'ECS00032',
+        'admission': 'ECS00032',
+        'class': 'LKG',
+        'section': 'A',
+        'school': 'Ecstasy School 1'
+      },
+      {
+        'name': 'vinitha',
+        'gender': 'Female',
+        'roll': 'ECS00033',
+        'admission': 'ECS00033',
+        'class': 'LKG',
+        'section': 'A',
+        'school': 'Ecstasy School 1'
+      },
+>>>>>>> Anudeep
     ];
 
     List<Map<String, dynamic>> studentsList = AppDataStore.instance.students.where((s) => s['school'] == _selectedBranch && s['class'] == _selectedClass).toList();
@@ -500,8 +647,183 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
               borderSide: BorderSide(color: Colors.grey.shade300),
             ),
           ),
+<<<<<<< HEAD
         ),
         const SizedBox(height: 16),
+=======
+          const SizedBox(height: 16),
+
+          if (_showGradeData)
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.grey.shade200),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.tune_outlined,
+                    size: 48,
+                    color: AppColors.primary,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    "Grade Report Custom Rules".tr,
+                    style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF1E2875)),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    "Custom report parameters and thresholds details will be configured in the next phase."
+                        .tr,
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 20),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      "Configuration Pre-loaded for $_selectedBranch - $_selectedClass"
+                          .tr,
+                      style: const TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        ],
+      );
+    }
+
+    // Standard Grade Report View matching the screenshot
+    final List<Map<String, String>> mockGradeStudents = [
+      {
+        'admission': '02600046',
+        'name': 'Deepthi',
+        'gender': 'Female',
+        'class': 'LKG'
+      },
+      {
+        'admission': '02600047',
+        'name': 'Priya',
+        'gender': 'Female',
+        'class': 'LKG'
+      },
+      {
+        'admission': '02600048',
+        'name': 'Deepthi',
+        'gender': 'Female',
+        'class': 'LKG'
+      },
+      {
+        'admission': '02600049',
+        'name': 'suresh',
+        'gender': 'Male',
+        'class': 'LKG'
+      },
+      {
+        'admission': '02600050',
+        'name': 'Rimsa',
+        'gender': 'Female',
+        'class': 'LKG'
+      },
+      {
+        'admission': '02600051',
+        'name': 'tony',
+        'gender': 'Male',
+        'class': 'LKG'
+      },
+      {
+        'admission': '02600055',
+        'name': 'lakshmi',
+        'gender': 'Male',
+        'class': 'LKG'
+      },
+      {
+        'admission': '02600057',
+        'name': 'Vijaya',
+        'gender': 'Male',
+        'class': 'LKG'
+      },
+      {
+        'admission': '02600060',
+        'name': 'phani',
+        'gender': 'Male',
+        'class': 'LKG'
+      },
+      {
+        'admission': '02600061',
+        'name': 'vinitha',
+        'gender': 'Female',
+        'class': 'LKG'
+      },
+      {
+        'admission': '02600074',
+        'name': 'dhurandarrr',
+        'gender': 'Male',
+        'class': 'LKG'
+      },
+      {
+        'admission': '02600075',
+        'name': 'MadiviliNaresh',
+        'gender': 'Male',
+        'class': 'LKG'
+      },
+      {
+        'admission': '02600078',
+        'name': 'ECSTASY SOLUTIONS PVT LTD',
+        'gender': 'Male',
+        'class': 'LKG'
+      },
+    ];
+
+    List<Map<String, String>> currentGradeList = [];
+    if (_selectedClass == 'LKG') {
+      currentGradeList = mockGradeStudents;
+    } else {
+      currentGradeList = AppDataStore.instance.students
+          .where((s) =>
+              s['school'] == _selectedBranch && s['class'] == _selectedClass)
+          .map((s) => {
+                'admission': (s['admission'] ?? '').toString(),
+                'name': (s['name'] ?? '').toString(),
+                'gender': (s['gender'] ?? 'Male').toString(),
+                'class': (s['class'] ?? '').toString(),
+              })
+          .toList();
+    }
+
+    if (_gradeSearchQuery.isNotEmpty) {
+      currentGradeList = currentGradeList
+          .where((s) =>
+              s['name']!
+                  .toLowerCase()
+                  .contains(_gradeSearchQuery.toLowerCase()) ||
+              s['admission']!
+                  .toLowerCase()
+                  .contains(_gradeSearchQuery.toLowerCase()))
+          .toList();
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Filter card
+>>>>>>> Anudeep
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
@@ -605,6 +927,7 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
     return Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4), decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.grey.shade300)), child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [ Text(label.tr, style: const TextStyle(fontSize: 9, color: Colors.grey)), const SizedBox(height: 2), DropdownButtonHideUnderline(child: DropdownButton<String>(value: value, isDense: true, isExpanded: true, style: const TextStyle(fontSize: 11, color: Color(0xFF1E2875), fontWeight: FontWeight.bold), items: items.map((String item) => DropdownMenuItem<String>(value: item, child: Text(item.tr))).toList(), onChanged: onChanged))]));
   }
 
+<<<<<<< HEAD
   Widget _buildDrawer() {
     return Drawer(backgroundColor: Colors.white, child: ListView(padding: EdgeInsets.zero, children: [
       DrawerHeader(decoration: const BoxDecoration(color: Color(0xFF001C7F)), child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.end, children: [ Row(children: [ CircleAvatar(radius: 25, backgroundColor: Colors.white, child: Icon(Icons.person, color: Color(0xFF001C7F), size: 30)), const SizedBox(width: 12), Column(crossAxisAlignment: CrossAxisAlignment.start, children: [ Text("Admin User".tr, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)), Text("Super Administrator".tr, style: const TextStyle(color: Colors.white70, fontSize: 12)) ])]), const SizedBox(height: 16), PopupMenuButton<String>(onSelected: (String value) => ProfileManager().selectedSchool.value = value, color: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)), itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[ PopupMenuItem<String>(value: 'Ecstasy School 1', child: Text('Ecstasy School 1'.tr, style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875)))), PopupMenuItem<String>(value: 'Ecstasy School 2', child: Text('Ecstasy School 2'.tr, style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875)))), PopupMenuItem<String>(value: 'Ecstasy School 3', child: Text('Ecstasy School 3'.tr, style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875)))) ], child: Container(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8), decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.white.withValues(alpha: 0.15))), child: ValueListenableBuilder<String>(valueListenable: ProfileManager().selectedSchool, builder: (context, selectedSchool, _) => Row(children: [ const Icon(Icons.school_outlined, color: Colors.white, size: 18), const SizedBox(width: 8), Expanded(child: Text(selectedSchool, style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500))), Icon(Icons.keyboard_arrow_down, color: Colors.white.withValues(alpha: 0.7), size: 18) ]))))])),
@@ -633,4 +956,6 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
   Widget _buildDrawerSubItem(String title, VoidCallback onTap) {
     return ListTile(contentPadding: const EdgeInsets.symmetric(horizontal: 48, vertical: 0), title: Text(title.tr, style: const TextStyle(color: Color(0xFF1E2875), fontSize: 12, fontWeight: FontWeight.w500)), onTap: onTap, dense: true);
   }
+=======
+>>>>>>> Anudeep
 }

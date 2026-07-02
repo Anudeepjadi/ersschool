@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
 import '../../../widgets/app_footer.dart';
@@ -12,12 +13,12 @@ class AdminClassTeachersScreen extends StatefulWidget {
 
 class _AdminClassTeachersScreenState extends State<AdminClassTeachersScreen> {
   String _selectedBranch = 'Ecstasy School 1 (ECS001)';
-  String _selectedClass = 'Grade 1';
+  String _selectedClass = 'LKG';
   final TextEditingController _searchController = TextEditingController();
 
   final List<Map<String, String>> _allMappings = [
-    {'class': 'Grade 1', 'section': 'A', 'teacher': ''},
-    {'class': 'Grade 1', 'section': 'B', 'teacher': 'Ms. Rani'},
+    {'class': 'LKG', 'section': 'A', 'teacher': ''},
+    {'class': 'LKG', 'section': 'B', 'teacher': 'Ms. Rani'},
     {'class': 'Grade 2', 'section': 'A', 'teacher': 'Mrs. Gayatri Devi'},
     {'class': 'Grade 2', 'section': 'B', 'teacher': 'Mr. Giri Prasad'},
     {'class': 'Grade 2', 'section': 'C', 'teacher': 'Mr. Giri Prasad'},
@@ -79,7 +80,7 @@ class _AdminClassTeachersScreenState extends State<AdminClassTeachersScreen> {
           titlePadding: EdgeInsets.zero,
           title: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: const BoxDecoration(color: Colors.orange, borderRadius: BorderRadius.vertical(top: Radius.circular(8))),
+            decoration: const BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.vertical(top: Radius.circular(8))),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -129,7 +130,7 @@ class _AdminClassTeachersScreenState extends State<AdminClassTeachersScreen> {
         titlePadding: EdgeInsets.zero,
         title: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: const BoxDecoration(color: Colors.orange, borderRadius: BorderRadius.vertical(top: Radius.circular(8))),
+          decoration: const BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.vertical(top: Radius.circular(8))),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -162,8 +163,6 @@ class _AdminClassTeachersScreenState extends State<AdminClassTeachersScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Center(child: Text("Class Teachers", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.orange))),
-                  const SizedBox(height: 24),
                   _buildFilters(),
                   const SizedBox(height: 24),
                   _buildSearchBar(),
@@ -191,11 +190,11 @@ class _AdminClassTeachersScreenState extends State<AdminClassTeachersScreen> {
               children: [
                 Expanded(child: _buildDropdown(label: "Branch", value: _selectedBranch, items: ['Ecstasy School 1 (ECS001)', 'Ecstasy School 2 (ECS002)', 'Ecstasy School 3 (ECS003)'], onChanged: (v) => setState(() => _selectedBranch = v!))),
                 const SizedBox(width: 8),
-                Expanded(child: _buildDropdown(label: "Class", value: _selectedClass, items: ['Grade 1', 'Grade 2', 'Grade 3', 'Grade 4', 'Grade 5'], onChanged: (v) => setState(() => _selectedClass = v!))),
+                Expanded(child: _buildDropdown(label: "Class", value: _selectedClass, items: ['LKG', 'UKG', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'], onChanged: (v) => setState(() => _selectedClass = v!))),
               ],
             ),
             const SizedBox(height: 16),
-            ElevatedButton(onPressed: () {}, style: ElevatedButton.styleFrom(backgroundColor: Colors.orange.shade800, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 12), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))), child: const Text("Search")),
+            ElevatedButton(onPressed: () {}, style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 12), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))), child: const Text("Search")),
           ],
         );
       }
@@ -204,9 +203,9 @@ class _AdminClassTeachersScreenState extends State<AdminClassTeachersScreen> {
         children: [
           Expanded(child: _buildDropdown(label: "Branch", value: _selectedBranch, items: ['Ecstasy School 1 (ECS001)', 'Ecstasy School 2 (ECS002)', 'Ecstasy School 3 (ECS003)'], onChanged: (v) => setState(() => _selectedBranch = v!))),
           const SizedBox(width: 12),
-          Expanded(child: _buildDropdown(label: "Class", value: _selectedClass, items: ['Grade 1', 'Grade 2', 'Grade 3', 'Grade 4', 'Grade 5'], onChanged: (v) => setState(() => _selectedClass = v!))),
+          Expanded(child: _buildDropdown(label: "Class", value: _selectedClass, items: ['LKG', 'UKG', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'], onChanged: (v) => setState(() => _selectedClass = v!))),
           const SizedBox(width: 12),
-          ElevatedButton(onPressed: () {}, style: ElevatedButton.styleFrom(backgroundColor: Colors.orange.shade800, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))), child: const Text("Search")),
+          ElevatedButton(onPressed: () {}, style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))), child: const Text("Search")),
         ],
       );
     });
