@@ -4,6 +4,8 @@ import '../../widgets/admin_app_bar.dart';
 import '../../widgets/admin_drawer.dart';
 import '../../widgets/admin_bottom_nav_bar.dart';
 import '../admin_attendance_screen.dart';
+import '../student_management/admin_student_attendance_report_screen.dart';
+
 class ClassAttendanceReportScreen extends StatefulWidget {
   const ClassAttendanceReportScreen({super.key});
 
@@ -18,6 +20,10 @@ class _ClassAttendanceReportScreenState extends State<ClassAttendanceReportScree
   String selectedClass = 'LKG';
   String selectedSection = 'A';
   String selectedMonth = 'Jun-2025';
+
+  // Pagination State
+  int itemsPerPage = 25;
+  int currentPage = 1;
 
   final List<String> branches = [
     'Ecstasy School 1 (ECS001)',
@@ -41,7 +47,7 @@ class _ClassAttendanceReportScreenState extends State<ClassAttendanceReportScree
     'Apr-2026',
   ];
 
-  List<Map<String, String>> get _attendanceData {
+  List<Map<String, dynamic>> get _allAttendanceData {
     return AdminAttendanceScreen.students.map((student) {
       final isPresent = student['isPresent'] as bool;
       final fatherName = student['father']?.toString() ?? '';
@@ -53,8 +59,18 @@ class _ClassAttendanceReportScreenState extends State<ClassAttendanceReportScree
         'section': selectedSection,
         'month': selectedMonth,
         'attendance': isPresent ? '3 / 3' : '2 / 3',
+        'student': student, // Store original object
       };
     }).toList();
+  }
+
+  List<Map<String, dynamic>> get _paginatedAttendanceData {
+    final allData = _allAttendanceData;
+    int start = (currentPage - 1) * itemsPerPage;
+    int end = start + itemsPerPage;
+    if (end > allData.length) end = allData.length;
+    if (start >= allData.length) return [];
+    return allData.sublist(start, end);
   }
 
   @override
@@ -91,7 +107,6 @@ class _ClassAttendanceReportScreenState extends State<ClassAttendanceReportScree
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
                   _buildFilters(),
                   const SizedBox(height: 20),
                   const Text("Class: Grade 1 - A", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black87)),
@@ -177,6 +192,7 @@ class _ClassAttendanceReportScreenState extends State<ClassAttendanceReportScree
   }
 
   Widget _buildDataTable() {
+    final dataList = _paginatedAttendanceData;
     return Scrollbar(
       controller: _scrollController,
       thumbVisibility: true,
@@ -199,23 +215,35 @@ class _ClassAttendanceReportScreenState extends State<ClassAttendanceReportScree
           DataColumn(label: Text("Attendance", style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold))),
           DataColumn(label: Text("Action", style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold))),
         ],
-        rows: _attendanceData.map((data) => DataRow(
+        rows: dataList.map((data) => DataRow(
           cells: [
-            DataCell(Text(data['name']!, style: const TextStyle(fontSize: 9))),
-            DataCell(Text(data['father']!, style: const TextStyle(fontSize: 9))),
-            DataCell(Text(data['class']!, style: const TextStyle(fontSize: 9))),
-            DataCell(Text(data['section']!, style: const TextStyle(fontSize: 9))),
-            DataCell(Text(data['month']!, style: const TextStyle(fontSize: 9))),
-            DataCell(Text(data['attendance']!, style: const TextStyle(fontSize: 9, fontWeight: FontWeight.bold))),
+            DataCell(Text(data['name']?.toString() ?? '', style: const TextStyle(fontSize: 9))),
+            DataCell(Text(data['father']?.toString() ?? '', style: const TextStyle(fontSize: 9))),
+            DataCell(Text(data['class']?.toString() ?? '', style: const TextStyle(fontSize: 9))),
+            DataCell(Text(data['section']?.toString() ?? '', style: const TextStyle(fontSize: 9))),
+            DataCell(Text(data['month']?.toString() ?? '', style: const TextStyle(fontSize: 9))),
+            DataCell(Text(data['attendance']?.toString() ?? '', style: const TextStyle(fontSize: 9, fontWeight: FontWeight.bold))),
             DataCell(
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.blue.shade800,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: const Padding(
-                  padding: EdgeInsets.all(4.0),
-                  child: Icon(Icons.visibility, size: 14, color: Colors.white),
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AdminStudentAttendanceReportScreen(
+                        student: data['student'] as Map<String, dynamic>,
+                      ),
+                    ),
+                  );
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade800,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.all(4.0),
+                    child: Icon(Icons.visibility, size: 14, color: Colors.white),
+                  ),
                 ),
               ),
             ),
@@ -226,36 +254,81 @@ class _ClassAttendanceReportScreenState extends State<ClassAttendanceReportScree
   }
 
   Widget _buildPaginationFooter() {
+    int totalItems = AdminAttendanceScreen.students.length;
+    int startIdx = totalItems == 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
+    int endIdx = currentPage * itemsPerPage;
+    if (endIdx > totalItems) endIdx = totalItems;
+
+    int totalPages = (totalItems / itemsPerPage).ceil();
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       color: Colors.orange.shade50,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          const Text("Items per page:", style: TextStyle(fontSize: 10)),
-          const SizedBox(width: 8),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey.shade400),
-              borderRadius: BorderRadius.circular(4),
-              color: Colors.white,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            const Text("Items per page:", style: TextStyle(fontSize: 10)),
+            const SizedBox(width: 8),
+            PopupMenuButton<int>(
+              onSelected: (value) {
+                setState(() {
+                  itemsPerPage = value;
+                  currentPage = 1;
+                });
+              },
+              itemBuilder: (context) => [10, 25, 50, 100].map((int val) => PopupMenuItem<int>(
+                value: val,
+                child: Text("$val", style: const TextStyle(fontSize: 11)),
+              )).toList(),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.shade400),
+                  borderRadius: BorderRadius.circular(4),
+                  color: Colors.white,
+                ),
+                child: Row(
+                  children: [
+                    Text("$itemsPerPage", style: const TextStyle(fontSize: 10)),
+                    const Icon(Icons.arrow_drop_down, size: 14),
+                  ],
+                ),
+              ),
             ),
-            child: Row(
-              children: const [
-                Text("25", style: TextStyle(fontSize: 10)),
-                Icon(Icons.arrow_drop_down, size: 14),
-              ],
+            const SizedBox(width: 24),
+            Text("$startIdx - $endIdx of $totalItems", style: const TextStyle(fontSize: 10)),
+            const SizedBox(width: 16),
+            IconButton(
+              onPressed: currentPage > 1 ? () => setState(() => currentPage = 1) : null,
+              icon: Icon(Icons.first_page, size: 18, color: currentPage > 1 ? Colors.black87 : Colors.grey),
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
             ),
-          ),
-          const SizedBox(width: 24),
-          const Text("1 - 14 of 14", style: TextStyle(fontSize: 10)),
-          const SizedBox(width: 16),
-          const Icon(Icons.first_page, size: 18, color: Colors.grey),
-          const Icon(Icons.chevron_left, size: 18, color: Colors.grey),
-          const Icon(Icons.chevron_right, size: 18, color: Colors.grey),
-          const Icon(Icons.last_page, size: 18, color: Colors.grey),
-        ],
+            const SizedBox(width: 8),
+            IconButton(
+              onPressed: currentPage > 1 ? () => setState(() => currentPage--) : null,
+              icon: Icon(Icons.chevron_left, size: 18, color: currentPage > 1 ? Colors.black87 : Colors.grey),
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+            ),
+            const SizedBox(width: 8),
+            IconButton(
+              onPressed: currentPage < totalPages ? () => setState(() => currentPage++) : null,
+              icon: Icon(Icons.chevron_right, size: 18, color: currentPage < totalPages ? Colors.black87 : Colors.grey),
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+            ),
+            const SizedBox(width: 8),
+            IconButton(
+              onPressed: currentPage < totalPages ? () => setState(() => currentPage = totalPages) : null,
+              icon: Icon(Icons.last_page, size: 18, color: currentPage < totalPages ? Colors.black87 : Colors.grey),
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+            ),
+          ],
+        ),
       ),
     );
   }
