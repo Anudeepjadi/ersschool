@@ -70,10 +70,31 @@ class AdminAppBar extends StatelessWidget implements PreferredSizeWidget {
         automaticallyImplyLeading: false, // hide back button on web top nav
         title: Row(
           children: [
-            // Logo
-            Image.asset('assets/images/applogo.png', height: 40, width: 40, errorBuilder: (c, e, s) {
-              return Image.asset('assets/images/loginscreenlogo.png', height: 40, width: 40, errorBuilder: (c, e, s) => const Icon(Icons.school, color: AppColors.primary, size: 40));
-            }),
+            // Circular Logo
+            Container(
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white,
+              ),
+              padding: const EdgeInsets.all(4),
+              child: ClipOval(
+                child: Image.asset(
+                  'assets/images/applogo.png',
+                  height: 44, // Increased size to make text more visible
+                  width: 44,
+                  fit: BoxFit.contain, // Use contain to prevent clipping of text
+                  errorBuilder: (c, e, s) {
+                    return Image.asset(
+                      'assets/images/loginscreenlogo.png',
+                      height: 44,
+                      width: 44,
+                      fit: BoxFit.contain,
+                      errorBuilder: (c, e, s) => const Icon(Icons.school, color: AppColors.primary, size: 36),
+                    );
+                  },
+                ),
+              ),
+            ),
             const SizedBox(width: 12),
             // Title
             const Text('Ecstasy School', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white)),

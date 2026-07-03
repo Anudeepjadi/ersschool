@@ -272,7 +272,7 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: const Color(0xFFFDE6D2), // light orange
+                color: AppColors.primary.withValues(alpha: 0.05), // light blue theme
                 border: Border(
                   left: BorderSide(color: Colors.grey.shade300),
                   right: BorderSide(color: Colors.grey.shade300),
@@ -282,63 +282,66 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
               ),
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade600,
-                        borderRadius: BorderRadius.circular(16),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width - 64),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade600,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Text(
+                          "Total Records: ${_filteredData.length}".tr,
+                          style: const TextStyle(color: Colors.white, fontSize: 10),
+                        ),
                       ),
-                      child: Text(
-                        "Total Records: ${_filteredData.length}".tr,
-                        style: const TextStyle(color: Colors.white, fontSize: 10),
+                      const SizedBox(width: 16),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text("Items per page:".tr, style: const TextStyle(fontSize: 12, color: Colors.black54)),
+                          const SizedBox(width: 8),
+                          DropdownButton<int>(
+                            value: _itemsPerPage,
+                            underline: const SizedBox(),
+                            items: const [
+                              DropdownMenuItem(value: 25, child: Text("25", style: TextStyle(fontSize: 12))),
+                              DropdownMenuItem(value: 50, child: Text("50", style: TextStyle(fontSize: 12))),
+                            ],
+                            onChanged: (val) {
+                              if (val != null) setState(() { _itemsPerPage = val; _currentPage = 1; });
+                            },
+                          ),
+                          const SizedBox(width: 24),
+                          Text("$_currentPage - ${(_filteredData.length / _itemsPerPage).ceil() == 0 ? 1 : (_filteredData.length / _itemsPerPage).ceil()} of ${_filteredData.length}".tr, style: const TextStyle(fontSize: 12, color: Colors.black54)),
+                          const SizedBox(width: 16),
+                          InkWell(
+                            onTap: _currentPage > 1 ? () => setState(() => _currentPage = 1) : null,
+                            child: Icon(Icons.first_page, size: 20, color: _currentPage > 1 ? Colors.black87 : Colors.black26),
+                          ),
+                          const SizedBox(width: 8),
+                          InkWell(
+                            onTap: _currentPage > 1 ? () => setState(() => _currentPage--) : null,
+                            child: Icon(Icons.chevron_left, size: 20, color: _currentPage > 1 ? Colors.black87 : Colors.black26),
+                          ),
+                          const SizedBox(width: 8),
+                          InkWell(
+                            onTap: _currentPage < (_filteredData.length / _itemsPerPage).ceil() ? () => setState(() => _currentPage++) : null,
+                            child: Icon(Icons.chevron_right, size: 20, color: _currentPage < (_filteredData.length / _itemsPerPage).ceil() ? Colors.black87 : Colors.black26),
+                          ),
+                          const SizedBox(width: 8),
+                          InkWell(
+                            onTap: _currentPage < (_filteredData.length / _itemsPerPage).ceil() ? () => setState(() => _currentPage = (_filteredData.length / _itemsPerPage).ceil()) : null,
+                            child: Icon(Icons.last_page, size: 20, color: _currentPage < (_filteredData.length / _itemsPerPage).ceil() ? Colors.black87 : Colors.black26),
+                          ),
+                        ],
                       ),
-                    ),
-                    const SizedBox(width: 16),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text("Items per page:".tr, style: const TextStyle(fontSize: 12, color: Colors.black54)),
-                        const SizedBox(width: 8),
-                        DropdownButton<int>(
-                          value: _itemsPerPage,
-                          underline: const SizedBox(),
-                          items: const [
-                            DropdownMenuItem(value: 25, child: Text("25", style: TextStyle(fontSize: 12))),
-                            DropdownMenuItem(value: 50, child: Text("50", style: TextStyle(fontSize: 12))),
-                          ],
-                          onChanged: (val) {
-                            if (val != null) setState(() { _itemsPerPage = val; _currentPage = 1; });
-                          },
-                        ),
-                        const SizedBox(width: 24),
-                        Text("$_currentPage - ${(_filteredData.length / _itemsPerPage).ceil() == 0 ? 1 : (_filteredData.length / _itemsPerPage).ceil()} of ${_filteredData.length}".tr, style: const TextStyle(fontSize: 12, color: Colors.black54)),
-                        const SizedBox(width: 16),
-                        InkWell(
-                          onTap: _currentPage > 1 ? () => setState(() => _currentPage = 1) : null,
-                          child: Icon(Icons.first_page, size: 20, color: _currentPage > 1 ? Colors.black87 : Colors.black26),
-                        ),
-                        const SizedBox(width: 8),
-                        InkWell(
-                          onTap: _currentPage > 1 ? () => setState(() => _currentPage--) : null,
-                          child: Icon(Icons.chevron_left, size: 20, color: _currentPage > 1 ? Colors.black87 : Colors.black26),
-                        ),
-                        const SizedBox(width: 8),
-                        InkWell(
-                          onTap: _currentPage < (_filteredData.length / _itemsPerPage).ceil() ? () => setState(() => _currentPage++) : null,
-                          child: Icon(Icons.chevron_right, size: 20, color: _currentPage < (_filteredData.length / _itemsPerPage).ceil() ? Colors.black87 : Colors.black26),
-                        ),
-                        const SizedBox(width: 8),
-                        InkWell(
-                          onTap: _currentPage < (_filteredData.length / _itemsPerPage).ceil() ? () => setState(() => _currentPage = (_filteredData.length / _itemsPerPage).ceil()) : null,
-                          child: Icon(Icons.last_page, size: 20, color: _currentPage < (_filteredData.length / _itemsPerPage).ceil() ? Colors.black87 : Colors.black26),
-                        ),
-                      ],
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

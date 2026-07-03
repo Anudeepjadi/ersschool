@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../widgets/admin_app_bar.dart';
 import '../../widgets/admin_drawer.dart';
 import '../../widgets/admin_bottom_nav_bar.dart';
@@ -12,6 +13,9 @@ class FeeCollectionSummaryScreen extends StatefulWidget {
 
 class _FeeCollectionSummaryScreenState extends State<FeeCollectionSummaryScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final ScrollController _tuitionScrollController = ScrollController();
+  final ScrollController _otherScrollController = ScrollController();
+  final ScrollController _transportScrollController = ScrollController();
   String selectedBranch = 'Ecstasy School 1 (ECS001)';
   String selectedYear = '2025-26';
 
@@ -27,6 +31,14 @@ class _FeeCollectionSummaryScreenState extends State<FeeCollectionSummaryScreen>
     '2026-27',
     '2025-26',
   ];
+
+  @override
+  void dispose() {
+    _tuitionScrollController.dispose();
+    _otherScrollController.dispose();
+    _transportScrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +57,11 @@ class _FeeCollectionSummaryScreenState extends State<FeeCollectionSummaryScreen>
         child: Column(
           children: [
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 16,
+              runSpacing: 16,
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,11 +79,11 @@ class _FeeCollectionSummaryScreenState extends State<FeeCollectionSummaryScreen>
             ),
             const SizedBox(height: 24),
             
-            _buildSection("Tuition Fee"),
+            _buildSection("Tuition Fee", _tuitionScrollController),
             const SizedBox(height: 32),
-            _buildSection("Other Fee"),
+            _buildSection("Other Fee", _otherScrollController),
             const SizedBox(height: 32),
-            _buildSection("Transport Fee"),
+            _buildSection("Transport Fee", _transportScrollController),
           ],
         ),
       ),
@@ -125,41 +140,78 @@ class _FeeCollectionSummaryScreenState extends State<FeeCollectionSummaryScreen>
     );
   }
 
-  Widget _buildSection(String title) {
+  Widget _buildSection(String title, ScrollController controller) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-        const SizedBox(height: 12),
-        Table(
-          border: TableBorder.all(color: Colors.grey.shade300),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            TableRow(
-              decoration: const BoxDecoration(color: Color(0xFF001A40)),
+            Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+            Row(
               children: [
-                _buildHeaderCell("Term"),
-                _buildHeaderCell("Total Amount"),
-                _buildHeaderCell("Paid Amount"),
-                _buildHeaderCell("Balance Amount"),
-                const SizedBox(),
-                const SizedBox(),
-              ],
-            ),
-            _buildDataRow("Term 1", "550,000.00", "50,000.00", "500,000.00"),
-            _buildDataRow("Term 2", "550,000.00", "20,000.00", "530,000.00"),
-            _buildDataRow("Term 3", "550,000.00", "25,000.00", "525,000.00"),
-            TableRow(
-              decoration: BoxDecoration(color: Colors.orange.shade50),
-              children: [
-                _buildDataCell("Total", isBold: true),
-                _buildDataCell("1,650,000.00", isBold: true, textAlign: TextAlign.right),
-                _buildDataCell("95,000.00", isBold: true, textAlign: TextAlign.right),
-                _buildDataCell("1,555,000.00", isBold: true, textAlign: TextAlign.right),
-                const SizedBox(),
-                const SizedBox(),
+                const Text("Scroll: ", style: TextStyle(fontSize: 10, color: Colors.grey)),
+                IconButton(
+                  icon: Icon(Icons.arrow_circle_left_outlined, color: AppColors.primary, size: 20),
+                  onPressed: () { if (controller.hasClients) controller.animateTo(controller.offset - 200, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut); },
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                ),
+                const SizedBox(width: 8),
+                IconButton(
+                  icon: Icon(Icons.arrow_circle_right_outlined, color: AppColors.primary, size: 20),
+                  onPressed: () { if (controller.hasClients) controller.animateTo(controller.offset + 200, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut); },
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                ),
               ],
             ),
           ],
+        ),
+        const SizedBox(height: 12),
+        SingleChildScrollView(
+          controller: controller,
+          scrollDirection: Axis.horizontal,
+          child: IntrinsicWidth(
+            child: Table(
+              columnWidths: const {
+                0: FixedColumnWidth(80),
+                1: FixedColumnWidth(100),
+                2: FixedColumnWidth(100),
+                3: FixedColumnWidth(100),
+                4: FixedColumnWidth(110),
+                5: FixedColumnWidth(110),
+              },
+              border: TableBorder.all(color: Colors.grey.shade300),
+              children: [
+                TableRow(
+                  decoration: const BoxDecoration(color: Color(0xFF001A40)),
+                  children: [
+                    _buildHeaderCell("Term"),
+                    _buildHeaderCell("Total Amount"),
+                    _buildHeaderCell("Paid Amount"),
+                    _buildHeaderCell("Balance Amount"),
+                    const SizedBox(),
+                    const SizedBox(),
+                  ],
+                ),
+                _buildDataRow("Term 1", "550,000.00", "50,000.00", "500,000.00"),
+                _buildDataRow("Term 2", "550,000.00", "20,000.00", "530,000.00"),
+                _buildDataRow("Term 3", "550,000.00", "25,000.00", "525,000.00"),
+                TableRow(
+                  decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.05)),
+                  children: [
+                    _buildDataCell("Total", isBold: true),
+                    _buildDataCell("1,650,000.00", isBold: true, textAlign: TextAlign.right),
+                    _buildDataCell("95,000.00", isBold: true, textAlign: TextAlign.right),
+                    _buildDataCell("1,555,000.00", isBold: true, textAlign: TextAlign.right),
+                    const SizedBox(),
+                    const SizedBox(),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ),
         const SizedBox(height: 12),
         Align(
@@ -206,8 +258,8 @@ class _FeeCollectionSummaryScreenState extends State<FeeCollectionSummaryScreen>
           child: ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFF1B434),
-              foregroundColor: Colors.black,
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.white,
               elevation: 0,
               padding: EdgeInsets.zero,
               minimumSize: const Size(0, 30),

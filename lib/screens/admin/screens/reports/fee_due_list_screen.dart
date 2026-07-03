@@ -111,6 +111,26 @@ class _FeeDueListScreenState extends State<FeeDueListScreen> {
                   const SizedBox(height: 16),
                   _buildSearchAndActions(),
                   const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      const Text("Scroll table horizontally: ", style: TextStyle(fontSize: 10, color: Colors.grey)),
+                      IconButton(
+                        icon: const Icon(Icons.arrow_circle_left_outlined, color: AppColors.primary, size: 20),
+                        onPressed: () { if (_scrollController.hasClients) _scrollController.animateTo(_scrollController.offset - 200, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut); },
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                      ),
+                      const SizedBox(width: 8),
+                      IconButton(
+                        icon: const Icon(Icons.arrow_circle_right_outlined, color: AppColors.primary, size: 20),
+                        onPressed: () { if (_scrollController.hasClients) _scrollController.animateTo(_scrollController.offset + 200, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut); },
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
                   _buildDataTable(),
                 ],
               ),
@@ -298,8 +318,8 @@ class _FeeDueListScreenState extends State<FeeDueListScreen> {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Sending SMS to ${student['name']}")));
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFF1B434),
-                    foregroundColor: Colors.black,
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: Colors.white,
                     elevation: 0,
                     padding: EdgeInsets.zero,
                     minimumSize: const Size(44, 26),
@@ -326,69 +346,75 @@ class _FeeDueListScreenState extends State<FeeDueListScreen> {
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      color: Colors.orange.shade50,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          const Text("Items per page:", style: TextStyle(fontSize: 10)),
-          const SizedBox(width: 8),
-          PopupMenuButton<int>(
-            onSelected: (value) {
-              setState(() {
-                itemsPerPage = value;
-                currentPage = 1;
-              });
-            },
-            itemBuilder: (context) => [10, 25, 50, 100].map((int val) => PopupMenuItem<int>(
-              value: val,
-              child: Text("$val", style: const TextStyle(fontSize: 11)),
-            )).toList(),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade400),
-                borderRadius: BorderRadius.circular(4),
-                color: Colors.white,
+      color: AppColors.primary.withValues(alpha: 0.05),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width - 32),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              const Text("Items per page:", style: TextStyle(fontSize: 10)),
+              const SizedBox(width: 8),
+              PopupMenuButton<int>(
+                onSelected: (value) {
+                  setState(() {
+                    itemsPerPage = value;
+                    currentPage = 1;
+                  });
+                },
+                itemBuilder: (context) => [10, 25, 50, 100].map((int val) => PopupMenuItem<int>(
+                  value: val,
+                  child: Text("$val", style: const TextStyle(fontSize: 11)),
+                )).toList(),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey.shade400),
+                    borderRadius: BorderRadius.circular(4),
+                    color: Colors.white,
+                  ),
+                  child: Row(
+                    children: [
+                      Text("$itemsPerPage", style: const TextStyle(fontSize: 10)),
+                      const Icon(Icons.arrow_drop_down, size: 14),
+                    ],
+                  ),
+                ),
               ),
-              child: Row(
-                children: [
-                  Text("$itemsPerPage", style: const TextStyle(fontSize: 10)),
-                  const Icon(Icons.arrow_drop_down, size: 14),
-                ],
+              const SizedBox(width: 24),
+              Text("$startIdx - $endIdx of $totalItems", style: const TextStyle(fontSize: 10)),
+              const SizedBox(width: 16),
+              IconButton(
+                onPressed: currentPage > 1 ? () => setState(() => currentPage = 1) : null,
+                icon: Icon(Icons.first_page, size: 18, color: currentPage > 1 ? Colors.black87 : Colors.grey),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
               ),
-            ),
+              const SizedBox(width: 8),
+              IconButton(
+                onPressed: currentPage > 1 ? () => setState(() => currentPage--) : null,
+                icon: Icon(Icons.chevron_left, size: 18, color: currentPage > 1 ? Colors.black87 : Colors.grey),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+              ),
+              const SizedBox(width: 8),
+              IconButton(
+                onPressed: currentPage < totalPages ? () => setState(() => currentPage++) : null,
+                icon: Icon(Icons.chevron_right, size: 18, color: currentPage < totalPages ? Colors.black87 : Colors.grey),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+              ),
+              const SizedBox(width: 8),
+              IconButton(
+                onPressed: currentPage < totalPages ? () => setState(() => currentPage = totalPages) : null,
+                icon: Icon(Icons.last_page, size: 18, color: currentPage < totalPages ? Colors.black87 : Colors.grey),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+              ),
+            ],
           ),
-          const SizedBox(width: 24),
-          Text("$startIdx - $endIdx of $totalItems", style: const TextStyle(fontSize: 10)),
-          const SizedBox(width: 16),
-          IconButton(
-            onPressed: currentPage > 1 ? () => setState(() => currentPage = 1) : null,
-            icon: Icon(Icons.first_page, size: 18, color: currentPage > 1 ? Colors.black87 : Colors.grey),
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(),
-          ),
-          const SizedBox(width: 8),
-          IconButton(
-            onPressed: currentPage > 1 ? () => setState(() => currentPage--) : null,
-            icon: Icon(Icons.chevron_left, size: 18, color: currentPage > 1 ? Colors.black87 : Colors.grey),
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(),
-          ),
-          const SizedBox(width: 8),
-          IconButton(
-            onPressed: currentPage < totalPages ? () => setState(() => currentPage++) : null,
-            icon: Icon(Icons.chevron_right, size: 18, color: currentPage < totalPages ? Colors.black87 : Colors.grey),
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(),
-          ),
-          const SizedBox(width: 8),
-          IconButton(
-            onPressed: currentPage < totalPages ? () => setState(() => currentPage = totalPages) : null,
-            icon: Icon(Icons.last_page, size: 18, color: currentPage < totalPages ? Colors.black87 : Colors.grey),
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(),
-          ),
-        ],
+        ),
       ),
     );
   }
