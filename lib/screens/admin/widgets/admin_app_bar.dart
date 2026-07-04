@@ -124,6 +124,10 @@ class AdminAppBar extends StatelessWidget implements PreferredSizeWidget {
               _MenuItem('Attender/Aaya List', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEmployeeListScreen(staffType: 'Attender')))),
               _MenuItem('Employee ID Cards', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEmployeeIDCardsScreen()))),
             ]),
+            _buildWebNavDropdown(context, 'Meetings', [
+              _MenuItem('Schedule Online Meeting', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminMeetingsScreen(initialFeature: MeetingsFeature.schedule)))),
+              _MenuItem('Calendar', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminMeetingsScreen(initialFeature: MeetingsFeature.calendar)))),
+            ]),
             _buildWebNavDropdown(context, 'Examination', [
               _MenuItem('Exam Details', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminExaminationsScreen(initialFeature: ExaminationFeature.examDetails)))),
               _MenuItem('Exam Timetable', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminExaminationsScreen(initialFeature: ExaminationFeature.examTimetable)))),
@@ -146,7 +150,6 @@ class AdminAppBar extends StatelessWidget implements PreferredSizeWidget {
               _MenuItem('Class Attendance', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ClassAttendanceReportScreen()))),
             ]),
             _buildWebNavDropdown(context, 'More', [
-              _MenuItem('Meetings List', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminMeetingsScreen()))),
               _MenuItem('App Settings', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminSettingsScreen()))),
             ]),
           ],
