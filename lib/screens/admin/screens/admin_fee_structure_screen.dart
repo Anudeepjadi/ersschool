@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
 import '../../../core/data/app_data_store.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminFeeStructureScreen extends StatefulWidget {
   const AdminFeeStructureScreen({super.key});
@@ -12,6 +13,7 @@ class AdminFeeStructureScreen extends StatefulWidget {
 
 class _AdminFeeStructureScreenState extends State<AdminFeeStructureScreen> {
   final _store = AppDataStore.instance;
+  final ScrollController _scrollController = ScrollController();
 
   String _selectedBranch = 'Ecstasy School 1';
   String _selectedYear = '2025-26';
@@ -61,6 +63,7 @@ class _AdminFeeStructureScreenState extends State<AdminFeeStructureScreen> {
   @override
   void dispose() {
     _store.configVersion.removeListener(_onStoreChanged);
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -92,7 +95,7 @@ class _AdminFeeStructureScreenState extends State<AdminFeeStructureScreen> {
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Text(
           editIndex != null ? 'Edit Fee Structure' : 'Add Fee Structure',
-          style: const TextStyle(
+          style: TextStyle(
               fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
         ),
         content: Column(mainAxisSize: MainAxisSize.min, children: [
@@ -105,7 +108,7 @@ class _AdminFeeStructureScreenState extends State<AdminFeeStructureScreen> {
                   borderRadius: BorderRadius.circular(10)),
             ),
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           TextField(
             controller: amtCtrl,
             keyboardType: TextInputType.number,
@@ -119,10 +122,10 @@ class _AdminFeeStructureScreenState extends State<AdminFeeStructureScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Cancel')),
+              child: Text('Cancel'.tr)),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF16A34A),
+                backgroundColor: Color(0xFF16A34A),
                 foregroundColor: Colors.white),
             onPressed: () {
               final amt = double.tryParse(amtCtrl.text) ?? 0;
@@ -144,7 +147,7 @@ class _AdminFeeStructureScreenState extends State<AdminFeeStructureScreen> {
                 content: Text(editIndex != null
                     ? 'Fee structure updated'
                     : 'Fee structure added'),
-                backgroundColor: const Color(0xFF16A34A),
+                backgroundColor: Color(0xFF16A34A),
                 behavior: SnackBarBehavior.floating,
               ));
             },
@@ -162,14 +165,14 @@ class _AdminFeeStructureScreenState extends State<AdminFeeStructureScreen> {
       builder: (ctx) => AlertDialog(
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Delete Entry',
+        title: Text('Delete Entry'.tr,
             style:
                 TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
-        content: const Text('Are you sure?'),
+        content: Text('Are you sure?'.tr),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Cancel')),
+              child: Text('Cancel'.tr)),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red, foregroundColor: Colors.white),
@@ -180,7 +183,7 @@ class _AdminFeeStructureScreenState extends State<AdminFeeStructureScreen> {
               _loadFees();
               Navigator.pop(ctx);
             },
-            child: const Text('Delete'),
+            child: Text('Delete'.tr),
           ),
         ],
       ),
@@ -207,6 +210,11 @@ class _AdminFeeStructureScreenState extends State<AdminFeeStructureScreen> {
       appBar: const AdminAppBar(
           title: 'Fee Structure', subtitle: 'Fee structure for each class'),
       bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showAddDialog(),
+        backgroundColor: const Color(0xFF16A34A),
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
       body: Column(children: [
         // Filter bar
         Container(
@@ -228,167 +236,199 @@ class _AdminFeeStructureScreenState extends State<AdminFeeStructureScreen> {
               ElevatedButton(
                 onPressed: _loadFees,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFB45309),
+                  backgroundColor: const Color(0xFF1E2875),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8)),
                   padding: const EdgeInsets.symmetric(
                       horizontal: 14, vertical: 10),
                 ),
-                child: const Text('Get Fee Details',
-                    style: TextStyle(fontSize: 12)),
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton.icon(
-                onPressed: () => _showAddDialog(),
-                icon: const Icon(Icons.add, size: 14),
-                label: const Text('Add New', style: TextStyle(fontSize: 12)),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF16A34A),
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8)),
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 14, vertical: 10),
-                ),
+                child: Text('Get Fee Details'.tr,
+                    style: const TextStyle(fontSize: 12)),
               ),
             ]),
           ]),
         ),
-        // Table header
-        Container(
-          padding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          color: const Color(0xFF2D3748),
-          child: const Row(children: [
-            Expanded(flex: 2, child: Text('Branch', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
-            SizedBox(width: 56, child: Text('Year', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
-            SizedBox(width: 56, child: Text('Class', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
-            Expanded(flex: 2, child: Text('Fee Type', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
-            SizedBox(width: 60, child: Text('Amount', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
-            SizedBox(width: 68),
-          ]),
-        ),
-        // Rows
+        // Table Area with Horizontal Scroll
         Expanded(
-          child: !_loaded
-              ? const Center(child: CircularProgressIndicator())
-              : _feeRows.isEmpty
-                  ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.table_chart_outlined,
-                              size: 48, color: Colors.grey.shade300),
-                          const SizedBox(height: 12),
-                          const Text(
-                              'No fee structure for this selection.\nTap "Add New" to add one.',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.grey)),
-                        ],
-                      ),
-                    )
-                  : ListView.separated(
-                      padding: EdgeInsets.zero,
-                      itemCount: _feeRows.length,
-                      separatorBuilder: (_, __) =>
-                          Divider(height: 1, color: Colors.grey.shade100),
-                      itemBuilder: (_, i) {
-                        final row = _feeRows[i];
-                        return Container(
-                          color: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 10),
-                          child: Row(children: [
-                            Expanded(
-                                flex: 2,
-                                child: Text(row['branch'],
-                                    style: TextStyle(
-                                        fontSize: 11,
-                                        color: Colors.grey.shade600),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis)),
-                            SizedBox(
-                                width: 56,
-                                child: Text(row['year'],
-                                    style: const TextStyle(fontSize: 11))),
-                            SizedBox(
-                              width: 56,
-                              child: Text(row['class'],
-                                  style: const TextStyle(
-                                      fontSize: 11,
-                                      color: Color(0xFFB45309),
-                                      fontWeight: FontWeight.w600)),
-                            ),
-                            Expanded(
-                                flex: 2,
-                                child: Text(row['feeType'],
-                                    style: const TextStyle(fontSize: 11),
-                                    maxLines: 2)),
-                            SizedBox(
-                              width: 60,
-                              child: Text(
-                                (row['amount'] as double)
-                                    .toStringAsFixed(0),
-                                style: const TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                            Row(children: [
-                              InkWell(
-                                onTap: () => _showAddDialog(editIndex: i),
-                                child: Container(
-                                  width: 28,
-                                  height: 28,
-                                  decoration: const BoxDecoration(
-                                      color: Color(0xFF2563EB),
-                                      shape: BoxShape.circle),
-                                  child: const Icon(Icons.edit,
-                                      color: Colors.white, size: 14),
+          child: Scrollbar(
+            controller: _scrollController,
+            thumbVisibility: true,
+            child: SingleChildScrollView(
+              controller: _scrollController,
+              scrollDirection: Axis.horizontal,
+              child: SizedBox(
+                width: 600, // Fixed width to ensure columns are spread out
+                child: Column(children: [
+                  // Table header
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    color: const Color(0xFF1E2875),
+                    child: Row(children: [
+                      Expanded(
+                          flex: 3,
+                          child: Text('Branch Year'.tr,
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13))),
+                      Expanded(
+                          flex: 2,
+                          child: Text('Class'.tr,
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13))),
+                      Expanded(
+                          flex: 4,
+                          child: Text('Fee Type'.tr,
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13))),
+                      Expanded(
+                          flex: 2,
+                          child: Text('Amount'.tr,
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13))),
+                      const SizedBox(width: 72),
+                    ]),
+                  ),
+                  // Rows
+                  Expanded(
+                    child: !_loaded
+                        ? Center(child: CircularProgressIndicator())
+                        : _feeRows.isEmpty
+                            ? Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.table_chart_outlined,
+                                        size: 48, color: Colors.grey.shade300),
+                                    SizedBox(height: 12),
+                                    Text(
+                                        'No fee structure for this selection.\nTap "Add New" to add one.',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(color: Colors.grey)),
+                                  ],
                                 ),
+                              )
+                            : ListView.separated(
+                                padding: EdgeInsets.zero,
+                                itemCount: _feeRows.length,
+                                separatorBuilder: (_, __) =>
+                                    Divider(height: 1, color: Colors.grey.shade100),
+                                itemBuilder: (_, i) {
+                                  final row = _feeRows[i];
+                                  return Container(
+                                    color: Colors.white,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 10),
+                                    child: Row(children: [
+                                      Expanded(
+                                          flex: 3,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(row['branch'],
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.grey.shade600),
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis),
+                                              Text(row['year'],
+                                                  style: TextStyle(
+                                                      fontSize: 11,
+                                                      color:
+                                                          Colors.grey.shade500)),
+                                            ],
+                                          )),
+                                      Expanded(
+                                        flex: 2,
+                                        child: Text(row['class'],
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                color: Color(0xFFB45309),
+                                                fontWeight: FontWeight.w600)),
+                                      ),
+                                      Expanded(
+                                          flex: 4,
+                                          child: Text(row['feeType'],
+                                              style: TextStyle(fontSize: 13),
+                                              maxLines: 2)),
+                                      Expanded(
+                                        flex: 2,
+                                        child: Text(
+                                          (row['amount'] as double)
+                                              .toStringAsFixed(0),
+                                          style: TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                      ),
+                                      Row(children: [
+                                        InkWell(
+                                          onTap: () => _showAddDialog(editIndex: i),
+                                          child: Container(
+                                            width: 30,
+                                            height: 30,
+                                            decoration: BoxDecoration(
+                                                color: Color(0xFF2563EB),
+                                                shape: BoxShape.circle),
+                                            child: Icon(Icons.edit,
+                                                color: Colors.white, size: 14),
+                                          ),
+                                        ),
+                                        SizedBox(width: 4),
+                                        InkWell(
+                                          onTap: () => _delete(i),
+                                          child: Container(
+                                            width: 30,
+                                            height: 30,
+                                            decoration: BoxDecoration(
+                                                color: Colors.red.shade100,
+                                                shape: BoxShape.circle),
+                                            child: Icon(Icons.delete_outline,
+                                                color: Colors.red.shade700,
+                                                size: 14),
+                                          ),
+                                        ),
+                                      ]),
+                                    ]),
+                                  );
+                                },
                               ),
-                              const SizedBox(width: 4),
-                              InkWell(
-                                onTap: () => _delete(i),
-                                child: Container(
-                                  width: 28,
-                                  height: 28,
-                                  decoration: BoxDecoration(
-                                      color: Colors.red.shade100,
-                                      shape: BoxShape.circle),
-                                  child: Icon(Icons.delete_outline,
-                                      color: Colors.red.shade700,
-                                      size: 14),
-                                ),
-                              ),
-                            ]),
-                          ]),
-                        );
-                      },
-                    ),
+                  ),
+                ]),
+              ),
+            ),
+          ),
         ),
         // Footer
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          color: const Color(0xFFFEF3C7),
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          color: Color(0xFFFEF3C7),
           child: Row(children: [
-            const Text('Items per page:',
+            Text('Items per page:'.tr,
                 style: TextStyle(fontSize: 12, color: Colors.black54)),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Container(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey.shade400),
                   borderRadius: BorderRadius.circular(4),
                   color: Colors.white),
-              child: const Text('10', style: TextStyle(fontSize: 12)),
+              child: Text('10'.tr, style: TextStyle(fontSize: 12)),
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: 16),
             Text('1 - ${_feeRows.length} of ${_feeRows.length}',
                 style:
-                    const TextStyle(fontSize: 12, color: Colors.black54)),
+                    TextStyle(fontSize: 12, color: Colors.black54)),
           ]),
         ),
       ]),
@@ -399,23 +439,23 @@ class _AdminFeeStructureScreenState extends State<AdminFeeStructureScreen> {
       void Function(String?) onChanged) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(label,
-          style: const TextStyle(
+          style: TextStyle(
               fontSize: 10, color: Colors.grey, fontWeight: FontWeight.w600)),
-      const SizedBox(height: 3),
+      SizedBox(height: 3),
       DropdownButtonFormField<String>(
-        value: items.contains(value) ? value : items.first,
+        initialValue: items.contains(value) ? value : items.first,
         isExpanded: true,
         decoration: InputDecoration(
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
           contentPadding:
-              const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+              EdgeInsets.symmetric(horizontal: 8, vertical: 8),
           isDense: true,
         ),
         items: items
             .map((s) => DropdownMenuItem(
                 value: s,
                 child: Text(s,
-                    style: const TextStyle(fontSize: 11),
+                    style: TextStyle(fontSize: 11),
                     overflow: TextOverflow.ellipsis)))
             .toList(),
         onChanged: onChanged,

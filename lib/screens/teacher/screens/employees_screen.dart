@@ -5,6 +5,7 @@ import '../widgets/quick_actions.dart';
 import '../widgets/teacher_app_bar.dart';
 import '../widgets/teacher_drawer.dart';
 import '../widgets/teacher_bottom_nav.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class EmployeeItem {
   final String name;
@@ -105,30 +106,30 @@ class EmployeesScreenState extends State<EmployeesScreen> {
           builder: (context, setModalState) {
             return AlertDialog(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-              title: const Text("Add New Employee"),
+              title: Text("Add New Employee".tr),
               content: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     TextField(
                       controller: nameController,
-                      decoration: const InputDecoration(labelText: "Employee Name"),
+                      decoration: InputDecoration(labelText: "Employee Name"),
                     ),
                     TextField(
                       controller: idController,
-                      decoration: const InputDecoration(labelText: "Employee ID (e.g. EMP009)"),
+                      decoration: InputDecoration(labelText: "Employee ID (e.g. EMP009)"),
                     ),
                     TextField(
                       controller: roleController,
-                      decoration: const InputDecoration(labelText: "Role (e.g. Teacher, Accountant)"),
+                      decoration: InputDecoration(labelText: "Role (e.g. Teacher, Accountant)"),
                     ),
                     TextField(
                       controller: deptController,
-                      decoration: const InputDecoration(labelText: "Department"),
+                      decoration: InputDecoration(labelText: "Department"),
                     ),
                     Row(
                       children: [
-                        const Text("Status: "),
+                        Text("Status: ".tr),
                         Switch(
                           value: isActive,
                           onChanged: (val) {
@@ -146,7 +147,7 @@ class EmployeesScreenState extends State<EmployeesScreen> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text("Cancel"),
+                  child: Text("Cancel".tr),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -171,7 +172,7 @@ class EmployeesScreenState extends State<EmployeesScreen> {
                       );
                     }
                   },
-                  child: const Text("Add"),
+                  child: Text("Add".tr),
                 ),
               ],
             );
@@ -188,7 +189,7 @@ class EmployeesScreenState extends State<EmployeesScreen> {
       initialIndex: widget.activeTab > 3 ? 0 : widget.activeTab,
       child: Scaffold(
         key: _scaffoldKey,
-        backgroundColor: const Color(0xFFF5F7FF),
+        backgroundColor: Color(0xFFF5F7FF),
         appBar: TeacherAppBar(
           title: "Employees Directory",
           subtitle: "Manage all school staff",
@@ -210,7 +211,7 @@ class EmployeesScreenState extends State<EmployeesScreen> {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Material(
+            Material(
               color: Colors.white,
               elevation: 1,
               child: TabBar(
@@ -283,14 +284,14 @@ class EmployeesScreenState extends State<EmployeesScreen> {
           // 1. Sub-tabs bar spacer - since sub-tabs are displayed by CustomHeader, we will let main.dart sync this state.
           // Wait, the page header sub-tabs of employees page in PDF: Employees (active), Teachers, Attender/Aaya.
           // In main.dart we will listen to subTab index changes and update the roleTab! That's perfect!
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
 
           // 2. Employee Overview Stats (Horizontal scroll)
           SizedBox(
             height: 135,
             child: ListView(
               scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
               children: [
                 StatCard(
                   title: "Total Employees",
@@ -323,17 +324,17 @@ class EmployeesScreenState extends State<EmployeesScreen> {
               ],
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
 
           // 3. Employee List Section Header
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   "Employees List ($totalCount)",
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF1B263B),
@@ -341,22 +342,22 @@ class EmployeesScreenState extends State<EmployeesScreen> {
                 ),
                 ElevatedButton.icon(
                   onPressed: _showAddEmployeeDialog,
-                  icon: const Icon(Icons.add, size: 14, color: Colors.white),
-                  label: const Text("Add Employee", style: TextStyle(fontSize: 12, color: Colors.white)),
+                  icon: Icon(Icons.add, size: 14, color: Colors.white),
+                  label: Text("Add Employee".tr, style: TextStyle(fontSize: 12, color: Colors.white)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue[800],
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
 
           // 4. Search and Filter Bar
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: Row(
               children: [
                 Expanded(
@@ -374,7 +375,7 @@ class EmployeesScreenState extends State<EmployeesScreen> {
                           currentPage = 1;
                         });
                       },
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         hintText: "Search by name or employee ID",
                         hintStyle: TextStyle(fontSize: 12),
                         prefixIcon: Icon(Icons.search, size: 18, color: Colors.grey),
@@ -384,7 +385,7 @@ class EmployeesScreenState extends State<EmployeesScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Container(
                   height: 40,
                   width: 40,
@@ -394,10 +395,10 @@ class EmployeesScreenState extends State<EmployeesScreen> {
                     border: Border.all(color: Colors.grey[300]!),
                   ),
                   child: IconButton(
-                    icon: const Icon(Icons.tune, size: 18, color: Colors.grey),
+                    icon: Icon(Icons.tune, size: 18, color: Colors.grey),
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Filters clicked")),
+                        SnackBar(content: Text("Filters clicked".tr)),
                       );
                     },
                   ),
@@ -405,11 +406,11 @@ class EmployeesScreenState extends State<EmployeesScreen> {
               ],
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
 
           // 5. Employees Table View
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -423,36 +424,35 @@ class EmployeesScreenState extends State<EmployeesScreen> {
                     children: [
                       // Table Header Row
                       Container(
-                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
                         decoration: BoxDecoration(
                           color: Colors.grey[50],
-                          borderRadius: const BorderRadius.only(
+                          borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(12),
                             topRight: Radius.circular(12),
                           ),
                         ),
-                        child: const Row(
-                          children: [
-                            Expanded(flex: 3, child: Text("Employee Name", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: Colors.grey))),
-                            Expanded(flex: 2, child: Text("Employee ID", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: Colors.grey), textAlign: TextAlign.center)),
-                            Expanded(flex: 2, child: Text("Role", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: Colors.grey), textAlign: TextAlign.center)),
-                            Expanded(flex: 2, child: Text("Department", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: Colors.grey))),
-                            Expanded(flex: 2, child: Text("Status", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: Colors.grey), textAlign: TextAlign.center)),
-                            Expanded(flex: 1, child: Text("Action", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: Colors.grey), textAlign: TextAlign.right)),
+                        child: Row(children: [
+                            Expanded(flex: 3, child: Text("Employee Name".tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: Colors.grey))),
+                            Expanded(flex: 2, child: Text("Employee ID".tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: Colors.grey), textAlign: TextAlign.center)),
+                            Expanded(flex: 2, child: Text("Role".tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: Colors.grey), textAlign: TextAlign.center)),
+                            Expanded(flex: 2, child: Text("Department".tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: Colors.grey))),
+                            Expanded(flex: 2, child: Text("Status".tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: Colors.grey), textAlign: TextAlign.center)),
+                            Expanded(flex: 1, child: Text("Action".tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: Colors.grey), textAlign: TextAlign.right)),
                           ],
                         ),
                       ),
-                      const Divider(height: 1, color: Colors.grey),
+                      Divider(height: 1, color: Colors.grey),
                       // Table Data Rows
                       if (pageItems.isEmpty)
-                        const Padding(
+                        Padding(
                           padding: EdgeInsets.all(24.0),
-                          child: Text("No employees found", style: TextStyle(color: Colors.grey)),
+                          child: Text("No employees found".tr, style: TextStyle(color: Colors.grey)),
                         )
                       else
                     ...pageItems.map((emp) {
                           return Container(
-                            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
                             decoration: BoxDecoration(
                               border: Border(bottom: BorderSide(color: Colors.grey[100]!)),
                             ),
@@ -466,7 +466,7 @@ class EmployeesScreenState extends State<EmployeesScreen> {
                                       Expanded(
                                         child: Text(
                                           emp.name,
-                                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
@@ -476,17 +476,17 @@ class EmployeesScreenState extends State<EmployeesScreen> {
                                 // Employee ID
                                 Expanded(
                                   flex: 2,
-                                  child: Text(emp.id, style: const TextStyle(fontSize: 12), textAlign: TextAlign.center),
+                                  child: Text(emp.id, style: TextStyle(fontSize: 12), textAlign: TextAlign.center),
                                 ),
                                 // Role
                                 Expanded(
                                   flex: 2,
-                                  child: Text(emp.role, style: const TextStyle(fontSize: 12), textAlign: TextAlign.center),
+                                  child: Text(emp.role, style: TextStyle(fontSize: 12), textAlign: TextAlign.center),
                                 ),
                                 // Department
                                 Expanded(
                                   flex: 2,
-                                  child: Text(emp.department, style: const TextStyle(fontSize: 12)),
+                                  child: Text(emp.department, style: TextStyle(fontSize: 12)),
                                 ),
                                 // Status capsule
                                 Expanded(
@@ -501,13 +501,13 @@ class EmployeesScreenState extends State<EmployeesScreen> {
                                         ScaffoldMessenger.of(context).showSnackBar(
                                           SnackBar(
                                             content: Text('${emp.name} is now ${emp.isActive ? 'Active' : 'Inactive'}'),
-                                            duration: const Duration(seconds: 1),
+                                            duration: Duration(seconds: 1),
                                           ),
                                         );
                                       },
                                       borderRadius: BorderRadius.circular(12),
                                       child: Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                         decoration: BoxDecoration(
                                           color: emp.isActive ? Colors.green[50] : Colors.red[50],
                                           borderRadius: BorderRadius.circular(12),
@@ -535,7 +535,7 @@ class EmployeesScreenState extends State<EmployeesScreen> {
                                           SnackBar(content: Text('Menu for ${emp.name}')),
                                         );
                                       },
-                                      child: const Icon(Icons.more_vert, size: 18, color: Colors.grey),
+                                      child: Icon(Icons.more_vert, size: 18, color: Colors.grey),
                                     ),
                                   ),
                                 ),
@@ -552,18 +552,18 @@ class EmployeesScreenState extends State<EmployeesScreen> {
 
           // 6. Pagination Footer
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
                   child: Text(
                     "Showing ${startIndex + 1} to $endIndex of $totalCount employees",
-                    style: const TextStyle(fontSize: 11, color: Colors.grey),
+                    style: TextStyle(fontSize: 11, color: Colors.grey),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Flexible(
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
@@ -571,7 +571,7 @@ class EmployeesScreenState extends State<EmployeesScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
-                          icon: const Icon(Icons.arrow_left, size: 18),
+                          icon: Icon(Icons.arrow_left, size: 18),
                           onPressed: currentPage > 1
                               ? () {
                                   setState(() {
@@ -590,8 +590,8 @@ class EmployeesScreenState extends State<EmployeesScreen> {
                               });
                             },
                             child: Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 4),
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              margin: EdgeInsets.symmetric(horizontal: 4),
+                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                               decoration: BoxDecoration(
                                 color: isSelected ? Colors.blue[800] : Colors.transparent,
                                 borderRadius: BorderRadius.circular(4),
@@ -609,7 +609,7 @@ class EmployeesScreenState extends State<EmployeesScreen> {
                           );
                         }),
                         IconButton(
-                          icon: const Icon(Icons.arrow_right, size: 18),
+                          icon: Icon(Icons.arrow_right, size: 18),
                           onPressed: currentPage < safeTotalPages
                               ? () {
                                   setState(() {

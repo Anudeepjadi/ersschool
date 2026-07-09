@@ -12,6 +12,7 @@ class AppDataStore {
     // --- Ecstasy School 1 ---
     {
       'name': 'Aarav Sharma',
+      'father': 'Mr. Sharma',
       'class': 'Class 10',
       'roll': 'Roll No: 01',
       'admission': 'ECS00001',
@@ -21,9 +22,11 @@ class AppDataStore {
       'phone': '9876543210',
       'gender': 'Male',
       'school': 'Ecstasy School 1',
+      'hasIdCard': true,
     },
     {
       'name': 'Priya Patel',
+      'father': 'Mr. Patel',
       'class': 'Class 10',
       'roll': 'Roll No: 15',
       'admission': 'ECS00002',
@@ -33,9 +36,11 @@ class AppDataStore {
       'phone': '9876543211',
       'gender': 'Female',
       'school': 'Ecstasy School 1',
+      'hasIdCard': false,
     },
     {
       'name': 'Rohan Gupta',
+      'father': 'Mr. Gupta',
       'class': 'Class 9',
       'roll': 'Roll No: 08',
       'admission': 'ECS00003',
@@ -45,9 +50,11 @@ class AppDataStore {
       'phone': '9876543212',
       'gender': 'Male',
       'school': 'Ecstasy School 1',
+      'hasIdCard': true,
     },
     {
       'name': 'Ananya Singh',
+      'father': 'Mr. Singh',
       'class': 'Class 8',
       'roll': 'Roll No: 22',
       'admission': 'ECS00004',
@@ -57,9 +64,11 @@ class AppDataStore {
       'phone': '9876543213',
       'gender': 'Female',
       'school': 'Ecstasy School 1',
+      'hasIdCard': true,
     },
     {
       'name': 'Vikram Reddy',
+      'father': 'Mr. Reddy',
       'class': 'Class 10',
       'roll': 'Roll No: 03',
       'admission': 'ECS00005',
@@ -69,9 +78,11 @@ class AppDataStore {
       'phone': '9876543214',
       'gender': 'Male',
       'school': 'Ecstasy School 1',
+      'hasIdCard': false,
     },
     {
       'name': 'Sneha Joshi',
+      'father': 'Mr. Joshi',
       'class': 'Class 9',
       'roll': 'Roll No: 11',
       'admission': 'ECS00006',
@@ -81,9 +92,11 @@ class AppDataStore {
       'phone': '9876543215',
       'gender': 'Female',
       'school': 'Ecstasy School 1',
+      'hasIdCard': true,
     },
     {
       'name': 'Arjun Nair',
+      'father': 'Mr. Nair',
       'class': 'Class 8',
       'roll': 'Roll No: 05',
       'admission': 'ECS00007',
@@ -96,6 +109,7 @@ class AppDataStore {
     },
     {
       'name': 'Kavya Menon',
+      'father': 'Mr. Menon',
       'class': 'Class 7',
       'roll': 'Roll No: 19',
       'admission': 'ECS00008',
@@ -108,6 +122,7 @@ class AppDataStore {
     },
     {
       'name': 'Rahul Verma',
+      'father': 'Mr. Verma',
       'class': 'Class 7',
       'roll': 'Roll No: 02',
       'admission': 'ECS00009',
@@ -120,6 +135,7 @@ class AppDataStore {
     },
     {
       'name': 'Meera Das',
+      'father': 'Mr. Das',
       'class': 'Class 6',
       'roll': 'Roll No: 14',
       'admission': 'ECS00010',
@@ -132,6 +148,7 @@ class AppDataStore {
     },
     {
       'name': 'Little Timmy',
+      'father': 'Mr. Timmy',
       'class': 'LKG',
       'roll': 'Roll No: 01',
       'admission': 'ECS00011',
@@ -146,6 +163,7 @@ class AppDataStore {
     // --- Ecstasy School 2 ---
     {
       'name': 'Kabir Malhotra',
+      'father': 'Mr. Malhotra',
       'class': 'Class 10',
       'roll': 'Roll No: 01',
       'admission': 'ECS00201',
@@ -158,6 +176,7 @@ class AppDataStore {
     },
     {
       'name': 'Dia Sen',
+      'father': 'Mr. Sen',
       'class': 'Class 10',
       'roll': 'Roll No: 12',
       'admission': 'ECS00202',
@@ -170,6 +189,7 @@ class AppDataStore {
     },
     {
       'name': 'Aarush Nair',
+      'father': 'Mr. Nair',
       'class': 'Class 9',
       'roll': 'Roll No: 04',
       'admission': 'ECS00203',
@@ -182,6 +202,7 @@ class AppDataStore {
     },
     {
       'name': 'Myra Mehta',
+      'father': 'Mr. Mehta',
       'class': 'Class 8',
       'roll': 'Roll No: 18',
       'admission': 'ECS00204',
@@ -194,6 +215,7 @@ class AppDataStore {
     },
     {
       'name': 'Devansh Goel',
+      'father': 'Mr. Goel',
       'class': 'Class 10',
       'roll': 'Roll No: 02',
       'admission': 'ECS00205',
@@ -206,6 +228,7 @@ class AppDataStore {
     },
     {
       'name': 'Tanvi Bhatia',
+      'father': 'Mr. Bhatia',
       'class': 'Class 9',
       'roll': 'Roll No: 07',
       'admission': 'ECS00206',
@@ -221,6 +244,7 @@ class AppDataStore {
     // --- Ecstasy School 3 ---
     {
       'name': 'Vivaan Kapoor',
+      'father': 'Mr. Kapoor',
       'class': 'Class 10',
       'roll': 'Roll No: 01',
       'admission': 'ECS00301',
@@ -233,6 +257,7 @@ class AppDataStore {
     },
     {
       'name': 'Isha Patil',
+      'father': 'Mr. Patil',
       'class': 'Class 10',
       'roll': 'Roll No: 10',
       'admission': 'ECS00302',
@@ -245,6 +270,7 @@ class AppDataStore {
     },
     {
       'name': 'Parth Rawat',
+      'father': 'Mr. Rawat',
       'class': 'Class 9',
       'roll': 'Roll No: 03',
       'admission': 'ECS00303',
@@ -257,6 +283,7 @@ class AppDataStore {
     },
     {
       'name': 'Tara Dsouza',
+      'father': 'Mr. Dsouza',
       'class': 'Class 8',
       'roll': 'Roll No: 15',
       'admission': 'ECS00304',
@@ -269,6 +296,7 @@ class AppDataStore {
     },
     {
       'name': 'Neil Fernandes',
+      'father': 'Mr. Fernandes',
       'class': 'Class 10',
       'roll': 'Roll No: 05',
       'admission': 'ECS00305',
@@ -287,6 +315,7 @@ class AppDataStore {
     // --- Ecstasy School 1 ---
     {
       'name': 'Dr. Ramesh Kumar',
+      'father': 'Mr. Kumar',
       'subject': 'Mathematics',
       'department': 'Science',
       'status': 'Active',
@@ -300,6 +329,7 @@ class AppDataStore {
     },
     {
       'name': 'Mrs. Sunita Devi',
+      'father': 'Mr. Devi',
       'subject': 'English',
       'department': 'Languages',
       'status': 'Active',
@@ -313,6 +343,7 @@ class AppDataStore {
     },
     {
       'name': 'Mr. Anil Mishra',
+      'father': 'Mr. Mishra',
       'subject': 'Physics',
       'department': 'Science',
       'status': 'Active',
@@ -326,6 +357,7 @@ class AppDataStore {
     },
     {
       'name': 'Ms. Deepa Nair',
+      'father': 'Mr. Nair',
       'subject': 'Chemistry',
       'department': 'Science',
       'status': 'Inactive',
@@ -339,6 +371,7 @@ class AppDataStore {
     },
     {
       'name': 'Mr. Suresh Rao',
+      'father': 'Mr. Rao',
       'subject': 'Computer Science',
       'department': 'Technology',
       'status': 'Active',
@@ -352,6 +385,7 @@ class AppDataStore {
     },
     {
       'name': 'Mrs. Latha Iyer',
+      'father': 'Mr. Iyer',
       'subject': 'Hindi',
       'department': 'Languages',
       'status': 'Active',
@@ -365,6 +399,7 @@ class AppDataStore {
     },
     {
       'name': 'Mr. Prakash Jha',
+      'father': 'Mr. Jha',
       'subject': 'Social Studies',
       'department': 'Humanities',
       'status': 'Active',
@@ -378,6 +413,7 @@ class AppDataStore {
     },
     {
       'name': 'Mrs. Geeta Sharma',
+      'father': 'Mr. Sharma',
       'subject': 'Biology',
       'department': 'Science',
       'status': 'Inactive',
@@ -391,6 +427,7 @@ class AppDataStore {
     },
     {
       'name': 'Mr. Vijay Patil',
+      'father': 'Mr. Patil',
       'subject': 'Physical Education',
       'department': 'Sports',
       'status': 'Active',
@@ -404,6 +441,7 @@ class AppDataStore {
     },
     {
       'name': 'Ms. Anjali Chopra',
+      'father': 'Mr. Chopra',
       'subject': 'Art & Craft',
       'department': 'Creative Arts',
       'status': 'Active',
@@ -419,6 +457,7 @@ class AppDataStore {
     // --- Ecstasy School 2 ---
     {
       'name': 'Dr. Sanjay Dutt',
+      'father': 'Mr. Dutt',
       'subject': 'Mathematics',
       'department': 'Science',
       'status': 'Active',
@@ -432,6 +471,7 @@ class AppDataStore {
     },
     {
       'name': 'Mrs. Kiran Bedi',
+      'father': 'Mr. Bedi',
       'subject': 'English',
       'department': 'Languages',
       'status': 'Active',
@@ -445,6 +485,7 @@ class AppDataStore {
     },
     {
       'name': 'Mr. Rohit Sharma',
+      'father': 'Mr. Sharma',
       'subject': 'Physics',
       'department': 'Science',
       'status': 'Active',
@@ -458,6 +499,7 @@ class AppDataStore {
     },
     {
       'name': 'Ms. Kiara Advani',
+      'father': 'Mr. Advani',
       'subject': 'Art & Craft',
       'department': 'Creative Arts',
       'status': 'Active',
@@ -471,6 +513,7 @@ class AppDataStore {
     },
     {
       'name': 'Mr. MS Dhoni',
+      'father': 'Mr. Dhoni',
       'subject': 'Physical Education',
       'department': 'Sports',
       'status': 'Active',
@@ -487,6 +530,7 @@ class AppDataStore {
     // --- Ecstasy School 3 ---
     {
       'name': 'Dr. APJ Kalam',
+      'father': 'Mr. Kalam',
       'subject': 'Mathematics',
       'department': 'Science',
       'status': 'Active',
@@ -500,6 +544,7 @@ class AppDataStore {
     },
     {
       'name': 'Mrs. Sudha Murthy',
+      'father': 'Mr. Murthy',
       'subject': 'English',
       'department': 'Languages',
       'status': 'Active',
@@ -513,6 +558,7 @@ class AppDataStore {
     },
     {
       'name': 'Mr. Sachin Tendulkar',
+      'father': 'Mr. Tendulkar',
       'subject': 'Sports',
       'department': 'Sports',
       'status': 'Active',
@@ -526,6 +572,7 @@ class AppDataStore {
     },
     {
       'name': 'Ms. Lata Mangeshkar',
+      'father': 'Mr. Mangeshkar',
       'subject': 'Music',
       'department': 'Creative Arts',
       'status': 'Active',
@@ -545,6 +592,7 @@ class AppDataStore {
     // --- Ecstasy School 1 Branches ---
     {
       'name': 'Ecstasy School - Main Campus',
+      'father': 'Mr. Campus',
       'address': '123 Education Lane, Hyderabad',
       'students': 450,
       'teachers': 32,
@@ -557,6 +605,7 @@ class AppDataStore {
     },
     {
       'name': 'Ecstasy School - City Center',
+      'father': 'Mr. Center',
       'address': '456 Knowledge Rd, Hyderabad',
       'students': 380,
       'teachers': 28,
@@ -569,6 +618,7 @@ class AppDataStore {
     },
     {
       'name': 'Ecstasy School - Tech Park',
+      'father': 'Mr. Park',
       'address': '789 Innovation Blvd, Hyderabad',
       'students': 290,
       'teachers': 20,
@@ -581,6 +631,7 @@ class AppDataStore {
     },
     {
       'name': 'Ecstasy School - Lake View',
+      'father': 'Mr. View',
       'address': '321 Serene Ave, Hyderabad',
       'students': 125,
       'teachers': 6,
@@ -593,6 +644,7 @@ class AppDataStore {
     },
     {
       'name': 'Ecstasy School - North Campus',
+      'father': 'Mr. Campus',
       'address': '654 Scholar St, Secunderabad',
       'students': 0,
       'teachers': 0,
@@ -607,6 +659,7 @@ class AppDataStore {
     // --- Ecstasy School 2 Branches ---
     {
       'name': 'Ecstasy School 2 - West Campus',
+      'father': 'Mr. Campus',
       'address': '77 West High St, Gachibowli',
       'students': 310,
       'teachers': 22,
@@ -619,6 +672,7 @@ class AppDataStore {
     },
     {
       'name': 'Ecstasy School 2 - East Campus',
+      'father': 'Mr. Campus',
       'address': '88 East Ring Rd, Uppal',
       'students': 240,
       'teachers': 15,
@@ -631,6 +685,7 @@ class AppDataStore {
     },
     {
       'name': 'Ecstasy School 2 - Hilltop Branch',
+      'father': 'Mr. Branch',
       'address': '12 Hill View, Jubilee Hills',
       'students': 110,
       'teachers': 8,
@@ -645,6 +700,7 @@ class AppDataStore {
     // --- Ecstasy School 3 Branches ---
     {
       'name': 'Ecstasy School 3 - South Campus',
+      'father': 'Mr. Campus',
       'address': '55 Southern Rd, Begumpet',
       'students': 180,
       'teachers': 14,
@@ -657,6 +713,7 @@ class AppDataStore {
     },
     {
       'name': 'Ecstasy School 3 - Coastal Branch',
+      'father': 'Mr. Branch',
       'address': '99 Beach Dr, Vizag',
       'students': 150,
       'teachers': 10,
@@ -729,6 +786,12 @@ class AppDataStore {
     final admission = student['admission'];
     student['password'] ??= (admission is String ? admission : 'ECS00000');
     students.insert(0, student);
+    notifyConfigChange();
+  }
+
+  void updateStudent(int index, Map<String, dynamic> student) {
+    students[index] = student;
+    notifyConfigChange();
   }
 
   void addTeacher(Map<String, dynamic> teacher) {
@@ -935,7 +998,14 @@ class AppDataStore {
 
   // ─── Config Change Notifier ─────────────────────────────────────────────────
   /// Increment this whenever ANY config data changes.
-  /// Screens can listen via ValueListenableBuilder to stay reactive.
+  // ─── Settings ───────────────────────────────────────────────────────────
+  bool showIdCardPhoto = true;
+  void toggleIdCardPhoto(bool value) {
+    showIdCardPhoto = value;
+    notifyConfigChange();
+  }
+
+  // ─── Utilities ────────────────────────────────────────────────────────────
   final ValueNotifier<int> configVersion = ValueNotifier<int>(0);
   void notifyConfigChange() => configVersion.value++;
 
@@ -984,83 +1054,132 @@ class AppDataStore {
 
   // ─── Payment Types ───────────────────────────────────────────────────────────
   final List<Map<String, dynamic>> paymentTypes = [
-    {'name': 'Online Payment', 'isActive': true},
-    {'name': 'Cash', 'isActive': true},
-    {'name': 'UPI', 'isActive': true},
-    {'name': 'Credit/Debit Card', 'isActive': true},
-    {'name': 'Cheque', 'isActive': true},
+    {'name': 'Online Payment',
+      'father': 'Mr. Payment', 'isActive': true},
+    {'name': 'Cash',
+      'father': 'Mr. Kumar', 'isActive': true},
+    {'name': 'UPI',
+      'father': 'Mr. Kumar', 'isActive': true},
+    {'name': 'Credit/Debit Card',
+      'father': 'Mr. Card', 'isActive': true},
+    {'name': 'Cheque',
+      'father': 'Mr. Kumar', 'isActive': true},
   ];
 
   // ─── Study Classes ───────────────────────────────────────────────────────────
   final List<Map<String, dynamic>> studyClasses = [
-    {'name': 'Nursery', 'isActive': true},
-    {'name': 'L.K.G', 'isActive': true},
-    {'name': 'U.K.G', 'isActive': true},
-    {'name': 'Class 1', 'isActive': true},
-    {'name': 'Class 2', 'isActive': true},
-    {'name': 'Class 3', 'isActive': true},
-    {'name': 'Class 4', 'isActive': true},
-    {'name': 'Class 5', 'isActive': true},
-    {'name': 'Class 6', 'isActive': true},
-    {'name': 'Class 7', 'isActive': true},
-    {'name': 'Class 8', 'isActive': true},
-    {'name': 'Class 9', 'isActive': true},
-    {'name': 'Class 10', 'isActive': true},
+    {'name': 'Nursery',
+      'father': 'Mr. Kumar', 'isActive': true},
+    {'name': 'L.K.G',
+      'father': 'Mr. Kumar', 'isActive': true},
+    {'name': 'U.K.G',
+      'father': 'Mr. Kumar', 'isActive': true},
+    {'name': 'Class 1',
+      'father': 'Mr. 1', 'isActive': true},
+    {'name': 'Class 2',
+      'father': 'Mr. 2', 'isActive': true},
+    {'name': 'Class 3',
+      'father': 'Mr. 3', 'isActive': true},
+    {'name': 'Class 4',
+      'father': 'Mr. 4', 'isActive': true},
+    {'name': 'Class 5',
+      'father': 'Mr. 5', 'isActive': true},
+    {'name': 'Class 6',
+      'father': 'Mr. 6', 'isActive': true},
+    {'name': 'Class 7',
+      'father': 'Mr. 7', 'isActive': true},
+    {'name': 'Class 8',
+      'father': 'Mr. 8', 'isActive': true},
+    {'name': 'Class 9',
+      'father': 'Mr. 9', 'isActive': true},
+    {'name': 'Class 10',
+      'father': 'Mr. 10', 'isActive': true},
   ];
 
   // ─── Class Sections ──────────────────────────────────────────────────────────
   final List<Map<String, dynamic>> classSections = [
-    {'name': 'Section A', 'isActive': true},
-    {'name': 'Section B', 'isActive': true},
-    {'name': 'Section C', 'isActive': true},
-    {'name': 'Section D', 'isActive': true},
+    {'name': 'Section A',
+      'father': 'Mr. A', 'isActive': true},
+    {'name': 'Section B',
+      'father': 'Mr. B', 'isActive': true},
+    {'name': 'Section C',
+      'father': 'Mr. C', 'isActive': true},
+    {'name': 'Section D',
+      'father': 'Mr. D', 'isActive': true},
   ];
 
   // ─── Subjects ────────────────────────────────────────────────────────────────
   final List<Map<String, dynamic>> subjects = [
-    {'name': 'Mathematics', 'isActive': true},
-    {'name': 'English', 'isActive': true},
-    {'name': 'Science', 'isActive': true},
-    {'name': 'Hindi', 'isActive': true},
-    {'name': 'Social Studies', 'isActive': true},
-    {'name': 'Computer Science', 'isActive': true},
-    {'name': 'Physics', 'isActive': true},
-    {'name': 'Chemistry', 'isActive': true},
-    {'name': 'Biology', 'isActive': true},
+    {'name': 'Mathematics',
+      'father': 'Mr. Kumar', 'isActive': true},
+    {'name': 'English',
+      'father': 'Mr. Kumar', 'isActive': true},
+    {'name': 'Science',
+      'father': 'Mr. Kumar', 'isActive': true},
+    {'name': 'Hindi',
+      'father': 'Mr. Kumar', 'isActive': true},
+    {'name': 'Social Studies',
+      'father': 'Mr. Studies', 'isActive': true},
+    {'name': 'Computer Science',
+      'father': 'Mr. Science', 'isActive': true},
+    {'name': 'Physics',
+      'father': 'Mr. Kumar', 'isActive': true},
+    {'name': 'Chemistry',
+      'father': 'Mr. Kumar', 'isActive': true},
+    {'name': 'Biology',
+      'father': 'Mr. Kumar', 'isActive': true},
   ];
 
   // ─── Exam Types ──────────────────────────────────────────────────────────────
   final List<Map<String, dynamic>> examTypes = [
-    {'name': 'Unit Test', 'isActive': true},
-    {'name': 'Mid Term', 'isActive': true},
-    {'name': 'Final Exam', 'isActive': true},
-    {'name': 'Quarterly', 'isActive': true},
-    {'name': 'Annual', 'isActive': true},
+    {'name': 'Unit Test',
+      'father': 'Mr. Test', 'isActive': true},
+    {'name': 'Mid Term',
+      'father': 'Mr. Term', 'isActive': true},
+    {'name': 'Final Exam',
+      'father': 'Mr. Exam', 'isActive': true},
+    {'name': 'Quarterly',
+      'father': 'Mr. Kumar', 'isActive': true},
+    {'name': 'Annual',
+      'father': 'Mr. Kumar', 'isActive': true},
   ];
 
   // ─── Grade System ────────────────────────────────────────────────────────────
   final List<Map<String, dynamic>> gradeSystem = [
-    {'name': 'A+ (90-100)', 'isActive': true},
-    {'name': 'A (80-89)', 'isActive': true},
-    {'name': 'B+ (70-79)', 'isActive': true},
-    {'name': 'B (60-69)', 'isActive': true},
-    {'name': 'C (50-59)', 'isActive': true},
-    {'name': 'D (40-49)', 'isActive': true},
-    {'name': 'F (Below 40)', 'isActive': true},
+    {'name': 'A+ (90-100)',
+      'father': 'Mr. (90-100)', 'isActive': true},
+    {'name': 'A (80-89)',
+      'father': 'Mr. (80-89)', 'isActive': true},
+    {'name': 'B+ (70-79)',
+      'father': 'Mr. (70-79)', 'isActive': true},
+    {'name': 'B (60-69)',
+      'father': 'Mr. (60-69)', 'isActive': true},
+    {'name': 'C (50-59)',
+      'father': 'Mr. (50-59)', 'isActive': true},
+    {'name': 'D (40-49)',
+      'father': 'Mr. (40-49)', 'isActive': true},
+    {'name': 'F (Below 40)',
+      'father': 'Mr. 40)', 'isActive': true},
   ];
 
   // ─── Grade Report Designs ─────────────────────────────────────────────────────
   final List<Map<String, dynamic>> gradeReportDesigns = [
-    {'name': 'Standard Template', 'isActive': true},
-    {'name': 'Modern Template', 'isActive': true},
-    {'name': 'Classic Template', 'isActive': true},
+    {'name': 'Standard Template',
+      'father': 'Mr. Template', 'isActive': true},
+    {'name': 'Modern Template',
+      'father': 'Mr. Template', 'isActive': true},
+    {'name': 'Classic Template',
+      'father': 'Mr. Template', 'isActive': true},
   ];
 
   // ─── Student/Parent User Types ────────────────────────────────────────────────
   final List<Map<String, dynamic>> studentParentUsers = [
-    {'name': 'Student Portal', 'isActive': true},
-    {'name': 'Parent App', 'isActive': true},
-    {'name': 'Guardian Access', 'isActive': true},
+    {'name': 'Student Portal',
+      'father': 'Mr. Portal', 'isActive': true},
+    {'name': 'Parent App',
+      'father': 'Mr. App', 'isActive': true},
+    {'name': 'Guardian Access',
+      'father': 'Mr. Access', 'isActive': true},
   ];
 
   // ─── Class Subjects Mapping ───────────────────────────────────────────────────

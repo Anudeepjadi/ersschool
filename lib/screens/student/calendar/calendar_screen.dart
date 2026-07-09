@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../dashboard/widgets/student_app_bar.dart';
 import '../../admin/widgets/ai_bot_fab.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class CalendarScreen extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
@@ -40,11 +41,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
     DateTime temp = firstToDisplay;
     while (!temp.isAfter(lastToDisplay)) {
       list.add(temp);
-      temp = temp.add(const Duration(days: 1));
+      temp = temp.add(Duration(days: 1));
     }
     while (list.length % 7 != 0) {
       list.add(temp);
-      temp = temp.add(const Duration(days: 1));
+      temp = temp.add(Duration(days: 1));
     }
     _gridDays = list;
   }
@@ -63,7 +64,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     });
   }
 
-  String _monthName(int m) => const [
+  String _monthName(int m) => [
         "", "January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
       ][m];
@@ -73,11 +74,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
     if (day.month != _currentMonth.month) return null;
     final now = DateTime.now();
     if (day.month == now.month && day.year == now.year) {
-      if (day.day == 10) return const Color(0xFF8B5CF6); // Purple (Exams)
-      if (day.day == 15) return const Color(0xFF22C55E); // Green (Meetings)
-      if (day.day == 19) return const Color(0xFF22C55E); // Green (Meetings)
-      if (day.day == 22) return const Color(0xFFEF4444); // Red (Holidays)
-      if (day.day == 28) return const Color(0xFFF59E0B); // Orange (Events)
+      if (day.day == 10) return Color(0xFF8B5CF6); // Purple (Exams)
+      if (day.day == 15) return Color(0xFF22C55E); // Green (Meetings)
+      if (day.day == 19) return Color(0xFF22C55E); // Green (Meetings)
+      if (day.day == 22) return Color(0xFFEF4444); // Red (Holidays)
+      if (day.day == 28) return Color(0xFFF59E0B); // Orange (Events)
     }
     return null;
   }
@@ -85,8 +86,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
-      appBar: const StudentAppBar(
+      backgroundColor: Color(0xFFF8FAFC),
+      appBar: StudentAppBar(
         title: "Calendar",
         subtitle: "View your schedule and holidays",
       ),
@@ -98,7 +99,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           ),
         ],
       ),
-      floatingActionButton: const AiBotFab(),
+      floatingActionButton: AiBotFab(),
     );
   }
 
@@ -125,7 +126,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   Widget _buildTabItem(int index, IconData icon, String label) {
     final bool isActive = _activeTab == index;
-    final Color color = isActive ? AppColors.primary : const Color(0xFF6B7280);
+    final Color color = isActive ? AppColors.primary : Color(0xFF6B7280);
     return Expanded(
       child: InkWell(
         onTap: () {
@@ -136,12 +137,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(icon, color: color, size: 20),
-                const SizedBox(width: 6),
+                SizedBox(width: 6),
                 Text(
                   label,
                   style: TextStyle(
@@ -152,13 +153,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
             Container(
               height: 3,
               width: double.infinity,
               decoration: BoxDecoration(
                 color: isActive ? AppColors.primary : Colors.transparent,
-                borderRadius: const BorderRadius.only(
+                borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(2),
                   topRight: Radius.circular(2),
                 ),
@@ -177,7 +178,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           if (constraints.maxWidth > 720) {
             // Wide screen / Tablet layout
             return SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -189,19 +190,19 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         child: Column(
                           children: [
                             _buildCalendarGridCard(),
-                            const SizedBox(height: 16),
+                            SizedBox(height: 16),
                             _buildLegendRow(),
                           ],
                         ),
                       ),
-                      const SizedBox(width: 20),
+                      SizedBox(width: 20),
                       Expanded(
                         flex: 3,
                         child: _buildEventsListCard(),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 32),
+                  SizedBox(height: 32),
                   _buildHolidaysSection(),
                 ],
               ),
@@ -209,17 +210,17 @@ class _CalendarScreenState extends State<CalendarScreen> {
           } else {
             // Mobile portrait layout (stacked vertically)
             return SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              physics: const BouncingScrollPhysics(),
+              padding: EdgeInsets.all(16),
+              physics: BouncingScrollPhysics(),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildCalendarGridCard(),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
                   _buildLegendRow(),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
                   _buildEventsListCard(),
-                  const SizedBox(height: 32),
+                  SizedBox(height: 32),
                   _buildHolidaysSection(),
                 ],
               ),
@@ -230,7 +231,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     } else {
       // Holidays Tab view
       return SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16),
         child: _buildHolidaysSection(),
       );
     }
@@ -238,7 +239,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   Widget _buildCalendarGridCard() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -247,7 +248,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.015),
             blurRadius: 10,
-            offset: const Offset(0, 4),
+            offset: Offset(0, 4),
           ),
         ],
       ),
@@ -259,7 +260,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             children: [
               Text(
                 "${_monthName(_currentMonth.month)} ${_currentMonth.year}",
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF1E2875),
@@ -268,18 +269,18 @@ class _CalendarScreenState extends State<CalendarScreen> {
               Row(
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.chevron_left, size: 20, color: Color(0xFF1E2875)),
+                    icon: Icon(Icons.chevron_left, size: 20, color: Color(0xFF1E2875)),
                     onPressed: _prevMonth,
                   ),
                   IconButton(
-                    icon: const Icon(Icons.chevron_right, size: 20, color: Color(0xFF1E2875)),
+                    icon: Icon(Icons.chevron_right, size: 20, color: Color(0xFF1E2875)),
                     onPressed: _nextMonth,
                   ),
                 ],
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           // Day labels
           Row(
             children: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
@@ -297,13 +298,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     ))
                 .toList(),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           // Days grid
           GridView.builder(
             shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
+            physics: NeverScrollableScrollPhysics(),
             itemCount: _gridDays.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 7,
               crossAxisSpacing: 6,
               mainAxisSpacing: 6,
@@ -323,7 +324,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 },
                 child: Container(
                   decoration: BoxDecoration(
-                    color: isSelected ? const Color(0xFF0038FF) : Colors.transparent,
+                    color: isSelected ? Color(0xFF0038FF) : Colors.transparent,
                     shape: BoxShape.circle,
                   ),
                   alignment: Alignment.center,
@@ -338,12 +339,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           color: isSelected
                               ? Colors.white
                               : isCurrentMonth
-                                  ? const Color(0xFF1E2875)
+                                  ? Color(0xFF1E2875)
                                   : Colors.grey.shade300,
                         ),
                       ),
                       if (dotColor != null && !isSelected) ...[
-                        const SizedBox(height: 2),
+                        SizedBox(height: 2),
                         Container(
                           width: 4,
                           height: 4,
@@ -367,20 +368,20 @@ class _CalendarScreenState extends State<CalendarScreen> {
   Widget _buildLegendRow() {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      physics: const BouncingScrollPhysics(),
+      physics: BouncingScrollPhysics(),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4),
+        padding: EdgeInsets.symmetric(vertical: 4),
         child: Row(
           children: [
-            _buildLegendItem(const Color(0xFF8B5CF6), "Exams"),
-            const SizedBox(width: 16),
-            _buildLegendItem(const Color(0xFF22C55E), "Meetings"),
-            const SizedBox(width: 16),
-            _buildLegendItem(const Color(0xFFF59E0B), "Events"),
-            const SizedBox(width: 16),
-            _buildLegendItem(const Color(0xFFEF4444), "Holidays"),
-            const SizedBox(width: 16),
-            _buildLegendItem(const Color(0xFF3B82F6), "Others"),
+            _buildLegendItem(Color(0xFF8B5CF6), "Exams"),
+            SizedBox(width: 16),
+            _buildLegendItem(Color(0xFF22C55E), "Meetings"),
+            SizedBox(width: 16),
+            _buildLegendItem(Color(0xFFF59E0B), "Events"),
+            SizedBox(width: 16),
+            _buildLegendItem(Color(0xFFEF4444), "Holidays"),
+            SizedBox(width: 16),
+            _buildLegendItem(Color(0xFF3B82F6), "Others"),
           ],
         ),
       ),
@@ -398,10 +399,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
             shape: BoxShape.circle,
           ),
         ),
-        const SizedBox(width: 6),
+        SizedBox(width: 6),
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 11,
             color: Color(0xFF1E2875),
             fontWeight: FontWeight.w500,
@@ -485,7 +486,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -494,7 +495,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.015),
             blurRadius: 10,
-            offset: const Offset(0, 4),
+            offset: Offset(0, 4),
           ),
         ],
       ),
@@ -503,23 +504,22 @@ class _CalendarScreenState extends State<CalendarScreen> {
         children: [
           Text(
             "Events on ${_selectedDate.day} ${_monthName(_selectedDate.month)} ${_selectedDate.year}",
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.bold,
               color: Color(0xFF1E2875),
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           if (displayedEvents.isEmpty)
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 24),
+              padding: EdgeInsets.symmetric(vertical: 24),
               child: Center(
                 child: Column(
                   children: [
                     Icon(Icons.event_busy, color: Colors.grey.shade300, size: 36),
-                    const SizedBox(height: 8),
-                    Text(
-                      "No events scheduled for this day.",
+                    SizedBox(height: 8),
+                    Text("No events scheduled for this day.".tr,
                       style: TextStyle(color: Colors.grey.shade400, fontSize: 12),
                     ),
                   ],
@@ -543,33 +543,33 @@ class _CalendarScreenState extends State<CalendarScreen> {
     switch (ev["type"]) {
       case "Exam":
         icon = Icons.book_outlined;
-        color = const Color(0xFF8B5CF6);
-        bgColor = const Color(0xFFF3E8FF);
+        color = Color(0xFF8B5CF6);
+        bgColor = Color(0xFFF3E8FF);
         break;
       case "Meeting":
         icon = Icons.people_outline;
-        color = const Color(0xFF22C55E);
-        bgColor = const Color(0xFFDCFCE7);
+        color = Color(0xFF22C55E);
+        bgColor = Color(0xFFDCFCE7);
         break;
       case "Event":
         icon = Icons.science_outlined;
-        color = const Color(0xFFF59E0B);
-        bgColor = const Color(0xFFFEF3C7);
+        color = Color(0xFFF59E0B);
+        bgColor = Color(0xFFFEF3C7);
         break;
       case "Holiday":
         icon = Icons.beach_access_outlined;
-        color = const Color(0xFFEF4444);
-        bgColor = const Color(0xFFFEE2E2);
+        color = Color(0xFFEF4444);
+        bgColor = Color(0xFFFEE2E2);
         break;
       default:
         icon = Icons.directions_run_outlined;
-        color = const Color(0xFF3B82F6);
-        bgColor = const Color(0xFFDBEAFE);
+        color = Color(0xFF3B82F6);
+        bgColor = Color(0xFFDBEAFE);
     }
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(12),
+      margin: EdgeInsets.only(bottom: 12),
+      padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -579,42 +579,42 @@ class _CalendarScreenState extends State<CalendarScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: bgColor,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(icon, color: color, size: 20),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   ev["title"] ?? "",
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF1E2875),
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Row(
                   children: [
                     Icon(Icons.access_time, size: 12, color: Colors.grey.shade400),
-                    const SizedBox(width: 4),
+                    SizedBox(width: 4),
                     Text(
                       ev["time"] ?? "",
                       style: TextStyle(fontSize: 11, color: Colors.grey.shade500),
                     ),
                   ],
                 ),
-                const SizedBox(height: 2),
+                SizedBox(height: 2),
                 Row(
                   children: [
                     Icon(Icons.location_on_outlined, size: 12, color: Colors.grey.shade400),
-                    const SizedBox(width: 4),
+                    SizedBox(width: 4),
                     Text(
                       ev["location"] ?? "",
                       style: TextStyle(fontSize: 11, color: Colors.grey.shade500),
@@ -635,8 +635,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              "Holidays List",
+            Text("Holidays List".tr,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -646,71 +645,65 @@ class _CalendarScreenState extends State<CalendarScreen> {
             TextButton.icon(
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Downloading Holiday Calendar...")),
+                  SnackBar(content: Text("Downloading Holiday Calendar...".tr)),
                 );
               },
-              icon: const Icon(Icons.download, size: 16, color: AppColors.primary),
-              label: const Text(
-                "Download",
+              icon: Icon(Icons.download, size: 16, color: AppColors.primary),
+              label: Text("Download".tr,
                 style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 12),
               ),
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          physics: const BouncingScrollPhysics(),
+          physics: BouncingScrollPhysics(),
           child: SizedBox(
             width: 650,
             child: Column(
               children: [
                 // Table headers
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                   decoration: BoxDecoration(
                     color: Colors.grey.shade50,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Row(
-                    children: [
+                  child: Row(children: [
                       Expanded(
                         flex: 3,
-                        child: Text(
-                          "Holiday Name",
+                        child: Text("Holiday Name".tr,
                           style: TextStyle(fontSize: 11, color: Color(0xFF6B7280), fontWeight: FontWeight.bold),
                         ),
                       ),
                       Expanded(
                         flex: 3,
-                        child: Text(
-                          "Date",
+                        child: Text("Date".tr,
                           style: TextStyle(fontSize: 11, color: Color(0xFF6B7280), fontWeight: FontWeight.bold),
                         ),
                       ),
                       Expanded(
                         flex: 2,
-                        child: Text(
-                          "Day",
+                        child: Text("Day".tr,
                           style: TextStyle(fontSize: 11, color: Color(0xFF6B7280), fontWeight: FontWeight.bold),
                         ),
                       ),
                       Expanded(
                         flex: 4,
-                        child: Text(
-                          "Description",
+                        child: Text("Description".tr,
                           style: TextStyle(fontSize: 11, color: Color(0xFF6B7280), fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 6),
-                _buildHolidayRow("Summer Break", "20 June 2026 - 15 Jun 2026", "Mon - Sat", "School closed for summer vacation.", const Color(0xFFEF4444), const Color(0xFFFEE2E2), Icons.beach_access),
-                _buildHolidayRow("Independence Day", "15 Aug 2026", "Thursday", "National holiday.", const Color(0xFFF59E0B), const Color(0xFFFEF3C7), Icons.flag),
-                _buildHolidayRow("Janmashtami", "26 Aug 2026", "Monday", "Celebration of Lord Krishna's birthday.", const Color(0xFF22C55E), const Color(0xFFDCFCE7), Icons.celebration),
-                _buildHolidayRow("Gandhi Jayanti", "02 Oct 2026", "Wednesday", "Birth anniversary of Mahatma Gandhi.", const Color(0xFF8B5CF6), const Color(0xFFF3E8FF), Icons.person),
-                _buildHolidayRow("Diwali Break", "30 Oct 2026 - 03 Nov 2026", "Wed - Sun", "Festival of Lights.", const Color(0xFF3B82F6), const Color(0xFFDBEAFE), Icons.wb_sunny),
+                SizedBox(height: 6),
+                _buildHolidayRow("Summer Break", "20 June 2026 - 15 Jun 2026", "Mon - Sat", "School closed for summer vacation.", Color(0xFFEF4444), Color(0xFFFEE2E2), Icons.beach_access),
+                _buildHolidayRow("Independence Day", "15 Aug 2026", "Thursday", "National holiday.", Color(0xFFF59E0B), Color(0xFFFEF3C7), Icons.flag),
+                _buildHolidayRow("Janmashtami", "26 Aug 2026", "Monday", "Celebration of Lord Krishna's birthday.", Color(0xFF22C55E), Color(0xFFDCFCE7), Icons.celebration),
+                _buildHolidayRow("Gandhi Jayanti", "02 Oct 2026", "Wednesday", "Birth anniversary of Mahatma Gandhi.", Color(0xFF8B5CF6), Color(0xFFF3E8FF), Icons.person),
+                _buildHolidayRow("Diwali Break", "30 Oct 2026 - 03 Nov 2026", "Wed - Sun", "Festival of Lights.", Color(0xFF3B82F6), Color(0xFFDBEAFE), Icons.wb_sunny),
               ],
             ),
           ),
@@ -721,8 +714,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   Widget _buildHolidayRow(String name, String date, String day, String desc, Color color, Color bgColor, IconData icon) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-      decoration: const BoxDecoration(
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      decoration: BoxDecoration(
         border: Border(bottom: BorderSide(color: Color(0xFFF1F5F9))),
       ),
       child: Row(
@@ -732,18 +725,18 @@ class _CalendarScreenState extends State<CalendarScreen> {
             child: Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(6),
+                  padding: EdgeInsets.all(6),
                   decoration: BoxDecoration(
                     color: bgColor,
                     shape: BoxShape.circle,
                   ),
                   child: Icon(icon, color: color, size: 14),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     name,
-                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
                   ),
                 ),
               ],

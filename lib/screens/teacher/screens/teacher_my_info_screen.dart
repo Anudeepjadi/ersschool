@@ -6,6 +6,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/profile_manager.dart';
 import '../widgets/teacher_app_bar.dart';
 import '../../../core/data/app_data_store.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Data model helpers
@@ -43,7 +44,7 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
     
     name = (savedName.isNotEmpty && savedName != 'Teacher Name') 
         ? savedName 
-        : (currentTeacher != null ? currentTeacher['name'] as String : 'Dr. Ramesh Kumar');
+        : (currentTeacher != null ? currentTeacher['name'] as String : '');
         
     studentId = currentTeacher != null ? currentTeacher['employeeCode'] as String : 'ECS00E01';
     rollNumber = currentTeacher != null ? currentTeacher['subject'] as String : 'Senior Faculty';
@@ -135,7 +136,7 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
   final ImagePicker _picker = ImagePicker();
 
   // ── Country codes ──────────────────────────────────────────────────────────
-  static const List<_CountryCode> _countryCodes = [
+  static final List<_CountryCode> _countryCodes = [
     _CountryCode('+91', '🇮🇳', 'India'),
     _CountryCode('+1', '🇺🇸', 'USA'),
     _CountryCode('+44', '🇬🇧', 'UK'),
@@ -191,12 +192,12 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
             Row(
               children: [
                 Expanded(child: _photoBtn(Icons.camera_alt_rounded, 'Camera', 'Take a photo', () { Navigator.pop(ctx); _pickImage(ImageSource.camera); })),
-                const SizedBox(width: 16),
+                SizedBox(width: 16),
                 Expanded(child: _photoBtn(Icons.photo_library_rounded, 'Gallery', 'Choose existing', () { Navigator.pop(ctx); _pickImage(ImageSource.gallery); })),
               ],
             ),
             if (_profileImage != null) ...[
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton.icon(
@@ -205,11 +206,11 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
                     ProfileManager().setTeacherProfileImage(null);
                     Navigator.pop(ctx); 
                   },
-                  icon: const Icon(Icons.delete_outline, color: Colors.red),
-                  label: const Text('Remove Photo', style: TextStyle(color: Colors.red)),
+                  icon: Icon(Icons.delete_outline, color: Colors.red),
+                  label: Text('Remove Photo'.tr, style: TextStyle(color: Colors.red)),
                   style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Colors.red),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    side: BorderSide(color: Colors.red),
+                    padding: EdgeInsets.symmetric(vertical: 12),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
                 ),
@@ -226,7 +227,7 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 12),
         decoration: BoxDecoration(
           color: AppColors.primary.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(16),
@@ -234,12 +235,12 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
         ),
         child: Column(children: [
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: EdgeInsets.all(10),
             decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.1), shape: BoxShape.circle),
             child: Icon(icon, color: AppColors.primary, size: 26),
           ),
-          const SizedBox(height: 8),
-          Text(label, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+          SizedBox(height: 8),
+          Text(label, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
           Text(sub, style: TextStyle(fontSize: 11, color: Colors.grey.shade500)),
         ]),
       ),
@@ -261,7 +262,7 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
 
   void _showSnack(String msg, Color bg, IconData icon) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Row(children: [Icon(icon, color: Colors.white, size: 18), const SizedBox(width: 8), Expanded(child: Text(msg))]),
+      content: Row(children: [Icon(icon, color: Colors.white, size: 18), SizedBox(width: 8), Expanded(child: Text(msg))]),
       backgroundColor: bg,
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -271,7 +272,7 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
   // ── Shared bottom-sheet wrapper ────────────────────────────────────────────
   Widget _sheetWrapper(BuildContext ctx, {required String title, required Widget child}) {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -285,9 +286,9 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
           mainAxisSize: MainAxisSize.min,
           children: [
             Center(child: Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(2)))),
-            const SizedBox(height: 16),
-            Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primary)),
-            const SizedBox(height: 20),
+            SizedBox(height: 16),
+            Text(title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primary)),
+            SizedBox(height: 20),
             child,
           ],
         ),
@@ -320,9 +321,9 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
     prefixIcon: Icon(icon, color: AppColors.primary, size: 20),
     border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
     enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Colors.grey.shade300)),
-    focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.primary, width: 2)),
-    errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Colors.red, width: 1.5)),
-    focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Colors.red, width: 2)),
+    focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: AppColors.primary, width: 2)),
+    errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Colors.red, width: 1.5)),
+    focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Colors.red, width: 2)),
   );
 
   // ── Dropdown form field ────────────────────────────────────────────────────
@@ -368,11 +369,11 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
             // Full Name
             _formField(ctrl: nameCtrl, label: 'Full Name', icon: Icons.person,
               validator: (v) => (v == null || v.trim().length < 2) ? 'Enter a valid name' : null),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
 
             // Employee ID
             _formField(ctrl: studentIdCtrl, label: 'Employee ID', icon: Icons.badge_outlined),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
 
             // Phone + country code
             Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -382,17 +383,17 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
                   border: Border.all(color: Colors.grey.shade300),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 8),
+                padding: EdgeInsets.symmetric(horizontal: 8),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
                     value: selCode,
                     menuMaxHeight: 300,
-                    items: _countryCodes.map((c) => DropdownMenuItem(value: c.code, child: Text('${c.flag} ${c.code}', style: const TextStyle(fontSize: 13)))).toList(),
+                    items: _countryCodes.map((c) => DropdownMenuItem(value: c.code, child: Text('${c.flag} ${c.code}', style: TextStyle(fontSize: 13)))).toList(),
                     onChanged: (v) { if (v != null) setSS(() => selCode = v); },
                   ),
                 ),
               ),
-              const SizedBox(width: 10),
+              SizedBox(width: 10),
               Expanded(child: TextFormField(
                 controller: mobileCtrl,
                 keyboardType: TextInputType.phone,
@@ -401,7 +402,7 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
                 validator: (v) => (v == null || v.length != 10) ? 'Enter 10-digit number' : null,
               )),
             ]),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
 
             // Email
             _formField(ctrl: emailCtrl, label: 'Email Address', icon: Icons.email, keyboardType: TextInputType.emailAddress,
@@ -410,13 +411,13 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
                 if (!RegExp(r'^[\w\.\-\+]+@[\w\.\-]+\.[a-zA-Z]{2,}$').hasMatch(v.trim())) return 'Enter a valid email';
                 return null;
               }),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
 
             // Blood Group
             _dropField(label: 'Blood Group', icon: Icons.bloodtype, value: selBlood,
-              items: const ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+              items: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
               onChanged: (v) { if (v != null) setSS(() => selBlood = v); }),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
 
             // Date of Birth
             GestureDetector(
@@ -428,7 +429,7 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
                   firstDate: DateTime(1990),
                   lastDate: now,
                   builder: (c, w) => Theme(
-                    data: Theme.of(c).copyWith(colorScheme: const ColorScheme.light(primary: AppColors.primary, onPrimary: Colors.white)),
+                    data: Theme.of(c).copyWith(colorScheme: ColorScheme.light(primary: AppColors.primary, onPrimary: Colors.white)),
                     child: w!,
                   ),
                 );
@@ -438,21 +439,21 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
                 controller: TextEditingController(text: selDob != null ? _formatDate(selDob!) : ''),
                 decoration: _inputDeco('Date of Birth', Icons.cake).copyWith(
                   hintText: 'Tap to select date',
-                  suffixIcon: const Icon(Icons.calendar_today, color: AppColors.primary, size: 18),
+                  suffixIcon: Icon(Icons.calendar_today, color: AppColors.primary, size: 18),
                 ),
               )),
             ),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
 
             // Gender
             _dropField(label: 'Gender', icon: Icons.wc, value: selGender,
-              items: const ['Male', 'Female'],
+              items: ['Male', 'Female'],
               onChanged: (v) { if (v != null) setSS(() => selGender = v); }),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
 
             // Address
             _formField(ctrl: addressCtrl, label: 'Address', icon: Icons.home, maxLines: 2),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
 
             // Aadhaar Number
             TextFormField(
@@ -462,7 +463,7 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
               decoration: _inputDeco('Aadhaar Number (12 digits)', Icons.shield_outlined).copyWith(counterText: ''),
               validator: (v) => (v != null && v.isNotEmpty && v.length != 12) ? 'Aadhaar must be 12 digits' : null,
             ),
-            const SizedBox(height: 22),
+            SizedBox(height: 22),
 
             _saveBtn(() {
               if (formKey.currentState!.validate()) {
@@ -553,27 +554,27 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
         return _sheetWrapper(ctx, title: 'Edit Bank & Statutory Details', child: Form(
           key: formKey,
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            const Text('Bank Account', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange)),
-            const SizedBox(height: 10),
+            Text('Bank Account'.tr, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange)),
+            SizedBox(height: 10),
             _formField(ctrl: fNameCtrl, label: 'Bank Name', icon: Icons.account_balance),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
             _formField(ctrl: fPhoneCtrl, label: 'Account Number', icon: Icons.numbers),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
             _formField(ctrl: fEmailCtrl, label: 'IFSC Code', icon: Icons.account_balance_wallet),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
             _formField(ctrl: fOccCtrl, label: 'Branch Name', icon: Icons.business),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
 
-            const Text('Statutory Details', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFE91E8C))),
-            const SizedBox(height: 10),
+            Text('Statutory Details'.tr, style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFE91E8C))),
+            SizedBox(height: 10),
             _formField(ctrl: mNameCtrl, label: 'PAN Number', icon: Icons.badge),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
             _formField(ctrl: mPhoneCtrl, label: 'EPF Number', icon: Icons.health_and_safety),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
             _formField(ctrl: mEmailCtrl, label: 'UAN Number', icon: Icons.health_and_safety),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
             _formField(ctrl: mOccCtrl, label: 'Tax Regime (e.g. New/Old)', icon: Icons.monetization_on),
-            const SizedBox(height: 22),
+            SizedBox(height: 22),
 
             _saveBtn(() {
               if (formKey.currentState!.validate()) {
@@ -618,24 +619,24 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
           key: formKey,
           child: Column(children: [
             _formField(ctrl: nameCtrl, label: 'Contact Name', icon: Icons.person),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
             _formField(ctrl: relCtrl, label: 'Relationship', icon: Icons.people),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
             Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Container(
                 height: 56,
                 decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(12)),
-                padding: const EdgeInsets.symmetric(horizontal: 8),
+                padding: EdgeInsets.symmetric(horizontal: 8),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
                     value: selCode,
                     menuMaxHeight: 300,
-                    items: _countryCodes.map((c) => DropdownMenuItem(value: c.code, child: Text('${c.flag} ${c.code}', style: const TextStyle(fontSize: 13)))).toList(),
+                    items: _countryCodes.map((c) => DropdownMenuItem(value: c.code, child: Text('${c.flag} ${c.code}', style: TextStyle(fontSize: 13)))).toList(),
                     onChanged: (v) { if (v != null) setSS(() => selCode = v); },
                   ),
                 ),
               ),
-              const SizedBox(width: 10),
+              SizedBox(width: 10),
               Expanded(child: TextFormField(
                 controller: phoneCtrl,
                 keyboardType: TextInputType.phone,
@@ -644,7 +645,7 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
                 validator: (v) => (v != null && v.isNotEmpty && v.length != 10) ? 'Enter 10-digit number' : null,
               )),
             ]),
-            const SizedBox(height: 22),
+            SizedBox(height: 22),
             _saveBtn(() {
               if (formKey.currentState!.validate()) {
                 setState(() {
@@ -693,7 +694,7 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
       backgroundColor: Colors.transparent,
       builder: (ctx) => _sheetWrapper(ctx, title: title, child: Column(children: [
         ...ctrls.entries.map((e) => Padding(
-          padding: const EdgeInsets.only(bottom: 14),
+          padding: EdgeInsets.only(bottom: 14),
           child: _formField(ctrl: e.value, label: e.key, icon: icons[e.key] ?? Icons.edit),
         )),
         _saveBtn(() { onSaveData(); Navigator.pop(context); }),
@@ -708,10 +709,10 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(vertical: 14),
+        padding: EdgeInsets.symmetric(vertical: 14),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
-      child: const Text('Save Changes', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+      child: Text('Save Changes'.tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
     ),
   );
 
@@ -727,7 +728,7 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
 
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: const Color(0xFFF2F4F8),
+      backgroundColor: Color(0xFFF2F4F8),
       appBar: TeacherAppBar(
         title: "My Info",
         subtitle: "View and edit your profile",
@@ -741,16 +742,16 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
         type: BottomNavigationBarType.fixed,
         currentIndex: 0,
         selectedItemColor: AppColors.primary,
-        unselectedItemColor: const Color(0xFF757897),
-        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
-        unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
+        unselectedItemColor: Color(0xFF757897),
+        selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
+        unselectedLabelStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
         onTap: (index) {
           Navigator.pop(context);
           if (widget.onTabSelected != null) {
             widget.onTabSelected!(index);
           }
         },
-        items: const [
+        items: [
           BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home), label: "Home"),
           BottomNavigationBarItem(icon: Icon(Icons.class_outlined), activeIcon: Icon(Icons.class_), label: "Classes"),
           BottomNavigationBarItem(icon: Icon(Icons.people_outline), activeIcon: Icon(Icons.people), label: "Students"),
@@ -760,55 +761,55 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
         ],
       ),
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
+        physics: BouncingScrollPhysics(),
         child: Column(
           children: [
             Center(
               child: ConstrainedBox(
                 // cap max width for desktop
-                constraints: const BoxConstraints(maxWidth: 960),
+                constraints: BoxConstraints(maxWidth: 960),
                 child: Padding(
                   padding: EdgeInsets.only(left: hPad, right: hPad, top: 4, bottom: 16),
                   child: Column(children: [
                     // ── 1. Profile header ────────────────────────────────────────
                 _buildProfileCard(),
-                const SizedBox(height: 14),
+                SizedBox(height: 14),
 
                 // ── 2. Quick stats ────────────────────────────────────────────
                 _buildQuickStats(),
-                const SizedBox(height: 14),
+                SizedBox(height: 14),
 
                 // ── 3. Academic + Parent (side-by-side on wide, stacked on narrow) ──
                 isWide
                   ? Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       Expanded(child: _buildAcademicCard()),
-                      const SizedBox(width: 14),
+                      SizedBox(width: 14),
                       Expanded(child: _buildParentCard()),
                     ])
                   : Column(children: [
                       _buildAcademicCard(),
-                      const SizedBox(height: 14),
+                      SizedBox(height: 14),
                       _buildParentCard(),
                     ]),
-                const SizedBox(height: 14),
+                SizedBox(height: 14),
 
                 // ── 4. Emergency + Medical ────────────────────────────────────
                 isWide
                   ? Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       Expanded(child: _buildEmergencyCard()),
-                      const SizedBox(width: 14),
+                      SizedBox(width: 14),
                       Expanded(child: _buildMedicalCard()),
                     ])
                   : Column(children: [
                       _buildEmergencyCard(),
-                      const SizedBox(height: 14),
+                      SizedBox(height: 14),
                       _buildMedicalCard(),
                     ]),
-                const SizedBox(height: 14),
+                SizedBox(height: 14),
 
                 // ── 5. Other Information ─────────────────────────────────────
                 _buildOtherCard(),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
               ]),
             ),
           ),
@@ -825,13 +826,13 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
   Widget _buildProfileCard() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
+        gradient: LinearGradient(
           colors: [Color(0xFF1B263B), Color(0xFF0D1B2A)],
         ),
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, 3))],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 10, offset: Offset(0, 3))],
       ),
       child: Column(children: [
         Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -842,7 +843,7 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
               backgroundColor: Colors.white.withValues(alpha: 0.1),
               backgroundImage: _profileImage != null ? FileImage(_profileImage!) : null,
               child: _profileImage == null
-                  ? const Icon(Icons.person, size: 46, color: Colors.white)
+                  ? Icon(Icons.person, size: 46, color: Colors.white)
                   : null,
             ),
             Positioned(
@@ -850,14 +851,14 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
               child: GestureDetector(
                 onTap: _showPhotoOptions,
                 child: Container(
-                  padding: const EdgeInsets.all(5),
-                  decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
-                  child: const Icon(Icons.camera_alt, color: Colors.white, size: 14),
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
+                  child: Icon(Icons.camera_alt, color: Colors.white, size: 14),
                 ),
               ),
             ),
           ]),
-          const SizedBox(width: 14),
+          SizedBox(width: 14),
 
           // Name + class + details
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -869,7 +870,7 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
                     return Text(tName.isEmpty ? 'Employee Name' : tName, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: tName.isEmpty ? Colors.white70 : Colors.white));
                   }
                 ),
-                const SizedBox(height: 3),
+                SizedBox(height: 3),
                 Text(
                   rollNumber.isEmpty ? 'Designation' : rollNumber,
                   style: TextStyle(fontSize: 13, color: Colors.white.withValues(alpha: 0.8), fontWeight: FontWeight.w600),
@@ -877,17 +878,17 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
               ])),
               TextButton.icon(
                 onPressed: _openEditProfile,
-                icon: const Icon(Icons.edit, size: 14),
-                label: const Text('Edit Profile', style: TextStyle(fontSize: 12)),
+                icon: Icon(Icons.edit, size: 14),
+                label: Text('Edit Profile'.tr, style: TextStyle(fontSize: 12)),
                 style: TextButton.styleFrom(
                   foregroundColor: Colors.white,
                   backgroundColor: Colors.white.withValues(alpha: 0.1),
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 ),
               ),
             ]),
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
             _darkDetailLine(Icons.badge_outlined, 'Employee ID', studentId),
             _darkDetailLine(Icons.phone_outlined, 'Mobile Number', mobile.isEmpty ? '' : '$countryCode ${_formatMobile(mobile)}'),
             _darkDetailLine(Icons.email_outlined, 'Email Address', email),
@@ -905,11 +906,11 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
     final fw = isEmpty ? FontWeight.normal : FontWeight.bold;
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 6),
+      padding: EdgeInsets.only(bottom: 6),
       child: Row(children: [
         Icon(icon, size: 14, color: Colors.white70),
-        const SizedBox(width: 8),
-        Expanded(flex: 4, child: Text(label, style: const TextStyle(fontSize: 11, color: Colors.white70))),
+        SizedBox(width: 8),
+        Expanded(flex: 4, child: Text(label, style: TextStyle(fontSize: 11, color: Colors.white70))),
         Expanded(flex: 6, child: Text(displayValue, style: TextStyle(fontSize: 11, fontWeight: fw, color: valColor))),
       ]),
     );
@@ -940,14 +941,14 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
   Widget _statCell(IconData icon, String label, String val, {bool small = false}) {
     final bool isEmpty = val.trim().isEmpty;
     final displayValue = isEmpty ? label : val;
-    final color = isEmpty ? Colors.grey.shade400 : const Color(0xFF1A1A1A);
+    final color = isEmpty ? Colors.grey.shade400 : Color(0xFF1A1A1A);
     final fw = isEmpty ? FontWeight.normal : FontWeight.bold;
 
     return Expanded(child: Column(children: [
       Icon(icon, color: AppColors.primary, size: 20),
-      const SizedBox(height: 4),
+      SizedBox(height: 4),
       Text(label, style: TextStyle(fontSize: 9, color: Colors.grey.shade500), textAlign: TextAlign.center),
-      const SizedBox(height: 2),
+      SizedBox(height: 2),
       Text(displayValue, style: TextStyle(fontSize: small ? 9 : 11, fontWeight: fw, color: color), textAlign: TextAlign.center, maxLines: 2, overflow: TextOverflow.ellipsis),
     ]));
   }
@@ -986,19 +987,19 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
       onEdit: _openParentEdit,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         // Bank
-        const Text('Bank Account', style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold, fontSize: 12)),
-        const SizedBox(height: 4),
-        Text(fatherName.isEmpty ? 'Bank Name' : fatherName, style: TextStyle(fontWeight: fatherName.isEmpty ? FontWeight.normal : FontWeight.bold, fontSize: 13, color: fatherName.isEmpty ? Colors.grey.shade400 : const Color(0xFF1A1A1A))),
-        const SizedBox(height: 4),
+        Text('Bank Account'.tr, style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold, fontSize: 12)),
+        SizedBox(height: 4),
+        Text(fatherName.isEmpty ? 'Bank Name' : fatherName, style: TextStyle(fontWeight: fatherName.isEmpty ? FontWeight.normal : FontWeight.bold, fontSize: 13, color: fatherName.isEmpty ? Colors.grey.shade400 : Color(0xFF1A1A1A))),
+        SizedBox(height: 4),
         _contactLine(Icons.numbers, fatherPhone),
         _contactLine(Icons.account_balance_wallet, fatherEmail),
         _occupationRow('Branch', fatherOccupation),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         // Statutory
-        const Text('Statutory Info', style: TextStyle(color: Color(0xFFE91E8C), fontWeight: FontWeight.bold, fontSize: 12)),
-        const SizedBox(height: 4),
-        Text(motherName.isEmpty ? 'PAN Number' : motherName, style: TextStyle(fontWeight: motherName.isEmpty ? FontWeight.normal : FontWeight.bold, fontSize: 13, color: motherName.isEmpty ? Colors.grey.shade400 : const Color(0xFF1A1A1A))),
-        const SizedBox(height: 4),
+        Text('Statutory Info'.tr, style: TextStyle(color: Color(0xFFE91E8C), fontWeight: FontWeight.bold, fontSize: 12)),
+        SizedBox(height: 4),
+        Text(motherName.isEmpty ? 'PAN Number' : motherName, style: TextStyle(fontWeight: motherName.isEmpty ? FontWeight.normal : FontWeight.bold, fontSize: 13, color: motherName.isEmpty ? Colors.grey.shade400 : Color(0xFF1A1A1A))),
+        SizedBox(height: 4),
         _contactLine(Icons.badge, motherPhone),
         _contactLine(Icons.health_and_safety, motherEmail),
       ]),
@@ -1008,13 +1009,13 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
   Widget _contactLine(IconData icon, String val) {
     final bool isEmpty = val.trim().isEmpty;
     final displayValue = isEmpty ? 'Not provided' : val;
-    final color = isEmpty ? Colors.grey.shade400 : const Color(0xFF1A1A1A);
+    final color = isEmpty ? Colors.grey.shade400 : Color(0xFF1A1A1A);
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 3),
+      padding: EdgeInsets.only(bottom: 3),
       child: Row(children: [
         Icon(icon, size: 12, color: Colors.grey.shade500),
-        const SizedBox(width: 6),
+        SizedBox(width: 6),
         Expanded(child: Text(displayValue, style: TextStyle(fontSize: 11, color: color), overflow: TextOverflow.ellipsis)),
       ]),
     );
@@ -1023,11 +1024,11 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
   Widget _occupationRow(String label, String val) {
     final bool isEmpty = val.trim().isEmpty;
     final displayValue = isEmpty ? label : val;
-    final color = isEmpty ? Colors.grey.shade400 : const Color(0xFF1A1A1A);
+    final color = isEmpty ? Colors.grey.shade400 : Color(0xFF1A1A1A);
     final fw = isEmpty ? FontWeight.normal : FontWeight.w600;
 
     return Row(children: [
-      Text('$label  ', style: const TextStyle(fontSize: 11, color: Color(0xFF1A1A1A))),
+      Text('$label  ', style: TextStyle(fontSize: 11, color: Color(0xFF1A1A1A))),
       Expanded(child: Text(displayValue, style: TextStyle(fontSize: 11, fontWeight: fw, color: color), overflow: TextOverflow.ellipsis)),
     ]);
   }
@@ -1073,16 +1074,16 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
     return _card(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(children: [
         Container(
-          padding: const EdgeInsets.all(6),
+          padding: EdgeInsets.all(6),
           decoration: BoxDecoration(color: Colors.orange.withValues(alpha: 0.12), shape: BoxShape.circle),
-          child: const Icon(Icons.info_outline, color: Colors.orange, size: 18),
+          child: Icon(Icons.info_outline, color: Colors.orange, size: 18),
         ),
-        const SizedBox(width: 8),
-        const Text('Other Information', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+        SizedBox(width: 8),
+        Text('Other Information'.tr, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
       ]),
-      const SizedBox(height: 12),
-      const Divider(height: 1),
-      const SizedBox(height: 12),
+      SizedBox(height: 12),
+      Divider(height: 1),
+      SizedBox(height: 12),
       LayoutBuilder(builder: (_, constraints) {
         final wide = constraints.maxWidth > 420;
         if (wide) {
@@ -1091,7 +1092,7 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
               _row2('Nationality', nationality),
               _row2('Caste Category', casteCategory),
             ])),
-            const SizedBox(width: 16),
+            SizedBox(width: 16),
             Expanded(child: Column(children: [
               _row2('Religion', religion),
               _row2('Languages Known', languagesKnown),
@@ -1117,13 +1118,13 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
   Widget _row2(String label, String value) {
     final bool isEmpty = value.trim().isEmpty;
     final displayValue = isEmpty ? label : value;
-    final color = isEmpty ? Colors.grey.shade400 : const Color(0xFF1A1A1A);
+    final color = isEmpty ? Colors.grey.shade400 : Color(0xFF1A1A1A);
     final fw = isEmpty ? FontWeight.normal : FontWeight.w600;
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+      padding: EdgeInsets.only(bottom: 8),
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Expanded(flex: 5, child: Text(label, style: const TextStyle(fontSize: 11, color: Color(0xFF1A1A1A)))),
+        Expanded(flex: 5, child: Text(label, style: TextStyle(fontSize: 11, color: Color(0xFF1A1A1A)))),
         Expanded(flex: 5, child: Text(displayValue, style: TextStyle(fontSize: 11, fontWeight: fw, color: color), textAlign: TextAlign.right)),
       ]),
     );
@@ -1137,7 +1138,7 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 3))],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: Offset(0, 3))],
       ),
       child: child,
     );
@@ -1152,26 +1153,26 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
     VoidCallback? onEdit,
   }) {
     return _card(
-      padding: const EdgeInsets.all(14),
+      padding: EdgeInsets.all(14),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         // Header
         Row(children: [
           Container(
-            padding: const EdgeInsets.all(6),
+            padding: EdgeInsets.all(6),
             decoration: BoxDecoration(color: iconColor.withValues(alpha: 0.12), shape: BoxShape.circle),
             child: Icon(icon, color: iconColor, size: 16),
           ),
-          const SizedBox(width: 8),
-          Expanded(child: Text(title, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold))),
+          SizedBox(width: 8),
+          Expanded(child: Text(title, style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold))),
           if (onEdit != null)
             GestureDetector(
               onTap: onEdit,
               child: Icon(Icons.chevron_right, color: Colors.grey.shade400, size: 22),
             ),
         ]),
-        const SizedBox(height: 10),
-        const Divider(height: 1),
-        const SizedBox(height: 10),
+        SizedBox(height: 10),
+        Divider(height: 1),
+        SizedBox(height: 10),
         child,
       ]),
     );
@@ -1181,7 +1182,7 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
       backgroundColor: Colors.white,
       child: ListView(
         padding: EdgeInsets.zero,
-        physics: const BouncingScrollPhysics(),
+        physics: BouncingScrollPhysics(),
         children: [
           Container(
             padding: EdgeInsets.only(
@@ -1190,7 +1191,7 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
               right: 16,
               bottom: 18,
             ),
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [AppColors.primaryDark, AppColors.primaryDark],
                 begin: Alignment.topLeft,
@@ -1203,7 +1204,7 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
                 Align(
                   alignment: Alignment.topRight,
                   child: IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white, size: 22),
+                    icon: Icon(Icons.close, color: Colors.white, size: 22),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ),
@@ -1221,12 +1222,12 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
                             radius: 28,
                             backgroundColor: Colors.white,
                             backgroundImage: path != null ? FileImage(File(path)) : null,
-                            child: path == null ? const Icon(Icons.person, color: AppColors.primary, size: 36) : null,
+                            child: path == null ? Icon(Icons.person, color: AppColors.primary, size: 36) : null,
                           );
                         },
                       ),
                     ),
-                    const SizedBox(width: 14),
+                    SizedBox(width: 14),
                     Expanded(
                       child: ValueListenableBuilder<String>(
                         valueListenable: ProfileManager().teacherName,
@@ -1236,13 +1237,13 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
                             children: [
                               Text(
                                 tName.isEmpty ? "Employee Name" : tName,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              const SizedBox(height: 2),
+                              SizedBox(height: 2),
                               Text(
                                 rollNumber.isEmpty ? "Designation" : rollNumber,
                                 style: TextStyle(
@@ -1262,10 +1263,9 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
           ),
           
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Text(
-              "MAIN",
-              style: const TextStyle(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Text("MAIN".tr,
+              style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.bold,
                 color: Colors.grey,
@@ -1275,12 +1275,11 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
           ),
           
           ListTile(
-            leading: Icon(Icons.home_outlined, color: const Color(0xFF757897)),
-            title: Text(
-              "Dashboard",
-              style: TextStyle(color: const Color(0xFF1E2875), fontWeight: FontWeight.w500, fontSize: 13),
+            leading: Icon(Icons.home_outlined, color: Color(0xFF757897)),
+            title: Text("Dashboard".tr,
+              style: TextStyle(color: Color(0xFF1E2875), fontWeight: FontWeight.w500, fontSize: 13),
             ),
-            trailing: const Icon(Icons.chevron_right, size: 16, color: Colors.grey),
+            trailing: Icon(Icons.chevron_right, size: 16, color: Colors.grey),
             onTap: () {
               Navigator.pop(context); // Close drawer
               Navigator.pop(context); // Close Profile
@@ -1288,12 +1287,11 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
             },
           ),
           ListTile(
-            leading: Icon(Icons.class_outlined, color: const Color(0xFF757897)),
-            title: Text(
-              "Classes",
-              style: TextStyle(color: const Color(0xFF1E2875), fontWeight: FontWeight.w500, fontSize: 13),
+            leading: Icon(Icons.class_outlined, color: Color(0xFF757897)),
+            title: Text("Classes".tr,
+              style: TextStyle(color: Color(0xFF1E2875), fontWeight: FontWeight.w500, fontSize: 13),
             ),
-            trailing: const Icon(Icons.chevron_right, size: 16, color: Colors.grey),
+            trailing: Icon(Icons.chevron_right, size: 16, color: Colors.grey),
             onTap: () {
               Navigator.pop(context); // Close drawer
               Navigator.pop(context); // Close Profile
@@ -1301,12 +1299,11 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
             },
           ),
           ListTile(
-            leading: Icon(Icons.people_outline, color: const Color(0xFF757897)),
-            title: Text(
-              "Students",
-              style: TextStyle(color: const Color(0xFF1E2875), fontWeight: FontWeight.w500, fontSize: 13),
+            leading: Icon(Icons.people_outline, color: Color(0xFF757897)),
+            title: Text("Students".tr,
+              style: TextStyle(color: Color(0xFF1E2875), fontWeight: FontWeight.w500, fontSize: 13),
             ),
-            trailing: const Icon(Icons.chevron_right, size: 16, color: Colors.grey),
+            trailing: Icon(Icons.chevron_right, size: 16, color: Colors.grey),
             onTap: () {
               Navigator.pop(context); // Close drawer
               Navigator.pop(context); // Close Profile
@@ -1314,12 +1311,11 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
             },
           ),
           ListTile(
-            leading: Icon(Icons.assignment_outlined, color: const Color(0xFF757897)),
-            title: Text(
-              "Exams",
-              style: TextStyle(color: const Color(0xFF1E2875), fontWeight: FontWeight.w500, fontSize: 13),
+            leading: Icon(Icons.assignment_outlined, color: Color(0xFF757897)),
+            title: Text("Exams".tr,
+              style: TextStyle(color: Color(0xFF1E2875), fontWeight: FontWeight.w500, fontSize: 13),
             ),
-            trailing: const Icon(Icons.chevron_right, size: 16, color: Colors.grey),
+            trailing: Icon(Icons.chevron_right, size: 16, color: Colors.grey),
             onTap: () {
               Navigator.pop(context); // Close drawer
               Navigator.pop(context); // Close Profile
@@ -1327,12 +1323,11 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
             },
           ),
           ListTile(
-            leading: Icon(Icons.bar_chart_outlined, color: const Color(0xFF757897)),
-            title: Text(
-              "Reports",
-              style: TextStyle(color: const Color(0xFF1E2875), fontWeight: FontWeight.w500, fontSize: 13),
+            leading: Icon(Icons.bar_chart_outlined, color: Color(0xFF757897)),
+            title: Text("Reports".tr,
+              style: TextStyle(color: Color(0xFF1E2875), fontWeight: FontWeight.w500, fontSize: 13),
             ),
-            trailing: const Icon(Icons.chevron_right, size: 16, color: Colors.grey),
+            trailing: Icon(Icons.chevron_right, size: 16, color: Colors.grey),
             onTap: () {
               Navigator.pop(context); // Close drawer
               Navigator.pop(context); // Close Profile
@@ -1340,17 +1335,17 @@ class _TeacherMyInfoScreenState extends State<TeacherMyInfoScreen> with SingleTi
             },
           ),
           
-          const Divider(height: 20),
+          Divider(height: 20),
           
           ListTile(
-            leading: const Icon(Icons.logout, color: Colors.red),
-            title: const Text("Logout", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+            leading: Icon(Icons.logout, color: Colors.red),
+            title: Text("Logout".tr, style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
             onTap: () {
               // Just pop to the root
               Navigator.of(context).popUntil((route) => route.isFirst);
             },
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
         ],
       ),
     );

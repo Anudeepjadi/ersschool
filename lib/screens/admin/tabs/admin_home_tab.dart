@@ -3,6 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/profile_manager.dart';
 import '../../../core/data/app_data_store.dart';
+import '../../../core/localization/language_manager.dart';
 import '../../../widgets/calendar_popup.dart';
 
 // Import sub-screens for quick action routing
@@ -44,12 +45,12 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
   void initState() {
     super.initState();
     _quickActions = [
-      {'id': 'add_student', 'icon': Icons.person_add, 'label': "Add\nStudent", 'color': const Color(0xFF0038FF)},
-      {'id': 'add_teacher', 'icon': Icons.person_add, 'label': "Add\nTeacher", 'color': const Color(0xFF10B981)},
-      {'id': 'mark_attendance', 'icon': Icons.calendar_today, 'label': "Mark\nAttendance", 'color': const Color(0xFF8B5CF6)},
-      {'id': 'collect_fees', 'icon': Icons.receipt_long, 'label': "Collect\nFees", 'color': const Color(0xFFF59E0B)},
-      {'id': 'notice_board', 'icon': Icons.campaign, 'label': "Notice\nBoard", 'color': const Color(0xFF0038FF)},
-      {'id': 'more', 'icon': Icons.more_horiz, 'label': "More", 'color': const Color(0xFF6B7280)},
+      {'id': 'add_student', 'icon': Icons.person_add, 'label': "Add Student".tr.replaceAll(' ', '\n'), 'color': Color(0xFF0038FF)},
+      {'id': 'add_teacher', 'icon': Icons.person_add, 'label': "Add Teacher".tr.replaceAll(' ', '\n'), 'color': Color(0xFF10B981)},
+      {'id': 'mark_attendance', 'icon': Icons.calendar_today, 'label': "Mark Attendance".tr.replaceAll(' ', '\n'), 'color': Color(0xFF8B5CF6)},
+      {'id': 'collect_fees', 'icon': Icons.receipt_long, 'label': "Collect Fees".tr.replaceAll(' ', '\n'), 'color': Color(0xFFF59E0B)},
+      {'id': 'notice_board', 'icon': Icons.campaign, 'label': "Notice Board".tr.replaceAll(' ', '\n'), 'color': Color(0xFF0038FF)},
+      {'id': 'more', 'icon': Icons.more_horiz, 'label': "More".tr, 'color': Color(0xFF6B7280)},
     ];
   }
 
@@ -57,10 +58,10 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
     switch (id) {
       case 'add_student': return widget.onAddStudent;
       case 'add_teacher': return widget.onAddTeacher;
-      case 'mark_attendance': return () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminAttendanceScreen()));
-      case 'collect_fees': return () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminFeesScreen()));
-      case 'notice_board': return () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminCommunicationsScreen()));
-      case 'ai_assistant': return () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AiAssistantScreen()));
+      case 'mark_attendance': return () => Navigator.push(context, MaterialPageRoute(builder: (_) => AdminAttendanceScreen()));
+      case 'collect_fees': return () => Navigator.push(context, MaterialPageRoute(builder: (_) => AdminFeesScreen()));
+      case 'notice_board': return () => Navigator.push(context, MaterialPageRoute(builder: (_) => AdminCommunicationsScreen()));
+      case 'ai_assistant': return () => Navigator.push(context, MaterialPageRoute(builder: (_) => AiAssistantScreen()));
       case 'more': return widget.onOpenDrawer;
       default: return () {};
     }
@@ -69,15 +70,15 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF5F7FF),
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(72),
+        preferredSize: Size.fromHeight(72),
         child: ValueListenableBuilder<String>(
           valueListenable: ProfileManager().adminName,
           builder: (context, name, _) {
             return AdminAppBar(
-              title: "Welcome $name 👋",
-              subtitle: "Here's what's happening today.",
+              title: "${"Welcome".tr} $name 👋",
+              subtitle: "Here's what's happening today.".tr,
               onOpenDrawer: widget.onOpenDrawer,
               onProfileTap: widget.onOpenProfile,
               showSchoolSelector: false,
@@ -92,44 +93,46 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
           return Stack(
             children: [
               SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
+                physics: BouncingScrollPhysics(),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.only(top: 12, left: 16, right: 16),
+                      child: _buildDateDisplay(),
+                    ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      padding: EdgeInsets.symmetric(horizontal: 16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(height: 4),  // 2. Date display
-                          _buildDateDisplay(),
-
-                          const SizedBox(height: 20),
+                          SizedBox(height: 12),
 
                           // 3. Stats row
                           _buildStatsRowForSchool(school),
 
-                          const SizedBox(height: 24),
+                          SizedBox(height: 24),
 
                           // 4. Quick Actions
                           _buildQuickActions(),
 
-                          const SizedBox(height: 24),
+                          SizedBox(height: 24),
 
                           // 5. Fee Collection & Attendance Overview
                           _buildFeeAndAttendanceRowForSchool(school, metrics),
 
-                          const SizedBox(height: 24),
+                          SizedBox(height: 24),
 
                           // 6. Recent Notices & Upcoming Events
                           _buildNoticesAndEvents(),
 
-                          const SizedBox(height: 24),
+                          SizedBox(height: 24),
 
                           // 7. Fee Collection Overview Line Chart
                           _buildFeeCollectionChartForSchool(school, metrics),
 
-                          const SizedBox(height: 100),
+                          SizedBox(height: 100),
                         ],
                       ),
                     ),
@@ -140,72 +143,12 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
           );
         },
       ),
-      floatingActionButton: const AiBotFab(),
+      floatingActionButton: AiBotFab(),
     );
   }  // ══════════════════════════════════════════════════════════════════════════
   // 2. DATE DISPLAY
   // ══════════════════════════════════════════════════════════════════════════
-  Widget _buildSchoolSelector() {
-    return PopupMenuButton<String>(
-      onSelected: (String school) {
-        debugPrint("AdminHomeTab selected school: $school");
-        ProfileManager().selectedSchool.value = school;
-      },
-      color: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-        const PopupMenuItem<String>(
-          value: 'Ecstasy School 1',
-          child: Text('Ecstasy School 1', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-        ),
-        const PopupMenuItem<String>(
-          value: 'Ecstasy School 2',
-          child: Text('Ecstasy School 2', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-        ),
-        const PopupMenuItem<String>(
-          value: 'Ecstasy School 3',
-          child: Text('Ecstasy School 3', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-        ),
-      ],
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        decoration: BoxDecoration(
-          color: const Color(0xFFF0F4FF),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: ValueListenableBuilder<String>(
-          valueListenable: ProfileManager().selectedSchool,
-          builder: (context, selectedSchool, _) {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.school, color: AppColors.primary, size: 14),
-                    const SizedBox(width: 8),
-                    Text(
-                      selectedSchool,
-                      style: const TextStyle(
-                        color: Color(0xFF1E2875),
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-                const Icon(
-                  Icons.keyboard_arrow_down,
-                  color: Color(0xFF1E2875),
-                  size: 16,
-                ),
-              ],
-            );
-          },
-        ),
-      ),
-    );
-  }
+
 
   Widget _buildDateDisplay() {
     final now = DateTime.now();
@@ -219,47 +162,111 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
     ];
     final dateStr = "${now.day} ${months[now.month - 1]} ${now.year}";
     final dayStr = days[now.weekday - 1];
+    final shortDay = dayStr.substring(0, 3);
+    final combinedDate = "$shortDay, $dateStr";
 
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        // School Selector
         Expanded(
-          child: _buildSchoolSelector(),
+          child: Material(
+            color: const Color(0xFFF0F4FF),
+            borderRadius: BorderRadius.circular(8),
+            clipBehavior: Clip.antiAlias,
+            child: Theme(
+              data: Theme.of(context).copyWith(
+                splashColor: AppColors.primary.withValues(alpha: 0.2),
+                highlightColor: AppColors.primary.withValues(alpha: 0.1),
+              ),
+              child: PopupMenuButton<String>(
+                onSelected: (String school) {
+                ProfileManager().selectedSchool.value = school;
+              },
+              color: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                PopupMenuItem<String>(
+                  value: 'Ecstasy School 1',
+                  child: Text('Ecstasy School 1'.tr, style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                ),
+                PopupMenuItem<String>(
+                  value: 'Ecstasy School 2',
+                  child: Text('Ecstasy School 2'.tr, style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                ),
+                PopupMenuItem<String>(
+                  value: 'Ecstasy School 3',
+                  child: Text('Ecstasy School 3'.tr, style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                ),
+              ],
+              child: Container(
+                height: 44,
+                alignment: Alignment.center,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: ValueListenableBuilder<String>(
+                  valueListenable: ProfileManager().selectedSchool,
+                  builder: (context, selectedSchool, _) {
+                    return Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.school, color: AppColors.primary, size: 14),
+                        const SizedBox(width: 6),
+                        Text(
+                          selectedSchool,
+                          style: const TextStyle(
+                            color: Color(0xFF1E2875),
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        const Icon(
+                          Icons.keyboard_arrow_down,
+                          color: AppColors.primary,
+                          size: 14,
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ),
+            ),
+          ),
         ),
         const SizedBox(width: 12),
-        InkWell(
-          onTap: () {
-            showCalendarPopup(context);
-          },
-          borderRadius: BorderRadius.circular(8),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF0F4FF),
+        Expanded(
+          child: Material(
+            color: const Color(0xFFF0F4FF),
+            borderRadius: BorderRadius.circular(8),
+            clipBehavior: Clip.antiAlias,
+            child: InkWell(
+              splashColor: AppColors.primary.withValues(alpha: 0.2),
+              highlightColor: AppColors.primary.withValues(alpha: 0.1),
+              onTap: () {
+                showCalendarPopup(context);
+              },
               borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.calendar_today, size: 14, color: AppColors.primary),
-                const SizedBox(width: 6),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              child: Container(
+                height: 44,
+                alignment: Alignment.center,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
+                    const Icon(Icons.calendar_today, size: 14, color: AppColors.primary),
+                    const SizedBox(width: 6),
                     Text(
-                      dateStr,
+                      combinedDate,
                       style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF1E2875),
                       ),
                     ),
-                    Text(
-                      dayStr,
-                      style: const TextStyle(fontSize: 10, color: Colors.grey),
-                    ),
                   ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
@@ -282,31 +289,31 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
         Expanded(
           child: _buildStatCard(
             icon: Icons.people,
-            iconBgColor: const Color(0xFF0038FF),
-            label: "Students",
+            iconBgColor: Color(0xFF0038FF),
+            label: "Total Students".tr,
             value: studentsCount.toString(),
             change: "↑ 12 this month",
             changeColor: Colors.green,
             onTap: () => widget.onTabSelected?.call(1),
           ),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Expanded(
           child: _buildStatCard(
             icon: Icons.school,
-            iconBgColor: const Color(0xFFF59E0B),
-            label: "Teachers",
+            iconBgColor: Color(0xFFF59E0B),
+            label: "Total Teachers".tr,
             value: teachersCount.toString(),
             change: "↑ 3 this month",
             changeColor: Colors.green,
             onTap: () => widget.onTabSelected?.call(2),
           ),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Expanded(
           child: _buildStatCard(
             icon: Icons.business,
-            iconBgColor: const Color(0xFFEF4444),
+            iconBgColor: Color(0xFFEF4444),
             label: "Branches",
             value: branchesCount.toString(),
             change: "↑ 1 this month",
@@ -314,18 +321,18 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
             onTap: () => widget.onTabSelected?.call(3),
           ),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Expanded(
           child: _buildStatCard(
             icon: Icons.check_circle_outline,
-            iconBgColor: const Color(0xFF10B981),
-            label: "Attendance\nToday",
+            iconBgColor: Color(0xFF10B981),
+            label: "Attendance\nToday".tr,
             value: "$presentPercent%",
             change: metrics['attendanceChange'] as String,
             changeColor: metrics['attendanceChangeColor'] as Color,
             onTap: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => const AdminAttendanceScreen()),
+              MaterialPageRoute(builder: (_) => AdminAttendanceScreen()),
             ),
           ),
         ),
@@ -351,7 +358,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
           BoxShadow(
             color: Colors.grey.shade50,
             blurRadius: 4,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
       ),
@@ -362,19 +369,19 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
           child: InkWell(
             onTap: onTap,
             child: Padding(
-              padding: const EdgeInsets.all(10),
+              padding: EdgeInsets.all(10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(8),
+                    padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: iconBgColor.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(icon, color: iconBgColor, size: 20),
                   ),
-                  const SizedBox(height: 6),
+                  SizedBox(height: 6),
                   Text(
                     label,
                     textAlign: TextAlign.center,
@@ -384,16 +391,16 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   Text(
                     value,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF1E2875),
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   Text(
                     change,
                     textAlign: TextAlign.center,
@@ -422,8 +429,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              "Quick Actions",
+            Text("Quick Actions".tr,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -434,18 +440,17 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
               onTap: _showCustomizeBottomSheet,
               borderRadius: BorderRadius.circular(12),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 child: Row(
                   children: [
-                    const Text(
-                      "Customize",
+                    Text("Customize".tr,
                       style: TextStyle(
                         fontSize: 12,
                         color: AppColors.primary,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const SizedBox(width: 4),
+                    SizedBox(width: 4),
                     Icon(Icons.settings, size: 14, color: AppColors.primary.withValues(alpha: 0.7)),
                   ],
                 ),
@@ -453,12 +458,12 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
             ),
           ],
         ),
-        const SizedBox(height: 14),
+        SizedBox(height: 14),
         SizedBox(
           width: double.infinity,
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
+            physics: BouncingScrollPhysics(),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: _quickActions.map((action) {
@@ -479,35 +484,35 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
   void _showCustomizeBottomSheet() {
     showModalBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setModalState) {
             return Container(
-              padding: const EdgeInsets.symmetric(vertical: 20),
+              padding: EdgeInsets.symmetric(vertical: 20),
               height: 450,
               child: Column(
                 children: [
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Customize Quick Actions", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                        Text("Customize Quick Actions".tr, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  const Padding(
+                  SizedBox(height: 10),
+                  Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Text("Drag to reorder the icons below.", style: TextStyle(fontSize: 12, color: Colors.grey)),
+                    child: Text("Drag to reorder the icons below.".tr, style: TextStyle(fontSize: 12, color: Colors.grey)),
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10),
                   Expanded(
                     child: ReorderableListView(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      padding: EdgeInsets.symmetric(horizontal: 20),
                       onReorder: (oldIndex, newIndex) {
                         setState(() {
                           if (newIndex > oldIndex) newIndex -= 1;
@@ -520,12 +525,12 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
                         return ListTile(
                           key: ValueKey(action['id']),
                           leading: Container(
-                            padding: const EdgeInsets.all(8),
+                            padding: EdgeInsets.all(8),
                             decoration: BoxDecoration(color: (action['color'] as Color).withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
                             child: Icon(action['icon'] as IconData, color: action['color'] as Color, size: 20),
                           ),
-                          title: Text((action['label'] as String).replaceAll('\n', ' '), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF1E2875))),
-                          trailing: const Icon(Icons.drag_handle, color: Colors.grey),
+                          title: Text((action['label'] as String).replaceAll('\n', ' '), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF1E2875))),
+                          trailing: Icon(Icons.drag_handle, color: Colors.grey),
                         );
                       }).toList(),
                     ),
@@ -548,23 +553,23 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
           onTap: onTap,
           borderRadius: BorderRadius.circular(12),
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4),
+            padding: EdgeInsets.symmetric(vertical: 4),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  padding: const EdgeInsets.all(14),
+                  padding: EdgeInsets.all(14),
                   decoration: BoxDecoration(
                     color: color.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Icon(icon, color: color, size: 24),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
               Text(
                 label,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.w600,
                   color: Color(0xFF1E2875),
@@ -587,7 +592,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
       children: [
         // Fee Collection card
         _buildFeeCollectionCardForSchool(school, metrics),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         // Attendance Overview card
         _buildAttendanceOverviewCardForSchool(school, metrics),
       ],
@@ -610,7 +615,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
         // 1. Branch Selector Dropdown Card
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
@@ -619,28 +624,28 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
               BoxShadow(
                 color: Colors.grey.shade50,
                 blurRadius: 4,
-                offset: const Offset(0, 2),
+                offset: Offset(0, 2),
               ),
             ],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "Branch",
+              Text("Branch".tr,
                 style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.w600),
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
               DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
                   value: school,
                   isExpanded: true,
-                  icon: const Icon(Icons.keyboard_arrow_down, color: Color(0xFF1E2875)),
-                  style: const TextStyle(fontSize: 14, color: Color(0xFF1E2875), fontWeight: FontWeight.bold),
-                  items: const [
-                    DropdownMenuItem(value: 'Ecstasy School 1', child: Text("Ecstasy School 1 (ECS001)")),
-                    DropdownMenuItem(value: 'Ecstasy School 2', child: Text("Ecstasy School 2 (ECS002)")),
-                    DropdownMenuItem(value: 'Ecstasy School 3', child: Text("Ecstasy School 3 (ECS003)")),
+                  icon: Icon(Icons.keyboard_arrow_down, color: Color(0xFF1E2875)),
+                  style: TextStyle(fontSize: 14, color: Color(0xFF1E2875), fontWeight: FontWeight.bold),
+                  items: [
+                    DropdownMenuItem(value: 'All Branches', child: Text("All Branches".tr)),
+                    DropdownMenuItem(value: 'Ecstasy School 1', child: Text("Ecstasy School 1 (ECS001)".tr)),
+                    DropdownMenuItem(value: 'Ecstasy School 2', child: Text("Ecstasy School 2 (ECS002)".tr)),
+                    DropdownMenuItem(value: 'Ecstasy School 3', child: Text("Ecstasy School 3 (ECS003)".tr)),
                   ],
                   onChanged: (v) {
                     if (v != null) {
@@ -652,120 +657,37 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
             ],
           ),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
 
         // 2. Side-by-Side Pie Charts
-        Row(
-          children: [
-            // Tuition Fee Collection
-            Expanded(
-              child: Container(
-                height: 250,
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.grey.shade100),
-                  boxShadow: [
-                    BoxShadow(color: Colors.grey.shade50, blurRadius: 4, offset: const Offset(0, 2)),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("$school ($branchCode)", style: const TextStyle(fontSize: 9, color: Colors.grey, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 2),
-                    const Text("Tuition Fee Collection", style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                    const SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _buildDotLegend(const Color(0xFF0F5A35), "Paid ${tuitionPaid.toInt()}%"),
-                        _buildDotLegend(const Color(0xFFB3241F), "Pending ${tuitionPending.toInt()}%"),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    Expanded(
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          PieChart(
-                            PieChartData(
-                              sectionsSpace: 0,
-                              centerSpaceRadius: 36,
-                              sections: [
-                                PieChartSectionData(value: tuitionPaid, color: const Color(0xFF0F5A35), radius: 14, showTitle: false),
-                                PieChartSectionData(value: tuitionPending, color: const Color(0xFFB3241F), radius: 14, showTitle: false),
-                              ],
-                            ),
-                          ),
-                          Text("${tuitionPaid.toInt()}%", style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
-            // Transport Fee Collection
-            Expanded(
-              child: Container(
-                height: 250,
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.grey.shade100),
-                  boxShadow: [
-                    BoxShadow(color: Colors.grey.shade50, blurRadius: 4, offset: const Offset(0, 2)),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("$school ($branchCode)", style: const TextStyle(fontSize: 9, color: Colors.grey, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 2),
-                    const Text("Transport Fee Collection", style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                    const SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _buildDotLegend(const Color(0xFF0F5A35), "Paid ${transportPaid.toInt()}%"),
-                        _buildDotLegend(const Color(0xFFB3241F), "Pending ${transportPending.toInt()}%"),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    Expanded(
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          PieChart(
-                            PieChartData(
-                              sectionsSpace: 0,
-                              centerSpaceRadius: 36,
-                              sections: [
-                                PieChartSectionData(value: transportPaid, color: const Color(0xFF0F5A35), radius: 14, showTitle: false),
-                                PieChartSectionData(value: transportPending, color: const Color(0xFFB3241F), radius: 14, showTitle: false),
-                              ],
-                            ),
-                          ),
-                          Text("${transportPaid.toInt()}%", style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final bool isNarrow = constraints.maxWidth < 360;
+            if (isNarrow) {
+              return Column(
+                children: [
+                  _buildTuitionFeeCard(school, branchCode, tuitionPaid, tuitionPending),
+                  SizedBox(height: 16),
+                  _buildTransportFeeCard(school, branchCode, transportPaid, transportPending),
+                ],
+              );
+            }
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(child: _buildTuitionFeeCard(school, branchCode, tuitionPaid, tuitionPending)),
+                SizedBox(width: 12),
+                Expanded(child: _buildTransportFeeCard(school, branchCode, transportPaid, transportPending)),
+              ],
+            );
+          },
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
 
         // 3. Fee Due Students Section
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
@@ -774,56 +696,55 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
               BoxShadow(
                 color: Colors.grey.shade50,
                 blurRadius: 4,
-                offset: const Offset(0, 2),
+                offset: Offset(0, 2),
               ),
             ],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("$school ($branchCode)", style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 2),
-              const Text(
-                "Fee Due Students",
+              Text("$school ($branchCode)", style: TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
+              SizedBox(height: 2),
+              Text("Fee Due Students".tr,
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Wrap(
                 spacing: 12,
                 runSpacing: 8,
                 children: [
-                  _buildLegendBlock(const Color(0xFF1E3A8A), "Total Students"),
-                  _buildLegendBlock(const Color(0xFF0F5A35), "Term 1 Paid"),
-                  _buildLegendBlock(const Color(0xFFB3241F), "Term 1 Due"),
-                  _buildLegendBlock(const Color(0xFF10B981), "Term 2 Paid"),
-                  _buildLegendBlock(const Color(0xFFF59E0B), "Term 2 Due"),
-                  _buildLegendBlock(const Color(0xFFA7F3D0), "Term 3 Paid"),
-                  _buildLegendBlock(const Color(0xFFFCA5A5), "Term 3 Due"),
+                  _buildLegendBlock(Color(0xFF1E3A8A), "Total Students"),
+                  _buildLegendBlock(Color(0xFF0F5A35), "Term 1 Paid"),
+                  _buildLegendBlock(Color(0xFFB3241F), "Term 1 Due"),
+                  _buildLegendBlock(Color(0xFF10B981), "Term 2 Paid"),
+                  _buildLegendBlock(Color(0xFFF59E0B), "Term 2 Due"),
+                  _buildLegendBlock(Color(0xFFA7F3D0), "Term 3 Paid"),
+                  _buildLegendBlock(Color(0xFFFCA5A5), "Term 3 Due"),
                 ],
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               SizedBox(
                 height: 160,
                 child: BarChart(
                   BarChartData(
                     borderData: FlBorderData(show: false),
-                    gridData: const FlGridData(show: false),
+                    gridData: FlGridData(show: false),
                     titlesData: FlTitlesData(
                       show: true,
-                      topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                      rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                      leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                      topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                      rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                      leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
                       bottomTitles: AxisTitles(
                         sideTitles: SideTitles(
                           showTitles: true,
                           getTitlesWidget: (value, meta) {
                             switch (value.toInt()) {
-                              case 0: return const Text("Total", style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: Colors.grey));
-                              case 1: return const Text("Term 1", style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: Colors.grey));
-                              case 2: return const Text("Term 2", style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: Colors.grey));
-                              case 3: return const Text("Term 3", style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: Colors.grey));
+                              case 0: return Text("Total".tr, style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: Colors.grey));
+                              case 1: return Text("Term 1".tr, style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: Colors.grey));
+                              case 2: return Text("Term 2".tr, style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: Colors.grey));
+                              case 3: return Text("Term 3".tr, style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: Colors.grey));
                             }
-                            return const SizedBox();
+                            return SizedBox();
                           },
                         ),
                       ),
@@ -835,11 +756,115 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
             ],
           ),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
 
         // 4. School Fee Structures Card
         _buildSchoolFeeStructuresCard(),
       ],
+    );
+  }
+
+  Widget _buildTuitionFeeCard(String school, String branchCode, double paid, double pending) {
+    return Container(
+      height: 250,
+      padding: EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey.shade100),
+        boxShadow: [
+          BoxShadow(color: Colors.grey.shade50, blurRadius: 4, offset: Offset(0, 2)),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("$school ($branchCode)", style: TextStyle(fontSize: 9, color: Colors.grey, fontWeight: FontWeight.bold)),
+          SizedBox(height: 2),
+          Text("Tuition Fee Collection".tr, style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+          SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            runSpacing: 4,
+            alignment: WrapAlignment.spaceBetween,
+            children: [
+              _buildDotLegend(Color(0xFF0F5A35), "Paid ${paid.toInt()}%"),
+              _buildDotLegend(Color(0xFFB3241F), "Pending ${pending.toInt()}%"),
+            ],
+          ),
+          SizedBox(height: 12),
+          Expanded(
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                PieChart(
+                  PieChartData(
+                    sectionsSpace: 0,
+                    centerSpaceRadius: 36,
+                    sections: [
+                      PieChartSectionData(value: paid, color: Color(0xFF0F5A35), radius: 14, showTitle: false),
+                      PieChartSectionData(value: pending, color: Color(0xFFB3241F), radius: 14, showTitle: false),
+                    ],
+                  ),
+                ),
+                Text("${paid.toInt()}%", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTransportFeeCard(String school, String branchCode, double paid, double pending) {
+    return Container(
+      height: 250,
+      padding: EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey.shade100),
+        boxShadow: [
+          BoxShadow(color: Colors.grey.shade50, blurRadius: 4, offset: Offset(0, 2)),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("$school ($branchCode)", style: TextStyle(fontSize: 9, color: Colors.grey, fontWeight: FontWeight.bold)),
+          SizedBox(height: 2),
+          Text("Transport Fee Collection".tr, style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+          SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            runSpacing: 4,
+            alignment: WrapAlignment.spaceBetween,
+            children: [
+              _buildDotLegend(Color(0xFF0F5A35), "Paid ${paid.toInt()}%"),
+              _buildDotLegend(Color(0xFFB3241F), "Pending ${pending.toInt()}%"),
+            ],
+          ),
+          SizedBox(height: 12),
+          Expanded(
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                PieChart(
+                  PieChartData(
+                    sectionsSpace: 0,
+                    centerSpaceRadius: 36,
+                    sections: [
+                      PieChartSectionData(value: paid, color: Color(0xFF0F5A35), radius: 14, showTitle: false),
+                      PieChartSectionData(value: pending, color: Color(0xFFB3241F), radius: 14, showTitle: false),
+                    ],
+                  ),
+                ),
+                Text("${paid.toInt()}%", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -852,7 +877,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
           height: 8,
           decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
-        const SizedBox(width: 4),
+        SizedBox(width: 4),
         Text(text, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey.shade700)),
       ],
     );
@@ -867,8 +892,8 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
           height: 12,
           decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(3)),
         ),
-        const SizedBox(width: 6),
-        Text(text, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: Color(0xFF757897))),
+        SizedBox(width: 6),
+        Text(text, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: Color(0xFF757897))),
       ],
     );
   }
@@ -882,28 +907,28 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
       BarChartGroupData(
         x: 0,
         barRods: [
-          BarChartRodData(toY: 100 * scale, color: const Color(0xFF1E3A8A), width: 14, borderRadius: BorderRadius.circular(4)),
+          BarChartRodData(toY: 100 * scale, color: Color(0xFF1E3A8A), width: 14, borderRadius: BorderRadius.circular(4)),
         ],
       ),
       BarChartGroupData(
         x: 1,
         barRods: [
-          BarChartRodData(toY: 85 * scale, color: const Color(0xFF0F5A35), width: 10, borderRadius: BorderRadius.circular(4)),
-          BarChartRodData(toY: 15 * scale, color: const Color(0xFFB3241F), width: 10, borderRadius: BorderRadius.circular(4)),
+          BarChartRodData(toY: 85 * scale, color: Color(0xFF0F5A35), width: 10, borderRadius: BorderRadius.circular(4)),
+          BarChartRodData(toY: 15 * scale, color: Color(0xFFB3241F), width: 10, borderRadius: BorderRadius.circular(4)),
         ],
       ),
       BarChartGroupData(
         x: 2,
         barRods: [
-          BarChartRodData(toY: 70 * scale, color: const Color(0xFF10B981), width: 10, borderRadius: BorderRadius.circular(4)),
-          BarChartRodData(toY: 30 * scale, color: const Color(0xFFF59E0B), width: 10, borderRadius: BorderRadius.circular(4)),
+          BarChartRodData(toY: 70 * scale, color: Color(0xFF10B981), width: 10, borderRadius: BorderRadius.circular(4)),
+          BarChartRodData(toY: 30 * scale, color: Color(0xFFF59E0B), width: 10, borderRadius: BorderRadius.circular(4)),
         ],
       ),
       BarChartGroupData(
         x: 3,
         barRods: [
-          BarChartRodData(toY: 55 * scale, color: const Color(0xFFA7F3D0), width: 10, borderRadius: BorderRadius.circular(4)),
-          BarChartRodData(toY: 45 * scale, color: const Color(0xFFFCA5A5), width: 10, borderRadius: BorderRadius.circular(4)),
+          BarChartRodData(toY: 55 * scale, color: Color(0xFFA7F3D0), width: 10, borderRadius: BorderRadius.circular(4)),
+          BarChartRodData(toY: 45 * scale, color: Color(0xFFFCA5A5), width: 10, borderRadius: BorderRadius.circular(4)),
         ],
       ),
     ];
@@ -912,7 +937,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
   Widget _buildSchoolFeeStructuresCard() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -921,24 +946,22 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
           BoxShadow(
             color: Colors.grey.shade50,
             blurRadius: 4,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
-            children: [
+          Row(children: [
               Icon(Icons.table_chart_outlined, color: AppColors.primary, size: 20),
               SizedBox(width: 8),
-              Text(
-                "School Fee Structures (Annual)",
+              Text("School Fee Structures (Annual)".tr,
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Table(
             border: TableBorder.all(color: Colors.grey.shade100, borderRadius: BorderRadius.circular(8)),
             columnWidths: const {
@@ -951,22 +974,22 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
             children: [
               TableRow(
                 decoration: BoxDecoration(color: Colors.grey.shade50),
-                children: const [
-                  Padding(padding: EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0), child: Text("School", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10, color: Color(0xFF1E2875)))),
-                  Padding(padding: EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0), child: Text("Tuition", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10, color: Color(0xFF1E2875)))),
-                  Padding(padding: EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0), child: Text("Transport", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10, color: Color(0xFF1E2875)))),
-                  Padding(padding: EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0), child: Text("Exam", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10, color: Color(0xFF1E2875)))),
-                  Padding(padding: EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0), child: Text("Total", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10, color: Color(0xFF1E2875)))),
+                children: [
+                  Padding(padding: EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0), child: Text("School".tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10, color: Color(0xFF1E2875)))),
+                  Padding(padding: EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0), child: Text("Tuition".tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10, color: Color(0xFF1E2875)))),
+                  Padding(padding: EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0), child: Text("Transport".tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10, color: Color(0xFF1E2875)))),
+                  Padding(padding: EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0), child: Text("Exam".tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10, color: Color(0xFF1E2875)))),
+                  Padding(padding: EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0), child: Text("Total".tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10, color: Color(0xFF1E2875)))),
                 ],
               ),
               ...AppDataStore.instance.feeStructures.map((fee) {
                 return TableRow(
                   children: [
-                    Padding(padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0), child: Text("${fee['school']}\n(${fee['branchCode']})", style: const TextStyle(fontSize: 9, fontWeight: FontWeight.w600, color: Color(0xFF757897)))),
-                    Padding(padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0), child: Text("₹ ${fee['tuition']}", style: const TextStyle(fontSize: 9, color: Color(0xFF1E2875)))),
-                    Padding(padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0), child: Text("₹ ${fee['transport']}", style: const TextStyle(fontSize: 9, color: Color(0xFF1E2875)))),
-                    Padding(padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0), child: Text("₹ ${fee['exam']}", style: const TextStyle(fontSize: 9, color: Color(0xFF1E2875)))),
-                    Padding(padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0), child: Text("₹ ${fee['total']}", style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)))),
+                    Padding(padding: EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0), child: Text("${fee['school']}\n(${fee['branchCode']})", style: TextStyle(fontSize: 9, fontWeight: FontWeight.w600, color: Color(0xFF757897)))),
+                    Padding(padding: EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0), child: Text("₹ ${fee['tuition']}", style: TextStyle(fontSize: 9, color: Color(0xFF1E2875)))),
+                    Padding(padding: EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0), child: Text("₹ ${fee['transport']}", style: TextStyle(fontSize: 9, color: Color(0xFF1E2875)))),
+                    Padding(padding: EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0), child: Text("₹ ${fee['exam']}", style: TextStyle(fontSize: 9, color: Color(0xFF1E2875)))),
+                    Padding(padding: EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0), child: Text("₹ ${fee['total']}", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)))),
                   ],
                 );
               }),
@@ -982,7 +1005,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -991,7 +1014,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
           BoxShadow(
             color: Colors.grey.shade50,
             blurRadius: 4,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
       ),
@@ -1001,8 +1024,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                "Attendance Overview",
+              Text("Attendance Overview".tr,
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
@@ -1013,7 +1035,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
                   (v) => setState(() => _attendanceFilter = v)),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Row(
             children: [
               // Left side - donut chart
@@ -1030,19 +1052,19 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
                         sections: [
                           PieChartSectionData(
                             value: presentPercent.toDouble(),
-                            color: const Color(0xFF10B981),
+                            color: Color(0xFF10B981),
                             radius: 18,
                             showTitle: false,
                           ),
                           PieChartSectionData(
                             value: (100 - presentPercent) * 0.78,
-                            color: const Color(0xFFEF4444),
+                            color: Color(0xFFEF4444),
                             radius: 18,
                             showTitle: false,
                           ),
                           PieChartSectionData(
                             value: (100 - presentPercent) * 0.22,
-                            color: const Color(0xFF9CA3AF),
+                            color: Color(0xFF9CA3AF),
                             radius: 18,
                             showTitle: false,
                           ),
@@ -1054,14 +1076,13 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
                       children: [
                         Text(
                           "$presentPercent%",
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF1E2875),
                           ),
                         ),
-                        const Text(
-                          "Present",
+                        Text("Present".tr,
                           style: TextStyle(fontSize: 10, color: Colors.grey),
                         ),
                       ],
@@ -1069,26 +1090,26 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
                   ],
                 ),
               ),
-              const SizedBox(width: 20),
+              SizedBox(width: 20),
               // Right side - legend
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildLegendItem(
-                      color: const Color(0xFF10B981),
+                      color: Color(0xFF10B981),
                       label: "Present",
                       value: metrics['presentCount'] as String,
                     ),
-                    const SizedBox(height: 10),
+                    SizedBox(height: 10),
                     _buildLegendItem(
-                      color: const Color(0xFFEF4444),
+                      color: Color(0xFFEF4444),
                       label: "Absent",
                       value: metrics['absentCount'] as String,
                     ),
-                    const SizedBox(height: 10),
+                    SizedBox(height: 10),
                     _buildLegendItem(
-                      color: const Color(0xFF9CA3AF),
+                      color: Color(0xFF9CA3AF),
                       label: "Leave",
                       value: metrics['leaveCount'] as String,
                     ),
@@ -1097,15 +1118,13 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           InkWell(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminAttendanceScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (_) => AdminAttendanceScreen()));
             },
-            child: const Row(
-              children: [
-                Text(
-                  "View attendance report",
+            child: Row(children: [
+                Text("View attendance report".tr,
                   style: TextStyle(
                     fontSize: 12,
                     color: AppColors.primary,
@@ -1137,15 +1156,15 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
             borderRadius: BorderRadius.circular(3),
           ),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Text(
           label,
           style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
         ),
-        const Spacer(),
+        Spacer(),
         Text(
           value,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.bold,
             color: Color(0xFF1E2875),
@@ -1164,7 +1183,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
       children: [
         // Recent Notices
         _buildRecentNotices(),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         // Upcoming Events
         _buildUpcomingEvents(),
       ],
@@ -1173,7 +1192,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
 
   Widget _buildRecentNotices() {
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -1182,7 +1201,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
           BoxShadow(
             color: Colors.grey.shade50,
             blurRadius: 4,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
       ),
@@ -1192,9 +1211,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Expanded(
-                child: Text(
-                  "Recent Notices",
+              Expanded(child: Text("Recent Notices".tr,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -1203,13 +1220,12 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               GestureDetector(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminCommunicationsScreen()));
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => AdminCommunicationsScreen()));
                 },
-                child: Text(
-                  "View All",
+                child: Text("View All".tr,
                   style: TextStyle(
                     fontSize: 11,
                     color: AppColors.primary,
@@ -1219,26 +1235,26 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           _buildNoticeItem(
             icon: Icons.wb_sunny,
-            iconColor: const Color(0xFFF59E0B),
+            iconColor: Color(0xFFF59E0B),
             title: "Summer Holiday Announcement",
             subtitle: "Holiday will be from 25 May to 10 June 2026.",
             date: "20 May 2026",
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           _buildNoticeItem(
             icon: Icons.people,
-            iconColor: const Color(0xFF3B82F6),
+            iconColor: Color(0xFF3B82F6),
             title: "Parent Meeting",
             subtitle: "Parent meeting on 26 May at 10 AM.",
             date: "19 May 2026",
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           _buildNoticeItem(
             icon: Icons.assignment,
-            iconColor: const Color(0xFF10B981),
+            iconColor: Color(0xFF10B981),
             title: "Exam Schedule",
             subtitle: "Mid term exam schedule released.",
             date: "18 May 2026",
@@ -1259,21 +1275,21 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          padding: const EdgeInsets.all(6),
+          padding: EdgeInsets.all(6),
           decoration: BoxDecoration(
             color: iconColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(icon, color: iconColor, size: 16),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF1E2875),
@@ -1281,14 +1297,14 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(height: 2),
+              SizedBox(height: 2),
               Text(
                 subtitle,
                 style: TextStyle(fontSize: 9, color: Colors.grey.shade600),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(height: 2),
+              SizedBox(height: 2),
               Text(
                 date,
                 style: TextStyle(
@@ -1306,7 +1322,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
 
   Widget _buildUpcomingEvents() {
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -1315,7 +1331,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
           BoxShadow(
             color: Colors.grey.shade50,
             blurRadius: 4,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
       ),
@@ -1325,9 +1341,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Expanded(
-                child: Text(
-                  "Upcoming Events",
+              Expanded(child: Text("Upcoming Events".tr,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -1336,13 +1350,12 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               GestureDetector(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEventsScreen()));
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => AdminEventsScreen()));
                 },
-                child: Text(
-                  "View All",
+                child: Text("View All".tr,
                   style: TextStyle(
                     fontSize: 11,
                     color: AppColors.primary,
@@ -1352,24 +1365,24 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           _buildEventItem(
             icon: Icons.groups,
-            iconColor: const Color(0xFF3B82F6),
+            iconColor: Color(0xFF3B82F6),
             title: "Parent Meeting",
             datetime: "26 May 2026, 10:00 AM",
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           _buildEventItem(
             icon: Icons.science,
-            iconColor: const Color(0xFF8B5CF6),
+            iconColor: Color(0xFF8B5CF6),
             title: "Science Exhibition",
             datetime: "30 May 2026, 09:00 AM",
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           _buildEventItem(
             icon: Icons.sports_soccer,
-            iconColor: const Color(0xFFF59E0B),
+            iconColor: Color(0xFFF59E0B),
             title: "Annual Sports Day",
             datetime: "17 June 2026, 08:00 AM",
           ),
@@ -1388,21 +1401,21 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          padding: const EdgeInsets.all(6),
+          padding: EdgeInsets.all(6),
           decoration: BoxDecoration(
             color: iconColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(icon, color: iconColor, size: 16),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF1E2875),
@@ -1410,7 +1423,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(height: 2),
+              SizedBox(height: 2),
               Text(
                 datetime,
                 style: TextStyle(fontSize: 9, color: Colors.grey.shade600),
@@ -1428,7 +1441,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
   Widget _buildFeeCollectionChartForSchool(String school, Map<String, dynamic> metrics) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -1437,7 +1450,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
           BoxShadow(
             color: Colors.grey.shade50,
             blurRadius: 4,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
       ),
@@ -1447,8 +1460,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                "Fee Collection Overview",
+              Text("Fee Collection Overview".tr,
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
@@ -1459,18 +1471,18 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
                   (v) => setState(() => _chartFilter = v)),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           // Legend
           Row(
             children: [
-              const Text("₹ (Lakh)", style: TextStyle(fontSize: 10, color: Colors.grey)),
-              const SizedBox(width: 16),
-              _buildChartLegendDot(const Color(0xFF10B981), "Collected"),
-              const SizedBox(width: 12),
-              _buildChartLegendDot(const Color(0xFFEF4444), "Pending"),
+              Text("₹ (Lakh)".tr, style: TextStyle(fontSize: 10, color: Colors.grey)),
+              SizedBox(width: 16),
+              _buildChartLegendDot(Color(0xFF10B981), "Collected"),
+              SizedBox(width: 12),
+              _buildChartLegendDot(Color(0xFFEF4444), "Pending"),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           SizedBox(
             height: 200,
             child: LineChart(
@@ -1493,7 +1505,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
                       getTitlesWidget: (value, meta) {
                         return Text(
                           '${value.toInt()}',
-                          style: const TextStyle(fontSize: 9, color: Colors.grey),
+                          style: TextStyle(fontSize: 9, color: Colors.grey),
                         );
                       },
                     ),
@@ -1509,21 +1521,21 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
                         ];
                         if (value.toInt() >= 0 && value.toInt() < months.length) {
                           return Padding(
-                            padding: const EdgeInsets.only(top: 4),
+                            padding: EdgeInsets.only(top: 4),
                             child: Text(
                               months[value.toInt()],
-                              style: const TextStyle(fontSize: 9, color: Colors.grey),
+                              style: TextStyle(fontSize: 9, color: Colors.grey),
                             ),
                           );
                         }
-                        return const SizedBox();
+                        return SizedBox();
                       },
                     ),
                   ),
-                  topTitles: const AxisTitles(
+                  topTitles: AxisTitles(
                     sideTitles: SideTitles(showTitles: false),
                   ),
-                  rightTitles: const AxisTitles(
+                  rightTitles: AxisTitles(
                     sideTitles: SideTitles(showTitles: false),
                   ),
                 ),
@@ -1541,8 +1553,8 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
                           '${isCollected ? "Collected" : "Pending"}: ₹ ${spot.y.toStringAsFixed(1)} Lakh',
                           TextStyle(
                             color: isCollected
-                                ? const Color(0xFF10B981)
-                                : const Color(0xFFEF4444),
+                                ? Color(0xFF10B981)
+                                : Color(0xFFEF4444),
                             fontWeight: FontWeight.bold,
                             fontSize: 11,
                           ),
@@ -1556,7 +1568,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
                   LineChartBarData(
                     spots: metrics['chartCollected'] as List<FlSpot>,
                     isCurved: true,
-                    color: const Color(0xFF10B981),
+                    color: Color(0xFF10B981),
                     barWidth: 2.5,
                     isStrokeCapRound: true,
                     dotData: FlDotData(
@@ -1564,7 +1576,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
                       getDotPainter: (spot, percent, barData, index) {
                         return FlDotCirclePainter(
                           radius: 3,
-                          color: const Color(0xFF10B981),
+                          color: Color(0xFF10B981),
                           strokeWidth: 1.5,
                           strokeColor: Colors.white,
                         );
@@ -1572,14 +1584,14 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
                     ),
                     belowBarData: BarAreaData(
                       show: true,
-                      color: const Color(0xFF10B981).withValues(alpha: 0.08),
+                      color: Color(0xFF10B981).withValues(alpha: 0.08),
                     ),
                   ),
                   // Pending line (red)
                   LineChartBarData(
                     spots: metrics['chartPending'] as List<FlSpot>,
                     isCurved: true,
-                    color: const Color(0xFFEF4444),
+                    color: Color(0xFFEF4444),
                     barWidth: 2.5,
                     isStrokeCapRound: true,
                     dotData: FlDotData(
@@ -1587,7 +1599,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
                       getDotPainter: (spot, percent, barData, index) {
                         return FlDotCirclePainter(
                           radius: 3,
-                          color: const Color(0xFFEF4444),
+                          color: Color(0xFFEF4444),
                           strokeWidth: 1.5,
                           strokeColor: Colors.white,
                         );
@@ -1595,7 +1607,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
                     ),
                     belowBarData: BarAreaData(
                       show: true,
-                      color: const Color(0xFFEF4444).withValues(alpha: 0.08),
+                      color: Color(0xFFEF4444).withValues(alpha: 0.08),
                     ),
                   ),
                 ],
@@ -1619,8 +1631,8 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
             borderRadius: BorderRadius.circular(2),
           ),
         ),
-        const SizedBox(width: 4),
-        Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey)),
+        SizedBox(width: 4),
+        Text(label, style: TextStyle(fontSize: 10, color: Colors.grey)),
       ],
     );
   }
@@ -1631,21 +1643,21 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
   Widget _buildFilterChip(
       String current, List<String> options, Function(String) onChanged) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: const Color(0xFFF0F4FF),
+        color: Color(0xFFF0F4FF),
         borderRadius: BorderRadius.circular(8),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           value: current,
           isDense: true,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 11,
             color: Color(0xFF1E2875),
             fontWeight: FontWeight.w600,
           ),
-          icon: const Icon(Icons.keyboard_arrow_down, size: 14, color: Color(0xFF1E2875)),
+          icon: Icon(Icons.keyboard_arrow_down, size: 14, color: Color(0xFF1E2875)),
           items: options
               .map((e) => DropdownMenuItem(value: e, child: Text(e)))
               .toList(),

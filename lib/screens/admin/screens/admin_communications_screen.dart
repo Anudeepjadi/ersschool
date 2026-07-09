@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
 import '../widgets/admin_app_bar.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminCommunicationsScreen extends StatefulWidget {
   const AdminCommunicationsScreen({super.key});
@@ -79,15 +80,15 @@ class _AdminCommunicationsScreenState extends State<AdminCommunicationsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FF),
-      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
-      appBar: const AdminAppBar(
+      backgroundColor: Color(0xFFF5F7FF),
+      bottomNavigationBar: AdminBottomNavBar(currentIndex: 4),
+      appBar: AdminAppBar(
         title: "Communications",
         subtitle: "Manage all school communications",
       ),
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(16),
+        physics: BouncingScrollPhysics(),
+        padding: EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -104,7 +105,7 @@ class _AdminCommunicationsScreenState extends State<AdminCommunicationsScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Folder selector list
             SingleChildScrollView(
@@ -115,8 +116,8 @@ class _AdminCommunicationsScreenState extends State<AdminCommunicationsScreen> {
                   return GestureDetector(
                     onTap: () => setState(() => _activeFolder = f['name']),
                     child: Container(
-                      margin: const EdgeInsets.only(right: 8),
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                      margin: EdgeInsets.only(right: 8),
+                      padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                       decoration: BoxDecoration(
                         color: isSelected ? AppColors.primary : Colors.white,
                         borderRadius: BorderRadius.circular(20),
@@ -125,16 +126,16 @@ class _AdminCommunicationsScreenState extends State<AdminCommunicationsScreen> {
                       child: Row(
                         children: [
                           Icon(f['icon'], size: 16, color: isSelected ? Colors.white : Colors.grey),
-                          const SizedBox(width: 6),
+                          SizedBox(width: 6),
                           Text(
                             f['name'],
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
-                              color: isSelected ? Colors.white : const Color(0xFF757897),
+                              color: isSelected ? Colors.white : Color(0xFF757897),
                             ),
                           ),
-                          const SizedBox(width: 6),
+                          SizedBox(width: 6),
                           Text(
                             "(${f['count']})",
                             style: TextStyle(
@@ -149,11 +150,11 @@ class _AdminCommunicationsScreenState extends State<AdminCommunicationsScreen> {
                 }).toList(),
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Layout row with Messages list on top and Message Detail view underneath
             _buildMessagesList(),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             if (_selectedMessage != null) _buildMessageDetailCard(_selectedMessage!),
           ],
         ),
@@ -164,8 +165,8 @@ class _AdminCommunicationsScreenState extends State<AdminCommunicationsScreen> {
   Widget _buildStatCard(String label, String value, String subtext, Color color) {
     return Container(
       width: 120,
-      margin: const EdgeInsets.only(right: 12),
-      padding: const EdgeInsets.all(12),
+      margin: EdgeInsets.only(right: 12),
+      padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -174,10 +175,10 @@ class _AdminCommunicationsScreenState extends State<AdminCommunicationsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
-          Text(value, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-          const SizedBox(height: 4),
+          Text(label, style: TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
+          SizedBox(height: 8),
+          Text(value, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+          SizedBox(height: 4),
           Text(subtext, style: TextStyle(fontSize: 10, color: color, fontWeight: FontWeight.bold)),
         ],
       ),
@@ -194,23 +195,23 @@ class _AdminCommunicationsScreenState extends State<AdminCommunicationsScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   "Messages Inbox (${_messages.length})",
-                  style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+                  style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
                 ),
-                const Icon(Icons.more_horiz, color: Colors.grey),
+                Icon(Icons.more_horiz, color: Colors.grey),
               ],
             ),
           ),
           ListView.separated(
             shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
+            physics: NeverScrollableScrollPhysics(),
             itemCount: _messages.length,
-            separatorBuilder: (context, index) => const Divider(height: 1),
+            separatorBuilder: (context, index) => Divider(height: 1),
             itemBuilder: (context, index) {
               final msg = _messages[index];
               final isSelected = _selectedMessage == msg;
@@ -229,11 +230,11 @@ class _AdminCommunicationsScreenState extends State<AdminCommunicationsScreen> {
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: msg['unread'] ? FontWeight.bold : FontWeight.w600,
-                          color: const Color(0xFF1E2875),
+                          color: Color(0xFF1E2875),
                         ),
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     Text(
                       msg['time'],
                       style: TextStyle(
@@ -245,7 +246,7 @@ class _AdminCommunicationsScreenState extends State<AdminCommunicationsScreen> {
                   ],
                 ),
                 subtitle: Padding(
-                  padding: const EdgeInsets.only(top: 4.0),
+                  padding: EdgeInsets.only(top: 4.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -254,19 +255,19 @@ class _AdminCommunicationsScreenState extends State<AdminCommunicationsScreen> {
                           msg['preview'],
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(fontSize: 12, color: Colors.grey),
+                          style: TextStyle(fontSize: 12, color: Colors.grey),
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
                           color: Colors.blue.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Text(
                           msg['audience'],
-                          style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.blue),
+                          style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.blue),
                         ),
                       ),
                     ],
@@ -282,7 +283,7 @@ class _AdminCommunicationsScreenState extends State<AdminCommunicationsScreen> {
 
   Widget _buildMessageDetailCard(Map<String, dynamic> msg) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -294,86 +295,83 @@ class _AdminCommunicationsScreenState extends State<AdminCommunicationsScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                "Message Detail",
+              Text("Message Detail".tr,
                 style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey.shade400, letterSpacing: 0.5),
               ),
               Row(
                 children: [
-                  const Icon(Icons.star_border, size: 18, color: Colors.grey),
-                  const SizedBox(width: 12),
-                  const Icon(Icons.delete_outline, size: 18, color: Colors.grey),
-                  const SizedBox(width: 12),
+                  Icon(Icons.star_border, size: 18, color: Colors.grey),
+                  SizedBox(width: 12),
+                  Icon(Icons.delete_outline, size: 18, color: Colors.grey),
+                  SizedBox(width: 12),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF10B981).withValues(alpha: 0.1),
+                      color: Color(0xFF10B981).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Text("Sent", style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: Color(0xFF10B981))),
+                    child: Text("Sent".tr, style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: Color(0xFF10B981))),
                   ),
                 ],
               )
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Text(
             msg['title'],
-            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Row(
             children: [
               CircleAvatar(
                 radius: 18,
                 backgroundColor: AppColors.primary.withValues(alpha: 0.1),
-                child: Text(msg['sender'][0], style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                child: Text(msg['sender'][0], style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("From: ${msg['sender']}", style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-                    Text("To: ${msg['to']}", style: const TextStyle(fontSize: 10, color: Colors.grey)),
+                    Text("From: ${msg['sender']}", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                    Text("To: ${msg['to']}", style: TextStyle(fontSize: 10, color: Colors.grey)),
                   ],
                 ),
               ),
-              Text(msg['date'], style: const TextStyle(fontSize: 10, color: Colors.grey)),
+              Text(msg['date'], style: TextStyle(fontSize: 10, color: Colors.grey)),
             ],
           ),
-          const SizedBox(height: 16),
-          const Divider(),
-          const SizedBox(height: 12),
+          SizedBox(height: 16),
+          Divider(),
+          SizedBox(height: 12),
           Text(
             msg['content'],
-            style: const TextStyle(fontSize: 13, height: 1.5, color: Color(0xFF1E2875)),
+            style: TextStyle(fontSize: 13, height: 1.5, color: Color(0xFF1E2875)),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               OutlinedButton(
                 style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: AppColors.primary),
+                  side: BorderSide(color: AppColors.primary),
                 ),
                 onPressed: () {},
-                child: const Row(
-                  children: [
+                child: Row(children: [
                     Icon(Icons.reply, size: 16),
                     SizedBox(width: 6),
-                    Text("Reply"),
+                    Text("Reply".tr),
                   ],
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               ElevatedButton(
                 onPressed: () {},
-                child: const Row(
-                  children: [
+                child: Row(children: [
                     Icon(Icons.forward, size: 16),
                     SizedBox(width: 6),
-                    Text("Forward"),
+                    Text("Forward".tr),
                   ],
                 ),
               ),

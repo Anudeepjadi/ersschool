@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import '../widgets/admin_bottom_nav_bar.dart';
 import '../../../core/theme/app_colors.dart';
 import '../widgets/admin_app_bar.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminInvalidFeeTotalsScreen extends StatefulWidget {
   const AdminInvalidFeeTotalsScreen({super.key});
@@ -47,7 +49,7 @@ class _AdminInvalidFeeTotalsScreenState extends State<AdminInvalidFeeTotalsScree
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Ledger for ${_discrepancies[index]['school']} reconciled and balanced!'),
-        backgroundColor: const Color(0xFF10B981),
+        backgroundColor: Color(0xFF10B981),
         behavior: SnackBarBehavior.floating,
       ),
     );
@@ -56,21 +58,22 @@ class _AdminInvalidFeeTotalsScreenState extends State<AdminInvalidFeeTotalsScree
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FF),
-      appBar: const AdminAppBar(
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
+      backgroundColor: Color(0xFFF5F7FF),
+      appBar: AdminAppBar(
         title: "Invalid Fee Totals",
         subtitle: "Audit ledger sums against reported branch collection totals",
         showSchoolSelector: false,
       ),
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(16),
+        physics: BouncingScrollPhysics(),
+        padding: EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Informational Overview
             Container(
-              padding: const EdgeInsets.all(14),
+              padding: EdgeInsets.all(14),
               decoration: BoxDecoration(
                 color: Colors.blue.shade50,
                 borderRadius: BorderRadius.circular(12),
@@ -78,14 +81,13 @@ class _AdminInvalidFeeTotalsScreenState extends State<AdminInvalidFeeTotalsScree
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.info_outline, color: Colors.blue, size: 24),
-                  const SizedBox(width: 12),
+                  Icon(Icons.info_outline, color: Colors.blue, size: 24),
+                  SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text(
-                          "Total Reconciliation Engine",
+                      children: [
+                        Text("Total Reconciliation Engine".tr,
                           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E3A8A)),
                         ),
                         SizedBox(height: 2),
@@ -99,19 +101,19 @@ class _AdminInvalidFeeTotalsScreenState extends State<AdminInvalidFeeTotalsScree
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             ListView.separated(
               shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
+              physics: NeverScrollableScrollPhysics(),
               itemCount: _discrepancies.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 12),
+              separatorBuilder: (context, index) => SizedBox(height: 12),
               itemBuilder: (context, index) {
                 final item = _discrepancies[index];
                 final isBalanced = item['diff'] == 0.0;
 
                 return Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(16),
@@ -120,7 +122,7 @@ class _AdminInvalidFeeTotalsScreenState extends State<AdminInvalidFeeTotalsScree
                       BoxShadow(
                         color: Colors.grey.shade50,
                         blurRadius: 4,
-                        offset: const Offset(0, 2),
+                        offset: Offset(0, 2),
                       ),
                     ],
                   ),
@@ -132,10 +134,10 @@ class _AdminInvalidFeeTotalsScreenState extends State<AdminInvalidFeeTotalsScree
                         children: [
                           Text(
                             item['school'],
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF1E2875)),
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF1E2875)),
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
                               color: isBalanced ? Colors.green.shade50 : Colors.red.shade50,
                               borderRadius: BorderRadius.circular(8),
@@ -151,16 +153,16 @@ class _AdminInvalidFeeTotalsScreenState extends State<AdminInvalidFeeTotalsScree
                           ),
                         ],
                       ),
-                      const SizedBox(height: 14),
+                      SizedBox(height: 14),
                       Row(
                         children: [
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text("Reported Total", style: TextStyle(fontSize: 10, color: Colors.grey)),
-                                const SizedBox(height: 4),
-                                Text("₹ ${item['reported'].toStringAsFixed(0)}", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF1E2875))),
+                                Text("Reported Total".tr, style: TextStyle(fontSize: 10, color: Colors.grey)),
+                                SizedBox(height: 4),
+                                Text("₹ ${item['reported'].toStringAsFixed(0)}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF1E2875))),
                               ],
                             ),
                           ),
@@ -168,9 +170,9 @@ class _AdminInvalidFeeTotalsScreenState extends State<AdminInvalidFeeTotalsScree
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text("Calculated Total", style: TextStyle(fontSize: 10, color: Colors.grey)),
-                                const SizedBox(height: 4),
-                                Text("₹ ${item['calculated'].toStringAsFixed(0)}", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF1E2875))),
+                                Text("Calculated Total".tr, style: TextStyle(fontSize: 10, color: Colors.grey)),
+                                SizedBox(height: 4),
+                                Text("₹ ${item['calculated'].toStringAsFixed(0)}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF1E2875))),
                               ],
                             ),
                           ),
@@ -178,8 +180,8 @@ class _AdminInvalidFeeTotalsScreenState extends State<AdminInvalidFeeTotalsScree
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text("Discrepancy", style: TextStyle(fontSize: 10, color: Colors.grey)),
-                                const SizedBox(height: 4),
+                                Text("Discrepancy".tr, style: TextStyle(fontSize: 10, color: Colors.grey)),
+                                SizedBox(height: 4),
                                 Text(
                                   "${item['diff'] > 0 ? '+' : ''}₹ ${item['diff'].toStringAsFixed(0)}",
                                   style: TextStyle(
@@ -193,31 +195,30 @@ class _AdminInvalidFeeTotalsScreenState extends State<AdminInvalidFeeTotalsScree
                           ),
                         ],
                       ),
-                      const SizedBox(height: 12),
-                      const Divider(height: 1),
-                      const SizedBox(height: 12),
-                      Text(
-                        "Audit Explanation:",
+                      SizedBox(height: 12),
+                      Divider(height: 1),
+                      SizedBox(height: 12),
+                      Text("Audit Explanation:".tr,
                         style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey.shade600),
                       ),
-                      const SizedBox(height: 2),
+                      SizedBox(height: 2),
                       Text(
                         item['reason'],
                         style: TextStyle(fontSize: 11, color: Colors.grey.shade800),
                       ),
                       if (!isBalanced) ...[
-                        const SizedBox(height: 12),
+                        SizedBox(height: 12),
                         Align(
                           alignment: Alignment.centerRight,
                           child: ElevatedButton.icon(
                             onPressed: () => _reconcileSchool(index),
-                            icon: const Icon(Icons.compare_arrows_rounded, size: 14),
-                            label: const Text("Resolve Adjustment", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                            icon: Icon(Icons.compare_arrows_rounded, size: 14),
+                            label: Text("Resolve Adjustment".tr, style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primary,
                               foregroundColor: Colors.white,
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                              padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                               elevation: 0,
                             ),
                           ),

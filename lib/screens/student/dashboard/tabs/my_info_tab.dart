@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/profile_manager.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class MyInfoTab extends StatelessWidget {
   const MyInfoTab({super.key});
@@ -10,8 +11,7 @@ class MyInfoTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "My Info",
+        title: Text("My Info".tr,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.transparent,
@@ -19,7 +19,7 @@ class MyInfoTab extends StatelessWidget {
         foregroundColor: AppColors.text,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(20),
         child: Column(
           children: [
             ValueListenableBuilder<String?>(
@@ -29,24 +29,22 @@ class MyInfoTab extends StatelessWidget {
                   radius: 60,
                   backgroundColor: AppColors.primary.withValues(alpha: 0.1),
                   backgroundImage: path != null ? FileImage(File(path)) : null,
-                  child: path == null ? const Icon(Icons.person, size: 60, color: AppColors.primary) : null,
+                  child: path == null ? Icon(Icons.person, size: 60, color: AppColors.primary) : null,
                 );
               },
             ),
-            const SizedBox(height: 16),
-            const Text(
-              "Student",
+            SizedBox(height: 16),
+            Text("Student".tr,
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF1E2875),
               ),
             ),
-            const Text(
-              "Class 8-A | Roll No: 24",
+            Text("Class 8-A | Roll No: 24".tr,
               style: TextStyle(fontSize: 14, color: Colors.grey),
             ),
-            const SizedBox(height: 25),
+            SizedBox(height: 25),
             _buildInfoTile(
               Icons.email_outlined,
               "Email",
@@ -81,7 +79,7 @@ class MyInfoTab extends StatelessWidget {
   Widget _buildInfoTile(IconData icon, String label, String value) {
     return Card(
       elevation: 0,
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: EdgeInsets.only(bottom: 12),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(color: Colors.grey.shade200),
@@ -90,11 +88,11 @@ class MyInfoTab extends StatelessWidget {
         leading: Icon(icon, color: AppColors.primary),
         title: Text(
           label,
-          style: const TextStyle(fontSize: 12, color: Colors.grey),
+          style: TextStyle(fontSize: 12, color: Colors.grey),
         ),
         subtitle: Text(
           value,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.bold,
             color: Color(0xFF1E2875),

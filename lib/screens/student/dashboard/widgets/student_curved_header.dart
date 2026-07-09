@@ -10,7 +10,7 @@ class StudentCurvedHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: AppColors.primaryDark,
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(30),

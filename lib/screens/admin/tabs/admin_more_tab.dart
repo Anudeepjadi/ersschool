@@ -7,19 +7,20 @@ import '../../../core/utils/profile_manager.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/ai_bot_fab.dart';
 import '../screens/admin_attendance_screen.dart';
-import '../screens/admin_fees_screen.dart';
 import '../screens/admin_examinations_screen.dart';
-import '../screens/admin_library_screen.dart';
 import '../screens/admin_transport_screen.dart';
-import '../screens/admin_hostel_screen.dart';
-import '../screens/admin_events_screen.dart';
-import '../screens/admin_communications_screen.dart';
 import '../screens/admin_id_cards_screen.dart';
-import '../screens/admin_certificates_screen.dart';
 import '../screens/admin_reports_screen.dart';
 import '../screens/admin_invalid_info_screen.dart';
 import '../screens/admin_sms_screen.dart';
 import '../screens/admin_settings_screen.dart';
+import '../screens/admin_classes_screen.dart';
+import '../screens/admin_meetings_screen.dart';
+import 'admin_students_tab.dart';
+import 'admin_teachers_tab.dart';
+import 'admin_branches_tab.dart';
+import '../screens/admin_employee_id_cards_screen.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 class AdminMoreTab extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
   final VoidCallback? onOpenProfile;
@@ -41,8 +42,10 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
   String? _networkImageUrl;
   
   bool _tfaEnabled = true;
+  bool _pushNotificationsEnabled = true;
+  bool _emailAlertsEnabled = false;
+  bool _smsUpdatesEnabled = true;
   final ImagePicker _imagePicker = ImagePicker();
-
   @override
   void initState() {
     super.initState();
@@ -81,7 +84,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
         content: Text(message),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        duration: const Duration(seconds: 2),
+        duration: Duration(seconds: 2),
       ),
     );
   }
@@ -92,7 +95,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
       context: context,
       barrierDismissible: false,
       barrierColor: Colors.black,
-      transitionDuration: const Duration(milliseconds: 300),
+      transitionDuration: Duration(milliseconds: 300),
       pageBuilder: (context, anim1, anim2) {
         return StatefulBuilder(
           builder: (context, setModalState) {
@@ -108,10 +111,9 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(Icons.person, size: 120, color: Colors.white24),
-                            const SizedBox(height: 16),
-                            Text(
-                              "CAMERA VIEWFINDER ACTIVE",
+                            Icon(Icons.person, size: 120, color: Colors.white24),
+                            SizedBox(height: 16),
+                            Text("CAMERA VIEWFINDER ACTIVE".tr,
                               style: TextStyle(
                                 color: Colors.white.withValues(alpha: 0.6),
                                 fontSize: 13,
@@ -174,15 +176,14 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Row(
-                          children: [
+                        Row(children: [
                             Icon(Icons.flash_off, color: Colors.white),
                             SizedBox(width: 16),
                             Icon(Icons.hdr_on, color: Colors.white),
                           ],
                         ),
                         IconButton(
-                          icon: const Icon(Icons.close, color: Colors.white, size: 28),
+                          icon: Icon(Icons.close, color: Colors.white, size: 28),
                           onPressed: () => Navigator.pop(context),
                         ),
                       ],
@@ -196,19 +197,18 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                     right: 0,
                     child: Column(
                       children: [
-                        Text(
-                          "Focus locked. Tap shutter to capture.",
+                        Text("Focus locked. Tap shutter to capture.".tr,
                           style: TextStyle(
                             color: Colors.white.withValues(alpha: 0.5),
                             fontSize: 11,
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: 16),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             // Gallery Icon
-                            const Icon(Icons.photo_library, color: Colors.white, size: 28),
+                            Icon(Icons.photo_library, color: Colors.white, size: 28),
                             // Shutter
                             GestureDetector(
                               onTap: () {
@@ -221,8 +221,8 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                                 _showToast("Photo captured successfully via simulated camera!");
                               },
                               child: Container(
-                                padding: const EdgeInsets.all(4),
-                                decoration: const BoxDecoration(
+                                padding: EdgeInsets.all(4),
+                                decoration: BoxDecoration(
                                   color: Colors.white,
                                   shape: BoxShape.circle,
                                 ),
@@ -238,7 +238,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                               ),
                             ),
                             // Switch camera
-                            const Icon(Icons.flip_camera_ios, color: Colors.white, size: 28),
+                            Icon(Icons.flip_camera_ios, color: Colors.white, size: 28),
                           ],
                         ),
                       ],
@@ -257,7 +257,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
   void _showImageSourcePicker() {
     showModalBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
@@ -266,39 +266,38 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
       builder: (context) {
         return SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(16.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
-                  "Choose Profile Picture Source",
+                Text("Choose Profile Picture Source".tr,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF1E2875),
                   ),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 ListTile(
-                  leading: const Icon(Icons.camera_alt, color: AppColors.primary),
-                  title: const Text("Take Photo (Physical Camera)"),
+                  leading: Icon(Icons.camera_alt, color: AppColors.primary),
+                  title: Text("Take Photo (Physical Camera)".tr),
                   onTap: () {
                     Navigator.pop(context);
                     _pickImage(ImageSource.camera);
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.photo_library, color: AppColors.primary),
-                  title: const Text("Choose from Gallery"),
+                  leading: Icon(Icons.photo_library, color: AppColors.primary),
+                  title: Text("Choose from Gallery".tr),
                   onTap: () {
                     Navigator.pop(context);
                     _pickImage(ImageSource.gallery);
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.linked_camera_outlined, color: Colors.blue),
-                  title: const Text("Simulate Camera Viewfinder"),
-                  subtitle: const Text("Interactive mock camera capture"),
+                  leading: Icon(Icons.linked_camera_outlined, color: Colors.blue),
+                  title: Text("Simulate Camera Viewfinder".tr),
+                  subtitle: Text("Interactive mock camera capture".tr),
                   onTap: () {
                     Navigator.pop(context);
                     _openSimulatedCamera();
@@ -306,8 +305,8 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                 ),
                 if (_selectedLocalImage != null)
                   ListTile(
-                    leading: const Icon(Icons.delete_outline, color: Colors.red),
-                    title: const Text("Remove Photo", style: TextStyle(color: Colors.red)),
+                    leading: Icon(Icons.delete_outline, color: Colors.red),
+                    title: Text("Remove Photo".tr, style: TextStyle(color: Colors.red)),
                     onTap: () {
                       Navigator.pop(context);
                       setState(() {
@@ -335,7 +334,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
@@ -353,8 +352,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Text(
-                "Edit Admin Details",
+              Text("Edit Admin Details".tr,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -362,48 +360,48 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               TextField(
                 controller: nameCtrl,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: "Full Name",
                   prefixIcon: Icon(Icons.person),
                   border: OutlineInputBorder(),
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               TextField(
                 controller: emailCtrl,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: "Email Address",
                   prefixIcon: Icon(Icons.email),
                   border: OutlineInputBorder(),
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               TextField(
                 controller: phoneCtrl,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: "Mobile Number",
                   prefixIcon: Icon(Icons.phone),
                   border: OutlineInputBorder(),
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               TextField(
                 controller: locCtrl,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: "Location",
                   prefixIcon: Icon(Icons.location_on),
                   border: OutlineInputBorder(),
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  padding: EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 ),
                 onPressed: () {
@@ -417,9 +415,9 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                   Navigator.pop(context);
                   _showToast("Admin profile details saved!");
                 },
-                child: const Text("Save Details", style: TextStyle(fontWeight: FontWeight.bold)),
+                child: Text("Save Details".tr, style: TextStyle(fontWeight: FontWeight.bold)),
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: 10),
             ],
           ),
         );
@@ -439,65 +437,62 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
       ),
 
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 20),
+        physics: BouncingScrollPhysics(),
+        padding: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Avatar and Top details card
             _buildProfileHeaderCard(),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
 
             // Admin Modules Grid
             _buildAdminMenuGrid(),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
 
             // Account Information
-            const Text(
-              "Account Information",
+            Text("Account Information".tr,
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF1E2875),
               ),
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
             _buildAccountInfoCard(),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
 
             // Security Settings
-            const Text(
-              "Security",
+            Text("Security".tr,
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF1E2875),
               ),
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
             _buildSecurityCard(),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
 
             // Preferences
-            const Text(
-              "Preferences",
+            Text("Preferences".tr,
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF1E2875),
               ),
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
             _buildPreferencesCard(),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
 
             // Logout row
             _buildLogoutRow(),
-            const SizedBox(height: 30),
+            SizedBox(height: 30),
           ],
         ),
       ),
-      floatingActionButton: const AiBotFab(),
+      floatingActionButton: AiBotFab(),
     );
   }
 
@@ -506,64 +501,67 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Admin Modules",
+        Text("Admin Modules".tr,
           style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.bold,
             color: Color(0xFF1E2875),
           ),
         ),
-        const SizedBox(height: 10),
+        SizedBox(height: 10),
         GridView.count(
           crossAxisCount: 2,
           shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
+          physics: NeverScrollableScrollPhysics(),
           mainAxisSpacing: 12,
           crossAxisSpacing: 12,
           childAspectRatio: 2.8,
           children: [
+            _buildGridItem(Icons.people_alt, "Students", Colors.teal, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminStudentsTab()));
+            }),
+            _buildGridItem(Icons.people_outline, "Employee", Colors.indigo, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminTeachersTab()));
+            }),
+            _buildGridItem(Icons.corporate_fare, "Branches", Colors.deepPurple, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminBranchesTab()));
+            }),
+            _buildGridItem(Icons.class_, "Classes", Colors.amber, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminClassesScreen()));
+            }),
+            _buildGridItem(Icons.video_camera_front, "Meetings", Colors.redAccent, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminMeetingsScreen(initialFeature: MeetingsFeature.schedule)));
+            }),
             _buildGridItem(Icons.how_to_reg, "Attendance", Colors.blue, () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminAttendanceScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (_) => AdminAttendanceScreen()));
             }),
-            _buildGridItem(Icons.receipt_long, "Fees", Colors.green, () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminFeesScreen()));
-            }),
+
             _buildGridItem(Icons.assignment, "Examination", Colors.orange, () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminExaminationsScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (_) => AdminExaminationsScreen()));
             }),
-            _buildGridItem(Icons.menu_book, "Library", Colors.purple, () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminLibraryScreen()));
-            }),
+
             _buildGridItem(Icons.directions_bus, "Transport", Colors.indigo, () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminTransportScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (_) => AdminTransportScreen()));
             }),
-            _buildGridItem(Icons.bed, "Hostel", Colors.teal, () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminHostelScreen()));
+
+            _buildGridItem(Icons.badge, "Student ID Cards", Colors.brown, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => AdminIDCardsScreen()));
             }),
-            _buildGridItem(Icons.event, "Events", Colors.pink, () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEventsScreen()));
+            _buildGridItem(Icons.badge_outlined, "Employee ID Cards", Colors.brown.shade400, () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEmployeeIDCardsScreen()));
             }),
-            _buildGridItem(Icons.campaign, "Communicate", Colors.cyan, () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminCommunicationsScreen()));
-            }),
-            _buildGridItem(Icons.badge, "ID Card", Colors.brown, () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminIDCardsScreen()));
-            }),
-            _buildGridItem(Icons.workspace_premium, "Certificates", Colors.amber, () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminCertificatesScreen()));
-            }),
+
             _buildGridItem(Icons.assessment, "Reports", Colors.red, () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminReportsScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (_) => AdminReportsScreen()));
             }),
             _buildGridItem(Icons.error_outline, "Invalid Info", Colors.deepOrange, () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminInvalidInfoScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (_) => AdminInvalidInfoScreen()));
             }),
             _buildGridItem(Icons.sms_outlined, "SMS", Colors.blueAccent, () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminSmsScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (_) => AdminSmsScreen()));
             }),
             _buildGridItem(Icons.settings, "Settings", Colors.grey, () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminSettingsScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (_) => AdminSettingsScreen()));
             }),
           ],
         ),
@@ -582,34 +580,40 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
             BoxShadow(
               color: color.withValues(alpha: 0.1),
               blurRadius: 6,
-              offset: const Offset(0, 2),
+              offset: Offset(0, 2),
             ),
           ],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Container(
-              padding: const EdgeInsets.all(10),
+              padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.15),
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: color, size: 20),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 8),
             Expanded(
-              child: Text(
-                label,
-                textAlign: TextAlign.left,
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF1E2875),
+              child: Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    label,
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1E2875),
+                    ),
+                    maxLines: 1,
+                  ),
                 ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
@@ -628,7 +632,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
     }
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -637,7 +641,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
           BoxShadow(
             color: Colors.grey.shade50,
             blurRadius: 4,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
       ),
@@ -655,7 +659,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                     BoxShadow(
                       color: Colors.grey.shade200,
                       blurRadius: 6,
-                      offset: const Offset(0, 2),
+                      offset: Offset(0, 2),
                     ),
                   ],
                 ),
@@ -674,12 +678,12 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                 child: GestureDetector(
                   onTap: _showImageSourcePicker,
                   child: Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: const BoxDecoration(
+                    padding: EdgeInsets.all(6),
+                    decoration: BoxDecoration(
                       color: Color(0xFF0038FF),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.camera_alt,
                       color: Colors.white,
                       size: 16,
@@ -689,7 +693,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
               ),
             ],
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: 16),
           // Details
           Expanded(
             child: Column(
@@ -701,7 +705,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                     Expanded(
                       child: Text(
                         _adminName,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF1E2875),
@@ -712,31 +716,29 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                     ),
                     OutlinedButton.icon(
                       style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-                        minimumSize: const Size(0, 26),
+                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                        minimumSize: Size(0, 26),
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        side: const BorderSide(color: Color(0xFF0038FF)),
+                        side: BorderSide(color: Color(0xFF0038FF)),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
                       ),
                       onPressed: _openEditProfileDialog,
-                      icon: const Icon(Icons.edit, size: 12, color: Color(0xFF0038FF)),
-                      label: const Text(
-                        "Edit",
+                      icon: Icon(Icons.edit, size: 12, color: Color(0xFF0038FF)),
+                      label: Text("Edit".tr,
                         style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF0038FF)),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 // Super Admin badge
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF0038FF).withValues(alpha: 0.1),
+                    color: Color(0xFF0038FF).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(6),
                   ),
-                  child: const Text(
-                    "Super Administrator",
+                  child: Text("Super Administrator".tr,
                     style: TextStyle(
                       fontSize: 10,
                       color: Color(0xFF0038FF),
@@ -744,46 +746,46 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
                 // Phone number
                 Row(
                   children: [
-                    const Icon(Icons.phone, size: 13, color: Colors.grey),
-                    const SizedBox(width: 6),
+                    Icon(Icons.phone, size: 13, color: Colors.grey),
+                    SizedBox(width: 6),
                     Expanded(
                       child: Text(
                         _adminPhone,
-                        style: const TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.w500),
+                        style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.w500),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 // Email
                 Row(
                   children: [
-                    const Icon(Icons.email, size: 13, color: Colors.grey),
-                    const SizedBox(width: 6),
+                    Icon(Icons.email, size: 13, color: Colors.grey),
+                    SizedBox(width: 6),
                     Expanded(
                       child: Text(
                         _adminEmail,
-                        style: const TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.w500),
+                        style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.w500),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 // Location
                 Row(
                   children: [
-                    const Icon(Icons.location_on, size: 13, color: Colors.grey),
-                    const SizedBox(width: 6),
+                    Icon(Icons.location_on, size: 13, color: Colors.grey),
+                    SizedBox(width: 6),
                     Expanded(
                       child: Text(
                         _adminLocation,
-                        style: const TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.w500),
+                        style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.w500),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -808,16 +810,16 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
       child: Column(
         children: [
           _buildInfoRow(Icons.person_outline, "Full Name", _adminName),
-          const Divider(height: 1),
+          Divider(height: 1),
           _buildInfoRow(Icons.email_outlined, "Email Address", _adminEmail),
-          const Divider(height: 1),
+          Divider(height: 1),
           _buildInfoRow(Icons.phone_outlined, "Mobile Number", _adminPhone),
-          const Divider(height: 1),
+          Divider(height: 1),
           _buildInfoRow(Icons.badge_outlined, "Role", "Super Administrator"),
-          const Divider(height: 1),
+          Divider(height: 1),
           _buildInfoRow(Icons.calendar_today_outlined, "Date of Joining", "01 Jan 2024, 09:00 AM"),
-          const Divider(height: 1),
-          _buildInfoRow(Icons.language, "Language", "English", trailing: const Icon(Icons.chevron_right, size: 14, color: Colors.grey)),
+          Divider(height: 1),
+          _buildInfoRow(Icons.language, "Language", "English", trailing: Icon(Icons.chevron_right, size: 14, color: Colors.grey)),
         ],
       ),
     );
@@ -825,22 +827,22 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
 
   Widget _buildInfoRow(IconData icon, String label, String value, {Widget? trailing}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       child: Row(
         children: [
-          Icon(icon, size: 18, color: const Color(0xFF0038FF)),
-          const SizedBox(width: 12),
+          Icon(icon, size: 18, color: Color(0xFF0038FF)),
+          SizedBox(width: 12),
           Text(
             label,
-            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF757897)),
+            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF757897)),
           ),
-          const Spacer(),
+          Spacer(),
           Text(
             value,
-            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+            style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
           ),
           if (trailing != null) ...[
-            const SizedBox(width: 6),
+            SizedBox(width: 6),
             trailing,
           ]
         ],
@@ -864,22 +866,20 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
             "Update your account password",
             onTap: () => _showChangePasswordDialog(context),
           ),
-          const Divider(height: 1),
+          Divider(height: 1),
           SwitchListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            secondary: const Icon(Icons.security_outlined, color: Color(0xFF0038FF), size: 18),
-            title: const Text(
-              "Two-Factor Authentication",
+            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            secondary: Icon(Icons.security_outlined, color: Color(0xFF0038FF), size: 18),
+            title: Text("Two-Factor Authentication".tr,
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
             ),
-            subtitle: const Text(
-              "Add an extra layer of security",
+            subtitle: Text("Add an extra layer of security".tr,
               style: TextStyle(fontSize: 11, color: Colors.grey),
             ),
             value: _tfaEnabled,
             onChanged: (v) => setState(() => _tfaEnabled = v),
           ),
-          const Divider(height: 1),
+          Divider(height: 1),
           _buildSettingsRow(
             Icons.devices_outlined,
             "Active Sessions",
@@ -907,14 +907,14 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
             "Manage notification preferences",
             onTap: () => _showNotificationsDialog(context),
           ),
-          const Divider(height: 1),
+          Divider(height: 1),
           _buildSettingsRow(
             Icons.palette_outlined,
             "Theme",
             "System Default",
             onTap: () => _showThemeSelectorDialog(context),
           ),
-          const Divider(height: 1),
+          Divider(height: 1),
           _buildSettingsRow(
             Icons.public,
             "Region & Time Zone",
@@ -928,16 +928,16 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
 
   Widget _buildSettingsRow(IconData icon, String title, String subtitle, {required VoidCallback onTap}) {
     return ListTile(
-      leading: Icon(icon, color: const Color(0xFF0038FF), size: 18),
+      leading: Icon(icon, color: Color(0xFF0038FF), size: 18),
       title: Text(
         title,
-        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+        style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
       ),
       subtitle: Text(
         subtitle,
-        style: const TextStyle(fontSize: 11, color: Colors.grey),
+        style: TextStyle(fontSize: 11, color: Colors.grey),
       ),
-      trailing: const Icon(Icons.chevron_right, size: 16, color: Colors.grey),
+      trailing: Icon(Icons.chevron_right, size: 16, color: Colors.grey),
       onTap: onTap,
     );
   }
@@ -948,35 +948,35 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Change Password'),
+        title: Text('Change Password'.tr),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const TextField(
+            TextField(
               obscureText: true,
               decoration: InputDecoration(labelText: 'Current Password', border: OutlineInputBorder()),
             ),
-            const SizedBox(height: 12),
-            const TextField(
+            SizedBox(height: 12),
+            TextField(
               obscureText: true,
               decoration: InputDecoration(labelText: 'New Password', border: OutlineInputBorder()),
             ),
-            const SizedBox(height: 12),
-            const TextField(
+            SizedBox(height: 12),
+            TextField(
               obscureText: true,
               decoration: InputDecoration(labelText: 'Confirm New Password', border: OutlineInputBorder()),
             ),
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: Text('Cancel'.tr)),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(ctx);
               _showToast("Password updated successfully!");
             },
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white),
-            child: const Text('Save'),
+            child: Text('Save'.tr),
           ),
         ],
       ),
@@ -988,22 +988,22 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Active Sessions'),
+        title: Text('Active Sessions'.tr),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              leading: const Icon(Icons.phone_android, color: Colors.green),
-              title: const Text('iPhone 13 (Current)'),
-              subtitle: const Text('Active now'),
+              leading: Icon(Icons.phone_android, color: Colors.green),
+              title: Text('iPhone 13 (Current)'.tr),
+              subtitle: Text('Active now'.tr),
             ),
-            const Divider(),
+            Divider(),
             ListTile(
-              leading: const Icon(Icons.computer, color: Colors.grey),
-              title: const Text('MacBook Pro'),
-              subtitle: const Text('Last active: 2 hours ago'),
+              leading: Icon(Icons.computer, color: Colors.grey),
+              title: Text('MacBook Pro'.tr),
+              subtitle: Text('Last active: 2 hours ago'.tr),
               trailing: IconButton(
-                icon: const Icon(Icons.logout, color: Colors.red),
+                icon: Icon(Icons.logout, color: Colors.red),
                 onPressed: () {
                   Navigator.pop(ctx);
                   _showToast("Session terminated.");
@@ -1013,7 +1013,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Close')),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: Text('Close'.tr)),
         ],
       ),
     );
@@ -1024,29 +1024,42 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Notification Settings'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SwitchListTile(
-              title: const Text('Push Notifications'),
-              value: true,
-              onChanged: (v) {},
-            ),
-            SwitchListTile(
-              title: const Text('Email Alerts'),
-              value: false,
-              onChanged: (v) {},
-            ),
-            SwitchListTile(
-              title: const Text('SMS Updates'),
-              value: true,
-              onChanged: (v) {},
-            ),
-          ],
+        title: Text('Notification Settings'.tr),
+        content: StatefulBuilder(
+          builder: (context, setModalState) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SwitchListTile(
+                  title: Text('Push Notifications'.tr),
+                  value: _pushNotificationsEnabled,
+                  onChanged: (v) {
+                    setModalState(() => _pushNotificationsEnabled = v);
+                    setState(() => _pushNotificationsEnabled = v);
+                  },
+                ),
+                SwitchListTile(
+                  title: Text('Email Alerts'.tr),
+                  value: _emailAlertsEnabled,
+                  onChanged: (v) {
+                    setModalState(() => _emailAlertsEnabled = v);
+                    setState(() => _emailAlertsEnabled = v);
+                  },
+                ),
+                SwitchListTile(
+                  title: Text('SMS Updates'.tr),
+                  value: _smsUpdatesEnabled,
+                  onChanged: (v) {
+                    setModalState(() => _smsUpdatesEnabled = v);
+                    setState(() => _smsUpdatesEnabled = v);
+                  },
+                ),
+              ],
+            );
+          }
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Close')),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: Text('Close'.tr)),
         ],
       ),
     );
@@ -1055,34 +1068,34 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
   void _showThemeSelectorDialog(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (ctx) => Padding(
-        padding: const EdgeInsets.all(24.0),
+        padding: EdgeInsets.all(24.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Select Theme', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 20),
+            Text('Select Theme'.tr, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            SizedBox(height: 20),
             ListTile(
-              leading: const Icon(Icons.brightness_auto),
-              title: const Text('System Default'),
+              leading: Icon(Icons.brightness_auto),
+              title: Text('System Default'.tr),
               onTap: () {
                 ProfileManager().themeMode.value = ThemeMode.system;
                 Navigator.pop(ctx);
               },
             ),
             ListTile(
-              leading: const Icon(Icons.light_mode),
-              title: const Text('Light Theme'),
+              leading: Icon(Icons.light_mode),
+              title: Text('Light Theme'.tr),
               onTap: () {
                 ProfileManager().themeMode.value = ThemeMode.light;
                 Navigator.pop(ctx);
               },
             ),
             ListTile(
-              leading: const Icon(Icons.dark_mode),
-              title: const Text('Dark Theme'),
+              leading: Icon(Icons.dark_mode),
+              title: Text('Dark Theme'.tr),
               onTap: () {
                 ProfileManager().themeMode.value = ThemeMode.dark;
                 Navigator.pop(ctx);
@@ -1099,21 +1112,21 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Region & Time Zone'),
+        title: Text('Region & Time Zone'.tr),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              title: const Text('Asia/Kolkata (IST)'),
-              trailing: const Icon(Icons.check, color: AppColors.primary),
+              title: Text('Asia/Kolkata (IST)'.tr),
+              trailing: Icon(Icons.check, color: AppColors.primary),
               onTap: () => Navigator.pop(ctx),
             ),
             ListTile(
-              title: const Text('America/New_York (EST)'),
+              title: Text('America/New_York (EST)'.tr),
               onTap: () => Navigator.pop(ctx),
             ),
             ListTile(
-              title: const Text('Europe/London (GMT)'),
+              title: Text('Europe/London (GMT)'.tr),
               onTap: () => Navigator.pop(ctx),
             ),
           ],
@@ -1131,13 +1144,11 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
         border: Border.all(color: Colors.grey.shade100),
       ),
       child: ListTile(
-        leading: const Icon(Icons.logout, color: Colors.red, size: 18),
-        title: const Text(
-          "Logout",
+        leading: Icon(Icons.logout, color: Colors.red, size: 18),
+        title: Text("Logout".tr,
           style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.red),
         ),
-        subtitle: const Text(
-          "Sign out from your account",
+        subtitle: Text("Sign out from your account".tr,
           style: TextStyle(fontSize: 11, color: Colors.grey),
         ),
         onTap: () {
@@ -1145,12 +1156,12 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
             context: context,
             builder: (ctx) => AlertDialog(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-              title: const Text('Logout', style: TextStyle(fontWeight: FontWeight.bold)),
-              content: const Text('Are you sure you want to logout?'),
+              title: Text('Logout'.tr, style: TextStyle(fontWeight: FontWeight.bold)),
+              content: Text('Are you sure you want to logout?'.tr),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(ctx),
-                  child: const Text('Cancel'),
+                  child: Text('Cancel'.tr),
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
@@ -1161,10 +1172,10 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                     Navigator.pop(ctx);
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (_) => const LoginScreen()),
+                      MaterialPageRoute(builder: (_) => LoginScreen()),
                     );
                   },
-                  child: const Text('Logout', style: TextStyle(color: Colors.white)),
+                  child: Text('Logout'.tr, style: TextStyle(color: Colors.white)),
                 ),
               ],
             ),

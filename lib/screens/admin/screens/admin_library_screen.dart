@@ -1,8 +1,9 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../../core/theme/app_colors.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 class AdminLibraryScreen extends StatefulWidget {
   const AdminLibraryScreen({super.key});
@@ -81,9 +82,9 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
 
   final List<Map<String, dynamic>> _issuedRegistry = [
     {
-      'student': 'Anudeep Jaadi',
-      'rollNo': 'ECS0801',
-      'class': 'Class 8-A',
+      'student': 'Aarav Sharma',
+      'rollNo': 'ECS00001',
+      'class': 'Class 10-A',
       'book': 'Brief History of Time',
       'issuedDate': '10 Jun 2026',
       'dueDate': '25 Jun 2026',
@@ -133,9 +134,9 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FF),
-      appBar: const AdminAppBar(title: "Library Management", subtitle: "Manage your account details"),
-      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
+      backgroundColor: Color(0xFFF5F7FF),
+      appBar: AdminAppBar(title: "Library Management", subtitle: "Manage your account details"),
+      bottomNavigationBar: AdminBottomNavBar(currentIndex: 4),
       body: TabBarView(
         controller: _tabController,
         children: [
@@ -147,8 +148,8 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
         heroTag: null,
         onPressed: () {},
         backgroundColor: AppColors.primaryDark,
-        icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text("Add Book", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        icon: Icon(Icons.add, color: Colors.white),
+        label: Text("Add Book".tr, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
       ),
     );
   }
@@ -163,8 +164,8 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
     }).toList();
 
     return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.all(16),
+      physics: BouncingScrollPhysics(),
+      padding: EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -180,19 +181,19 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // Donut chart of categories
           _buildCategoryDistribution(),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
 
           // Search Bar
           _buildSearchBar(),
-          const SizedBox(height: 14),
+          SizedBox(height: 14),
 
           // Horizontal Categories
           _buildCategoryFilterRow(),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // Books List Title
           Row(
@@ -200,24 +201,24 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
             children: [
               Text(
                 "Books in Catalog (${filteredBooks.length})",
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
               ),
-              const Icon(Icons.sort_outlined, color: Colors.grey, size: 18),
+              Icon(Icons.sort_outlined, color: Colors.grey, size: 18),
             ],
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
 
           // Catalog List
           ListView.builder(
             shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
+            physics: NeverScrollableScrollPhysics(),
             itemCount: filteredBooks.length,
             itemBuilder: (context, index) {
               final book = filteredBooks[index];
               return _buildBookItem(book);
             },
           ),
-          const SizedBox(height: 60),
+          SizedBox(height: 60),
         ],
       ),
     );
@@ -228,7 +229,7 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
       children: [
         // Top filters inside Issued Tab
         Padding(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(16),
           child: Row(
             children: [
               Expanded(
@@ -240,11 +241,11 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
                   },
                   decoration: InputDecoration(
                     hintText: "Search by student name or roll number...",
-                    hintStyle: const TextStyle(fontSize: 13, color: Colors.grey),
-                    prefixIcon: const Icon(Icons.search, color: Colors.grey, size: 20),
+                    hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
+                    prefixIcon: Icon(Icons.search, color: Colors.grey, size: 20),
                     filled: true,
                     fillColor: Colors.white,
-                    contentPadding: const EdgeInsets.symmetric(vertical: 10),
+                    contentPadding: EdgeInsets.symmetric(vertical: 10),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
@@ -252,14 +253,14 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
                   ),
                 ),
               ),
-              const SizedBox(width: 10),
+              SizedBox(width: 10),
               Container(
-                padding: const EdgeInsets.all(10),
+                padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(Icons.filter_list_outlined, color: AppColors.primary, size: 20),
+                child: Icon(Icons.filter_list_outlined, color: AppColors.primary, size: 20),
               ),
             ],
           ),
@@ -268,15 +269,15 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
         // Issued books list
         Expanded(
           child: ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: EdgeInsets.symmetric(horizontal: 16),
             itemCount: _issuedRegistry.length,
             itemBuilder: (context, index) {
               final log = _issuedRegistry[index];
               final isOverdue = log['status'] == 'Overdue';
 
               return Container(
-                margin: const EdgeInsets.only(bottom: 12),
-                padding: const EdgeInsets.all(16),
+                margin: EdgeInsets.only(bottom: 12),
+                padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
@@ -284,7 +285,7 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
                     BoxShadow(
                       color: Colors.grey.shade50,
                       blurRadius: 4,
-                      offset: const Offset(0, 1),
+                      offset: Offset(0, 1),
                     ),
                   ],
                 ),
@@ -296,10 +297,10 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
                       children: [
                         Text(
                           log['student'],
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF1E2875)),
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF1E2875)),
                         ),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
                             color: (isOverdue ? Colors.red : Colors.green).withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(8),
@@ -315,47 +316,47 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
                         ),
                       ],
                     ),
-                    const SizedBox(height: 2),
+                    SizedBox(height: 2),
                     Text(
                       "${log['rollNo']} | ${log['class']}",
-                      style: const TextStyle(fontSize: 11, color: Colors.grey),
+                      style: TextStyle(fontSize: 11, color: Colors.grey),
                     ),
-                    const Divider(height: 20),
+                    Divider(height: 20),
                     Row(
                       children: [
-                        const Icon(Icons.book, size: 16, color: AppColors.primary),
-                        const SizedBox(width: 8),
+                        Icon(Icons.book, size: 16, color: AppColors.primary),
+                        SizedBox(width: 8),
                         Expanded(
                           child: Text(
                             log['book'],
-                            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: Color(0xFF1E2875)),
+                            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: Color(0xFF1E2875)),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text("Issued Date", style: TextStyle(fontSize: 9, color: Colors.grey)),
-                            const SizedBox(height: 2),
-                            Text(log['issuedDate'], style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF757897))),
+                            Text("Issued Date".tr, style: TextStyle(fontSize: 9, color: Colors.grey)),
+                            SizedBox(height: 2),
+                            Text(log['issuedDate'], style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF757897))),
                           ],
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Text("Due Date", style: TextStyle(fontSize: 9, color: isOverdue ? Colors.red.shade300 : Colors.grey)),
-                            const SizedBox(height: 2),
+                            Text("Due Date".tr, style: TextStyle(fontSize: 9, color: isOverdue ? Colors.red.shade300 : Colors.grey)),
+                            SizedBox(height: 2),
                             Text(
                               log['dueDate'],
                               style: TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.bold,
-                                color: isOverdue ? Colors.red : const Color(0xFF1E2875),
+                                color: isOverdue ? Colors.red : Color(0xFF1E2875),
                               ),
                             ),
                           ],
@@ -363,7 +364,7 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
                       ],
                     ),
                     if (isOverdue) ...[
-                      const SizedBox(height: 12),
+                      SizedBox(height: 12),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -372,11 +373,11 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.red,
                               elevation: 0,
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                             ),
-                            icon: const Icon(Icons.notifications_active, color: Colors.white, size: 12),
-                            label: const Text("Send Reminder", style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
+                            icon: Icon(Icons.notifications_active, color: Colors.white, size: 12),
+                            label: Text("Send Reminder".tr, style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
                           )
                         ],
                       )
@@ -394,8 +395,8 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
   Widget _buildStatCard(String label, String value, String subtext, Color color) {
     return Container(
       width: 130,
-      margin: const EdgeInsets.only(right: 12),
-      padding: const EdgeInsets.all(12),
+      margin: EdgeInsets.only(right: 12),
+      padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -404,10 +405,10 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
-          Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-          const SizedBox(height: 4),
+          Text(label, style: TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
+          SizedBox(height: 8),
+          Text(value, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+          SizedBox(height: 4),
           Text(subtext, style: TextStyle(fontSize: 9, color: color, fontWeight: FontWeight.w500)),
         ],
       ),
@@ -416,7 +417,7 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
 
   Widget _buildCategoryDistribution() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -425,11 +426,10 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Category Distribution",
+          Text("Category Distribution".tr,
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Row(
             children: [
               SizedBox(
@@ -448,16 +448,16 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
                   ),
                 ),
               ),
-              const SizedBox(width: 20),
+              SizedBox(width: 20),
               Expanded(
                 child: Column(
                   children: [
                     _buildLegendItem("Science (35%)", Colors.blue),
-                    const SizedBox(height: 6),
+                    SizedBox(height: 6),
                     _buildLegendItem("Maths (20%)", Colors.purple),
-                    const SizedBox(height: 6),
+                    SizedBox(height: 6),
                     _buildLegendItem("Tech (25%)", Colors.teal),
-                    const SizedBox(height: 6),
+                    SizedBox(height: 6),
                     _buildLegendItem("Literature (20%)", Colors.orange),
                   ],
                 ),
@@ -473,8 +473,8 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
     return Row(
       children: [
         Container(width: 10, height: 10, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
-        const SizedBox(width: 8),
-        Text(label, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF757897))),
+        SizedBox(width: 8),
+        Text(label, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF757897))),
       ],
     );
   }
@@ -488,11 +488,11 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
       },
       decoration: InputDecoration(
         hintText: "Search books by title, author, or ISBN...",
-        hintStyle: const TextStyle(fontSize: 13, color: Colors.grey),
-        prefixIcon: const Icon(Icons.search, color: Colors.grey, size: 20),
+        hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
+        prefixIcon: Icon(Icons.search, color: Colors.grey, size: 20),
         filled: true,
         fillColor: Colors.white,
-        contentPadding: const EdgeInsets.symmetric(vertical: 10),
+        contentPadding: EdgeInsets.symmetric(vertical: 10),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
@@ -505,12 +505,12 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
     final categories = ['All', 'Science', 'Maths', 'Tech', 'Literature'];
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      physics: const BouncingScrollPhysics(),
+      physics: BouncingScrollPhysics(),
       child: Row(
         children: categories.map((cat) {
           final isSelected = _selectedCategory == cat;
           return Padding(
-            padding: const EdgeInsets.only(right: 8.0),
+            padding: EdgeInsets.only(right: 8.0),
             child: ChoiceChip(
               label: Text(cat),
               selected: isSelected,
@@ -522,7 +522,7 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
               selectedColor: AppColors.primary,
               backgroundColor: Colors.white,
               labelStyle: TextStyle(
-                color: isSelected ? Colors.white : const Color(0xFF757897),
+                color: isSelected ? Colors.white : Color(0xFF757897),
                 fontWeight: FontWeight.bold,
                 fontSize: 12,
               ),
@@ -538,8 +538,8 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
   Widget _buildBookItem(Map<String, dynamic> book) {
     final isAvailable = book['status'] == 'Available';
     return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(12),
+      margin: EdgeInsets.only(bottom: 10),
+      padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
@@ -549,14 +549,14 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: AppColors.primary.withValues(alpha: 0.08),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: const Icon(Icons.book_outlined, color: AppColors.primary, size: 24),
+            child: Icon(Icons.book_outlined, color: AppColors.primary, size: 24),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -567,12 +567,12 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
                     Flexible(
                       child: Text(
                         book['title']!,
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875)),
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875)),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
                         color: (isAvailable ? Colors.green : Colors.red).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(6),
@@ -588,24 +588,24 @@ class _AdminLibraryScreenState extends State<AdminLibraryScreen> with SingleTick
                     ),
                   ],
                 ),
-                const SizedBox(height: 2),
+                SizedBox(height: 2),
                 Text(
                   "By ${book['author']}",
-                  style: const TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.w500),
+                  style: TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.w500),
                 ),
-                const SizedBox(height: 6),
+                SizedBox(height: 6),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text("ISBN: ${book['isbn']}", style: TextStyle(fontSize: 9, color: Colors.grey.shade400)),
-                    Text(book['shelf']!, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF757897))),
+                    Text(book['shelf']!, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF757897))),
                   ],
                 ),
-                const Divider(height: 14),
+                Divider(height: 14),
                 Row(
                   children: [
                     Icon(Icons.inventory_2_outlined, size: 12, color: Colors.grey.shade400),
-                    const SizedBox(width: 4),
+                    SizedBox(width: 4),
                     Text(
                       "Available: ${book['available']} / ${book['total']} copies",
                       style: TextStyle(fontSize: 10, color: Colors.grey.shade600, fontWeight: FontWeight.bold),

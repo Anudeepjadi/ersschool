@@ -4,6 +4,7 @@ import '../widgets/quick_actions.dart';
 import '../widgets/teacher_drawer.dart';
 import '../widgets/teacher_bottom_nav.dart';
 import '../widgets/teacher_app_bar.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 
 enum MeetingStatus { completed, pending, upcoming, cancelled }
 
@@ -66,7 +67,7 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
       context: context,
       barrierDismissible: false,
       barrierColor: Colors.black.withValues(alpha: 0.9),
-      transitionDuration: const Duration(milliseconds: 200),
+      transitionDuration: Duration(milliseconds: 200),
       pageBuilder: (context, anim1, anim2) {
         return StatefulBuilder(
           builder: (context, setOverlayState) {
@@ -74,7 +75,7 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
               backgroundColor: Colors.transparent,
               body: SafeArea(
                 child: Padding(
-                  padding: const EdgeInsets.all(24.0),
+                  padding: EdgeInsets.all(24.0),
                   child: Column(
                     children: [
                       Row(
@@ -83,38 +84,38 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(meetingTitle, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
-                              const Text("Live Session", style: TextStyle(color: Colors.green, fontSize: 12)),
+                              Text(meetingTitle, style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                              Text("Live Session".tr, style: TextStyle(color: Colors.green, fontSize: 12)),
                             ],
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(4)),
-                            child: const Text("REC", style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
+                            child: Text("REC".tr, style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
                           )
                         ],
                       ),
-                      const Spacer(),
+                      Spacer(),
                       Container(
                         height: 350,
                         width: double.infinity,
                         decoration: BoxDecoration(color: Colors.grey[900], borderRadius: BorderRadius.circular(24), border: Border.all(color: Colors.white.withValues(alpha: 0.2))),
                         child: Center(
                           child: isVideoOff
-                              ? const Column(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.videocam_off, color: Colors.white54, size: 48), SizedBox(height: 8), Text("Video is off", style: TextStyle(color: Colors.white70))])
+                              ? Column(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.videocam_off, color: Colors.white54, size: 48), SizedBox(height: 8), Text("Video is off".tr, style: TextStyle(color: Colors.white70))])
                               : ClipRRect(borderRadius: BorderRadius.circular(24), child: Image.network('https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400', fit: BoxFit.cover, width: double.infinity, height: double.infinity)),
                         ),
                       ),
-                      const Spacer(),
+                      Spacer(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           FloatingActionButton(heroTag: null, backgroundColor: isMuted ? Colors.red : Colors.white24, child: Icon(isMuted ? Icons.mic_off : Icons.mic, color: Colors.white), onPressed: () => setOverlayState(() => isMuted = !isMuted)),
                           FloatingActionButton(heroTag: null, backgroundColor: isVideoOff ? Colors.red : Colors.white24, child: Icon(isVideoOff ? Icons.videocam_off : Icons.videocam, color: Colors.white), onPressed: () => setOverlayState(() => isVideoOff = !isVideoOff)),
-                          FloatingActionButton(heroTag: null, backgroundColor: Colors.red, child: const Icon(Icons.call_end, color: Colors.white), onPressed: () => Navigator.pop(context)),
+                          FloatingActionButton(heroTag: null, backgroundColor: Colors.red, child: Icon(Icons.call_end, color: Colors.white), onPressed: () => Navigator.pop(context)),
                         ],
                       ),
-                      const SizedBox(height: 24),
+                      SizedBox(height: 24),
                     ],
                   ),
                 ),
@@ -133,7 +134,7 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
       initialIndex: widget.activeTab > 3 ? 0 : widget.activeTab,
       child: Scaffold(
         key: _scaffoldKey,
-        backgroundColor: const Color(0xFFF5F7FF),
+        backgroundColor: Color(0xFFF5F7FF),
         appBar: TeacherAppBar(
           title: "Meetings",
           subtitle: "Manage your schedule",
@@ -154,7 +155,7 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
         ),
         body: Column(
           children: [
-            const Material(
+            Material(
               color: Colors.white,
               elevation: 1,
               child: TabBar(
@@ -195,13 +196,13 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           // Overview Stats
           SizedBox(
             height: 135,
             child: ListView(
               scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
               children: [
                 StatCard(
                   title: "Scheduled Meetings", 
@@ -234,22 +235,22 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
               ],
             ),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Today's Meetings", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1B263B))),
-                TextButton(onPressed: () {}, child: const Text("View All", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold))),
+                Text("Today's Meetings", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1B263B))),
+                TextButton(onPressed: () {}, child: Text("View All".tr, style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold))),
               ],
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           _buildMeetingList(_meetings, showJoinButton: true),
           
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           QuickActionsBar(
             actions: [
               QuickActionItem(title: "Schedule Meeting", icon: Icons.add_circle_outline, onTap: () {}), 
@@ -257,7 +258,7 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
               QuickActionItem(title: "Create Zoom Link", icon: Icons.link, onTap: () {})
             ],
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
         ],
       ),
     );
@@ -265,40 +266,40 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
 
   Widget _buildMeetingList(List<MeetingItem> meetings, {bool showJoinButton = false, bool isLog = false, bool showStatusLabel = false}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      padding: EdgeInsets.symmetric(horizontal: 16.0),
       child: Container(
         decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), border: Border.all(color: Colors.grey[200]!)),
         child: ListView.separated(
           shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
+          physics: NeverScrollableScrollPhysics(),
           itemCount: meetings.length,
-          separatorBuilder: (context, index) => const Divider(height: 1),
+          separatorBuilder: (context, index) => Divider(height: 1),
           itemBuilder: (context, index) {
             final mt = meetings[index];
             return ListTile(
-              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              leading: Container(padding: const EdgeInsets.all(8), decoration: BoxDecoration(color: _getStatusColor(mt.status).withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)), child: Icon(isLog ? Icons.history : Icons.videocam_outlined, color: _getStatusColor(mt.status), size: 20)),
-              title: Text(mt.title, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1B263B))),
+              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              leading: Container(padding: EdgeInsets.all(8), decoration: BoxDecoration(color: _getStatusColor(mt.status).withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)), child: Icon(isLog ? Icons.history : Icons.videocam_outlined, color: _getStatusColor(mt.status), size: 20)),
+              title: Text(mt.title, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1B263B))),
               subtitle: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Text(isLog ? "Duration: ${mt.duration ?? 'N/A'}" : mt.category, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.grey[500], fontSize: 11)),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Wrap(
                   spacing: 8,
                   runSpacing: 4,
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    Row(mainAxisSize: MainAxisSize.min, children: [const Icon(Icons.calendar_today, size: 10, color: Colors.grey), const SizedBox(width: 4), Text("${mt.date} | ${mt.time}", style: const TextStyle(fontSize: 10, color: Colors.grey))]),
-                    Row(mainAxisSize: MainAxisSize.min, children: [const Icon(Icons.group_outlined, size: 10, color: Colors.grey), const SizedBox(width: 4), Text("${mt.participants}", style: const TextStyle(fontSize: 10, color: Colors.grey))]),
+                    Row(mainAxisSize: MainAxisSize.min, children: [Icon(Icons.calendar_today, size: 10, color: Colors.grey), SizedBox(width: 4), Text("${mt.date} | ${mt.time}", style: TextStyle(fontSize: 10, color: Colors.grey))]),
+                    Row(mainAxisSize: MainAxisSize.min, children: [Icon(Icons.group_outlined, size: 10, color: Colors.grey), SizedBox(width: 4), Text("${mt.participants}", style: TextStyle(fontSize: 10, color: Colors.grey))]),
                   ],
                 ),
               ]),
               trailing: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  if (showJoinButton) ElevatedButton(onPressed: () => _showJoinMeetingOverlay(mt.title), style: ElevatedButton.styleFrom(backgroundColor: Colors.blue[800], foregroundColor: Colors.white, minimumSize: const Size(50, 26), padding: const EdgeInsets.symmetric(horizontal: 8), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6))), child: const Text("Join", style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold))),
+                  if (showJoinButton) ElevatedButton(onPressed: () => _showJoinMeetingOverlay(mt.title), style: ElevatedButton.styleFrom(backgroundColor: Colors.blue[800], foregroundColor: Colors.white, minimumSize: Size(50, 26), padding: EdgeInsets.symmetric(horizontal: 8), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6))), child: Text("Join".tr, style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold))),
                   if (showStatusLabel) _buildStatusChip(mt.status),
-                  if (isLog) const Text("Success", style: TextStyle(color: Colors.green, fontSize: 10, fontWeight: FontWeight.bold)),
+                  if (isLog) Text("Success".tr, style: TextStyle(color: Colors.green, fontSize: 10, fontWeight: FontWeight.bold)),
                 ],
               ),
             );
@@ -310,7 +311,7 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
 
   Widget _buildStatusChip(MeetingStatus status) {
     Color color = _getStatusColor(status);
-    return Container(padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(4)), child: Text(status.name.toUpperCase(), style: TextStyle(color: color, fontSize: 8, fontWeight: FontWeight.bold)));
+    return Container(padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2), decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(4)), child: Text(status.name.toUpperCase(), style: TextStyle(color: color, fontSize: 8, fontWeight: FontWeight.bold)));
   }
 
   Color _getStatusColor(MeetingStatus status) {
