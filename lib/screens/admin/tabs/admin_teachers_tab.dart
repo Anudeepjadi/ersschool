@@ -3,7 +3,6 @@ import 'package:ersschool/core/localization/language_manager.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/ai_bot_fab.dart';
 import '../screens/admin_employee_list_screen.dart';
-import '../screens/admin_register_employee_screen.dart';
 import '../screens/admin_employee_id_cards_screen.dart';
 
 class AdminTeachersTab extends StatelessWidget {
@@ -40,14 +39,7 @@ class AdminTeachersTab extends StatelessWidget {
                   color: const Color(0xFF10B981),
                   onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEmployeeListScreen(staffType: 'Teacher'))),
                 ),
-                const SizedBox(height: 12),
-                _buildCard(
-                  context,
-                  title: "Add New Teacher",
-                  icon: Icons.person_add_alt_1,
-                  color: const Color(0xFFF59E0B),
-                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminRegisterEmployeeScreen(staffType: 'Teacher'))),
-                ),
+
                 const SizedBox(height: 12),
                 _buildCard(
                   context,

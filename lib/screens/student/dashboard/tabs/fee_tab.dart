@@ -1,5 +1,5 @@
+import 'package:ersschool/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../widgets/student_app_bar.dart';
 import '../../../../widgets/scrollable_table_wrapper.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
@@ -792,7 +792,7 @@ class _FeeTabState extends State<FeeTab> {
                         opacity: 0.15,
                         child: Transform.rotate(
                           angle: -0.5,
-                          child: Icon(Icons.spa, size: 30, color: Color(0xFF0038FF)),
+                          child: Icon(Icons.spa, size: 30, color: AppColors.primary),
                         ),
                       ),
                     ),
@@ -803,7 +803,7 @@ class _FeeTabState extends State<FeeTab> {
                         opacity: 0.15,
                         child: Transform.rotate(
                           angle: 0.5,
-                          child: Icon(Icons.spa, size: 30, color: Color(0xFF0038FF)),
+                          child: Icon(Icons.spa, size: 30, color: AppColors.primary),
                         ),
                       ),
                     ),
@@ -814,7 +814,7 @@ class _FeeTabState extends State<FeeTab> {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(6),
-                        border: Border.all(color: Color(0xFF0038FF), width: 1.5),
+                        border: Border.all(color: AppColors.primary, width: 1.5),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withValues(alpha: 0.05),
@@ -828,7 +828,7 @@ class _FeeTabState extends State<FeeTab> {
                         children: [
                           Text("FEE".tr,
                             style: TextStyle(
-                              color: Color(0xFF0038FF),
+                              color: AppColors.primary,
                               fontSize: 9,
                               fontWeight: FontWeight.bold,
                               letterSpacing: 0.5,
@@ -851,7 +851,7 @@ class _FeeTabState extends State<FeeTab> {
                         width: 28,
                         height: 7,
                         decoration: BoxDecoration(
-                          color: Color(0xFF0038FF),
+                          color: AppColors.primary,
                           borderRadius: BorderRadius.circular(2),
                         ),
                       ),

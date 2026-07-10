@@ -77,7 +77,7 @@ class TeacherAppBar extends StatelessWidget implements PreferredSizeWidget {
                   value: 'notices',
                   child: Row(
                     children: [
-                      Container(padding: EdgeInsets.all(8), decoration: BoxDecoration(color: Color(0xFFF0F4FF), borderRadius: BorderRadius.circular(8)), child: Icon(Icons.campaign_outlined, color: Color(0xFF0038FF), size: 20)),
+                      Container(padding: EdgeInsets.all(8), decoration: BoxDecoration(color: Color(0xFFF0F4FF), borderRadius: BorderRadius.circular(8)), child: Icon(Icons.campaign_outlined, color: AppColors.primary, size: 20)),
                       SizedBox(width: 12),
                       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text("Important Notices".tr, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875))), Text("3 new notices".tr, style: TextStyle(fontSize: 11, color: Colors.grey.shade600))]),
                     ],

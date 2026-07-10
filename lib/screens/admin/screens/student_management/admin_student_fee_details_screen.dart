@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 import 'package:ersschool/core/theme/app_colors.dart';
 import '../../widgets/admin_app_bar.dart';
@@ -19,7 +20,7 @@ class _AdminStudentFeeDetailsScreenState extends State<AdminStudentFeeDetailsScr
   final ScrollController _scrollController2 = ScrollController();
 
   String _selectedYear = "2025-26";
-  String _selectedClass = "Grade 1";
+  String _selectedClass = "All";
 
   @override
   void dispose() {
@@ -65,7 +66,7 @@ class _AdminStudentFeeDetailsScreenState extends State<AdminStudentFeeDetailsScr
               crossAxisAlignment: WrapCrossAlignment.end,
               children: [
                 _buildTopDropdown("Academic Year", _selectedYear, ["All", "2024-25", "2025-26"], (v) => setState(() => _selectedYear = v!)),
-                _buildTopDropdown("Class", _selectedClass, ["All", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "batch1", "Grade 5", "Grade 6", "grade 7"], (v) => setState(() => _selectedClass = v!)),
+                _buildTopDropdown("Class", _selectedClass, ['All', 'LKG', 'UKG', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'], (v) => setState(() => _selectedClass = v!)),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 2), // Small offset for alignment with dropdowns
                   child: Row(
@@ -311,8 +312,13 @@ class _AdminStudentFeeDetailsScreenState extends State<AdminStudentFeeDetailsScr
                 ),
                 const SizedBox(width: 8),
                 ElevatedButton(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Online payment coming soon".tr)));
+                  onPressed: () async {
+                    final Uri url = Uri.parse('https://razorpay.com/payment-gateway/');
+                    try {
+                      await launchUrl(url, mode: LaunchMode.externalApplication);
+                    } catch (e) {
+                      debugPrint('Could not launch \$url');
+                    }
                   },
                   style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))),
                   child: Text("Pay Online".tr),
@@ -397,7 +403,14 @@ class _AdminStudentFeeDetailsScreenState extends State<AdminStudentFeeDetailsScr
                                 )
                               : const SizedBox(),
                         ),
-                        DataCell(_buildSmallButton("SMS", AppColors.absentOrange, textColor: Colors.black)),
+                        DataCell(_buildSmallButton("SMS", AppColors.absentOrange, textColor: Colors.black, onTap: () async {
+                          final Uri url = Uri.parse('sms:+1234567890?body=Fee%20Payment%20Reminder');
+                          try {
+                            await launchUrl(url, mode: LaunchMode.externalApplication);
+                          } catch (e) {
+                            debugPrint('Could not launch SMS');
+                          }
+                        })),
                       ],
                     );
                   }).toList(),
@@ -445,7 +458,14 @@ class _AdminStudentFeeDetailsScreenState extends State<AdminStudentFeeDetailsScr
                       }),
                     ),
                     const SizedBox(width: 4),
-                    _buildSmallButton("SMS", AppColors.success, fontSize: 10, onTap: () {}),
+                    _buildSmallButton("SMS", AppColors.success, fontSize: 10, onTap: () async {
+                      final Uri url = Uri.parse('sms:+1234567890?body=Fee%20Payment%20Reminder');
+                      try {
+                        await launchUrl(url, mode: LaunchMode.externalApplication);
+                      } catch (e) {
+                        debugPrint('Could not launch SMS');
+                      }
+                    }),
                   ],
                 )
               : Text(text.tr, style: TextStyle(color: color, fontSize: 12)),

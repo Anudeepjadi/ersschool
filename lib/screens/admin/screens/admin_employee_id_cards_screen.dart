@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
+import 'package:flutter/foundation.dart';
+import 'dart:io' show File;
 import 'package:ersschool/core/theme/app_colors.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 import 'package:ersschool/core/data/app_data_store.dart';
@@ -19,8 +20,6 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
   String _selectedBranch = 'Ecstasy School 1 (ECS001)';
   String _selectedYear = '2025-26';
   String _selectedStatus = 'Only Active';
-  String _selectedClass = 'Grade 1';
-  String _selectedSection = 'All';
   String _searchQuery = '';
   bool _selectAll = false;
   final ScrollController _scrollController = ScrollController();
@@ -54,20 +53,11 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
                 Wrap(
                   spacing: 16,
                   runSpacing: 16,
+                  crossAxisAlignment: WrapCrossAlignment.end,
                   children: [
                     SizedBox(width: fieldWidth, child: _buildFilterDropdown("Branch", _selectedBranch, ["All Branches", "Ecstasy School 1 (ECS001)", "Ecstasy School 2 (ECS002)", "Ecstasy (ECS003)", "Ecstasy (ECS004)"], (val) => setState(() => _selectedBranch = val!))),
                     SizedBox(width: fieldWidth, child: _buildFilterDropdown("Academic Year", _selectedYear, ["2025-26"], (val) => setState(() => _selectedYear = val!))),
                     SizedBox(width: fieldWidth, child: _buildFilterDropdown("Active / Inactive", _selectedStatus, ["All employees", "Only Active", "Only Inactive"], (val) => setState(() => _selectedStatus = val!))),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Wrap(
-                  spacing: 16,
-                  runSpacing: 16,
-                  crossAxisAlignment: WrapCrossAlignment.end,
-                  children: [
-                    SizedBox(width: fieldWidth, child: _buildFilterDropdown("Class", _selectedClass, ["All", "L.K.G", "U.K.G", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5", "Grade 6", "Grade 7", "Grade 8", "Grade 9", "Class 10"], (val) => setState(() => _selectedClass = val!))),
-                    SizedBox(width: fieldWidth, child: _buildFilterDropdown("Section", _selectedSection, ["All", "A", "B", "C"], (val) => setState(() => _selectedSection = val!))),
                     SizedBox(
                       width: fieldWidth,
                       child: Align(
@@ -100,7 +90,7 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
                   width: searchWidth,
                   child: TextField(
                     decoration: InputDecoration(
-                      hintText: "Search students".tr,
+                      hintText: "Search employees".tr,
                       suffixIcon: const Icon(Icons.search, color: Colors.grey),
                       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       border: OutlineInputBorder(
@@ -121,7 +111,14 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
                   runSpacing: 16,
                   children: [
                     ElevatedButton(
-                      onPressed: () => _showDownloadDialog(targetName: "selected students"),
+                      onPressed: () {
+                        final selected = _filteredData.where((e) => e['selected'] == true).toList();
+                        if (selected.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("No employees selected".tr)));
+                          return;
+                        }
+                        _showDownloadDialog(employeesData: selected);
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
                         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -130,7 +127,13 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
                       child: Text("Download Selected ID Cards".tr, style: const TextStyle(color: Colors.white)),
                     ),
                     ElevatedButton(
-                      onPressed: () => _showDownloadDialog(targetName: "All employees"),
+                      onPressed: () {
+                        if (_filteredData.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("No employees available".tr)));
+                          return;
+                        }
+                        _showDownloadDialog(employeesData: _filteredData);
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.success, // green
                         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -183,19 +186,17 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
                       ),
                     ),
                     DataColumn(label: const Text("")), // Avatar placeholder
-                    DataColumn(label: Text("Student Name".tr)),
-                    DataColumn(label: Text("Father Name".tr)),
-                    DataColumn(label: Text("Mother Name".tr)),
+                    DataColumn(label: Text("Employee Code".tr)),
+                    DataColumn(label: Text("Employee Name".tr)),
+                    DataColumn(label: Text("Department".tr)),
                     DataColumn(label: Text("Gender".tr)),
-                    DataColumn(label: Text("Class".tr)),
-                    DataColumn(label: Text("Section".tr)),
+                    DataColumn(label: Text("Experience".tr)),
                     DataColumn(label: Text("Mobile".tr)),
-                    DataColumn(label: Text("Mobile 2".tr)),
-                    DataColumn(label: Text("Address".tr)),
                     DataColumn(label: const Text("")), // Action
                   ],
                   rows: _getPaginatedData().map((data) {
                     final photoPath = data['photoPath'];
+                    final bool fileExists = !kIsWeb && photoPath != null && File(photoPath).existsSync();
                     return DataRow(
                       cells: [
                         DataCell(
@@ -218,26 +219,23 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
                               color: Colors.grey.shade300,
                               borderRadius: BorderRadius.circular(4),
                             ),
-                            child: photoPath != null && File(photoPath).existsSync()
+                            child: fileExists
                                 ? ClipRRect(
                                     borderRadius: BorderRadius.circular(4),
-                                    child: Image.file(File(photoPath), fit: BoxFit.cover),
+                                    child: Image.file(File(photoPath!), fit: BoxFit.cover),
                                   )
                                 : const Icon(Icons.person, color: Colors.white, size: 20),
                           ),
                         ),
+                        DataCell(Text(data['employeeCode'] ?? "")),
                         DataCell(Text(data['name'] ?? "")),
-                        DataCell(Text(data['father'] ?? "")),
-                        DataCell(Text(data['mother'] ?? "")),
+                        DataCell(Text(data['department'] ?? data['subject'] ?? "")),
                         DataCell(Text(data['gender'] ?? "")),
-                        DataCell(Text(data['class'] ?? "")),
-                        DataCell(Text(data['section'] ?? "A")),
-                        DataCell(Text(data['mobile'] ?? data['phone'] ?? "")),
-                        DataCell(Text(data['secondary_mobile'] ?? "")),
-                        DataCell(Text(data['address'] ?? "")),
+                        DataCell(Text(data['experience'] ?? "")),
+                        DataCell(Text(data['phone'] ?? "")),
                         DataCell(
                           InkWell(
-                            onTap: () => _showDownloadDialog(employeeData: data),
+                            onTap: () => _showDownloadDialog(employeesData: [data]),
                             child: Container(
                               padding: const EdgeInsets.all(4),
                               decoration: const BoxDecoration(
@@ -262,11 +260,11 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
               children: [
                 Text("Scroll table horizontally: ".tr, style: const TextStyle(fontSize: 12, color: Colors.grey)),
                 IconButton(
-                  icon: const Icon(Icons.arrow_circle_left_outlined, color: AppColors.primary),
+                  icon: Icon(Icons.arrow_circle_left_outlined, color: AppColors.primary),
                   onPressed: () { if (_scrollController.hasClients) _scrollController.animateTo(_scrollController.offset - 250, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut); },
                 ),
                 IconButton(
-                  icon: const Icon(Icons.arrow_circle_right_outlined, color: AppColors.primary),
+                  icon: Icon(Icons.arrow_circle_right_outlined, color: AppColors.primary),
                   onPressed: () { if (_scrollController.hasClients) _scrollController.animateTo(_scrollController.offset + 250, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut); },
                 ),
               ],
@@ -276,7 +274,7 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: const Color(0xFFFDE6D2), // light orange
+                color: AppColors.primary.withValues(alpha: 0.05), // light blue theme
                 border: Border(
                   left: BorderSide(color: Colors.grey.shade300),
                   right: BorderSide(color: Colors.grey.shade300),
@@ -286,63 +284,66 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
               ),
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade600,
-                        borderRadius: BorderRadius.circular(16),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width - 64),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade600,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Text(
+                          "Total Records: ${_filteredData.length}".tr,
+                          style: const TextStyle(color: Colors.white, fontSize: 10),
+                        ),
                       ),
-                      child: Text(
-                        "Total Records: ${_filteredData.length}".tr,
-                        style: const TextStyle(color: Colors.white, fontSize: 10),
+                      const SizedBox(width: 16),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text("Items per page:".tr, style: const TextStyle(fontSize: 12, color: Colors.black54)),
+                          const SizedBox(width: 8),
+                          DropdownButton<int>(
+                            value: _itemsPerPage,
+                            underline: const SizedBox(),
+                            items: const [
+                              DropdownMenuItem(value: 25, child: Text("25", style: TextStyle(fontSize: 12))),
+                              DropdownMenuItem(value: 50, child: Text("50", style: TextStyle(fontSize: 12))),
+                            ],
+                            onChanged: (val) {
+                              if (val != null) setState(() { _itemsPerPage = val; _currentPage = 1; });
+                            },
+                          ),
+                          const SizedBox(width: 24),
+                          Text("$_currentPage - ${(_filteredData.length / _itemsPerPage).ceil() == 0 ? 1 : (_filteredData.length / _itemsPerPage).ceil()} of ${_filteredData.length}".tr, style: const TextStyle(fontSize: 12, color: Colors.black54)),
+                          const SizedBox(width: 16),
+                          InkWell(
+                            onTap: _currentPage > 1 ? () => setState(() => _currentPage = 1) : null,
+                            child: Icon(Icons.first_page, size: 20, color: _currentPage > 1 ? Colors.black87 : Colors.black26),
+                          ),
+                          const SizedBox(width: 8),
+                          InkWell(
+                            onTap: _currentPage > 1 ? () => setState(() => _currentPage--) : null,
+                            child: Icon(Icons.chevron_left, size: 20, color: _currentPage > 1 ? Colors.black87 : Colors.black26),
+                          ),
+                          const SizedBox(width: 8),
+                          InkWell(
+                            onTap: _currentPage < (_filteredData.length / _itemsPerPage).ceil() ? () => setState(() => _currentPage++) : null,
+                            child: Icon(Icons.chevron_right, size: 20, color: _currentPage < (_filteredData.length / _itemsPerPage).ceil() ? Colors.black87 : Colors.black26),
+                          ),
+                          const SizedBox(width: 8),
+                          InkWell(
+                            onTap: _currentPage < (_filteredData.length / _itemsPerPage).ceil() ? () => setState(() => _currentPage = (_filteredData.length / _itemsPerPage).ceil()) : null,
+                            child: Icon(Icons.last_page, size: 20, color: _currentPage < (_filteredData.length / _itemsPerPage).ceil() ? Colors.black87 : Colors.black26),
+                          ),
+                        ],
                       ),
-                    ),
-                    const SizedBox(width: 16),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text("Items per page:".tr, style: const TextStyle(fontSize: 12, color: Colors.black54)),
-                        const SizedBox(width: 8),
-                        DropdownButton<int>(
-                          value: _itemsPerPage,
-                          underline: const SizedBox(),
-                          items: const [
-                            DropdownMenuItem(value: 25, child: Text("25", style: TextStyle(fontSize: 12))),
-                            DropdownMenuItem(value: 50, child: Text("50", style: TextStyle(fontSize: 12))),
-                          ],
-                          onChanged: (val) {
-                            if (val != null) setState(() { _itemsPerPage = val; _currentPage = 1; });
-                          },
-                        ),
-                        const SizedBox(width: 24),
-                        Text("$_currentPage - ${(_filteredData.length / _itemsPerPage).ceil() == 0 ? 1 : (_filteredData.length / _itemsPerPage).ceil()} of ${_filteredData.length}".tr, style: const TextStyle(fontSize: 12, color: Colors.black54)),
-                        const SizedBox(width: 16),
-                        InkWell(
-                          onTap: _currentPage > 1 ? () => setState(() => _currentPage = 1) : null,
-                          child: Icon(Icons.first_page, size: 20, color: _currentPage > 1 ? Colors.black87 : Colors.black26),
-                        ),
-                        const SizedBox(width: 8),
-                        InkWell(
-                          onTap: _currentPage > 1 ? () => setState(() => _currentPage--) : null,
-                          child: Icon(Icons.chevron_left, size: 20, color: _currentPage > 1 ? Colors.black87 : Colors.black26),
-                        ),
-                        const SizedBox(width: 8),
-                        InkWell(
-                          onTap: _currentPage < (_filteredData.length / _itemsPerPage).ceil() ? () => setState(() => _currentPage++) : null,
-                          child: Icon(Icons.chevron_right, size: 20, color: _currentPage < (_filteredData.length / _itemsPerPage).ceil() ? Colors.black87 : Colors.black26),
-                        ),
-                        const SizedBox(width: 8),
-                        InkWell(
-                          onTap: _currentPage < (_filteredData.length / _itemsPerPage).ceil() ? () => setState(() => _currentPage = (_filteredData.length / _itemsPerPage).ceil()) : null,
-                          child: Icon(Icons.last_page, size: 20, color: _currentPage < (_filteredData.length / _itemsPerPage).ceil() ? Colors.black87 : Colors.black26),
-                        ),
-                      ],
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -414,7 +415,7 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
     );
   }
 
-  void _showDownloadDialog({String? targetName, Map<String, dynamic>? employeeData}) {
+  void _showDownloadDialog({required List<Map<String, dynamic>> employeesData}) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -445,10 +446,12 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (employeeData != null) _buildIdCardPreview(employeeData),
-              if (employeeData != null) const SizedBox(height: 16),
+              if (employeesData.length == 1) _buildIdCardPreview(employeesData.first),
+              if (employeesData.length == 1) const SizedBox(height: 16),
               Text(
-                "Are you sure you want to download ID card for ${targetName ?? employeeData?['name'] ?? ''} ?".tr,
+                employeesData.length == 1
+                    ? "Are you sure you want to download ID card for ${employeesData.first['name']}?".tr
+                    : "Are you sure you want to download ID cards for ${employeesData.length} employees?".tr,
                 style: const TextStyle(fontSize: 14, color: Colors.black87),
                 textAlign: TextAlign.center,
               ),
@@ -467,18 +470,12 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
             ElevatedButton(
               onPressed: () {
                 Navigator.pop(context); // Close dialog
-                if (employeeData != null) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AdminEmployeeIdCardPrintScreen(employeeData: employeeData),
-                    ),
-                  );
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Batch download feature coming soon...".tr)),
-                  );
-                }
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AdminEmployeeIdCardPrintScreen(employeesData: employeesData),
+                  ),
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.success,
@@ -495,7 +492,7 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
 
   Widget _buildIdCardPreview(Map<String, dynamic> employeeData) {
     final photo = employeeData['photoPath'];
-    final bool hasValidPhoto = photo != null && File(photo.toString()).existsSync();
+    final bool hasValidPhoto = !kIsWeb && photo != null && File(photo.toString()).existsSync();
     final headerColor = Colors.blue.shade800;
     
     return Container(
@@ -579,11 +576,10 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
                       const SizedBox(height: 4),
                       Divider(color: headerColor, thickness: 1.5, endIndent: 20),
                       const SizedBox(height: 8),
-                      _buildIdInfoRow("Class", "${employeeData['class'] ?? '-'} ${employeeData['section'] ?? 'A'}"),
                       _buildIdInfoRow("Code", employeeData['employeeCode'] ?? "N/A"),
                       _buildIdInfoRow("Gender", employeeData['gender'] ?? ""),
                       _buildIdInfoRow("Phone", employeeData['phone'] ?? ""),
-                      _buildIdInfoRow("Email", employeeData['email'] ?? ""),
+                      _buildIdInfoRow("Dept.", employeeData['department'] ?? employeeData['designation'] ?? employeeData['role'] ?? 'N/A'),
                       _buildIdInfoRow("Exp.", employeeData['experience'] ?? "N/A"),
                     ],
                   ),
@@ -620,7 +616,7 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Image.asset(
-                      'assets/images/principal_signature.png',
+                      'assets/images/principal_signature_v2.png',
                       height: 50,
                       width: 90,
                       fit: BoxFit.contain,
@@ -650,7 +646,7 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            width: 75, // Fixed width for labels to keep alignment
+            width: 65, // Fixed width for labels to keep alignment
             child: Text("${label.tr}:", style: const TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.bold)),
           ),
           Expanded(

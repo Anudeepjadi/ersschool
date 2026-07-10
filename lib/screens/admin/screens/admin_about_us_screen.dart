@@ -1,3 +1,4 @@
+import 'package:ersschool/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
@@ -79,7 +80,7 @@ class _AdminAboutUsScreenState extends State<AdminAboutUsScreen> {
       children: [
         Row(
           children: [
-            Expanded(child: _buildStatItem(Icons.school, "5,200+", "Students", Color(0xFF0038FF))),
+            Expanded(child: _buildStatItem(Icons.school, "5,200+", "Students", AppColors.primary)),
             SizedBox(width: 16),
             Expanded(child: _buildStatItem(Icons.person, "320+", "Teachers", Color(0xFF10B981))),
           ],
@@ -114,7 +115,7 @@ class _AdminAboutUsScreenState extends State<AdminAboutUsScreen> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.track_changes, color: Color(0xFF0038FF), size: 32),
+            Icon(Icons.track_changes, color: AppColors.primary, size: 32),
             SizedBox(width: 16),
             Expanded(
               child: Column(
@@ -132,7 +133,7 @@ class _AdminAboutUsScreenState extends State<AdminAboutUsScreen> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.remove_red_eye, color: Color(0xFF0038FF), size: 32),
+            Icon(Icons.remove_red_eye, color: AppColors.primary, size: 32),
             SizedBox(width: 16),
             Expanded(
               child: Column(
@@ -158,7 +159,7 @@ class _AdminAboutUsScreenState extends State<AdminAboutUsScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text("Our Core Values".tr, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-            TextButton(onPressed: () {}, child: Text("Learn More".tr, style: TextStyle(fontSize: 12, color: Color(0xFF0038FF), fontWeight: FontWeight.bold))),
+            TextButton(onPressed: () {}, child: Text("Learn More".tr, style: TextStyle(fontSize: 12, color: AppColors.primary, fontWeight: FontWeight.bold))),
           ],
         ),
         SizedBox(height: 16),
@@ -168,7 +169,7 @@ class _AdminAboutUsScreenState extends State<AdminAboutUsScreen> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(width: 140, child: _buildCoreValueItem(Icons.person, "Integrity", "We act with honesty, transparency and strong ethics.", Color(0xFF0038FF))),
+              SizedBox(width: 140, child: _buildCoreValueItem(Icons.person, "Integrity", "We act with honesty, transparency and strong ethics.", AppColors.primary)),
               SizedBox(width: 140, child: _buildCoreValueItem(Icons.diamond, "Excellence", "We strive for the highest standards in everything we do.", Color(0xFF10B981))),
               SizedBox(width: 140, child: _buildCoreValueItem(Icons.lightbulb, "Innovation", "We embrace new ideas and technology.", Color(0xFFF59E0B))),
               SizedBox(width: 140, child: _buildCoreValueItem(Icons.group, "Collaboration", "We believe in the power of teamwork.", Color(0xFF8B5CF6))),
@@ -203,7 +204,7 @@ class _AdminAboutUsScreenState extends State<AdminAboutUsScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text("Leadership Team".tr, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-            TextButton(onPressed: () {}, child: Text("View All".tr, style: TextStyle(fontSize: 12, color: Color(0xFF0038FF), fontWeight: FontWeight.bold))),
+            TextButton(onPressed: () {}, child: Text("View All".tr, style: TextStyle(fontSize: 12, color: AppColors.primary, fontWeight: FontWeight.bold))),
           ],
         ),
         SizedBox(height: 16),
@@ -249,7 +250,7 @@ class _AdminAboutUsScreenState extends State<AdminAboutUsScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text("Our History".tr, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-            TextButton(onPressed: () {}, child: Text("Read More".tr, style: TextStyle(fontSize: 12, color: Color(0xFF0038FF), fontWeight: FontWeight.bold))),
+            TextButton(onPressed: () {}, child: Text("Read More".tr, style: TextStyle(fontSize: 12, color: AppColors.primary, fontWeight: FontWeight.bold))),
           ],
         ),
         SizedBox(height: 16),
@@ -272,7 +273,7 @@ class _AdminAboutUsScreenState extends State<AdminAboutUsScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("“".tr, style: TextStyle(fontSize: 60, color: Color(0xFF0038FF), height: 0.8)),
+              Text("“".tr, style: TextStyle(fontSize: 60, color: AppColors.primary, height: 0.8)),
               Text("Education is the most powerful weapon which you can use to change the world.".tr,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875), height: 1.5),
@@ -292,14 +293,14 @@ class _AdminAboutUsScreenState extends State<AdminAboutUsScreen> {
       children: [
         Column(
           children: [
-            Icon(Icons.business, color: isFirst ? Color(0xFF0038FF) : Colors.transparent, size: 24),
+            Icon(Icons.business, color: isFirst ? AppColors.primary : Colors.transparent, size: 24),
             Container(
               width: 12,
               height: 12,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: Color(0xFF0038FF), width: 2),
-                color: isFirst ? Color(0xFF0038FF) : Colors.white,
+                border: Border.all(color: AppColors.primary, width: 2),
+                color: isFirst ? AppColors.primary : Colors.white,
               ),
             ),
             if (year != "2024") Container(width: 2, height: 60, color: Colors.grey.shade300),
@@ -355,10 +356,10 @@ class _AdminAboutUsScreenState extends State<AdminAboutUsScreen> {
         Container(
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: Color(0xFF0038FF).withValues(alpha: 0.1),
+            color: AppColors.primary.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
-          child: Icon(icon, color: Color(0xFF0038FF), size: 20),
+          child: Icon(icon, color: AppColors.primary, size: 20),
         ),
         SizedBox(width: 16),
         Expanded(

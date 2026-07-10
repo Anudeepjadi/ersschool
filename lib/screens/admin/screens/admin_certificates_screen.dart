@@ -1,3 +1,4 @@
+import 'package:ersschool/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
@@ -111,7 +112,7 @@ class _AdminCertificatesScreenState extends State<AdminCertificatesScreen> {
         SizedBox(height: 16),
         // 2. Teacher Appreciation Certificate
         _buildCertLayout(
-          primaryColor: Color(0xFF0038FF), // Blue Color
+          primaryColor: AppColors.primary, // Blue Color
           title: "CERTIFICATE OF APPRECIATION",
           subtitle: "GRATEFULLY PRESENTED TO",
           name: "Mrs. Ananya Sharma",

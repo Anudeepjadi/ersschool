@@ -1,3 +1,4 @@
+import 'package:ersschool/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
@@ -84,7 +85,7 @@ class _AdminBranchListScreenState extends State<AdminBranchListScreen> {
                   'teachers': edit?['teachers'] ?? 0,
                   'status': 'Active',
                   'established': DateTime.now().year.toString(),
-                  'color': Color(0xFF0038FF),
+                  'color': AppColors.primary,
                   'icon': Icons.apartment,
                   'school': ProfileManager().selectedSchool.value,
                 };

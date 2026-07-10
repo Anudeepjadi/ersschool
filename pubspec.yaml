@@ -12,12 +12,15 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.8
   video_player: ^2.9.2
-  image_picker: ^1.1.2
+  image_picker: ^1.2.3
   google_fonts: ^8.1.0
   fl_chart: ^0.69.0
   shared_preferences: ^2.5.5
   pdf: ^3.12.0
   printing: ^5.14.3
+  url_launcher: ^6.3.2
+  intl: ^0.20.3
+  file_picker: ^11.0.2
   path_provider: ^2.1.6
   open_filex: ^4.7.0
 
@@ -35,8 +38,8 @@ flutter:
     - assets/images/student_welcome.png
     - assets/images/school_bus.png
     - assets/animations/ers_animation.mp4
-    - assets/images/principal_signature.png
-
+    - assets/images/principal_signature_v2.png
+    
 flutter_icons:
   android: true
   ios: true

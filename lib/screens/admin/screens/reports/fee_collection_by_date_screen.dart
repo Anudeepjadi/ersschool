@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../widgets/admin_app_bar.dart';
 import '../../widgets/admin_drawer.dart';
 import '../../widgets/admin_bottom_nav_bar.dart';
@@ -12,6 +14,7 @@ class FeeCollectionByDateScreen extends StatefulWidget {
 
 class _FeeCollectionByDateScreenState extends State<FeeCollectionByDateScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final ScrollController _scrollController = ScrollController();
   String selectedBranch = 'Ecstasy School 1 (ECS001)';
   DateTime startDate = DateTime(2026, 6, 29);
   DateTime endDate = DateTime(2026, 6, 29);
@@ -22,6 +25,12 @@ class _FeeCollectionByDateScreenState extends State<FeeCollectionByDateScreen> {
     'Ecstasy (ECS003)',
     'Ecstasy (ECS004)',
   ];
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,13 +48,7 @@ class _FeeCollectionByDateScreenState extends State<FeeCollectionByDateScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            const Center(
-              child: Text(
-                "Fee Collection By Date",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.brown),
-              ),
-            ),
-            const SizedBox(height: 20),
+
             _buildFilters(),
             const SizedBox(height: 16),
             Text(
@@ -56,7 +59,7 @@ class _FeeCollectionByDateScreenState extends State<FeeCollectionByDateScreen> {
             Align(
               alignment: Alignment.centerRight,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () => _exportToExcel(),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black87,
                   foregroundColor: Colors.white,
@@ -68,6 +71,26 @@ class _FeeCollectionByDateScreenState extends State<FeeCollectionByDateScreen> {
             const SizedBox(height: 16),
             _buildSummaryPills(),
             const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                const Text("Scroll table horizontally: ", style: TextStyle(fontSize: 10, color: Colors.grey)),
+                IconButton(
+                  icon: Icon(Icons.arrow_circle_left_outlined, color: AppColors.primary, size: 20),
+                  onPressed: () { if (_scrollController.hasClients) _scrollController.animateTo(_scrollController.offset - 200, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut); },
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                ),
+                const SizedBox(width: 8),
+                IconButton(
+                  icon: Icon(Icons.arrow_circle_right_outlined, color: AppColors.primary, size: 20),
+                  onPressed: () { if (_scrollController.hasClients) _scrollController.animateTo(_scrollController.offset + 200, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut); },
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
             _buildDataTable(),
           ],
         ),
@@ -76,35 +99,38 @@ class _FeeCollectionByDateScreenState extends State<FeeCollectionByDateScreen> {
   }
 
   Widget _buildFilters() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Expanded(
-          flex: 4,
-          child: _buildBodyDropdown("Branch", selectedBranch, branches, (v) => setState(() => selectedBranch = v!)),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          flex: 3,
-          child: _buildDatePicker("Start Date", startDate, (d) => setState(() => startDate = d)),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          flex: 3,
-          child: _buildDatePicker("End Date", endDate, (d) => setState(() => endDate = d)),
-        ),
-        const SizedBox(width: 8),
-        ElevatedButton(
-          onPressed: () {},
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFFBC5314),
-            foregroundColor: Colors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-            minimumSize: const Size(80, 36),
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          SizedBox(
+            width: 160,
+            child: _buildBodyDropdown("Branch", selectedBranch, branches, (v) => setState(() => selectedBranch = v!)),
           ),
-          child: const Text("Get Data", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
-        ),
-      ],
+          const SizedBox(width: 8),
+          SizedBox(
+            width: 120,
+            child: _buildDatePicker("Start Date", startDate, (d) => setState(() => startDate = d)),
+          ),
+          const SizedBox(width: 8),
+          SizedBox(
+            width: 120,
+            child: _buildDatePicker("End Date", endDate, (d) => setState(() => endDate = d)),
+          ),
+          const SizedBox(width: 8),
+          ElevatedButton(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+              minimumSize: const Size(80, 38),
+            ),
+            child: const Text("Get Data", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
     );
   }
 
@@ -177,13 +203,13 @@ class _FeeCollectionByDateScreenState extends State<FeeCollectionByDateScreen> {
       scrollDirection: Axis.horizontal,
       child: Row(
         children: [
-          _buildPill("Total Payments Count: 0", Colors.grey),
+          _buildPill("Total Payments Count: 0", AppColors.primary),
           const SizedBox(width: 8),
-          _buildPill("Total Amount Received: 0.00", Colors.green.shade700),
+          _buildPill("Total Amount Received: 0.00", AppColors.success),
           const SizedBox(width: 8),
           _buildPill("Total Cash Payment: 0.00", Colors.teal),
           const SizedBox(width: 8),
-          _buildPill("Total Credit/Debit Card Payment: 0.00", Colors.orange),
+          _buildPill("Total Credit/Debit Card Payment: 0.00", AppColors.primaryDark),
           const SizedBox(width: 8),
           _buildPill("Total Online Payment: 0.00", Colors.black),
         ],
@@ -200,10 +226,16 @@ class _FeeCollectionByDateScreenState extends State<FeeCollectionByDateScreen> {
   }
 
   Widget _buildDataTable() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: DataTable(
-        headingRowColor: WidgetStateProperty.all(const Color(0xFF001A40)),
+    return Scrollbar(
+      controller: _scrollController,
+      thumbVisibility: true,
+      thickness: 6,
+      radius: const Radius.circular(8),
+      child: SingleChildScrollView(
+        controller: _scrollController,
+        scrollDirection: Axis.horizontal,
+        child: DataTable(
+        headingRowColor: WidgetStateProperty.all(AppColors.primary),
         columnSpacing: 20,
         horizontalMargin: 12,
         columns: const [
@@ -221,6 +253,30 @@ class _FeeCollectionByDateScreenState extends State<FeeCollectionByDateScreen> {
         ],
         rows: const [],
       ),
+    ));
+  }
+
+  void _exportToExcel() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+            const SizedBox(width: 12),
+            Text("Generating Collection Excel...".tr),
+          ],
+        ),
+        duration: const Duration(seconds: 2),
+      ),
     );
+    Future.delayed(const Duration(seconds: 2), () {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Collection_Report_${startDate.day}_${startDate.month}_to_${endDate.day}_${endDate.month}.xlsx downloaded.".tr),
+          backgroundColor: Colors.green,
+        ),
+      );
+    });
   }
 }

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 
 class AdminHallTicketPrintScreen extends StatefulWidget {
   final Map<String, dynamic> student;
@@ -19,88 +22,66 @@ class AdminHallTicketPrintScreen extends StatefulWidget {
 class _AdminHallTicketPrintScreenState extends State<AdminHallTicketPrintScreen> {
   bool _isPrinting = false;
 
-  void _simulatePrint() {
-    setState(() {
-      _isPrinting = true;
-    });
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setDialogState) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const SizedBox(height: 10),
-                  const CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    "Preparing document...".tr,
-                    style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    "Generating PDF and sending to printer.".tr,
-                    style: const TextStyle(fontSize: 12, color: Colors.grey),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 10),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-
-    Future.delayed(const Duration(seconds: 2), () {
+  Future<void> _simulatePrint() async {
+    setState(() => _isPrinting = true);
+    try {
+      await Printing.layoutPdf(
+        onLayout: (PdfPageFormat format) async {
+          final doc = pw.Document();
+          doc.addPage(
+            pw.Page(
+              pageFormat: format,
+              margin: const pw.EdgeInsets.all(32),
+              build: (pw.Context context) {
+                return pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Center(
+                      child: pw.Text("HALL TICKET (${widget.examination})", style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
+                    ),
+                    pw.SizedBox(height: 24),
+                    pw.Text("Student Name: ${widget.student['name'] ?? ''}"),
+                    pw.Text("Admission Number: ${widget.student['admission'] ?? ''}"),
+                    pw.Text("Class & Section: ${widget.student['class'] ?? ''} - ${widget.student['section'] ?? ''}"),
+                    pw.Text("Academic Year: 2025-26"),
+                    pw.SizedBox(height: 40),
+                    pw.Text("EXAMINATION SCHEDULE", style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold)),
+                    pw.SizedBox(height: 12),
+                    pw.TableHelper.fromTextArray(
+                      border: pw.TableBorder.all(),
+                      headers: ['Subject', 'Date', 'Time'],
+                      data: [
+                        ['Telugu', '2/1/2026', '09:00 AM - 10:00 AM'],
+                        ['English', '3/1/2026', '09:00 AM - 10:00 AM'],
+                        ['Hindi', '5/1/2026', '09:00 AM - 10:00 AM'],
+                        ['Maths', '6/1/2026', '09:00 AM - 10:00 AM'],
+                      ],
+                    ),
+                  ],
+                );
+              },
+            ),
+          );
+          return doc.save();
+        },
+        name: 'Hall_Ticket_${widget.student['name'] ?? 'student'}',
+      );
+    } catch (e) {
       if (mounted) {
-        Navigator.pop(context); // Close progress dialog
-        setState(() {
-          _isPrinting = false;
-        });
-        
-        // Show Success Dialog
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-              title: Row(
-                children: [
-                  const Icon(Icons.check_circle, color: Color(0xFF10B981), size: 28),
-                  const SizedBox(width: 10),
-                  Text("Print Status".tr, style: const TextStyle(color: Color(0xFF1E2875))),
-                ],
-              ),
-              content: Text(
-                "Hall ticket printed successfully or saved as PDF!".tr,
-                style: const TextStyle(color: Color(0xFF1E2875)),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text("OK".tr, style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
-                ),
-              ],
-            );
-          },
-        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Print Error: $e")));
       }
-    });
+    } finally {
+      if (mounted) {
+        setState(() => _isPrinting = false);
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final Map<String, dynamic> student = widget.student;
     final String schoolName = student['school'] ?? 'Ecstasy School 1';
-    final String classAndSec = "${student['class'] ?? 'Grade 1'} - ${student['section'] ?? 'A'}";
+    final String classAndSec = "${student['class'] ?? 'LKG'} - ${student['section'] ?? 'A'}";
 
     // Mock subject dates for selected examination
     final List<Map<String, String>> timetable = [
@@ -194,26 +175,40 @@ class _AdminHallTicketPrintScreenState extends State<AdminHallTicketPrintScreen>
                     // School Letterhead
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              schoolName.toUpperCase().tr,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w800,
-                                color: Color(0xFF1E2875),
-                                letterSpacing: 0.5,
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  schoolName.toUpperCase().tr,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w800,
+                                    color: Color(0xFF1E2875),
+                                    letterSpacing: 0.5,
+                                  ),
+                                  maxLines: 1,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              "Affiliated to State Board | School Code: ${schoolName.contains('1') ? 'ECS001' : schoolName.contains('2') ? 'ECS002' : 'ECS003'}".tr,
-                              style: const TextStyle(fontSize: 10, color: Colors.grey),
-                            ),
-                          ],
+                              const SizedBox(height: 2),
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "Affiliated to State Board | School Code: ${schoolName.contains('1') ? 'ECS001' : schoolName.contains('2') ? 'ECS002' : 'ECS003'}".tr,
+                                  style: const TextStyle(fontSize: 10, color: Colors.grey),
+                                  maxLines: 1,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
+                        const SizedBox(width: 12),
                         // Logo Placeholder
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
@@ -376,11 +371,19 @@ class _AdminHallTicketPrintScreenState extends State<AdminHallTicketPrintScreen>
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: Text(row['date']!, style: const TextStyle(fontSize: 11, color: Colors.black87)),
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(row['date']!, style: const TextStyle(fontSize: 11, color: Colors.black87), maxLines: 1),
+                                ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: Text(row['time']!.tr, style: const TextStyle(fontSize: 11, color: Colors.black87)),
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(row['time']!.tr, style: const TextStyle(fontSize: 11, color: Colors.black87), maxLines: 1),
+                                ),
                               ),
                             ],
                           );
@@ -406,12 +409,14 @@ class _AdminHallTicketPrintScreenState extends State<AdminHallTicketPrintScreen>
                     const SizedBox(height: 40),
 
                     // Signatures
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    Wrap(
+                      alignment: WrapAlignment.spaceBetween,
+                      runSpacing: 20,
+                      spacing: 12,
                       children: [
                         Column(
                           children: [
-                            Container(width: 100, height: 1, color: Colors.grey.shade400),
+                            Container(width: 80, height: 1, color: Colors.grey.shade400),
                             const SizedBox(height: 6),
                             Text(
                               "Signature of Candidate".tr,
@@ -421,7 +426,7 @@ class _AdminHallTicketPrintScreenState extends State<AdminHallTicketPrintScreen>
                         ),
                         Column(
                           children: [
-                            Container(width: 100, height: 1, color: Colors.grey.shade400),
+                            Container(width: 80, height: 1, color: Colors.grey.shade400),
                             const SizedBox(height: 6),
                             Text(
                               "Signature of Invigilator".tr,
@@ -432,19 +437,25 @@ class _AdminHallTicketPrintScreenState extends State<AdminHallTicketPrintScreen>
                         Column(
                           children: [
                             Container(
-                              height: 25,
+                              height: 40,
                               alignment: Alignment.bottomCenter,
-                              child: const Text(
-                                "EXSTAGE",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  fontStyle: FontStyle.italic,
-                                  color: Color(0xFF0038FF),
+                              child: Image.asset(
+                                'assets/images/principal_signature_v2.png',
+                                height: 40,
+                                width: 80,
+                                fit: BoxFit.contain,
+                                errorBuilder: (context, error, stackTrace) => const Text(
+                                  "EXSTAGE",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    fontStyle: FontStyle.italic,
+                                    color: AppColors.primary,
+                                  ),
                                 ),
                               ),
                             ),
-                            Container(width: 100, height: 1, color: Colors.grey.shade400),
+                            Container(width: 80, height: 1, color: Colors.grey.shade400),
                             const SizedBox(height: 6),
                             Text(
                               "Principal Signature".tr,

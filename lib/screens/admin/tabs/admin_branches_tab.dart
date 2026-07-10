@@ -1,3 +1,4 @@
+import 'package:ersschool/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import '../widgets/admin_app_bar.dart';
 import '../widgets/ai_bot_fab.dart';
@@ -48,7 +49,7 @@ class _AdminBranchesTabState extends State<AdminBranchesTab> {
             _branches.where((b) => b['status'] == 'Active').length;
 
         return Scaffold(
-          backgroundColor: Color(0xFFF5F7FF),
+          backgroundColor: const Color(0xFFF5F7FF),
           appBar: AdminAppBar(
             title: "Branches",
             subtitle: "Manage school branches and locations",
@@ -117,7 +118,7 @@ class _AdminBranchesTabState extends State<AdminBranchesTab> {
                 icon: Icon(Icons.add_business, size: 18),
                 label: Text("Add Branch".tr, style: TextStyle(fontWeight: FontWeight.bold)),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF0038FF),
+                  backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,
                   padding: EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -129,7 +130,7 @@ class _AdminBranchesTabState extends State<AdminBranchesTab> {
           // Stats cards
           Row(
             children: [
-              _buildMiniStat("Branches", "${_branches.length}", Icons.business, Color(0xFF0038FF)),
+              _buildMiniStat("Branches", "${_branches.length}", Icons.business, AppColors.primary),
               SizedBox(width: 10),
               _buildMiniStat("Students", "$students", Icons.people, Color(0xFF10B981)),
               SizedBox(width: 10),
@@ -229,7 +230,7 @@ class _AdminBranchesTabState extends State<AdminBranchesTab> {
                     'status': 'Active',
                     'established': DateTime.now().year.toString(),
                     'principal': principal.isEmpty ? 'TBD' : principal,
-                    'color': Color(0xFF0038FF),
+                    'color': AppColors.primary,
                     'icon': Icons.apartment,
                     'school': ProfileManager().selectedSchool.value,
                   };
@@ -246,7 +247,7 @@ class _AdminBranchesTabState extends State<AdminBranchesTab> {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF0038FF),
+                  backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,
                   padding: EdgeInsets.symmetric(vertical: 14),
                 ),

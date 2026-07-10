@@ -4,6 +4,7 @@ import 'package:ersschool/core/localization/language_manager.dart';
 import 'package:ersschool/core/theme/app_colors.dart';
 import '../../widgets/admin_app_bar.dart';
 import 'admin_add_driver_screen.dart';
+import 'admin_driver_details_screen.dart';
 
 class AdminDriversListScreen extends StatefulWidget {
   const AdminDriversListScreen({super.key});
@@ -34,6 +35,14 @@ class _AdminDriversListScreenState extends State<AdminDriversListScreen> {
       'code': '',
       'name': 'Kumar',
       'mobile': '1652949043',
+      'email': '',
+    },
+    {
+      'branch': 'Ecstasy School 1 (ECS001)',
+      'role': 'Driver',
+      'code': '1003',
+      'name': 'shiva',
+      'mobile': '8529637410',
       'email': '',
     },
   ];
@@ -110,7 +119,7 @@ class _AdminDriversListScreenState extends State<AdminDriversListScreen> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
+                  backgroundColor: const Color(0xFFD35400),
                   padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                 ),
@@ -169,28 +178,15 @@ class _AdminDriversListScreenState extends State<AdminDriversListScreen> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     InkWell(
-                                      onTap: () async {
-                                        final result = await Navigator.push(
+                                      onTap: () {
+                                        Navigator.push(
                                           context,
-                                          MaterialPageRoute(builder: (_) => AdminAddDriverScreen(existingData: data)),
+                                          MaterialPageRoute(builder: (_) => AdminDriverDetailsScreen(driver: data)),
                                         );
-                                        if (result != null && result is Map<String, dynamic>) {
-                                          setState(() {
-                                            result["branch"] = _selectedBranch;
-                                            _dummyData = List.from(_dummyData);
-                                            final index = _dummyData.indexOf(data);
-                                            if (index != -1) _dummyData[index] = result;
-                                          });
-                                        }
                                       },
-                                      child: Container(
-                                        width: 32,
-                                        height: 32,
-                                        decoration: const BoxDecoration(
-                                            color: Color(0xFF1E2875),
-                                            shape: BoxShape.circle),
-                                        child: const Icon(Icons.remove_red_eye,
-                                            color: Colors.white, size: 16),
+                                      child: const Padding(
+                                        padding: EdgeInsets.all(4.0),
+                                        child: Icon(Icons.visibility, color: Color(0xFF2563EB), size: 20),
                                       ),
                                     ),
                                     const SizedBox(width: 8),
@@ -209,14 +205,9 @@ class _AdminDriversListScreenState extends State<AdminDriversListScreen> {
                                           });
                                         }
                                       },
-                                      child: Container(
-                                        width: 32,
-                                        height: 32,
-                                        decoration: const BoxDecoration(
-                                            color: Color(0xFF2563EB),
-                                            shape: BoxShape.circle),
-                                        child: const Icon(Icons.edit,
-                                            color: Colors.white, size: 16),
+                                      child: const Padding(
+                                        padding: EdgeInsets.all(4.0),
+                                        child: Icon(Icons.edit, color: Color(0xFF2563EB), size: 20),
                                       ),
                                     ),
                                     const SizedBox(width: 8),
@@ -226,14 +217,9 @@ class _AdminDriversListScreenState extends State<AdminDriversListScreen> {
                                           _dummyData = List.from(_dummyData)..remove(data);
                                         });
                                       },
-                                      child: Container(
-                                        width: 32,
-                                        height: 32,
-                                        decoration: BoxDecoration(
-                                            color: Colors.red.shade100,
-                                            shape: BoxShape.circle),
-                                        child: Icon(Icons.delete_outline,
-                                            color: Colors.red.shade700, size: 16),
+                                      child: const Padding(
+                                        padding: EdgeInsets.all(4.0),
+                                        child: Icon(Icons.delete, color: Color(0xFFDC2626), size: 20),
                                       ),
                                     ),
                                   ],

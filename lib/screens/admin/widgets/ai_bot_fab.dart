@@ -1,6 +1,6 @@
+import 'package:ersschool/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
-import '../../ai_assistant/ai_assistant_screen.dart';
-import 'package:ersschool/core/localization/language_manager.dart';
+import '../screens/admin_chat_support_screen.dart';
 
 class AiBotFab extends StatefulWidget {
   const AiBotFab({super.key});
@@ -17,7 +17,7 @@ class _AiBotFabState extends State<AiBotFab> with SingleTickerProviderStateMixin
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: Duration(milliseconds: 1500),
+      duration: const Duration(milliseconds: 1500),
       vsync: this,
     )..repeat(reverse: true);
     _animation = Tween<double>(begin: 0, end: 6).animate(
@@ -34,7 +34,7 @@ class _AiBotFabState extends State<AiBotFab> with SingleTickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     return Transform.translate(
-      offset: Offset(0, 14),
+      offset: const Offset(0, 14),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -48,11 +48,11 @@ class _AiBotFabState extends State<AiBotFab> with SingleTickerProviderStateMixin
             );
           },
           child: Container(
-            margin: EdgeInsets.only(bottom: 6, right: 2),
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            margin: const EdgeInsets.only(bottom: 6, right: 2),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(16),
                 topRight: Radius.circular(16),
                 bottomLeft: Radius.circular(16),
@@ -62,13 +62,14 @@ class _AiBotFabState extends State<AiBotFab> with SingleTickerProviderStateMixin
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 8,
-                  offset: Offset(0, 4),
+                  offset: const Offset(0, 4),
                 ),
               ],
             ),
-            child: Text("Hi, Need any help?".tr,
+            child: const Text(
+              "Hi, Need any help?",
               style: TextStyle(
-                color: Color(0xFF0038FF),
+                color: AppColors.primary,
                 fontWeight: FontWeight.bold,
                 fontSize: 10,
               ),
@@ -79,10 +80,10 @@ class _AiBotFabState extends State<AiBotFab> with SingleTickerProviderStateMixin
           heroTag: null,
           mini: true,
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => AiAssistantScreen()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminChatSupportScreen()));
           },
           backgroundColor: Colors.white,
-          child: Icon(Icons.smart_toy, color: Color(0xFF0038FF), size: 22),
+          child: const Icon(Icons.smart_toy, color: AppColors.primary, size: 22),
         ),
         ],
       ),

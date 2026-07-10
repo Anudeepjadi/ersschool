@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
+// import 'dart:io';
 import '../widgets/admin_bottom_nav_bar.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/data/app_data_store.dart';
@@ -64,8 +64,7 @@ class _AdminEmployeeListScreenState extends State<AdminEmployeeListScreen> {
       return matchesBranch && matchesStatus && matchesSearch;
     }).toList();
 
-    // Limit to 10 employees as requested
-    return filtered.take(10).toList();
+    return filtered.toList();
   }
 
   @override
@@ -130,7 +129,13 @@ class _AdminEmployeeListScreenState extends State<AdminEmployeeListScreen> {
                       Navigator.push(
                         context, 
                         MaterialPageRoute(builder: (_) => const AdminRegisterEmployeeScreen())
-                      );
+                      ).then((newEmployee) {
+                        if (newEmployee != null && newEmployee is Map<String, dynamic>) {
+                          setState(() {
+                            AppDataStore.instance.teachers.insert(0, newEmployee);
+                          });
+                        }
+                      });
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
@@ -199,42 +204,6 @@ class _AdminEmployeeListScreenState extends State<AdminEmployeeListScreen> {
                     ),
             ),
 
-            // 5. Pagination Footer
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.05),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  physics: const BouncingScrollPhysics(),
-                  child: Row(
-                    children: [
-                      const Text("Items per page: ", style: TextStyle(fontSize: 11, color: Colors.grey)),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey.shade300),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: const Text("25", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
-                      ),
-                      const SizedBox(width: 16),
-                      Text("1 - ${_filteredEmployees.length} of ${_filteredEmployees.length}", 
-                           style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600)),
-                      const SizedBox(width: 12),
-                      const Icon(Icons.first_page, size: 18, color: Colors.grey),
-                      const Icon(Icons.chevron_left, size: 18, color: Colors.grey),
-                      const Icon(Icons.chevron_right, size: 18, color: Colors.grey),
-                      const Icon(Icons.last_page, size: 18, color: Colors.grey),
-                    ],
-                  ),
-                ),
-              ),
-            ),
             const SizedBox(height: 40),
           ],
         ),
@@ -271,12 +240,8 @@ class _AdminEmployeeListScreenState extends State<AdminEmployeeListScreen> {
               CircleAvatar(
                 radius: 24,
                 backgroundColor: AppColors.primary.withValues(alpha: 0.1),
-                backgroundImage: emp['photoPath'] != null && File(emp['photoPath']).existsSync()
-                    ? FileImage(File(emp['photoPath']))
-                    : null,
-                child: emp['photoPath'] != null && File(emp['photoPath']).existsSync()
-                    ? null
-                    : Text(
+                backgroundImage: null,
+                child: Text(
                         emp['avatar'] ?? 'E',
                         style: const TextStyle(
                           color: AppColors.primary,
@@ -324,8 +289,8 @@ class _AdminEmployeeListScreenState extends State<AdminEmployeeListScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      "15 years  |  ${emp['phone'] ?? 'N/A'}",
-                      style: TextStyle(fontSize: 10, color: Colors.grey.shade400),
+                      "${emp['experience'] ?? 'N/A'}  |  ${emp['phone'] ?? 'N/A'}  |  ₹${emp['salary'] ?? '0'}",
+                      style: TextStyle(fontSize: 10, color: Colors.grey.shade500, fontWeight: FontWeight.w500),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ],
@@ -373,7 +338,13 @@ class _AdminEmployeeListScreenState extends State<AdminEmployeeListScreen> {
                       }),
                       const SizedBox(width: 8),
                       _actionIcon(Icons.edit, Colors.blue, size: 14, onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (_) => AdminRegisterEmployeeScreen(employee: emp))).then((_) => setState(() {}));
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => AdminRegisterEmployeeScreen(employee: emp, isEditMode: true))).then((updatedData) {
+                          if (updatedData != null && updatedData is Map<String, dynamic>) {
+                            setState(() {
+                              emp.addAll(updatedData);
+                            });
+                          }
+                        });
                       }),
                       const SizedBox(width: 8),
                       _actionIcon(Icons.delete, Colors.red, size: 14, onTap: () => _confirmDelete(emp)),

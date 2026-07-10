@@ -1,19 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart'; // Added for kIsWeb
 import '../widgets/admin_bottom_nav_bar.dart';
-import 'dart:io';
+import 'dart:io' show File;
 import 'package:ersschool/core/theme/app_colors.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 import 'package:ersschool/core/utils/profile_manager.dart';
 import '../widgets/admin_app_bar.dart';
-import 'dart:typed_data';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
-class AdminEmployeeIdCardPrintScreen extends StatelessWidget {
-  final Map<String, dynamic> employeeData;
-  const AdminEmployeeIdCardPrintScreen({super.key, required this.employeeData});
+class AdminEmployeeIdCardPrintScreen extends StatefulWidget {
+  final List<Map<String, dynamic>> employeesData;
+  const AdminEmployeeIdCardPrintScreen({super.key, required this.employeesData});
+
+  @override
+  State<AdminEmployeeIdCardPrintScreen> createState() => _AdminEmployeeIdCardPrintScreenState();
+}
+
+class _AdminEmployeeIdCardPrintScreenState extends State<AdminEmployeeIdCardPrintScreen> {
+  final PageController _pageController = PageController();
+  int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +36,48 @@ class AdminEmployeeIdCardPrintScreen extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 40),
-            Center(
-              child: _buildProfessionalIdCard(),
+            SizedBox(
+              height: 480,
+              child: PageView.builder(
+                controller: _pageController,
+                itemCount: widget.employeesData.length,
+                onPageChanged: (index) {
+                  setState(() {
+                    _currentIndex = index;
+                  });
+                },
+                itemBuilder: (context, index) {
+                  return Center(
+                    child: _buildProfessionalIdCard(widget.employeesData[index]),
+                  );
+                },
+              ),
             ),
+            if (widget.employeesData.length > 1)
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.chevron_left, color: AppColors.primary),
+                      onPressed: _currentIndex > 0
+                          ? () => _pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut)
+                          : null,
+                    ),
+                    Text(
+                      '${_currentIndex + 1} of ${widget.employeesData.length}',
+                      style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.chevron_right, color: AppColors.primary),
+                      onPressed: _currentIndex < widget.employeesData.length - 1
+                          ? () => _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut)
+                          : null,
+                    ),
+                  ],
+                ),
+              ),
             const SizedBox(height: 40),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -42,8 +89,8 @@ class AdminEmployeeIdCardPrintScreen extends StatelessWidget {
                   _actionButton(Icons.print, "Print Card", AppColors.primaryDark, () async {
                     try {
                       await Printing.layoutPdf(
-                        onLayout: (PdfPageFormat format) => _generatePdf(format, employeeData),
-                        name: 'ID_Card_${employeeData['name'] ?? 'student'}',
+                        onLayout: (PdfPageFormat format) => _generatePdf(format, widget.employeesData),
+                        name: 'ID_Cards',
                       );
                     } catch (e) {
                       if (!context.mounted) return;
@@ -54,10 +101,10 @@ class AdminEmployeeIdCardPrintScreen extends StatelessWidget {
                   }),
                   _actionButton(Icons.share, "Share PDF", Colors.green.shade700, () async {
                     try {
-                      final pdfBytes = await _generatePdf(PdfPageFormat.a4, employeeData);
+                      final pdfBytes = await _generatePdf(PdfPageFormat.a4, widget.employeesData);
                       await Printing.sharePdf(
                         bytes: pdfBytes,
-                        filename: "ID_Card_${employeeData['admission'] ?? employeeData['name']}.pdf",
+                        filename: "ID_Cards.pdf",
                       );
                     } catch (e) {
                       if (!context.mounted) return;
@@ -76,9 +123,9 @@ class AdminEmployeeIdCardPrintScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProfessionalIdCard() {
+  Widget _buildProfessionalIdCard(Map<String, dynamic> employeeData) {
     final photo = employeeData['photoPath'];
-    final bool hasValidPhoto = photo != null && File(photo.toString()).existsSync();
+    final bool hasValidPhoto = !kIsWeb && photo != null && File(photo.toString()).existsSync();
     const headerColor = Color(0xFF1E40AF); // Deeper blue
     
     return Container(
@@ -174,11 +221,10 @@ class AdminEmployeeIdCardPrintScreen extends StatelessWidget {
                       const SizedBox(height: 4),
                       const Divider(color: headerColor, thickness: 1.5, endIndent: 20),
                       const SizedBox(height: 8),
-                      _detailItem("Class", "${employeeData['class'] ?? ''} - ${employeeData['section'] ?? 'A'}"),
                       _detailItem("Code", employeeData['employeeCode'] ?? "N/A"),
                       _detailItem("Gender", employeeData['gender'] ?? ""),
                       _detailItem("Phone", employeeData['phone'] ?? ""),
-                      _detailItem("Email", employeeData['email'] ?? ""),
+                      _detailItem("Dept.", employeeData['department'] ?? employeeData['designation'] ?? employeeData['role'] ?? 'N/A'),
                       _detailItem("Exp.", employeeData['experience'] ?? ""),
                     ],
                   ),
@@ -220,7 +266,7 @@ class AdminEmployeeIdCardPrintScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Image.asset(
-                      'assets/images/principal_signature.png',
+                      'assets/images/principal_signature_v2.png',
                       height: 50,
                       width: 90,
                       fit: BoxFit.contain,
@@ -254,7 +300,7 @@ class AdminEmployeeIdCardPrintScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            width: 75, // Fixed label width for perfect vertical alignment
+            width: 65, // Fixed label width for perfect vertical alignment
             child: Text(
               "${label.tr}:",
               style: const TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.bold),
@@ -288,7 +334,7 @@ class AdminEmployeeIdCardPrintScreen extends StatelessWidget {
     );
   }
 
-  Future<Uint8List> _generatePdf(PdfPageFormat format, Map<String, dynamic> employeeData) async {
+  Future<Uint8List> _generatePdf(PdfPageFormat format, List<Map<String, dynamic>> employeesData) async {
     final pdf = pw.Document();
     final headerColor = PdfColor.fromInt(0xFF1E40AF);
     final detailTextColor = PdfColor.fromInt(0xFF1E2875);
@@ -296,20 +342,21 @@ class AdminEmployeeIdCardPrintScreen extends StatelessWidget {
     // Load assets
     pw.ImageProvider? signatureImage;
     try {
-      final signatureBytes = await rootBundle.load('assets/images/principal_signature.png');
+      final signatureBytes = await rootBundle.load('assets/images/principal_signature_v2.png');
       signatureImage = pw.MemoryImage(signatureBytes.buffer.asUint8List());
     } catch (_) {}
 
-    pw.ImageProvider? studentPhoto;
-    final photo = employeeData['photoPath'];
-    if (photo != null && File(photo.toString()).existsSync()) {
-      studentPhoto = pw.MemoryImage(File(photo.toString()).readAsBytesSync());
-    }
+    for (var employeeData in employeesData) {
+      pw.ImageProvider? studentPhoto;
+      final photo = employeeData['photoPath'];
+      if (!kIsWeb && photo != null && File(photo.toString()).existsSync()) {
+        studentPhoto = pw.MemoryImage(File(photo.toString()).readAsBytesSync());
+      }
 
-    pdf.addPage(
-      pw.Page(
-        pageFormat: PdfPageFormat.a4,
-        build: (pw.Context context) {
+      pdf.addPage(
+        pw.Page(
+          pageFormat: PdfPageFormat.a4,
+          build: (pw.Context context) {
           return pw.Center(
             child: pw.Container(
               width: 320,
@@ -386,11 +433,11 @@ class AdminEmployeeIdCardPrintScreen extends StatelessWidget {
                                 padding: const pw.EdgeInsets.only(top: 2, bottom: 8),
                                 child: pw.Divider(color: headerColor, thickness: 1.5),
                               ),
-                              _pdfDetailItem("Class", "${employeeData['class'] ?? ''} - ${employeeData['section'] ?? 'A'}", detailTextColor),
                               _pdfDetailItem("Code", employeeData['employeeCode'] ?? "N/A", detailTextColor),
                               _pdfDetailItem("Gender", employeeData['gender'] ?? "", detailTextColor),
                               _pdfDetailItem("Phone", employeeData['phone'] ?? "", detailTextColor),
-                              _pdfDetailItem("Role", employeeData['designation'] ?? employeeData['subject'] ?? "", detailTextColor),
+                              _pdfDetailItem("Dept.", employeeData['department'] ?? employeeData['designation'] ?? employeeData['role'] ?? 'N/A', detailTextColor),
+                              _pdfDetailItem("Exp.", employeeData['experience'] ?? "N/A", detailTextColor),
                             ],
                           ),
                         ),
@@ -439,6 +486,7 @@ class AdminEmployeeIdCardPrintScreen extends StatelessWidget {
         },
       ),
     );
+    }
 
     return pdf.save();
   }
@@ -449,7 +497,7 @@ class AdminEmployeeIdCardPrintScreen extends StatelessWidget {
       child: pw.Row(
         children: [
           pw.SizedBox(
-            width: 55,
+            width: 45,
             child: pw.Text("${label.tr}:", style: pw.TextStyle(fontSize: 10, color: PdfColors.grey700, fontWeight: pw.FontWeight.bold)),
           ),
           pw.Expanded(

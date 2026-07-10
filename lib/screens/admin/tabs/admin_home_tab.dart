@@ -10,6 +10,7 @@ import '../../../widgets/calendar_popup.dart';
 import '../screens/admin_attendance_screen.dart';
 import '../screens/admin_fees_screen.dart';
 import '../screens/admin_communications_screen.dart';
+import '../screens/reports/class_attendance_report_screen.dart';
 import '../screens/admin_events_screen.dart';
 import '../../ai_assistant/ai_assistant_screen.dart';
 import '../widgets/admin_app_bar.dart';
@@ -45,11 +46,11 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
   void initState() {
     super.initState();
     _quickActions = [
-      {'id': 'add_student', 'icon': Icons.person_add, 'label': "Add Student".tr.replaceAll(' ', '\n'), 'color': Color(0xFF0038FF)},
+      {'id': 'add_student', 'icon': Icons.person_add, 'label': "Add Student".tr.replaceAll(' ', '\n'), 'color': AppColors.primary},
       {'id': 'add_teacher', 'icon': Icons.person_add, 'label': "Add Teacher".tr.replaceAll(' ', '\n'), 'color': Color(0xFF10B981)},
       {'id': 'mark_attendance', 'icon': Icons.calendar_today, 'label': "Mark Attendance".tr.replaceAll(' ', '\n'), 'color': Color(0xFF8B5CF6)},
       {'id': 'collect_fees', 'icon': Icons.receipt_long, 'label': "Collect Fees".tr.replaceAll(' ', '\n'), 'color': Color(0xFFF59E0B)},
-      {'id': 'notice_board', 'icon': Icons.campaign, 'label': "Notice Board".tr.replaceAll(' ', '\n'), 'color': Color(0xFF0038FF)},
+      {'id': 'notice_board', 'icon': Icons.campaign, 'label': "Notice Board".tr.replaceAll(' ', '\n'), 'color': AppColors.primary},
       {'id': 'more', 'icon': Icons.more_horiz, 'label': "More".tr, 'color': Color(0xFF6B7280)},
     ];
   }
@@ -70,7 +71,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF5F7FF),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(72),
         child: ValueListenableBuilder<String>(
@@ -97,15 +98,17 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.only(top: 12, left: 16, right: 16),
+                      child: _buildDateDisplay(),
+                    ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(height: 4),  // 2. Date display
-                          _buildDateDisplay(),
-
-                          SizedBox(height: 20),
+                          SizedBox(height: 12),
 
                           // 3. Stats row
                           _buildStatsRowForSchool(school),
@@ -146,67 +149,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
   }  // ══════════════════════════════════════════════════════════════════════════
   // 2. DATE DISPLAY
   // ══════════════════════════════════════════════════════════════════════════
-  Widget _buildSchoolSelector() {
-    return PopupMenuButton<String>(
-      onSelected: (String school) {
-        debugPrint("AdminHomeTab selected school: $school");
-        ProfileManager().selectedSchool.value = school;
-      },
-      color: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-        PopupMenuItem<String>(
-          value: 'Ecstasy School 1',
-          child: Text('Ecstasy School 1'.tr, style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-        ),
-        PopupMenuItem<String>(
-          value: 'Ecstasy School 2',
-          child: Text('Ecstasy School 2'.tr, style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-        ),
-        PopupMenuItem<String>(
-          value: 'Ecstasy School 3',
-          child: Text('Ecstasy School 3'.tr, style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-        ),
-      ],
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        decoration: BoxDecoration(
-          color: Color(0xFFF0F4FF),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: ValueListenableBuilder<String>(
-          valueListenable: ProfileManager().selectedSchool,
-          builder: (context, selectedSchool, _) {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.school, color: AppColors.primary, size: 14),
-                    SizedBox(width: 8),
-                    Text(
-                      selectedSchool,
-                      style: TextStyle(
-                        color: Color(0xFF1E2875),
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-                Icon(
-                  Icons.keyboard_arrow_down,
-                  color: Color(0xFF1E2875),
-                  size: 16,
-                ),
-              ],
-            );
-          },
-        ),
-      ),
-    );
-  }
+
 
   Widget _buildDateDisplay() {
     final now = DateTime.now();
@@ -220,47 +163,111 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
     ];
     final dateStr = "${now.day} ${months[now.month - 1]} ${now.year}";
     final dayStr = days[now.weekday - 1];
+    final shortDay = dayStr.substring(0, 3);
+    final combinedDate = "$shortDay, $dateStr";
 
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        // School Selector
         Expanded(
-          child: _buildSchoolSelector(),
-        ),
-        SizedBox(width: 12),
-        InkWell(
-          onTap: () {
-            showCalendarPopup(context);
-          },
-          borderRadius: BorderRadius.circular(8),
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: Color(0xFFF0F4FF),
-              borderRadius: BorderRadius.circular(8),
+          child: Material(
+            color: const Color(0xFFF0F4FF),
+            borderRadius: BorderRadius.circular(8),
+            clipBehavior: Clip.antiAlias,
+            child: Theme(
+              data: Theme.of(context).copyWith(
+                splashColor: AppColors.primary.withValues(alpha: 0.2),
+                highlightColor: AppColors.primary.withValues(alpha: 0.1),
+              ),
+              child: PopupMenuButton<String>(
+                onSelected: (String school) {
+                ProfileManager().selectedSchool.value = school;
+              },
+              color: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                PopupMenuItem<String>(
+                  value: 'Ecstasy School 1',
+                  child: Text('Ecstasy School 1'.tr, style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                ),
+                PopupMenuItem<String>(
+                  value: 'Ecstasy School 2',
+                  child: Text('Ecstasy School 2'.tr, style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                ),
+                PopupMenuItem<String>(
+                  value: 'Ecstasy School 3',
+                  child: Text('Ecstasy School 3'.tr, style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+                ),
+              ],
+              child: Container(
+                height: 44,
+                alignment: Alignment.center,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: ValueListenableBuilder<String>(
+                  valueListenable: ProfileManager().selectedSchool,
+                  builder: (context, selectedSchool, _) {
+                    return Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.school, color: AppColors.primary, size: 14),
+                        const SizedBox(width: 6),
+                        Text(
+                          selectedSchool,
+                          style: const TextStyle(
+                            color: Color(0xFF1E2875),
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        const Icon(
+                          Icons.keyboard_arrow_down,
+                          color: AppColors.primary,
+                          size: 14,
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
             ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.calendar_today, size: 14, color: AppColors.primary),
-                SizedBox(width: 6),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Material(
+            color: const Color(0xFFF0F4FF),
+            borderRadius: BorderRadius.circular(8),
+            clipBehavior: Clip.antiAlias,
+            child: InkWell(
+              splashColor: AppColors.primary.withValues(alpha: 0.2),
+              highlightColor: AppColors.primary.withValues(alpha: 0.1),
+              onTap: () {
+                showCalendarPopup(context);
+              },
+              borderRadius: BorderRadius.circular(8),
+              child: Container(
+                height: 44,
+                alignment: Alignment.center,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
+                    const Icon(Icons.calendar_today, size: 14, color: AppColors.primary),
+                    const SizedBox(width: 6),
                     Text(
-                      dateStr,
-                      style: TextStyle(
+                      combinedDate,
+                      style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF1E2875),
                       ),
                     ),
-                    Text(
-                      dayStr,
-                      style: TextStyle(fontSize: 10, color: Colors.grey),
-                    ),
                   ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
@@ -283,7 +290,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
         Expanded(
           child: _buildStatCard(
             icon: Icons.people,
-            iconBgColor: Color(0xFF0038FF),
+            iconBgColor: AppColors.primary,
             label: "Total Students".tr,
             value: studentsCount.toString(),
             change: "↑ 12 this month",
@@ -326,7 +333,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
             changeColor: metrics['attendanceChangeColor'] as Color,
             onTap: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => AdminAttendanceScreen()),
+              MaterialPageRoute(builder: (_) => const ClassAttendanceReportScreen()),
             ),
           ),
         ),
@@ -1115,7 +1122,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
           SizedBox(height: 12),
           InkWell(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => AdminAttendanceScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const ClassAttendanceReportScreen()));
             },
             child: Row(children: [
                 Text("View attendance report".tr,
