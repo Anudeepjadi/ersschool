@@ -324,7 +324,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 },
                 child: Container(
                   decoration: BoxDecoration(
-                    color: isSelected ? Color(0xFF0038FF) : Colors.transparent,
+                    color: isSelected ? AppColors.primary : Colors.transparent,
                     shape: BoxShape.circle,
                   ),
                   alignment: Alignment.center,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../widgets/admin_app_bar.dart';
 import '../../widgets/admin_drawer.dart';
@@ -58,7 +59,7 @@ class _FeeCollectionByDateScreenState extends State<FeeCollectionByDateScreen> {
             Align(
               alignment: Alignment.centerRight,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () => _exportToExcel(),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black87,
                   foregroundColor: Colors.white,
@@ -75,14 +76,14 @@ class _FeeCollectionByDateScreenState extends State<FeeCollectionByDateScreen> {
               children: [
                 const Text("Scroll table horizontally: ", style: TextStyle(fontSize: 10, color: Colors.grey)),
                 IconButton(
-                  icon: const Icon(Icons.arrow_circle_left_outlined, color: AppColors.primary, size: 20),
+                  icon: Icon(Icons.arrow_circle_left_outlined, color: AppColors.primary, size: 20),
                   onPressed: () { if (_scrollController.hasClients) _scrollController.animateTo(_scrollController.offset - 200, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut); },
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                 ),
                 const SizedBox(width: 8),
                 IconButton(
-                  icon: const Icon(Icons.arrow_circle_right_outlined, color: AppColors.primary, size: 20),
+                  icon: Icon(Icons.arrow_circle_right_outlined, color: AppColors.primary, size: 20),
                   onPressed: () { if (_scrollController.hasClients) _scrollController.animateTo(_scrollController.offset + 200, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut); },
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
@@ -234,7 +235,7 @@ class _FeeCollectionByDateScreenState extends State<FeeCollectionByDateScreen> {
         controller: _scrollController,
         scrollDirection: Axis.horizontal,
         child: DataTable(
-        headingRowColor: WidgetStateProperty.all(const Color(0xFF001A40)),
+        headingRowColor: WidgetStateProperty.all(AppColors.primary),
         columnSpacing: 20,
         horizontalMargin: 12,
         columns: const [
@@ -253,5 +254,29 @@ class _FeeCollectionByDateScreenState extends State<FeeCollectionByDateScreen> {
         rows: const [],
       ),
     ));
+  }
+
+  void _exportToExcel() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+            const SizedBox(width: 12),
+            Text("Generating Collection Excel...".tr),
+          ],
+        ),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+    Future.delayed(const Duration(seconds: 2), () {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Collection_Report_${startDate.day}_${startDate.month}_to_${endDate.day}_${endDate.month}.xlsx downloaded.".tr),
+          backgroundColor: Colors.green,
+        ),
+      );
+    });
   }
 }

@@ -357,7 +357,7 @@ class _AdminCommunicationsScreenState extends State<AdminCommunicationsScreen> {
                 style: OutlinedButton.styleFrom(
                   side: BorderSide(color: AppColors.primary),
                 ),
-                onPressed: () {},
+                onPressed: () => _handleMessageAction("Reply"),
                 child: Row(children: [
                     Icon(Icons.reply, size: 16),
                     SizedBox(width: 6),
@@ -367,7 +367,7 @@ class _AdminCommunicationsScreenState extends State<AdminCommunicationsScreen> {
               ),
               SizedBox(width: 12),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () => _handleMessageAction("Forward"),
                 child: Row(children: [
                     Icon(Icons.forward, size: 16),
                     SizedBox(width: 6),
@@ -379,6 +379,12 @@ class _AdminCommunicationsScreenState extends State<AdminCommunicationsScreen> {
           )
         ],
       ),
+    );
+  }
+
+  void _handleMessageAction(String action) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("$action action triggered for: ${_selectedMessage?['title'] ?? 'Notice'}")),
     );
   }
 }

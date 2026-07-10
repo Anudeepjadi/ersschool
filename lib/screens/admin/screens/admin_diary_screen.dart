@@ -97,7 +97,7 @@ class _AdminDiaryScreenState extends State<AdminDiaryScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text("Dairy", style: TextStyle(color: Colors.white, fontSize: 18)),
+                const Text("Diary", style: TextStyle(color: Colors.white, fontSize: 18)),
                 GestureDetector(
                   onTap: () => Navigator.pop(context),
                   child: const Icon(Icons.close, color: Colors.white, size: 20),
@@ -123,7 +123,7 @@ class _AdminDiaryScreenState extends State<AdminDiaryScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                const Text("Dairy Text", style: TextStyle(fontSize: 12, color: Color(0xFF1E2875))),
+                const Text("Diary Text", style: TextStyle(fontSize: 12, color: Color(0xFF1E2875))),
                 const SizedBox(height: 4),
                 TextField(
                   controller: textController,
@@ -154,9 +154,10 @@ class _AdminDiaryScreenState extends State<AdminDiaryScreen> {
                 });
                 _saveDiaryData();
                 
+                final messenger = ScaffoldMessenger.of(context);
                 Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Dairy entry saved successfully!")),
+                messenger.showSnackBar(
+                  const SnackBar(content: Text("Diary entry saved successfully!")),
                 );
               },
               style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1E2875), foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))),
@@ -191,7 +192,7 @@ class _AdminDiaryScreenState extends State<AdminDiaryScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text("Edit Dairy", style: TextStyle(color: Colors.white, fontSize: 18)),
+                const Text("Edit Diary", style: TextStyle(color: Colors.white, fontSize: 18)),
                 GestureDetector(
                   onTap: () => Navigator.pop(context),
                   child: const Icon(Icons.close, color: Colors.white, size: 20),
@@ -217,7 +218,7 @@ class _AdminDiaryScreenState extends State<AdminDiaryScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                const Text("Dairy Text", style: TextStyle(fontSize: 12, color: Color(0xFF1E2875))),
+                const Text("Diary Text", style: TextStyle(fontSize: 12, color: Color(0xFF1E2875))),
                 const SizedBox(height: 4),
                 TextField(
                   controller: textController,
@@ -248,9 +249,10 @@ class _AdminDiaryScreenState extends State<AdminDiaryScreen> {
                 });
                 _saveDiaryData();
                 
+                final messenger = ScaffoldMessenger.of(context);
                 Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Dairy entry updated successfully!")),
+                messenger.showSnackBar(
+                  const SnackBar(content: Text("Diary entry updated successfully!")),
                 );
               },
               style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1E2875), foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))),
@@ -267,7 +269,7 @@ class _AdminDiaryScreenState extends State<AdminDiaryScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("Delete Dairy Entry"),
+        title: const Text("Delete Diary Entry"),
         content: const Text("Are you sure you want to delete this entry?"),
         actions: [
           TextButton(
@@ -280,9 +282,10 @@ class _AdminDiaryScreenState extends State<AdminDiaryScreen> {
                 _diaryEntries.removeAt(index);
               });
               _saveDiaryData();
+              final messenger = ScaffoldMessenger.of(context);
               Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Dairy entry deleted successfully!")),
+              messenger.showSnackBar(
+                const SnackBar(content: Text("Diary entry deleted successfully!")),
               );
             },
             child: const Text("Delete", style: TextStyle(color: Colors.red)),
@@ -298,7 +301,7 @@ class _AdminDiaryScreenState extends State<AdminDiaryScreen> {
       backgroundColor: const Color(0xFFF8F9FA),
       bottomNavigationBar: const AdminBottomNavBar(currentIndex: 0),
       appBar: const AdminAppBar(
-        title: "Class Dairy",
+        title: "Class Diary",
         subtitle: "Manage daily class updates",
       ),
       body: Column(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
+import 'package:flutter/foundation.dart';
+import 'dart:io' show File;
 import 'package:ersschool/core/theme/app_colors.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 import 'package:ersschool/core/data/app_data_store.dart';
@@ -195,6 +196,7 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
                   ],
                   rows: _getPaginatedData().map((data) {
                     final photoPath = data['photoPath'];
+                    final bool fileExists = !kIsWeb && photoPath != null && File(photoPath).existsSync();
                     return DataRow(
                       cells: [
                         DataCell(
@@ -217,10 +219,10 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
                               color: Colors.grey.shade300,
                               borderRadius: BorderRadius.circular(4),
                             ),
-                            child: photoPath != null && File(photoPath).existsSync()
+                            child: fileExists
                                 ? ClipRRect(
                                     borderRadius: BorderRadius.circular(4),
-                                    child: Image.file(File(photoPath), fit: BoxFit.cover),
+                                    child: Image.file(File(photoPath!), fit: BoxFit.cover),
                                   )
                                 : const Icon(Icons.person, color: Colors.white, size: 20),
                           ),
@@ -258,11 +260,11 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
               children: [
                 Text("Scroll table horizontally: ".tr, style: const TextStyle(fontSize: 12, color: Colors.grey)),
                 IconButton(
-                  icon: const Icon(Icons.arrow_circle_left_outlined, color: AppColors.primary),
+                  icon: Icon(Icons.arrow_circle_left_outlined, color: AppColors.primary),
                   onPressed: () { if (_scrollController.hasClients) _scrollController.animateTo(_scrollController.offset - 250, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut); },
                 ),
                 IconButton(
-                  icon: const Icon(Icons.arrow_circle_right_outlined, color: AppColors.primary),
+                  icon: Icon(Icons.arrow_circle_right_outlined, color: AppColors.primary),
                   onPressed: () { if (_scrollController.hasClients) _scrollController.animateTo(_scrollController.offset + 250, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut); },
                 ),
               ],
@@ -490,7 +492,7 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
 
   Widget _buildIdCardPreview(Map<String, dynamic> employeeData) {
     final photo = employeeData['photoPath'];
-    final bool hasValidPhoto = photo != null && File(photo.toString()).existsSync();
+    final bool hasValidPhoto = !kIsWeb && photo != null && File(photo.toString()).existsSync();
     final headerColor = Colors.blue.shade800;
     
     return Container(

@@ -234,7 +234,7 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
             children: [
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF0F172A), // Dark slate/black
+                  backgroundColor: AppColors.primary, // Dark slate/black
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
@@ -402,7 +402,7 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: isSelected ? const Color(0xFF0038FF) : Colors.grey.shade400,
+                  color: isSelected ? AppColors.primary : Colors.grey.shade400,
                   width: 2,
                 ),
               ),
@@ -413,7 +413,7 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
                         height: 8,
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Color(0xFF0038FF),
+                          color: AppColors.primary,
                         ),
                       ),
                     )
@@ -762,7 +762,7 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
                                 color: cellDate.day == DateTime.now().day && 
                                         cellDate.month == DateTime.now().month &&
                                         cellDate.year == DateTime.now().year
-                                    ? const Color(0xFF0038FF)
+                                    ? AppColors.primary
                                     : Colors.black54,
                               ),
                             ),

@@ -680,7 +680,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                   child: Container(
                     padding: EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: Color(0xFF0038FF),
+                      color: AppColors.primary,
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
@@ -719,13 +719,13 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
                         minimumSize: Size(0, 26),
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        side: BorderSide(color: Color(0xFF0038FF)),
+                        side: BorderSide(color: AppColors.primary),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
                       ),
                       onPressed: _openEditProfileDialog,
-                      icon: Icon(Icons.edit, size: 12, color: Color(0xFF0038FF)),
+                      icon: Icon(Icons.edit, size: 12, color: AppColors.primary),
                       label: Text("Edit".tr,
-                        style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF0038FF)),
+                        style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.primary),
                       ),
                     ),
                   ],
@@ -735,13 +735,13 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(
-                    color: Color(0xFF0038FF).withValues(alpha: 0.1),
+                    color: AppColors.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Text("Super Administrator".tr,
                     style: TextStyle(
                       fontSize: 10,
-                      color: Color(0xFF0038FF),
+                      color: AppColors.primary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -830,7 +830,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       child: Row(
         children: [
-          Icon(icon, size: 18, color: Color(0xFF0038FF)),
+          Icon(icon, size: 18, color: AppColors.primary),
           SizedBox(width: 12),
           Text(
             label,
@@ -869,7 +869,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
           Divider(height: 1),
           SwitchListTile(
             contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            secondary: Icon(Icons.security_outlined, color: Color(0xFF0038FF), size: 18),
+            secondary: Icon(Icons.security_outlined, color: AppColors.primary, size: 18),
             title: Text("Two-Factor Authentication".tr,
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
             ),
@@ -928,7 +928,7 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
 
   Widget _buildSettingsRow(IconData icon, String title, String subtitle, {required VoidCallback onTap}) {
     return ListTile(
-      leading: Icon(icon, color: Color(0xFF0038FF), size: 18),
+      leading: Icon(icon, color: AppColors.primary, size: 18),
       title: Text(
         title,
         style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),

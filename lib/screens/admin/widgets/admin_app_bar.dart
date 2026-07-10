@@ -1,5 +1,7 @@
-import 'dart:io';
+import 'dart:io' show File;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/profile_manager.dart';
 import '../../../core/localization/language_manager.dart';
@@ -89,7 +91,7 @@ class AdminAppBar extends StatelessWidget implements PreferredSizeWidget {
                       height: 44,
                       width: 44,
                       fit: BoxFit.contain,
-                      errorBuilder: (c, e, s) => const Icon(Icons.school, color: AppColors.primary, size: 36),
+                      errorBuilder: (c, e, s) => Icon(Icons.school, color: AppColors.primary, size: 36),
                     );
                   },
                 ),
@@ -100,58 +102,72 @@ class AdminAppBar extends StatelessWidget implements PreferredSizeWidget {
             const Text('Ecstasy School', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white)),
             const SizedBox(width: 24),
             // Navigation Links
-            _buildWebNavItem(context, 'Home', false, () {
-              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => const AdminDashboardScreen(initialIndex: 0)), (r) => false);
-            }),
-            _buildWebNavDropdown(context, 'Student', [
-              _MenuItem('Register Student', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminRegisterStudentScreen()))),
-              _MenuItem('Student List', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminStudentListScreen()))),
-              _MenuItem('Student Promotions', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminStudentPromotionsScreen()))),
-              _MenuItem('Sibling Mapping', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminStudentSiblingsScreen()))),
-              _MenuItem('Student ID Cards', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminIDCardsScreen()))),
-            ]),
-            _buildWebNavDropdown(context, 'Class', [
-              _MenuItem('Class Details', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminClassDetailsScreen()))),
-              _MenuItem('Class Teachers', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminClassTeachersScreen()))),
-              _MenuItem('Class Routine', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminTimeTableScreen()))),
-              _MenuItem('Assignments', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminAssignmentsScreen()))),
-              _MenuItem('Diary', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminDiaryScreen()))),
-              _MenuItem('Attendance', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminAttendanceScreen()))),
-            ]),
-            _buildWebNavDropdown(context, 'Employee', [
-              _MenuItem('Employees List', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEmployeeListScreen(staffType: 'Employee')))),
-              _MenuItem('Teachers List', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEmployeeListScreen(staffType: 'Teacher')))),
-              _MenuItem('Attender/Aaya List', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEmployeeListScreen(staffType: 'Attender')))),
-              _MenuItem('Employee ID Cards', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEmployeeIDCardsScreen()))),
-            ]),
-            _buildWebNavDropdown(context, 'Meetings', [
-              _MenuItem('Schedule Online Meeting', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminMeetingsScreen(initialFeature: MeetingsFeature.schedule)))),
-              _MenuItem('Calendar', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminMeetingsScreen(initialFeature: MeetingsFeature.calendar)))),
-            ]),
-            _buildWebNavDropdown(context, 'Examination', [
-              _MenuItem('Exam Details', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminExaminationsScreen(initialFeature: ExaminationFeature.examDetails)))),
-              _MenuItem('Exam Timetable', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminExaminationsScreen(initialFeature: ExaminationFeature.examTimetable)))),
-              _MenuItem('Exam Hall Tickets', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminExaminationsScreen(initialFeature: ExaminationFeature.examHallTickets)))),
-              _MenuItem('Grade Report', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminExaminationsScreen(initialFeature: ExaminationFeature.gradeReport)))),
-            ]),
-            _buildWebNavDropdown(context, 'Transport', [
-              _MenuItem('Vehicle Details', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminVehicleDetailsScreen()))),
-              _MenuItem('Drivers List', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminDriversListScreen()))),
-              _MenuItem('Students by Route', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminTransportStudentsRouteScreen()))),
-              _MenuItem('Students by Class', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminTransportStudentsClassScreen()))),
-            ]),
-            _buildWebNavDropdown(context, 'Reports', [
-              _MenuItem('Holidays List', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const HolidaysListReportScreen()))),
-              _MenuItem('Fee Structure', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const FeeStructureReportScreen()))),
-              _MenuItem('Fee Collection', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const FeeCollectionSummaryScreen()))),
-              _MenuItem('Tuition Fee Due', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const FeeDueListScreen(reportTitle: "Tuition Fee Due Students")))),
-              _MenuItem('Transport Fee Due', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const FeeDueListScreen(reportTitle: "Transport Fee Due Students")))),
-              _MenuItem('Collection By Date', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const FeeCollectionByDateScreen()))),
-              _MenuItem('Class Attendance', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ClassAttendanceReportScreen()))),
-            ]),
-            _buildWebNavDropdown(context, 'More', [
-              _MenuItem('App Settings', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminSettingsScreen()))),
-            ]),
+            Expanded(
+              child: ScrollConfiguration(
+                behavior: ScrollConfiguration.of(context).copyWith(
+                  dragDevices: {
+                    PointerDeviceKind.touch,
+                    PointerDeviceKind.mouse,
+                  },
+                ),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      _buildWebNavItem(context, 'Home', false, () {
+                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => const AdminDashboardScreen(initialIndex: 0)), (r) => false);
+                      }),
+                      _buildWebNavDropdown(context, 'Student', [
+                        _MenuItem('Register Student', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminRegisterStudentScreen()))),
+                        _MenuItem('Student List', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminStudentListScreen()))),
+                        _MenuItem('Student Promotions', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminStudentPromotionsScreen()))),
+                        _MenuItem('Sibling Mapping', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminStudentSiblingsScreen()))),
+                      ]),
+                      _buildWebNavDropdown(context, 'Class', [
+                        _MenuItem('Class Routine', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminTimeTableScreen()))),
+                        _MenuItem('Attendance', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminAttendanceScreen()))),
+                        _MenuItem('Diary', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminDiaryScreen()))),
+                        _MenuItem('Class Details', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminClassDetailsScreen()))),
+                        _MenuItem('Assignments', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminAssignmentsScreen()))),
+                        _MenuItem('Class Teachers', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminClassTeachersScreen()))),
+                      ]),
+                      _buildWebNavDropdown(context, 'Employee', [
+                        _MenuItem('Employees', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEmployeeListScreen(staffType: 'Employee')))),
+                        _MenuItem('Teachers', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEmployeeListScreen(staffType: 'Teacher')))),
+                        _MenuItem('Attender/Aaya', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEmployeeListScreen(staffType: 'Attender')))),
+                      ]),
+                      _buildWebNavDropdown(context, 'Meetings', [
+                        _MenuItem('Schedule Online Meeting', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminMeetingsScreen(initialFeature: MeetingsFeature.schedule)))),
+                        _MenuItem('Calendar', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminMeetingsScreen(initialFeature: MeetingsFeature.calendar)))),
+                      ]),
+                      _buildWebNavDropdown(context, 'Examination', [
+                        _MenuItem('Exam Details', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminExaminationsScreen(initialFeature: ExaminationFeature.examDetails)))),
+                        _MenuItem('Exam Timetable', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminExaminationsScreen(initialFeature: ExaminationFeature.examTimetable)))),
+                        _MenuItem('Exam Hall Tickets', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminExaminationsScreen(initialFeature: ExaminationFeature.examHallTickets)))),
+                        _MenuItem('Grade Report', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminExaminationsScreen(initialFeature: ExaminationFeature.gradeReport)))),
+                        _MenuItem('Grade Report Custom', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminExaminationsScreen(initialFeature: ExaminationFeature.gradeReportCustom)))),
+                      ]),
+                      _buildWebNavDropdown(context, 'Transport', [
+                        _MenuItem('Vehicle Details', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminVehicleDetailsScreen()))),
+                        _MenuItem('Drivers List', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminDriversListScreen()))),
+                        _MenuItem('Students by Route', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminTransportStudentsRouteScreen()))),
+                        _MenuItem('Students by Class', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminTransportStudentsClassScreen()))),
+                      ]),
+                      _buildWebNavDropdown(context, 'Reports', [
+                        _MenuItem('Holidays List', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const HolidaysListReportScreen()))),
+                        _MenuItem('Fee Structure', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const FeeStructureReportScreen()))),
+                        _MenuItem('Fee Collection', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const FeeCollectionSummaryScreen()))),
+                        _MenuItem('Tuition Fee Due', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const FeeDueListScreen(reportTitle: "Tuition Fee Due Students")))),
+                        _MenuItem('Transport Fee Due', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const FeeDueListScreen(reportTitle: "Transport Fee Due Students")))),
+                        _MenuItem('Fee Paid By date', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const FeeCollectionByDateScreen()))),
+                        _MenuItem('Students Attendance Rept', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ClassAttendanceReportScreen()))),
+                      ]),
+
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
         actions: [
@@ -191,8 +207,8 @@ class AdminAppBar extends StatelessWidget implements PreferredSizeWidget {
                     return CircleAvatar(
                       radius: 18,
                       backgroundColor: Colors.white,
-                      backgroundImage: path != null ? FileImage(File(path)) : null,
-                      child: path == null ? const Icon(Icons.person, color: AppColors.primary, size: 24) : null,
+                      backgroundImage: (!kIsWeb && path != null) ? FileImage(File(path)) : null,
+                      child: (kIsWeb || path == null) ? Icon(Icons.person, color: AppColors.primary, size: 24) : null,
                     );
                   },
                 ),
@@ -257,7 +273,7 @@ class AdminAppBar extends StatelessWidget implements PreferredSizeWidget {
                   value: 'mails',
                   child: Row(
                     children: [
-                      Container(padding: const EdgeInsets.all(8), decoration: BoxDecoration(color: const Color(0xFFF0F4FF), borderRadius: BorderRadius.circular(8)), child: const Icon(Icons.mail_outline, color: Color(0xFF0038FF), size: 20)),
+                      Container(padding: const EdgeInsets.all(8), decoration: BoxDecoration(color: const Color(0xFFF0F4FF), borderRadius: BorderRadius.circular(8)), child: const Icon(Icons.mail_outline, color: AppColors.primary, size: 20)),
                       const SizedBox(width: 12),
                       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('Support Mails'.tr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E2875))), Text('12 unread queries'.tr, style: const TextStyle(fontSize: 11, color: Colors.grey))]),
                     ],
@@ -301,8 +317,8 @@ class AdminAppBar extends StatelessWidget implements PreferredSizeWidget {
                   return CircleAvatar(
                     radius: 15,
                     backgroundColor: Colors.white,
-                    backgroundImage: path != null ? FileImage(File(path)) : null,
-                    child: path == null ? const Icon(Icons.person, color: AppColors.primary, size: 20) : null,
+                    backgroundImage: (!kIsWeb && path != null) ? FileImage(File(path)) : null,
+                    child: (kIsWeb || path == null) ? Icon(Icons.person, color: AppColors.primary, size: 20) : null,
                   );
                 },
               ),

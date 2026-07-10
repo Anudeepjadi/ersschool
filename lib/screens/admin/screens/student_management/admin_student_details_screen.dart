@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
+import 'package:flutter/foundation.dart';
+import 'dart:io' show File;
 import 'package:ersschool/core/localization/language_manager.dart';
 import 'admin_student_attendance_report_screen.dart';
 import 'admin_student_fee_details_screen.dart';
@@ -92,6 +93,7 @@ class _AdminStudentDetailsScreenState extends State<AdminStudentDetailsScreen> {
                     title: "Academic Information",
                     icon: Icons.school_outlined,
                     children: [
+                      _buildDetailRow("Academic Year", widget.student?['academic_year'] ?? widget.student?['year'] ?? "2025-26"),
                       _buildDetailRow("Admission No", widget.student?['admission'] ?? widget.student?['admNo'] ?? "N/A"),
                       _buildDetailRow("Registration No", widget.student?['registration_no'] ?? "N/A"),
                       _buildDetailRow("Class & Section", "${widget.student?['class'] ?? 'N/A'} - ${widget.student?['section'] ?? 'A'}"),
@@ -129,7 +131,7 @@ class _AdminStudentDetailsScreenState extends State<AdminStudentDetailsScreen> {
     final bool isActive = status == 'Active';
 
     final photo = widget.student?['avatar'] ?? widget.student?['photoPath'];
-    final bool hasValidPhoto = photo != null && File(photo.toString()).existsSync();
+    final bool hasValidPhoto = !kIsWeb && photo != null && File(photo.toString()).existsSync();
 
     return Container(
       width: double.infinity,

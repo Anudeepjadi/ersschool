@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart'; // Added for kIsWeb
 import '../widgets/admin_bottom_nav_bar.dart';
-import 'dart:io';
+import 'dart:io' show File;
 import 'package:ersschool/core/theme/app_colors.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 import 'package:ersschool/core/utils/profile_manager.dart';
 import '../widgets/admin_app_bar.dart';
-import 'dart:typed_data';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -56,9 +56,26 @@ class _AdminEmployeeIdCardPrintScreenState extends State<AdminEmployeeIdCardPrin
             if (widget.employeesData.length > 1)
               Padding(
                 padding: const EdgeInsets.only(top: 16.0),
-                child: Text(
-                  '${_currentIndex + 1} of ${widget.employeesData.length}',
-                  style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.chevron_left, color: AppColors.primary),
+                      onPressed: _currentIndex > 0
+                          ? () => _pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut)
+                          : null,
+                    ),
+                    Text(
+                      '${_currentIndex + 1} of ${widget.employeesData.length}',
+                      style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.chevron_right, color: AppColors.primary),
+                      onPressed: _currentIndex < widget.employeesData.length - 1
+                          ? () => _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut)
+                          : null,
+                    ),
+                  ],
                 ),
               ),
             const SizedBox(height: 40),
@@ -108,7 +125,7 @@ class _AdminEmployeeIdCardPrintScreenState extends State<AdminEmployeeIdCardPrin
 
   Widget _buildProfessionalIdCard(Map<String, dynamic> employeeData) {
     final photo = employeeData['photoPath'];
-    final bool hasValidPhoto = photo != null && File(photo.toString()).existsSync();
+    final bool hasValidPhoto = !kIsWeb && photo != null && File(photo.toString()).existsSync();
     const headerColor = Color(0xFF1E40AF); // Deeper blue
     
     return Container(
@@ -332,7 +349,7 @@ class _AdminEmployeeIdCardPrintScreenState extends State<AdminEmployeeIdCardPrin
     for (var employeeData in employeesData) {
       pw.ImageProvider? studentPhoto;
       final photo = employeeData['photoPath'];
-      if (photo != null && File(photo.toString()).existsSync()) {
+      if (!kIsWeb && photo != null && File(photo.toString()).existsSync()) {
         studentPhoto = pw.MemoryImage(File(photo.toString()).readAsBytesSync());
       }
 

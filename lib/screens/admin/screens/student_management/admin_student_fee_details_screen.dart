@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 import 'package:ersschool/core/theme/app_colors.dart';
 import '../../widgets/admin_app_bar.dart';
@@ -311,8 +312,13 @@ class _AdminStudentFeeDetailsScreenState extends State<AdminStudentFeeDetailsScr
                 ),
                 const SizedBox(width: 8),
                 ElevatedButton(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Online payment coming soon".tr)));
+                  onPressed: () async {
+                    final Uri url = Uri.parse('https://razorpay.com/payment-gateway/');
+                    try {
+                      await launchUrl(url, mode: LaunchMode.externalApplication);
+                    } catch (e) {
+                      debugPrint('Could not launch \$url');
+                    }
                   },
                   style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))),
                   child: Text("Pay Online".tr),
@@ -397,7 +403,14 @@ class _AdminStudentFeeDetailsScreenState extends State<AdminStudentFeeDetailsScr
                                 )
                               : const SizedBox(),
                         ),
-                        DataCell(_buildSmallButton("SMS", AppColors.absentOrange, textColor: Colors.black)),
+                        DataCell(_buildSmallButton("SMS", AppColors.absentOrange, textColor: Colors.black, onTap: () async {
+                          final Uri url = Uri.parse('sms:+1234567890?body=Fee%20Payment%20Reminder');
+                          try {
+                            await launchUrl(url, mode: LaunchMode.externalApplication);
+                          } catch (e) {
+                            debugPrint('Could not launch SMS');
+                          }
+                        })),
                       ],
                     );
                   }).toList(),
@@ -445,7 +458,14 @@ class _AdminStudentFeeDetailsScreenState extends State<AdminStudentFeeDetailsScr
                       }),
                     ),
                     const SizedBox(width: 4),
-                    _buildSmallButton("SMS", AppColors.success, fontSize: 10, onTap: () {}),
+                    _buildSmallButton("SMS", AppColors.success, fontSize: 10, onTap: () async {
+                      final Uri url = Uri.parse('sms:+1234567890?body=Fee%20Payment%20Reminder');
+                      try {
+                        await launchUrl(url, mode: LaunchMode.externalApplication);
+                      } catch (e) {
+                        debugPrint('Could not launch SMS');
+                      }
+                    }),
                   ],
                 )
               : Text(text.tr, style: TextStyle(color: color, fontSize: 12)),
