@@ -74,21 +74,7 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
     return _markControllers[key]!;
   }
 
-  final List<Map<String, String>> _mockGradeStudents = const [
-    {'admission': '02600046', 'name': 'Deepthi', 'gender': 'Female', 'class': 'LKG'},
-    {'admission': '02600047', 'name': 'Priya', 'gender': 'Female', 'class': 'LKG'},
-    {'admission': '02600048', 'name': 'Deepthi', 'gender': 'Female', 'class': 'LKG'},
-    {'admission': '02600049', 'name': 'suresh', 'gender': 'Male', 'class': 'LKG'},
-    {'admission': '02600050', 'name': 'Rimsa', 'gender': 'Female', 'class': 'LKG'},
-    {'admission': '02600051', 'name': 'tony', 'gender': 'Male', 'class': 'LKG'},
-    {'admission': '02600055', 'name': 'lakshmi', 'gender': 'Male', 'class': 'LKG'},
-    {'admission': '02600057', 'name': 'Vijaya', 'gender': 'Male', 'class': 'LKG'},
-    {'admission': '02600060', 'name': 'phani', 'gender': 'Male', 'class': 'LKG'},
-    {'admission': '02600061', 'name': 'vinitha', 'gender': 'Female', 'class': 'LKG'},
-    {'admission': '02600074', 'name': 'dhurandarrr', 'gender': 'Male', 'class': 'LKG'},
-    {'admission': '02600075', 'name': 'MadiviliNaresh', 'gender': 'Male', 'class': 'LKG'},
-    {'admission': '02600078', 'name': 'ECSTASY SOLUTIONS PVT LTD', 'gender': 'Male', 'class': 'LKG'},
-  ];
+
 
   void _ensureStudentHasMarks(String admission) {
     if (!_mockStudentMarksDB.containsKey(admission)) {
@@ -2171,7 +2157,7 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
                             name: 'Grade_Report_${student['name'] ?? 'student'}',
                           );
                         } catch (e) {
-                          if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: $e")));
+                          if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: $e")));
                         }
                       },
                       style: ElevatedButton.styleFrom(

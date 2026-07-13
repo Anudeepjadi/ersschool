@@ -28,9 +28,7 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
   int _currentPage = 1;
   int _itemsPerPage = 25;
 
-  List<Map<String, dynamic>> get _students => AppDataStore.instance.students
-      .where((s) => s['school'] == ProfileManager().selectedSchool.value)
-      .toList();
+  List<Map<String, dynamic>> get _students => AppDataStore.instance.students.toList();
 
   @override
   Widget build(BuildContext context) {

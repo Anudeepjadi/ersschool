@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
 export 'app_colors.dart';
@@ -14,6 +15,9 @@ class AppTheme {
         surface: AppColors.white,
       ),
       scaffoldBackgroundColor: AppColors.white,
+      appBarTheme: const AppBarTheme(
+        centerTitle: kIsWeb,
+      ),
       textTheme: const TextTheme(
         bodyLarge: TextStyle(color: AppColors.text),
         bodyMedium: TextStyle(color: AppColors.text),
@@ -63,6 +67,9 @@ class AppTheme {
         surface: const Color(0xFF121212),
       ),
       scaffoldBackgroundColor: const Color(0xFF121212),
+      appBarTheme: const AppBarTheme(
+        centerTitle: kIsWeb,
+      ),
       textTheme: const TextTheme(
         bodyLarge: TextStyle(color: Colors.white),
         bodyMedium: TextStyle(color: Colors.white70),

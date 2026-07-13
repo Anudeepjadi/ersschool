@@ -3,6 +3,7 @@ import 'package:ersschool/core/localization/language_manager.dart';
 import 'package:ersschool/core/theme/app_colors.dart';
 import '../../widgets/admin_app_bar.dart';
 import '../../widgets/admin_bottom_nav_bar.dart';
+import 'package:intl/intl.dart';
 import 'dart:typed_data';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -25,8 +26,19 @@ class _AdminStudentFeeReceiptScreenState extends State<AdminStudentFeeReceiptScr
     super.dispose();
   }
 
+  String _formatClass(Map<String, dynamic>? student) {
+    if (student == null) return "Grade 1";
+    String c = student['class'] ?? "Grade 1";
+    String s = student['section'] ?? "";
+    if (s.isEmpty) return c;
+    if (c.endsWith(s) || c.contains(" - ")) return c;
+    return "$c - $s";
+  }
+
   @override
   Widget build(BuildContext context) {
+    final dateStr = DateFormat('dd/MM/yyyy').format(DateTime.now());
+
     return Scaffold(
       backgroundColor: AppColors.background,
       bottomNavigationBar: const AdminBottomNavBar(currentIndex: 1),
@@ -190,7 +202,7 @@ class _AdminStudentFeeReceiptScreenState extends State<AdminStudentFeeReceiptScr
                   const SizedBox(height: 12),
                   _buildInfoRow("Academic Year:".tr, widget.student?['academic_year'] ?? "2025-26"),
                   const SizedBox(height: 12),
-                  _buildInfoRow("Class:".tr, "${widget.student?['class'] ?? "Grade 1"} - ${widget.student?['section'] ?? "A"}"),
+                  _buildInfoRow("Class:".tr, _formatClass(widget.student)),
                   const SizedBox(height: 12),
                   _buildInfoRow("Mother Name:".tr, widget.student?['mother'] ?? "Tulasi"),
                 ],
@@ -200,56 +212,52 @@ class _AdminStudentFeeReceiptScreenState extends State<AdminStudentFeeReceiptScr
         ),
         const SizedBox(height: 24),
         // Fee Table
-        Container(
-          decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade400)),
-          child: Table(
-            border: TableBorder.all(color: Colors.grey.shade400),
-            columnWidths: const {
-              0: FlexColumnWidth(3),
-              1: FlexColumnWidth(1.5),
-              2: FlexColumnWidth(1.5),
-              3: FlexColumnWidth(1.5),
-              4: FlexColumnWidth(1.5),
-            },
-            children: [
-              TableRow(
-                children: [
-                  _buildTableCell("Tuition Fee - Term 1", align: TextAlign.left),
-                  _buildTableCell("13,000.00", align: TextAlign.right),
-                  _buildTableCell("11,000.00", align: TextAlign.right),
-                  _buildTableCell("28/5/2026", align: TextAlign.center),
-                  _buildTableCell("2,000.00", align: TextAlign.right),
-                ],
-              ),
-              TableRow(
-                children: [
-                  _buildTableCell("Tuition Fee - Term 2", align: TextAlign.left),
-                  _buildTableCell("13,000.00", align: TextAlign.right),
-                  _buildTableCell("0.00", align: TextAlign.right),
-                  _buildTableCell("", align: TextAlign.center),
-                  _buildTableCell("13,000.00", align: TextAlign.right),
-                ],
-              ),
-              TableRow(
-                children: [
-                  _buildTableCell("Tuition Fee - Term 3", align: TextAlign.left),
-                  _buildTableCell("12,000.00", align: TextAlign.right),
-                  _buildTableCell("0.00", align: TextAlign.right),
-                  _buildTableCell("", align: TextAlign.center),
-                  _buildTableCell("12,000.00", align: TextAlign.right),
-                ],
-              ),
-              TableRow(
-                children: [
-                  _buildTableCell("Total Amount", isBold: true, align: TextAlign.left),
-                  _buildTableCell("38,000.00", isBold: true, align: TextAlign.right),
-                  _buildTableCell("11,000.00", isBold: true, align: TextAlign.right),
-                  _buildTableCell("", align: TextAlign.center),
-                  _buildTableCell("27,000.00", isBold: true, align: TextAlign.right),
-                ],
-              ),
-            ],
-          ),
+        Table(
+          columnWidths: const {
+            0: FlexColumnWidth(3),
+            1: FlexColumnWidth(1.5),
+            2: FlexColumnWidth(1.5),
+            3: FlexColumnWidth(1.5),
+            4: FlexColumnWidth(1.5),
+          },
+          children: [
+            TableRow(
+              children: [
+                _buildTableCell("Tuition Fee - Term 1", align: TextAlign.left),
+                _buildTableCell("13,000.00", align: TextAlign.right),
+                _buildTableCell("11,000.00", align: TextAlign.right),
+                _buildTableCell("28/5/2026", align: TextAlign.center),
+                _buildTableCell("2,000.00", align: TextAlign.right),
+              ],
+            ),
+            TableRow(
+              children: [
+                _buildTableCell("Tuition Fee - Term 2", align: TextAlign.left),
+                _buildTableCell("13,000.00", align: TextAlign.right),
+                _buildTableCell("11,000.00", align: TextAlign.right),
+                _buildTableCell("28/5/2026", align: TextAlign.center),
+                _buildTableCell("2,000.00", align: TextAlign.right),
+              ],
+            ),
+            TableRow(
+              children: [
+                _buildTableCell("Tuition Fee - Term 3", align: TextAlign.left),
+                _buildTableCell("4,000.00", align: TextAlign.right),
+                _buildTableCell("3,500.00", align: TextAlign.right),
+                _buildTableCell("28/5/2026", align: TextAlign.center),
+                _buildTableCell("500.00", align: TextAlign.right),
+              ],
+            ),
+            TableRow(
+              children: [
+                _buildTableCell("Total", align: TextAlign.left, isBold: true),
+                _buildTableCell("30,000.00", align: TextAlign.right, isBold: true),
+                _buildTableCell("25,500.00", align: TextAlign.right, isBold: true),
+                _buildTableCell("", align: TextAlign.center, isBold: true),
+                _buildTableCell("4,500.00", align: TextAlign.right, isBold: true),
+              ],
+            ),
+          ],
         ),
         const SizedBox(height: 16),
         const Text("Total Amount Received (in words): Eleven Thousand Rupees Only.", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.black)),
@@ -367,7 +375,6 @@ class _AdminStudentFeeReceiptScreenState extends State<AdminStudentFeeReceiptScr
         ),
         pw.SizedBox(height: 24),
         pw.TableHelper.fromTextArray(
-          border: pw.TableBorder.all(),
           headerAlignment: pw.Alignment.center,
           cellAlignment: pw.Alignment.centerLeft,
           headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 10),

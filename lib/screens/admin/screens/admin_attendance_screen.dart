@@ -60,6 +60,14 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
   String _selectedDate = '30/6/2026';
   bool _showData = false;
 
+  List<Map<String, dynamic>> get _filteredStudents {
+    return AdminAttendanceScreen.students.where((student) {
+      if (_selectedClass == 'All') return true;
+      String studentClass = student['class'] ?? '';
+      return studentClass == _selectedClass || studentClass.startsWith('$_selectedClass -') || studentClass.startsWith('$_selectedClass ');
+    }).toList();
+  }
+
   final List<String> branches = ['Ecstasy School 1 (ECS001)', 'Ecstasy School 2 (ECS002)'];
   final List<String> classesList = ['LKG', 'UKG', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'];
   final List<String> sections = ['A', 'B', 'C'];
@@ -262,10 +270,10 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
           ListView.separated(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: AdminAttendanceScreen.students.length,
+            itemCount: _filteredStudents.length,
             separatorBuilder: (context, index) => const Divider(height: 1),
             itemBuilder: (context, index) {
-              final student = AdminAttendanceScreen.students[index];
+              final student = _filteredStudents[index];
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Row(

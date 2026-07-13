@@ -18,8 +18,6 @@ import '../screens/admin_class_teachers_screen.dart';
 import '../screens/admin_time_table_screen.dart';
 
 import '../screens/admin_employee_list_screen.dart';
-import '../screens/admin_employee_id_cards_screen.dart';
-import '../screens/admin_id_cards_screen.dart';
 import '../screens/admin_meetings_screen.dart';
 import '../screens/admin_examinations_screen.dart';
 import '../screens/transport/admin_vehicle_details_screen.dart';

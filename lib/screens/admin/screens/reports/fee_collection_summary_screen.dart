@@ -212,7 +212,7 @@ class _FeeCollectionSummaryScreenState extends State<FeeCollectionSummaryScreen>
   }
 
   Widget _buildSection(String title, ScrollController controller, double totalAmount) {
-    String _fmt(double val) => val.toStringAsFixed(2).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},');
+    String fmt(double val) => val.toStringAsFixed(2).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},');
 
     double termAmount = totalAmount / 3;
     
@@ -282,16 +282,16 @@ class _FeeCollectionSummaryScreenState extends State<FeeCollectionSummaryScreen>
                     const SizedBox(),
                   ],
                 ),
-                if (selectedTerm == 'All' || selectedTerm == 'Term 1') _buildDataRow(title, "Term 1", _fmt(termAmount), _fmt(paidTerm1), _fmt(balTerm1)),
-                if (selectedTerm == 'All' || selectedTerm == 'Term 2') _buildDataRow(title, "Term 2", _fmt(termAmount), _fmt(paidTerm2), _fmt(balTerm2)),
-                if (selectedTerm == 'All' || selectedTerm == 'Term 3') _buildDataRow(title, "Term 3", _fmt(termAmount), _fmt(paidTerm3), _fmt(balTerm3)),
+                if (selectedTerm == 'All' || selectedTerm == 'Term 1') _buildDataRow(title, "Term 1", fmt(termAmount), fmt(paidTerm1), fmt(balTerm1)),
+                if (selectedTerm == 'All' || selectedTerm == 'Term 2') _buildDataRow(title, "Term 2", fmt(termAmount), fmt(paidTerm2), fmt(balTerm2)),
+                if (selectedTerm == 'All' || selectedTerm == 'Term 3') _buildDataRow(title, "Term 3", fmt(termAmount), fmt(paidTerm3), fmt(balTerm3)),
                 if (selectedTerm == 'All') TableRow(
                   decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.05)),
                   children: [
                     _buildDataCell("Total", isBold: true),
-                    _buildDataCell(_fmt(totalAmount), isBold: true, textAlign: TextAlign.right),
-                    _buildDataCell(_fmt(totalPaid), isBold: true, textAlign: TextAlign.right),
-                    _buildDataCell(_fmt(totalBal), isBold: true, textAlign: TextAlign.right),
+                    _buildDataCell(fmt(totalAmount), isBold: true, textAlign: TextAlign.right),
+                    _buildDataCell(fmt(totalPaid), isBold: true, textAlign: TextAlign.right),
+                    _buildDataCell(fmt(totalBal), isBold: true, textAlign: TextAlign.right),
                     const SizedBox(),
                     const SizedBox(),
                   ],

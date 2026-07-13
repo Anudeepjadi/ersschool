@@ -4,6 +4,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../widgets/admin_app_bar.dart';
 import '../../widgets/admin_drawer.dart';
 import '../../widgets/admin_bottom_nav_bar.dart';
+import '../../../../core/data/app_data_store.dart';
 
 class FeeCollectionByDateScreen extends StatefulWidget {
   const FeeCollectionByDateScreen({super.key});
@@ -25,6 +26,28 @@ class _FeeCollectionByDateScreenState extends State<FeeCollectionByDateScreen> {
     'Ecstasy (ECS003)',
     'Ecstasy (ECS004)',
   ];
+
+  bool _hasFetched = false;
+
+  List<Map<String, dynamic>> get _collectionData {
+    if (!_hasFetched) return [];
+    
+    return AppDataStore.instance.students.map((student) {
+      return {
+        'name': student['name'],
+        'father': student['father'] ?? '',
+        'class': student['class'],
+        'year': '2025-26',
+        'feeType': 'Tuition Fee',
+        'feeAmount': '33,333.33',
+        'feePaid': '3,333.33',
+        'balance': '30,000.00',
+        'paidDate': '${startDate.day}/${startDate.month}/${startDate.year}',
+        'receiptNo': 'RCPT-${student['admission']}',
+        'payType': 'Online',
+      };
+    }).toList();
+  }
 
   @override
   void dispose() {
@@ -120,7 +143,11 @@ class _FeeCollectionByDateScreenState extends State<FeeCollectionByDateScreen> {
           ),
           const SizedBox(width: 8),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              setState(() {
+                _hasFetched = true;
+              });
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
               foregroundColor: Colors.white,
@@ -199,19 +226,21 @@ class _FeeCollectionByDateScreenState extends State<FeeCollectionByDateScreen> {
   }
 
   Widget _buildSummaryPills() {
+    int count = _collectionData.length;
+    double amount = count * 3333.33;
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         children: [
-          _buildPill("Total Payments Count: 0", AppColors.primary),
+          _buildPill("Total Payments Count: $count", AppColors.primary),
           const SizedBox(width: 8),
-          _buildPill("Total Amount Received: 0.00", AppColors.success),
+          _buildPill("Total Amount Received: ${amount.toStringAsFixed(2)}", AppColors.success),
           const SizedBox(width: 8),
           _buildPill("Total Cash Payment: 0.00", Colors.teal),
           const SizedBox(width: 8),
           _buildPill("Total Credit/Debit Card Payment: 0.00", AppColors.primaryDark),
           const SizedBox(width: 8),
-          _buildPill("Total Online Payment: 0.00", Colors.black),
+          _buildPill("Total Online Payment: ${amount.toStringAsFixed(2)}", Colors.black),
         ],
       ),
     );
@@ -251,7 +280,21 @@ class _FeeCollectionByDateScreenState extends State<FeeCollectionByDateScreen> {
           DataColumn(label: Text("Receipt No", style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold))),
           DataColumn(label: Text("Pay Type", style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold))),
         ],
-        rows: const [],
+        rows: _collectionData.map((data) => DataRow(
+          cells: [
+            DataCell(Text(data['name']?.toString() ?? '', style: const TextStyle(fontSize: 10))),
+            DataCell(Text(data['father']?.toString() ?? '', style: const TextStyle(fontSize: 10))),
+            DataCell(Text(data['class']?.toString() ?? '', style: const TextStyle(fontSize: 10))),
+            DataCell(Text(data['year']?.toString() ?? '', style: const TextStyle(fontSize: 10))),
+            DataCell(Text(data['feeType']?.toString() ?? '', style: const TextStyle(fontSize: 10))),
+            DataCell(Text(data['feeAmount']?.toString() ?? '', style: const TextStyle(fontSize: 10))),
+            DataCell(Text(data['feePaid']?.toString() ?? '', style: const TextStyle(fontSize: 10))),
+            DataCell(Text(data['balance']?.toString() ?? '', style: const TextStyle(fontSize: 10))),
+            DataCell(Text(data['paidDate']?.toString() ?? '', style: const TextStyle(fontSize: 10))),
+            DataCell(Text(data['receiptNo']?.toString() ?? '', style: const TextStyle(fontSize: 10))),
+            DataCell(Text(data['payType']?.toString() ?? '', style: const TextStyle(fontSize: 10))),
+          ]
+        )).toList(),
       ),
     ));
   }

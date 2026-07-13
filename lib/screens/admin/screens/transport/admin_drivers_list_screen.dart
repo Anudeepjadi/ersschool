@@ -5,6 +5,7 @@ import 'package:ersschool/core/theme/app_colors.dart';
 import '../../widgets/admin_app_bar.dart';
 import 'admin_add_driver_screen.dart';
 import 'admin_driver_details_screen.dart';
+import '../../../../core/data/app_data_store.dart';
 
 class AdminDriversListScreen extends StatefulWidget {
   const AdminDriversListScreen({super.key});
@@ -20,32 +21,19 @@ class _AdminDriversListScreenState extends State<AdminDriversListScreen> {
   int _currentPage = 1;
   int _itemsPerPage = 25;
 
-  List<Map<String, dynamic>> _dummyData = [
-    {
-      'branch': 'Ecstasy School 1 (ECS001)',
-      'role': 'Driver',
-      'code': '',
-      'name': 'Srinu',
-      'mobile': '1398405756',
-      'email': '',
-    },
-    {
-      'branch': 'Ecstasy School 1 (ECS001)',
-      'role': 'Driver',
-      'code': '',
-      'name': 'Kumar',
-      'mobile': '1652949043',
-      'email': '',
-    },
-    {
-      'branch': 'Ecstasy School 1 (ECS001)',
-      'role': 'Driver',
-      'code': '1003',
-      'name': 'shiva',
-      'mobile': '8529637410',
-      'email': '',
-    },
-  ];
+  List<Map<String, dynamic>> get _allData {
+    return AppDataStore.instance.teachers.where((t) => t['department'] == 'Driver').map((t) {
+      return {
+        'branch': t['school'] ?? '',
+        'role': t['department'] ?? 'Driver',
+        'code': t['employeeCode'] ?? '',
+        'name': t['name'] ?? '',
+        'mobile': t['phone'] ?? '',
+        'email': t['email'] ?? '',
+        'originalData': t,
+      };
+    }).toList();
+  }
 
   @override
   void dispose() {
@@ -113,8 +101,10 @@ class _AdminDriversListScreenState extends State<AdminDriversListScreen> {
                   );
                   if (result != null && result is Map<String, dynamic>) {
                     setState(() {
-                      result["branch"] = _selectedBranch;
-                      _dummyData = List.from(_dummyData)..add(result);
+                      result["department"] = "Driver";
+                      if (result["school"] == null) result["school"] = _selectedBranch;
+                      AppDataStore.instance.teachers.insert(0, result);
+                      AppDataStore.instance.saveTeachers();
                     });
                   }
                 },
@@ -194,14 +184,18 @@ class _AdminDriversListScreenState extends State<AdminDriversListScreen> {
                                       onTap: () async {
                                         final result = await Navigator.push(
                                           context,
-                                          MaterialPageRoute(builder: (_) => AdminAddDriverScreen(existingData: data)),
+                                          MaterialPageRoute(builder: (_) => AdminAddDriverScreen(existingData: data['originalData'])),
                                         );
                                         if (result != null && result is Map<String, dynamic>) {
                                           setState(() {
-                                            result["branch"] = _selectedBranch;
-                                            _dummyData = List.from(_dummyData);
-                                            final index = _dummyData.indexOf(data);
-                                            if (index != -1) _dummyData[index] = result;
+                                            result["department"] = "Driver";
+                                            final index = AppDataStore.instance.teachers.indexOf(data['originalData']);
+                                            if (index != -1) {
+                                              AppDataStore.instance.teachers[index] = result;
+                                            } else {
+                                              AppDataStore.instance.teachers.insert(0, result);
+                                            }
+                                            AppDataStore.instance.saveTeachers();
                                           });
                                         }
                                       },
@@ -214,7 +208,8 @@ class _AdminDriversListScreenState extends State<AdminDriversListScreen> {
                                     InkWell(
                                       onTap: () {
                                         setState(() {
-                                          _dummyData = List.from(_dummyData)..remove(data);
+                                          AppDataStore.instance.teachers.remove(data['originalData']);
+                                          AppDataStore.instance.saveTeachers();
                                         });
                                       },
                                       child: const Padding(
@@ -323,9 +318,9 @@ class _AdminDriversListScreenState extends State<AdminDriversListScreen> {
   }
 
   List<Map<String, dynamic>> get _filteredData {
-    if (_searchQuery.isEmpty) return _dummyData;
+    if (_searchQuery.isEmpty) return _allData;
     final query = _searchQuery.toLowerCase();
-    return _dummyData.where((item) {
+    return _allData.where((item) {
       return item.values.any((val) => val.toString().toLowerCase().contains(query));
     }).toList();
   }

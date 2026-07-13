@@ -106,7 +106,7 @@ class _FeeDueListScreenState extends State<FeeDueListScreen> {
          double paidAmount = widget.reportTitle.toLowerCase().contains("paid") ? termAmount : 0.0;
          double balance = termAmount - paidAmount;
          
-         String _fmt(double v) => v.toStringAsFixed(2).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},');
+         String fmt(double v) => v.toStringAsFixed(2).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},');
          
          for (String term in termsToDisplay) {
              realData.add({
@@ -116,9 +116,9 @@ class _FeeDueListScreenState extends State<FeeDueListScreen> {
                'class': cls,
                'mobile': student['phone'] ?? '-',
                'term': term,
-               'total': _fmt(termAmount),
-               'paid': _fmt(paidAmount),
-               'balance': _fmt(balance),
+               'total': fmt(termAmount),
+               'paid': fmt(paidAmount),
+               'balance': fmt(balance),
              });
          }
       }

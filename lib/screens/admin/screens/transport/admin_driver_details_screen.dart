@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 import '../../widgets/admin_bottom_nav_bar.dart';
@@ -97,7 +99,12 @@ class _AdminDriverDetailsScreenState extends State<AdminDriverDetailsScreen> {
             child: CircleAvatar(
               radius: 60,
               backgroundColor: Colors.grey.shade100,
-              child: const Icon(Icons.person, size: 60, color: Colors.grey),
+              backgroundImage: widget.driver['photo_path'] != null 
+                  ? (kIsWeb ? NetworkImage(widget.driver['photo_path']) as ImageProvider : FileImage(File(widget.driver['photo_path'])))
+                  : null,
+              child: widget.driver['photo_path'] == null 
+                  ? const Icon(Icons.person, size: 60, color: Colors.grey)
+                  : null,
             ),
           ),
           const SizedBox(height: 16),
