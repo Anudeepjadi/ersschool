@@ -16,19 +16,7 @@ class _AdminClassTeachersScreenState extends State<AdminClassTeachersScreen> {
   String _selectedClass = 'LKG';
   final TextEditingController _searchController = TextEditingController();
 
-  final List<Map<String, String>> _allMappings = [
-    {'class': 'LKG', 'section': 'A', 'teacher': ''},
-    {'class': 'LKG', 'section': 'B', 'teacher': 'Ms. Rani'},
-    {'class': 'Grade 2', 'section': 'A', 'teacher': 'Mrs. Gayatri Devi'},
-    {'class': 'Grade 2', 'section': 'B', 'teacher': 'Mr. Giri Prasad'},
-    {'class': 'Grade 2', 'section': 'C', 'teacher': 'Mr. Giri Prasad'},
-    {'class': 'Grade 3', 'section': 'A', 'teacher': 'Mrs. Gayatri Devi'},
-    {'class': 'Grade 3', 'section': 'B', 'teacher': 'Mrs. Gayatri Devi'},
-    {'class': 'Grade 3', 'section': 'C', 'teacher': 'Mr. Giri Prasad'},
-    {'class': 'Grade 4', 'section': 'A', 'teacher': 'Ms. Rani'},
-    {'class': 'Grade 4', 'section': 'B', 'teacher': 'Mr. Rajesh Kumar'},
-    {'class': 'Grade 5', 'section': 'A', 'teacher': 'Mrs. Sunita Devi'},
-  ];
+  final List<Map<String, String>> _allMappings = [];
   
   List<Map<String, String>> _filteredMappings = [];
   int _itemsPerPage = 25;
@@ -37,30 +25,47 @@ class _AdminClassTeachersScreenState extends State<AdminClassTeachersScreen> {
   @override
   void initState() {
     super.initState();
-    _filteredMappings = List.from(_allMappings);
-    _searchController.addListener(_onSearchChanged);
+    _generateMappings();
+    _applyFilters();
+    _searchController.addListener(_applyFilters);
+  }
+
+  void _generateMappings() {
+    final classes = ['Nursery', 'LKG', 'UKG', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'];
+    final sections = ['A', 'B', 'C'];
+    for (var c in classes) {
+      for (var s in sections) {
+        _allMappings.add({
+          'class': c,
+          'section': s,
+          'teacher': c == 'Class 2' ? 'Mrs. Gayatri Devi' : (c == 'Class 3' ? 'Mr. Giri Prasad' : (s == 'B' ? 'Ms. Rani' : '')),
+          'branch': 'Ecstasy School 1 (ECS001)'
+        });
+      }
+    }
   }
 
   @override
   void dispose() {
-    _searchController.removeListener(_onSearchChanged);
+    _searchController.removeListener(_applyFilters);
     _searchController.dispose();
     super.dispose();
   }
 
-  void _onSearchChanged() {
+  void _applyFilters() {
     final query = _searchController.text.toLowerCase();
     setState(() {
-      if (query.isEmpty) {
-        _filteredMappings = List.from(_allMappings);
-      } else {
-        _filteredMappings = _allMappings.where((m) {
-          final className = m['class']?.toLowerCase() ?? '';
-          final section = m['section']?.toLowerCase() ?? '';
-          final teacher = m['teacher']?.toLowerCase() ?? '';
-          return className.contains(query) || section.contains(query) || teacher.contains(query);
-        }).toList();
-      }
+      _filteredMappings = _allMappings.where((m) {
+        final matchesClass = _selectedClass == 'All' || m['class'] == _selectedClass;
+        final matchesBranch = _selectedBranch == 'All Branches' || m['branch'] == _selectedBranch || m['branch'] == null;
+        if (!matchesClass || !matchesBranch) return false;
+
+        if (query.isEmpty) return true;
+        final className = m['class']?.toLowerCase() ?? '';
+        final section = m['section']?.toLowerCase() ?? '';
+        final teacher = m['teacher']?.toLowerCase() ?? '';
+        return className.contains(query) || section.contains(query) || teacher.contains(query);
+      }).toList();
       _currentPage = 1;
     });
   }
@@ -142,7 +147,7 @@ class _AdminClassTeachersScreenState extends State<AdminClassTeachersScreen> {
         content: const Padding(padding: EdgeInsets.symmetric(vertical: 20), child: Text("Do you want to delete the record?", style: TextStyle(fontSize: 14))),
         actions: [
            ElevatedButton(onPressed: () => Navigator.pop(context), style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1E2832), foregroundColor: Colors.white), child: const Text("No")),
-          ElevatedButton(onPressed: () { setState(() { final item = _filteredMappings[index]; _allMappings.remove(item); _onSearchChanged(); }); Navigator.pop(context); }, style: ElevatedButton.styleFrom(backgroundColor: Colors.red.shade600, foregroundColor: Colors.white), child: const Text("Yes")),
+          ElevatedButton(onPressed: () { setState(() { final item = _filteredMappings[index]; _allMappings.remove(item); _applyFilters(); }); Navigator.pop(context); }, style: ElevatedButton.styleFrom(backgroundColor: Colors.red.shade600, foregroundColor: Colors.white), child: const Text("Yes")),
         ],
       ),
     );
@@ -181,6 +186,9 @@ class _AdminClassTeachersScreenState extends State<AdminClassTeachersScreen> {
   }
 
   Widget _buildFilters() {
+    final branchItems = ['All Branches', 'Ecstasy School 1 (ECS001)', 'Ecstasy School 2 (ECS002)', 'Ecstasy School 3 (ECS003)'];
+    final classItems = ['All', 'Nursery', 'LKG', 'UKG', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'];
+
     return LayoutBuilder(builder: (context, constraints) {
       if (constraints.maxWidth < 600) {
         return Column(
@@ -188,24 +196,24 @@ class _AdminClassTeachersScreenState extends State<AdminClassTeachersScreen> {
           children: [
             Row(
               children: [
-                Expanded(child: _buildDropdown(label: "Branch", value: _selectedBranch, items: ['Ecstasy School 1 (ECS001)', 'Ecstasy School 2 (ECS002)', 'Ecstasy School 3 (ECS003)'], onChanged: (v) => setState(() => _selectedBranch = v!))),
+                Expanded(child: _buildDropdown(label: "Branch", value: _selectedBranch, items: branchItems, onChanged: (v) { setState(() => _selectedBranch = v!); _applyFilters(); })),
                 const SizedBox(width: 8),
-                Expanded(child: _buildDropdown(label: "Class", value: _selectedClass, items: ['LKG', 'UKG', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'], onChanged: (v) => setState(() => _selectedClass = v!))),
+                Expanded(child: _buildDropdown(label: "Class", value: _selectedClass, items: classItems, onChanged: (v) { setState(() => _selectedClass = v!); _applyFilters(); })),
               ],
             ),
             const SizedBox(height: 16),
-            ElevatedButton(onPressed: () {}, style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 12), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))), child: const Text("Search")),
+            ElevatedButton(onPressed: _applyFilters, style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 12), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))), child: const Text("Search")),
           ],
         );
       }
       return Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Expanded(child: _buildDropdown(label: "Branch", value: _selectedBranch, items: ['Ecstasy School 1 (ECS001)', 'Ecstasy School 2 (ECS002)', 'Ecstasy School 3 (ECS003)'], onChanged: (v) => setState(() => _selectedBranch = v!))),
+          Expanded(child: _buildDropdown(label: "Branch", value: _selectedBranch, items: branchItems, onChanged: (v) { setState(() => _selectedBranch = v!); _applyFilters(); })),
           const SizedBox(width: 12),
-          Expanded(child: _buildDropdown(label: "Class", value: _selectedClass, items: ['LKG', 'UKG', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'], onChanged: (v) => setState(() => _selectedClass = v!))),
+          Expanded(child: _buildDropdown(label: "Class", value: _selectedClass, items: classItems, onChanged: (v) { setState(() => _selectedClass = v!); _applyFilters(); })),
           const SizedBox(width: 12),
-          ElevatedButton(onPressed: () {}, style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))), child: const Text("Search")),
+          ElevatedButton(onPressed: _applyFilters, style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))), child: const Text("Search")),
         ],
       );
     });

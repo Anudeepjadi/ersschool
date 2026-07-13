@@ -69,6 +69,9 @@ class _AdminAddDriverScreenState extends State<AdminAddDriverScreen> {
     employeeType = data?['employee_type'] ?? "Full Time Employee";
     employeeRole = data?['role'] ?? "Driver";
     isActive = data?['status'] == 'Active' || data?['status'] == null;
+    if (data?['photo_path'] != null) {
+      _imageFile = XFile(data!['photo_path']);
+    }
   }
 
   @override
@@ -187,7 +190,29 @@ class _AdminAddDriverScreenState extends State<AdminAddDriverScreen> {
                         const SizedBox(width: 8),
                         ElevatedButton(
                           onPressed: () {
-                            Navigator.pop(context);
+                            final updatedData = {
+                              'code': codeCtrl.text,
+                              'employeeCode': codeCtrl.text,
+                              'name': nameCtrl.text,
+                              'mobile': primaryMobileCtrl.text,
+                              'phone': primaryMobileCtrl.text,
+                              'secondaryMobile': secondaryMobileCtrl.text,
+                              'email': emailCtrl.text,
+                              'address': addressCtrl.text,
+                              'aadhaar': aadhaarCtrl.text,
+                              'designation': designationCtrl.text,
+                              'driving_license': drivingLicenseCtrl.text,
+                              'badge_number': badgeNumberCtrl.text,
+                              'salary': salaryCtrl.text,
+                              'other_details': otherDetailsCtrl.text,
+                              'branch': branch,
+                              'gender': gender,
+                              'employee_type': employeeType,
+                              'role': employeeRole,
+                              'status': isActive ? 'Active' : 'Inactive',
+                              'photo_path': _imageFile?.path ?? widget.existingData?['photo_path'],
+                            };
+                            Navigator.pop(context, updatedData);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFFD35400),

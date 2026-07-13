@@ -8,7 +8,7 @@ import '../../login/login_screen.dart' show LoginScreen;
 import '../screens/admin_attendance_screen.dart';
 import '../screens/admin_examinations_screen.dart';
 
-import '../screens/admin_id_cards_screen.dart';
+
 import '../screens/admin_invalid_info_screen.dart';
 import '../screens/admin_sms_screen.dart';
 import '../screens/admin_settings_screen.dart';
@@ -26,7 +26,7 @@ import '../screens/student_management/admin_student_promotions_screen.dart';
 import '../screens/student_management/admin_student_siblings_screen.dart';
 import '../screens/admin_employee_list_screen.dart';
 
-import '../screens/admin_employee_id_cards_screen.dart';
+
 import '../screens/admin_assignments_screen.dart';
 import '../screens/admin_class_details_screen.dart';
 import '../screens/admin_class_teachers_screen.dart';

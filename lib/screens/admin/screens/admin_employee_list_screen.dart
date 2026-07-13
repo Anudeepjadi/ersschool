@@ -38,19 +38,16 @@ class _AdminEmployeeListScreenState extends State<AdminEmployeeListScreen> {
     if (widget.staffType == 'Teacher') {
       return list.where((e) {
         final dept = (e['department'] ?? '').toString().toLowerCase();
-        return dept.contains('teacher') || 
+        return dept.contains('teach') || 
                (['science', 'languages', 'technology', 'sports', 'creative arts', 'humanities'].contains(dept));
       }).toList();
     } else if (widget.staffType == 'Attender') {
       return list.where((e) {
         final dept = (e['department'] ?? '').toString().toLowerCase();
-        return dept.contains('attender') || dept.contains('aaya');
+        return dept.contains('attender') || dept.contains('aaya') || dept.contains('support');
       }).toList();
     } else {
-      return list.where((e) {
-        final dept = (e['department'] ?? '').toString().toLowerCase();
-        return dept.contains('admin') || dept.contains('accountant') || dept.contains('employee');
-      }).toList();
+      return list;
     }
   }
 
@@ -128,11 +125,12 @@ class _AdminEmployeeListScreenState extends State<AdminEmployeeListScreen> {
                     onPressed: () {
                       Navigator.push(
                         context, 
-                        MaterialPageRoute(builder: (_) => const AdminRegisterEmployeeScreen())
+                        MaterialPageRoute(builder: (_) => AdminRegisterEmployeeScreen(staffType: widget.staffType))
                       ).then((newEmployee) {
                         if (newEmployee != null && newEmployee is Map<String, dynamic>) {
                           setState(() {
                             AppDataStore.instance.teachers.insert(0, newEmployee);
+                            AppDataStore.instance.saveTeachers();
                           });
                         }
                       });
@@ -304,6 +302,7 @@ class _AdminEmployeeListScreenState extends State<AdminEmployeeListScreen> {
                     onTap: () {
                       setState(() {
                         emp['status'] = isActive ? 'Inactive' : 'Active';
+                        AppDataStore.instance.saveTeachers();
                       });
                     },
                     child: Container(
@@ -342,6 +341,7 @@ class _AdminEmployeeListScreenState extends State<AdminEmployeeListScreen> {
                           if (updatedData != null && updatedData is Map<String, dynamic>) {
                             setState(() {
                               emp.addAll(updatedData);
+                              AppDataStore.instance.saveTeachers();
                             });
                           }
                         });
@@ -463,6 +463,7 @@ class _AdminEmployeeListScreenState extends State<AdminEmployeeListScreen> {
             onPressed: () {
               setState(() {
                 AppDataStore.instance.teachers.remove(emp);
+                AppDataStore.instance.saveTeachers();
               });
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(

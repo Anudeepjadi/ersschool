@@ -48,14 +48,16 @@ class _ClassAttendanceReportScreenState extends State<ClassAttendanceReportScree
   ];
 
   List<Map<String, dynamic>> get _allAttendanceData {
-    return AdminAttendanceScreen.students.map((student) {
+    return AdminAttendanceScreen.students
+        .where((student) => student['class'] == selectedClass)
+        .map((student) {
       final isPresent = student['isPresent'] as bool;
       final fatherName = student['father']?.toString() ?? '';
 
       return {
         'name': student['name'] as String,
         'father': fatherName,
-        'class': selectedClass,
+        'class': student['class'],
         'section': selectedSection,
         'month': selectedMonth,
         'attendance': isPresent ? '3 / 3' : '2 / 3',
@@ -109,7 +111,7 @@ class _ClassAttendanceReportScreenState extends State<ClassAttendanceReportScree
                 children: [
                   _buildFilters(),
                   const SizedBox(height: 20),
-                  const Text("Class: Grade 1 - A", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black87)),
+                  Text("Class: $selectedClass - $selectedSection", style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black87)),
                   const SizedBox(height: 12),
                   _buildDataTable(),
                 ],
@@ -149,7 +151,11 @@ class _ClassAttendanceReportScreenState extends State<ClassAttendanceReportScree
           ),
           const SizedBox(width: 12),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              setState(() {
+                currentPage = 1;
+              });
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
               foregroundColor: Colors.white,

@@ -223,9 +223,18 @@ class _AdminStudentFeeDetailsScreenState extends State<AdminStudentFeeDetailsScr
                         DataCell(
                           Row(
                             children: [
-                              _buildSmallButton("Pay", AppColors.success),
+                              _buildSmallButton("Pay", AppColors.success, onTap: () {
+                                _showPaymentOptionsDialog(context, fee['type'], fee['balance']);
+                              }),
                               const SizedBox(width: 4),
-                              _buildSmallButton("SMS", AppColors.absentOrange, textColor: Colors.black),
+                              _buildSmallButton("SMS", AppColors.absentOrange, textColor: Colors.black, onTap: () async {
+                                final Uri url = Uri.parse('sms:+1234567890?body=Fee%20Payment%20Reminder');
+                                try {
+                                  await launchUrl(url, mode: LaunchMode.externalApplication);
+                                } catch (e) {
+                                  debugPrint('Could not launch SMS');
+                                }
+                              }),
                             ],
                           ),
                         ),
@@ -261,7 +270,9 @@ class _AdminStudentFeeDetailsScreenState extends State<AdminStudentFeeDetailsScr
               runSpacing: 8,
               children: [
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => AdminStudentFeeReceiptScreen(student: widget.student)));
+                  },
                   style: ElevatedButton.styleFrom(backgroundColor: AppColors.primaryDark, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))),
                   child: Text("Consolidated Fee Receipt".tr),
                 ),
@@ -312,13 +323,8 @@ class _AdminStudentFeeDetailsScreenState extends State<AdminStudentFeeDetailsScr
                 ),
                 const SizedBox(width: 8),
                 ElevatedButton(
-                  onPressed: () async {
-                    final Uri url = Uri.parse('https://razorpay.com/payment-gateway/');
-                    try {
-                      await launchUrl(url, mode: LaunchMode.externalApplication);
-                    } catch (e) {
-                      debugPrint('Could not launch \$url');
-                    }
+                  onPressed: () {
+                    _showPaymentOptionsDialog(context, "Term Fee", "30,000.00");
                   },
                   style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))),
                   child: Text("Pay Online".tr),
@@ -960,6 +966,82 @@ class _AdminStudentFeeDetailsScreenState extends State<AdminStudentFeeDetailsScr
           ),
         ),
       ],
+    );
+  }
+
+  void _showPaymentOptionsDialog(BuildContext context, String feeType, String amount) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Select Payment Method".tr, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primaryDark)),
+          content: SizedBox(
+            width: 300,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text("Paying $amount for $feeType", style: const TextStyle(fontSize: 14, color: Colors.grey)),
+                const SizedBox(height: 24),
+                _buildPaymentOption(context, Icons.qr_code, "QR Code", "Pay via any UPI app"),
+                const SizedBox(height: 12),
+                _buildPaymentOption(context, Icons.phone_android, "UPI", "Google Pay, PhonePe, Paytm"),
+                const SizedBox(height: 12),
+                _buildPaymentOption(context, Icons.credit_card, "Credit/Debit Card", "Visa, Mastercard, RuPay"),
+                const SizedBox(height: 12),
+                _buildPaymentOption(context, Icons.money, "Cash", "Pay at counter"),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("Cancel".tr, style: const TextStyle(color: Colors.grey)),
+            ),
+          ],
+        );
+      }
+    );
+  }
+
+  Widget _buildPaymentOption(BuildContext context, IconData icon, String title, String subtitle) {
+    return InkWell(
+      onTap: () {
+        Navigator.pop(context);
+        final messenger = ScaffoldMessenger.of(context);
+        messenger.showSnackBar(
+          SnackBar(content: Text("$title Payment processing...".tr), backgroundColor: AppColors.primary),
+        );
+        Future.delayed(const Duration(seconds: 2), () {
+          if (!mounted) return;
+          messenger.showSnackBar(
+            SnackBar(content: Text("Payment Successful!".tr), backgroundColor: AppColors.success),
+          );
+        });
+      },
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.shade300),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, size: 28, color: AppColors.primary),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title.tr, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                  Text(subtitle.tr, style: const TextStyle(fontSize: 10, color: Colors.grey)),
+                ],
+              ),
+            ),
+            const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
+          ],
+        ),
+      ),
     );
   }
 }
