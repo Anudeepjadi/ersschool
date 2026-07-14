@@ -41,9 +41,10 @@ class _AdminStudentListScreenState extends State<AdminStudentListScreen> {
     final filtered = _allStudents.where((student) {
       final matchesBranch = _selectedBranch == 'All' || student['school'] == _selectedBranch;
       final matchesStatus = _activeStatusFilter == 'All' || student['status'] == _activeStatusFilter;
+      final name = student['name']?.toString() ?? '';
       final matchesSearch = _searchQuery.isEmpty ||
-          student['name'].toLowerCase().contains(_searchQuery.toLowerCase()) ||
-          (student['admission'] ?? '').toLowerCase().contains(_searchQuery.toLowerCase());
+          name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+          (student['admission'] ?? '').toString().toLowerCase().contains(_searchQuery.toLowerCase());
       return matchesBranch && matchesStatus && matchesSearch;
     }).toList();
 
