@@ -1,3 +1,4 @@
+import 'package:ersschool/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import '../widgets/student_app_bar.dart';
 import '../../../../widgets/scrollable_table_wrapper.dart';
@@ -55,10 +56,10 @@ class _ExExamsTabState extends State<ExamsTab>
               color: Colors.white,
               child: TabBar(
                 controller: _tabController,
-                indicatorColor: Color(0xFF0038FF),
+                indicatorColor: AppColors.primary,
                 indicatorSize: TabBarIndicatorSize.tab,
                 indicatorWeight: 3,
-                labelColor: Color(0xFF0038FF),
+                labelColor: AppColors.primary,
                 unselectedLabelColor: Colors.grey.shade600,
                 labelStyle:
                     TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
@@ -139,14 +140,14 @@ class _ExExamsTabState extends State<ExamsTab>
                   child: Row(children: [
                       Text("View Timetable".tr,
                         style: TextStyle(
-                          color: Color(0xFF0038FF),
+                          color: AppColors.primary,
                           fontWeight: FontWeight.bold,
                           fontSize: 12,
                         ),
                       ),
                       SizedBox(width: 4),
                       Icon(Icons.chevron_right,
-                          size: 16, color: Color(0xFF0038FF)),
+                          size: 16, color: AppColors.primary),
                     ],
                   ),
                 ),
@@ -177,14 +178,14 @@ class _ExExamsTabState extends State<ExamsTab>
                   child: Row(children: [
                       Text("View All Results".tr,
                         style: TextStyle(
-                          color: Color(0xFF0038FF),
+                          color: AppColors.primary,
                           fontWeight: FontWeight.bold,
                           fontSize: 12,
                         ),
                       ),
                       SizedBox(width: 4),
                       Icon(Icons.chevron_right,
-                          size: 16, color: Color(0xFF0038FF)),
+                          size: 16, color: AppColors.primary),
                     ],
                   ),
                 ),
@@ -498,13 +499,13 @@ class _ExExamsTabState extends State<ExamsTab>
               children: [
                 Text("View All Upcoming Exams".tr,
                   style: TextStyle(
-                    color: Color(0xFF0038FF),
+                    color: AppColors.primary,
                     fontWeight: FontWeight.bold,
                     fontSize: 12,
                   ),
                 ),
                 SizedBox(width: 4),
-                Icon(Icons.chevron_right, size: 16, color: Color(0xFF0038FF)),
+                Icon(Icons.chevron_right, size: 16, color: AppColors.primary),
               ],
             ),
           ),
@@ -626,7 +627,7 @@ class _ExExamsTabState extends State<ExamsTab>
             width: 32,
             alignment: Alignment.center,
             child: Icon(Icons.description_outlined,
-                color: Color(0xFF0038FF), size: 18),
+                color: AppColors.primary, size: 18),
           ),
         ),
       ],
@@ -701,13 +702,13 @@ class _ExExamsTabState extends State<ExamsTab>
               children: [
                 Text("View All Results".tr,
                   style: TextStyle(
-                    color: Color(0xFF0038FF),
+                    color: AppColors.primary,
                     fontWeight: FontWeight.bold,
                     fontSize: 12,
                   ),
                 ),
                 SizedBox(width: 4),
-                Icon(Icons.chevron_right, size: 16, color: Color(0xFF0038FF)),
+                Icon(Icons.chevron_right, size: 16, color: AppColors.primary),
               ],
             ),
           ),

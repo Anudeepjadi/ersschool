@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
+import 'package:flutter/foundation.dart';
+import 'dart:io' show File;
 import 'package:ersschool/core/theme/app_colors.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 import 'package:ersschool/core/data/app_data_store.dart';
@@ -25,9 +26,7 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
   int _currentPage = 1;
   int _itemsPerPage = 25;
 
-  List<Map<String, dynamic>> get _employees => AppDataStore.instance.teachers
-      .where((s) => s['school'] == ProfileManager().selectedSchool.value)
-      .toList();
+  List<Map<String, dynamic>> get _employees => AppDataStore.instance.teachers.toList();
 
   @override
   Widget build(BuildContext context) {
@@ -195,6 +194,7 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
                   ],
                   rows: _getPaginatedData().map((data) {
                     final photoPath = data['photoPath'];
+                    final bool fileExists = !kIsWeb && photoPath != null && File(photoPath).existsSync();
                     return DataRow(
                       cells: [
                         DataCell(
@@ -217,10 +217,10 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
                               color: Colors.grey.shade300,
                               borderRadius: BorderRadius.circular(4),
                             ),
-                            child: photoPath != null && File(photoPath).existsSync()
+                            child: fileExists
                                 ? ClipRRect(
                                     borderRadius: BorderRadius.circular(4),
-                                    child: Image.file(File(photoPath), fit: BoxFit.cover),
+                                    child: Image.file(File(photoPath!), fit: BoxFit.cover),
                                   )
                                 : const Icon(Icons.person, color: Colors.white, size: 20),
                           ),
@@ -258,11 +258,11 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
               children: [
                 Text("Scroll table horizontally: ".tr, style: const TextStyle(fontSize: 12, color: Colors.grey)),
                 IconButton(
-                  icon: const Icon(Icons.arrow_circle_left_outlined, color: AppColors.primary),
+                  icon: Icon(Icons.arrow_circle_left_outlined, color: AppColors.primary),
                   onPressed: () { if (_scrollController.hasClients) _scrollController.animateTo(_scrollController.offset - 250, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut); },
                 ),
                 IconButton(
-                  icon: const Icon(Icons.arrow_circle_right_outlined, color: AppColors.primary),
+                  icon: Icon(Icons.arrow_circle_right_outlined, color: AppColors.primary),
                   onPressed: () { if (_scrollController.hasClients) _scrollController.animateTo(_scrollController.offset + 250, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut); },
                 ),
               ],
@@ -272,7 +272,7 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: const Color(0xFFFDE6D2), // light orange
+                color: AppColors.primary.withValues(alpha: 0.05), // light blue theme
                 border: Border(
                   left: BorderSide(color: Colors.grey.shade300),
                   right: BorderSide(color: Colors.grey.shade300),
@@ -282,63 +282,66 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
               ),
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade600,
-                        borderRadius: BorderRadius.circular(16),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width - 64),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade600,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Text(
+                          "Total Records: ${_filteredData.length}".tr,
+                          style: const TextStyle(color: Colors.white, fontSize: 10),
+                        ),
                       ),
-                      child: Text(
-                        "Total Records: ${_filteredData.length}".tr,
-                        style: const TextStyle(color: Colors.white, fontSize: 10),
+                      const SizedBox(width: 16),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text("Items per page:".tr, style: const TextStyle(fontSize: 12, color: Colors.black54)),
+                          const SizedBox(width: 8),
+                          DropdownButton<int>(
+                            value: _itemsPerPage,
+                            underline: const SizedBox(),
+                            items: const [
+                              DropdownMenuItem(value: 25, child: Text("25", style: TextStyle(fontSize: 12))),
+                              DropdownMenuItem(value: 50, child: Text("50", style: TextStyle(fontSize: 12))),
+                            ],
+                            onChanged: (val) {
+                              if (val != null) setState(() { _itemsPerPage = val; _currentPage = 1; });
+                            },
+                          ),
+                          const SizedBox(width: 24),
+                          Text("$_currentPage - ${(_filteredData.length / _itemsPerPage).ceil() == 0 ? 1 : (_filteredData.length / _itemsPerPage).ceil()} of ${_filteredData.length}".tr, style: const TextStyle(fontSize: 12, color: Colors.black54)),
+                          const SizedBox(width: 16),
+                          InkWell(
+                            onTap: _currentPage > 1 ? () => setState(() => _currentPage = 1) : null,
+                            child: Icon(Icons.first_page, size: 20, color: _currentPage > 1 ? Colors.black87 : Colors.black26),
+                          ),
+                          const SizedBox(width: 8),
+                          InkWell(
+                            onTap: _currentPage > 1 ? () => setState(() => _currentPage--) : null,
+                            child: Icon(Icons.chevron_left, size: 20, color: _currentPage > 1 ? Colors.black87 : Colors.black26),
+                          ),
+                          const SizedBox(width: 8),
+                          InkWell(
+                            onTap: _currentPage < (_filteredData.length / _itemsPerPage).ceil() ? () => setState(() => _currentPage++) : null,
+                            child: Icon(Icons.chevron_right, size: 20, color: _currentPage < (_filteredData.length / _itemsPerPage).ceil() ? Colors.black87 : Colors.black26),
+                          ),
+                          const SizedBox(width: 8),
+                          InkWell(
+                            onTap: _currentPage < (_filteredData.length / _itemsPerPage).ceil() ? () => setState(() => _currentPage = (_filteredData.length / _itemsPerPage).ceil()) : null,
+                            child: Icon(Icons.last_page, size: 20, color: _currentPage < (_filteredData.length / _itemsPerPage).ceil() ? Colors.black87 : Colors.black26),
+                          ),
+                        ],
                       ),
-                    ),
-                    const SizedBox(width: 16),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text("Items per page:".tr, style: const TextStyle(fontSize: 12, color: Colors.black54)),
-                        const SizedBox(width: 8),
-                        DropdownButton<int>(
-                          value: _itemsPerPage,
-                          underline: const SizedBox(),
-                          items: const [
-                            DropdownMenuItem(value: 25, child: Text("25", style: TextStyle(fontSize: 12))),
-                            DropdownMenuItem(value: 50, child: Text("50", style: TextStyle(fontSize: 12))),
-                          ],
-                          onChanged: (val) {
-                            if (val != null) setState(() { _itemsPerPage = val; _currentPage = 1; });
-                          },
-                        ),
-                        const SizedBox(width: 24),
-                        Text("$_currentPage - ${(_filteredData.length / _itemsPerPage).ceil() == 0 ? 1 : (_filteredData.length / _itemsPerPage).ceil()} of ${_filteredData.length}".tr, style: const TextStyle(fontSize: 12, color: Colors.black54)),
-                        const SizedBox(width: 16),
-                        InkWell(
-                          onTap: _currentPage > 1 ? () => setState(() => _currentPage = 1) : null,
-                          child: Icon(Icons.first_page, size: 20, color: _currentPage > 1 ? Colors.black87 : Colors.black26),
-                        ),
-                        const SizedBox(width: 8),
-                        InkWell(
-                          onTap: _currentPage > 1 ? () => setState(() => _currentPage--) : null,
-                          child: Icon(Icons.chevron_left, size: 20, color: _currentPage > 1 ? Colors.black87 : Colors.black26),
-                        ),
-                        const SizedBox(width: 8),
-                        InkWell(
-                          onTap: _currentPage < (_filteredData.length / _itemsPerPage).ceil() ? () => setState(() => _currentPage++) : null,
-                          child: Icon(Icons.chevron_right, size: 20, color: _currentPage < (_filteredData.length / _itemsPerPage).ceil() ? Colors.black87 : Colors.black26),
-                        ),
-                        const SizedBox(width: 8),
-                        InkWell(
-                          onTap: _currentPage < (_filteredData.length / _itemsPerPage).ceil() ? () => setState(() => _currentPage = (_filteredData.length / _itemsPerPage).ceil()) : null,
-                          child: Icon(Icons.last_page, size: 20, color: _currentPage < (_filteredData.length / _itemsPerPage).ceil() ? Colors.black87 : Colors.black26),
-                        ),
-                      ],
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -487,7 +490,7 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
 
   Widget _buildIdCardPreview(Map<String, dynamic> employeeData) {
     final photo = employeeData['photoPath'];
-    final bool hasValidPhoto = photo != null && File(photo.toString()).existsSync();
+    final bool hasValidPhoto = !kIsWeb && photo != null && File(photo.toString()).existsSync();
     final headerColor = Colors.blue.shade800;
     
     return Container(

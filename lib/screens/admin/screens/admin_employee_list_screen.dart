@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
+// import 'dart:io';
 import '../widgets/admin_bottom_nav_bar.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/data/app_data_store.dart';
@@ -38,19 +38,16 @@ class _AdminEmployeeListScreenState extends State<AdminEmployeeListScreen> {
     if (widget.staffType == 'Teacher') {
       return list.where((e) {
         final dept = (e['department'] ?? '').toString().toLowerCase();
-        return dept.contains('teacher') || 
+        return dept.contains('teach') || 
                (['science', 'languages', 'technology', 'sports', 'creative arts', 'humanities'].contains(dept));
       }).toList();
     } else if (widget.staffType == 'Attender') {
       return list.where((e) {
         final dept = (e['department'] ?? '').toString().toLowerCase();
-        return dept.contains('attender') || dept.contains('aaya');
+        return dept.contains('attender') || dept.contains('aaya') || dept.contains('support');
       }).toList();
     } else {
-      return list.where((e) {
-        final dept = (e['department'] ?? '').toString().toLowerCase();
-        return dept.contains('admin') || dept.contains('accountant') || dept.contains('employee');
-      }).toList();
+      return list;
     }
   }
 
@@ -128,11 +125,12 @@ class _AdminEmployeeListScreenState extends State<AdminEmployeeListScreen> {
                     onPressed: () {
                       Navigator.push(
                         context, 
-                        MaterialPageRoute(builder: (_) => const AdminRegisterEmployeeScreen())
+                        MaterialPageRoute(builder: (_) => AdminRegisterEmployeeScreen(staffType: widget.staffType))
                       ).then((newEmployee) {
                         if (newEmployee != null && newEmployee is Map<String, dynamic>) {
                           setState(() {
                             AppDataStore.instance.teachers.insert(0, newEmployee);
+                            AppDataStore.instance.saveTeachers();
                           });
                         }
                       });
@@ -240,12 +238,8 @@ class _AdminEmployeeListScreenState extends State<AdminEmployeeListScreen> {
               CircleAvatar(
                 radius: 24,
                 backgroundColor: AppColors.primary.withValues(alpha: 0.1),
-                backgroundImage: emp['photoPath'] != null && File(emp['photoPath']).existsSync()
-                    ? FileImage(File(emp['photoPath']))
-                    : null,
-                child: emp['photoPath'] != null && File(emp['photoPath']).existsSync()
-                    ? null
-                    : Text(
+                backgroundImage: null,
+                child: Text(
                         emp['avatar'] ?? 'E',
                         style: const TextStyle(
                           color: AppColors.primary,
@@ -293,8 +287,8 @@ class _AdminEmployeeListScreenState extends State<AdminEmployeeListScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      "15 years  |  ${emp['phone'] ?? 'N/A'}",
-                      style: TextStyle(fontSize: 10, color: Colors.grey.shade400),
+                      "${emp['experience'] ?? 'N/A'}  |  ${emp['phone'] ?? 'N/A'}  |  ₹${emp['salary'] ?? '0'}",
+                      style: TextStyle(fontSize: 10, color: Colors.grey.shade500, fontWeight: FontWeight.w500),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ],
@@ -308,6 +302,7 @@ class _AdminEmployeeListScreenState extends State<AdminEmployeeListScreen> {
                     onTap: () {
                       setState(() {
                         emp['status'] = isActive ? 'Inactive' : 'Active';
+                        AppDataStore.instance.saveTeachers();
                       });
                     },
                     child: Container(
@@ -346,6 +341,7 @@ class _AdminEmployeeListScreenState extends State<AdminEmployeeListScreen> {
                           if (updatedData != null && updatedData is Map<String, dynamic>) {
                             setState(() {
                               emp.addAll(updatedData);
+                              AppDataStore.instance.saveTeachers();
                             });
                           }
                         });
@@ -467,6 +463,7 @@ class _AdminEmployeeListScreenState extends State<AdminEmployeeListScreen> {
             onPressed: () {
               setState(() {
                 AppDataStore.instance.teachers.remove(emp);
+                AppDataStore.instance.saveTeachers();
               });
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(

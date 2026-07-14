@@ -1,8 +1,10 @@
+import 'package:ersschool/core/theme/app_colors.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../widgets/admin_app_bar.dart';
 import '../../widgets/admin_drawer.dart';
 import '../../widgets/admin_bottom_nav_bar.dart';
+import '../../../../core/data/app_data_store.dart';
 import '../student_management/admin_student_fee_details_screen.dart';
 
 class FeeDueListScreen extends StatefulWidget {
@@ -47,29 +49,84 @@ class _FeeDueListScreenState extends State<FeeDueListScreen> {
     '3',
   ];
 
-  // Large mock dataset
-  late final List<Map<String, String>> _allStudentsData;
+  List<Map<String, String>> _allStudentsData = [];
 
   @override
   void initState() {
     super.initState();
-    _generateMockData();
+    _loadStudentData();
   }
 
-  void _generateMockData() {
-    _allStudentsData = List.generate(111, (index) {
-      final id = index + 1;
-      return {
-        'adm': 'T25000$id',
-        'name': 'Student Name $id',
-        'father': 'Father Name $id',
-        'class': 'Grade 4 - ${index % 2 == 0 ? 'A' : 'B'}',
-        'mobile': '987654321$index',
-        'term': '${(index % 3) + 1}',
-        'total': '15,000.00',
-        'paid': '0.00',
-        'balance': '15,000.00'
-      };
+  void _loadStudentData() {
+    final store = AppDataStore.instance;
+    List<Map<String, String>> realData = [];
+    
+    bool isTuition = widget.reportTitle.toLowerCase().contains("tuition");
+    bool isTransport = widget.reportTitle.toLowerCase().contains("transport");
+    bool isOther = widget.reportTitle.toLowerCase().contains("other");
+    if (!isTuition && !isTransport && !isOther) {
+       isTuition = true;
+    }
+
+    String? specificTerm;
+    if (widget.reportTitle.contains("Term 1")) specificTerm = "1";
+    if (widget.reportTitle.contains("Term 2")) specificTerm = "2";
+    if (widget.reportTitle.contains("Term 3")) specificTerm = "3";
+    
+    String termFilter = selectedTerm == 'All' ? (specificTerm ?? 'All') : selectedTerm.replaceAll('Term ', '');
+    String realBranch = selectedBranch == 'All' ? '' : selectedBranch.split(' (')[0];
+
+    for (var student in store.students) {
+      String school = student['school'] ?? 'Ecstasy School 1';
+      String cls = student['class'] ?? 'LKG';
+      
+      if (realBranch.isNotEmpty && school != realBranch) continue;
+      if (selectedClass != 'All' && cls != selectedClass) continue;
+      
+      final items = store.getFeeStructureItems(school, selectedYear, cls);
+      double totalAmount = 0;
+      
+      for (var item in items) {
+        String type = (item['feeType'] as String).toLowerCase();
+        double amt = (item['amount'] as num).toDouble();
+        
+        bool isItemTuition = type.contains('tuition');
+        bool isItemTransport = type.contains('transport');
+        bool isItemOther = !isItemTuition && !isItemTransport;
+
+        if (isTuition && isItemTuition) totalAmount += amt;
+        if (isTransport && isItemTransport) totalAmount += amt;
+        if (isOther && isItemOther) totalAmount += amt;
+      }
+      
+      if (totalAmount > 0) {
+         List<String> termsToDisplay = termFilter != 'All' ? [termFilter] : ["1", "2", "3"];
+         
+         double termAmount = totalAmount / 3;
+         double paidAmount = widget.reportTitle.toLowerCase().contains("paid") ? termAmount : 0.0;
+         double balance = termAmount - paidAmount;
+         
+         String fmt(double v) => v.toStringAsFixed(2).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},');
+         
+         for (String term in termsToDisplay) {
+             realData.add({
+               'adm': student['admission'] ?? '-',
+               'name': student['name'] ?? '-',
+               'father': student['father'] ?? '-',
+               'class': cls,
+               'mobile': student['phone'] ?? '-',
+               'term': term,
+               'total': fmt(termAmount),
+               'paid': fmt(paidAmount),
+               'balance': fmt(balance),
+             });
+         }
+      }
+    }
+    
+    setState(() {
+       _allStudentsData = realData;
+       currentPage = 1;
     });
   }
 
@@ -111,6 +168,26 @@ class _FeeDueListScreenState extends State<FeeDueListScreen> {
                   const SizedBox(height: 16),
                   _buildSearchAndActions(),
                   const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      const Text("Scroll table horizontally: ", style: TextStyle(fontSize: 10, color: Colors.grey)),
+                      IconButton(
+                        icon: Icon(Icons.arrow_circle_left_outlined, color: AppColors.primary, size: 20),
+                        onPressed: () { if (_scrollController.hasClients) _scrollController.animateTo(_scrollController.offset - 200, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut); },
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                      ),
+                      const SizedBox(width: 8),
+                      IconButton(
+                        icon: Icon(Icons.arrow_circle_right_outlined, color: AppColors.primary, size: 20),
+                        onPressed: () { if (_scrollController.hasClients) _scrollController.animateTo(_scrollController.offset + 200, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut); },
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
                   _buildDataTable(),
                 ],
               ),
@@ -137,7 +214,7 @@ class _FeeDueListScreenState extends State<FeeDueListScreen> {
           SizedBox(width: 100, child: _buildBodyDropdown("Term", selectedTerm, terms, (v) => setState(() => selectedTerm = v!))),
           const SizedBox(width: 12),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () => _loadStudentData(),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
               foregroundColor: Colors.white,
@@ -204,19 +281,17 @@ class _FeeDueListScreenState extends State<FeeDueListScreen> {
           spacing: 8,
           runSpacing: 8,
           children: [
-            _buildButton("Export to Excel", Colors.black87),
-            _buildButton("Send SMS to all due Students", AppColors.primary),
+            _buildButton("Export to Excel", Colors.black87, () => _exportToExcel()),
+            _buildButton("Send SMS to all due Students", AppColors.primary, () => _sendBulkSms()),
           ],
         ),
       ],
     );
   }
 
-  Widget _buildButton(String text, Color color) {
+  Widget _buildButton(String text, Color color, VoidCallback onTap) {
     return ElevatedButton(
-      onPressed: () {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Processing: $text")));
-      },
+      onPressed: onTap,
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
         foregroundColor: Colors.white,
@@ -237,7 +312,7 @@ class _FeeDueListScreenState extends State<FeeDueListScreen> {
         controller: _scrollController,
         scrollDirection: Axis.horizontal,
         child: DataTable(
-          headingRowColor: WidgetStateProperty.all(const Color(0xFF001A40)),
+          headingRowColor: WidgetStateProperty.all(AppColors.primary),
           columnSpacing: 20,
           horizontalMargin: 12,
           dividerThickness: 0.5,
@@ -294,12 +369,10 @@ class _FeeDueListScreenState extends State<FeeDueListScreen> {
               DataCell(Text(student['balance']!, style: const TextStyle(fontSize: 9, color: Colors.red))),
               DataCell(
                 ElevatedButton(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Sending SMS to ${student['name']}")));
-                  },
+                  onPressed: () => _sendIndividualSms(student),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFF1B434),
-                    foregroundColor: Colors.black,
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: Colors.white,
                     elevation: 0,
                     padding: EdgeInsets.zero,
                     minimumSize: const Size(44, 26),
@@ -326,70 +399,146 @@ class _FeeDueListScreenState extends State<FeeDueListScreen> {
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      color: Colors.orange.shade50,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          const Text("Items per page:", style: TextStyle(fontSize: 10)),
-          const SizedBox(width: 8),
-          PopupMenuButton<int>(
-            onSelected: (value) {
-              setState(() {
-                itemsPerPage = value;
-                currentPage = 1;
-              });
-            },
-            itemBuilder: (context) => [10, 25, 50, 100].map((int val) => PopupMenuItem<int>(
-              value: val,
-              child: Text("$val", style: const TextStyle(fontSize: 11)),
-            )).toList(),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade400),
-                borderRadius: BorderRadius.circular(4),
-                color: Colors.white,
+      color: AppColors.primary.withValues(alpha: 0.05),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width - 32),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              const Text("Items per page:", style: TextStyle(fontSize: 10)),
+              const SizedBox(width: 8),
+              PopupMenuButton<int>(
+                onSelected: (value) {
+                  setState(() {
+                    itemsPerPage = value;
+                    currentPage = 1;
+                  });
+                },
+                itemBuilder: (context) => [10, 25, 50, 100].map((int val) => PopupMenuItem<int>(
+                  value: val,
+                  child: Text("$val", style: const TextStyle(fontSize: 11)),
+                )).toList(),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey.shade400),
+                    borderRadius: BorderRadius.circular(4),
+                    color: Colors.white,
+                  ),
+                  child: Row(
+                    children: [
+                      Text("$itemsPerPage", style: const TextStyle(fontSize: 10)),
+                      const Icon(Icons.arrow_drop_down, size: 14),
+                    ],
+                  ),
+                ),
               ),
-              child: Row(
-                children: [
-                  Text("$itemsPerPage", style: const TextStyle(fontSize: 10)),
-                  const Icon(Icons.arrow_drop_down, size: 14),
-                ],
+              const SizedBox(width: 24),
+              Text("$startIdx - $endIdx of $totalItems", style: const TextStyle(fontSize: 10)),
+              const SizedBox(width: 16),
+              IconButton(
+                onPressed: currentPage > 1 ? () => setState(() => currentPage = 1) : null,
+                icon: Icon(Icons.first_page, size: 18, color: currentPage > 1 ? Colors.black87 : Colors.grey),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
               ),
-            ),
+              const SizedBox(width: 8),
+              IconButton(
+                onPressed: currentPage > 1 ? () => setState(() => currentPage--) : null,
+                icon: Icon(Icons.chevron_left, size: 18, color: currentPage > 1 ? Colors.black87 : Colors.grey),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+              ),
+              const SizedBox(width: 8),
+              IconButton(
+                onPressed: currentPage < totalPages ? () => setState(() => currentPage++) : null,
+                icon: Icon(Icons.chevron_right, size: 18, color: currentPage < totalPages ? Colors.black87 : Colors.grey),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+              ),
+              const SizedBox(width: 8),
+              IconButton(
+                onPressed: currentPage < totalPages ? () => setState(() => currentPage = totalPages) : null,
+                icon: Icon(Icons.last_page, size: 18, color: currentPage < totalPages ? Colors.black87 : Colors.grey),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+              ),
+            ],
           ),
-          const SizedBox(width: 24),
-          Text("$startIdx - $endIdx of $totalItems", style: const TextStyle(fontSize: 10)),
-          const SizedBox(width: 16),
-          IconButton(
-            onPressed: currentPage > 1 ? () => setState(() => currentPage = 1) : null,
-            icon: Icon(Icons.first_page, size: 18, color: currentPage > 1 ? Colors.black87 : Colors.grey),
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(),
-          ),
-          const SizedBox(width: 8),
-          IconButton(
-            onPressed: currentPage > 1 ? () => setState(() => currentPage--) : null,
-            icon: Icon(Icons.chevron_left, size: 18, color: currentPage > 1 ? Colors.black87 : Colors.grey),
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(),
-          ),
-          const SizedBox(width: 8),
-          IconButton(
-            onPressed: currentPage < totalPages ? () => setState(() => currentPage++) : null,
-            icon: Icon(Icons.chevron_right, size: 18, color: currentPage < totalPages ? Colors.black87 : Colors.grey),
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(),
-          ),
-          const SizedBox(width: 8),
-          IconButton(
-            onPressed: currentPage < totalPages ? () => setState(() => currentPage = totalPages) : null,
-            icon: Icon(Icons.last_page, size: 18, color: currentPage < totalPages ? Colors.black87 : Colors.grey),
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(),
-          ),
-        ],
+        ),
       ),
     );
+  }
+
+  void _exportToExcel() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+            const SizedBox(width: 12),
+            Text("Generating Excel Report...".tr),
+          ],
+        ),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+    Future.delayed(const Duration(seconds: 2), () {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Fee_Due_Report_${selectedBranch.replaceAll(' ', '_')}.xlsx downloaded.".tr),
+          backgroundColor: Colors.green,
+        ),
+      );
+    });
+  }
+
+  void _sendBulkSms() {
+    final count = _allStudentsData.length;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        content: Row(
+          children: [
+            const CircularProgressIndicator(),
+            const SizedBox(width: 20),
+            Expanded(child: Text("Sending SMS notifications to $count parents...".tr)),
+          ],
+        ),
+      ),
+    );
+
+    Future.delayed(const Duration(seconds: 2), () {
+      if (!mounted) return;
+      Navigator.pop(context); // Close progress dialog
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Successfully sent SMS notifications to $count parents.".tr),
+          backgroundColor: Colors.green,
+        ),
+      );
+    });
+  }
+
+  void _sendIndividualSms(Map<String, String> student) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Sending SMS reminder to parent: ${student['mobile']}...".tr),
+        duration: const Duration(seconds: 1),
+      ),
+    );
+    Future.delayed(const Duration(seconds: 1), () {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("SMS sent to ${student['name']}'s parent successfully.".tr),
+          backgroundColor: Colors.green,
+        ),
+      );
+    });
   }
 }

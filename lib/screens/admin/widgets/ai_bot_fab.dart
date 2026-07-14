@@ -1,3 +1,4 @@
+import 'package:ersschool/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import '../screens/admin_chat_support_screen.dart';
 
@@ -68,7 +69,7 @@ class _AiBotFabState extends State<AiBotFab> with SingleTickerProviderStateMixin
             child: const Text(
               "Hi, Need any help?",
               style: TextStyle(
-                color: Color(0xFF0038FF),
+                color: AppColors.primary,
                 fontWeight: FontWeight.bold,
                 fontSize: 10,
               ),
@@ -82,7 +83,7 @@ class _AiBotFabState extends State<AiBotFab> with SingleTickerProviderStateMixin
             Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminChatSupportScreen()));
           },
           backgroundColor: Colors.white,
-          child: const Icon(Icons.smart_toy, color: Color(0xFF0038FF), size: 22),
+          child: const Icon(Icons.smart_toy, color: AppColors.primary, size: 22),
         ),
         ],
       ),

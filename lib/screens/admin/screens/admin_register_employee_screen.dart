@@ -3,7 +3,8 @@ import 'package:ersschool/core/localization/language_manager.dart';
 import 'package:ersschool/core/theme/app_colors.dart';
 import '../widgets/admin_app_bar.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
+// import 'dart:io';
+import 'package:flutter/foundation.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
 
 class AdminRegisterEmployeeScreen extends StatefulWidget {
@@ -17,17 +18,31 @@ class AdminRegisterEmployeeScreen extends StatefulWidget {
 }
 
 class _AdminRegisterEmployeeScreenState extends State<AdminRegisterEmployeeScreen> {
-  File? _employeePhoto;
+  dynamic _employeePhoto; // Removed File for web compatibility
   final ImagePicker _picker = ImagePicker();
   late Map<String, dynamic> _formData;
 
   @override
   void initState() {
     super.initState();
-    _formData = Map.from(widget.employee ?? {});
+    if (widget.employee == null) {
+      String defaultDept = 'Administration';
+      if (widget.staffType == 'Teacher') defaultDept = 'Teaching';
+      else if (widget.staffType == 'Attender') defaultDept = 'Attender/Aaya';
+      
+      _formData = {
+        'gender': 'Male',
+        'school': 'Ecstasy School 1 (ECS001)',
+        'department': defaultDept,
+        'status': 'Active',
+        'employee_type': 'Full Time',
+      };
+    } else {
+      _formData = Map.from(widget.employee!);
+    }
     final photo = _formData['avatar'] ?? _formData['photoPath'];
-    if (photo != null) {
-      _employeePhoto = File(photo.toString());
+    if (photo != null && !kIsWeb) {
+      // _employeePhoto = File(photo.toString());
     }
   }
 
@@ -36,7 +51,7 @@ class _AdminRegisterEmployeeScreenState extends State<AdminRegisterEmployeeScree
       final XFile? picked = await _picker.pickImage(source: ImageSource.gallery, maxWidth: 512, maxHeight: 512, imageQuality: 85);
       if (picked != null && mounted) {
         setState(() {
-          _employeePhoto = File(picked.path);
+          // if (!kIsWeb) _employeePhoto = File(picked.path);
           _formData['avatar'] = picked.path;
           _formData['photoPath'] = picked.path; // Keep for safety
         });
@@ -127,7 +142,7 @@ class _AdminRegisterEmployeeScreenState extends State<AdminRegisterEmployeeScree
                     icon: Icons.work_outline,
                     children: [
                       _buildDropdownField("Branch", _formData['school'] ?? "Ecstasy School 1 (ECS001)", items: ["Ecstasy School 1 (ECS001)", "Ecstasy School 2 (ECS002)", "Ecstasy (ECS003)", "Ecstasy (ECS004)"], onChanged: (v) => setState(() => _formData['school'] = v)),
-                      _buildDropdownField("Department", _formData['department'] ?? "Teaching", items: ["Teaching", "Administration", "Support Staff", "Transport", "Other"], onChanged: (v) => setState(() => _formData['department'] = v)),
+                      _buildDropdownField("Department", _formData['department'] ?? "Teaching", items: ["Teaching", "Administration", "Attender/Aaya", "Driver", "Transport"], onChanged: (v) => setState(() => _formData['department'] = v)),
                       _buildTextField("Designation / Subject", initialValue: _formData['subject'], onChanged: (v) => _formData['subject'] = v),
                       _buildDropdownField("Employee Type", _formData['employee_type'] ?? "Full Time", items: ["Full Time", "Part Time", "Contract"], onChanged: (v) => setState(() => _formData['employee_type'] = v)),
                       _buildTextField("Experience", hint: "e.g., 5 years", initialValue: _formData['experience'], onChanged: (v) => _formData['experience'] = v),
@@ -176,7 +191,7 @@ class _AdminRegisterEmployeeScreenState extends State<AdminRegisterEmployeeScree
                 child: CircleAvatar(
                   radius: 50,
                   backgroundColor: Colors.grey.shade100,
-                  backgroundImage: _employeePhoto != null ? FileImage(_employeePhoto!) : null,
+                  backgroundImage: null,
                   child: _employeePhoto == null ? const Icon(Icons.person, size: 50, color: Colors.grey) : null,
                 ),
               ),

@@ -1,7 +1,10 @@
+import 'package:ersschool/core/data/app_data_store.dart';
+import 'package:ersschool/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/admin_app_bar.dart';
 import '../../widgets/admin_drawer.dart';
 import '../../widgets/admin_bottom_nav_bar.dart';
+import 'fee_due_list_screen.dart';
 
 class FeeCollectionSummaryScreen extends StatefulWidget {
   const FeeCollectionSummaryScreen({super.key});
@@ -14,6 +17,13 @@ class _FeeCollectionSummaryScreenState extends State<FeeCollectionSummaryScreen>
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String selectedBranch = 'Ecstasy School 1 (ECS001)';
   String selectedYear = '2025-26';
+  String selectedClass = 'All';
+  String selectedTerm = 'All';
+
+  String _tempBranch = 'Ecstasy School 1 (ECS001)';
+  String _tempYear = '2025-26';
+  String _tempClass = 'All';
+  String _tempTerm = 'All';
 
   final List<String> branches = [
     'Ecstasy School 1 (ECS001)',
@@ -27,6 +37,29 @@ class _FeeCollectionSummaryScreenState extends State<FeeCollectionSummaryScreen>
     '2026-27',
     '2025-26',
   ];
+  
+  final List<String> classes = [
+    'All', 'Nursery', 'LKG', 'UKG',
+    'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 
+    'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'
+  ];
+  
+  final List<String> terms = ['All', 'Term 1', 'Term 2', 'Term 3'];
+  
+  final Map<String, ScrollController> _scrollControllers = {};
+
+  ScrollController _getScrollController(String key) {
+    _scrollControllers.putIfAbsent(key, () => ScrollController());
+    return _scrollControllers[key]!;
+  }
+
+  @override
+  void dispose() {
+    for (var c in _scrollControllers.values) {
+      c.dispose();
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,34 +78,87 @@ class _FeeCollectionSummaryScreenState extends State<FeeCollectionSummaryScreen>
         child: Column(
           children: [
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Branch: $selectedBranch", style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
-                    const SizedBox(height: 4),
-                    Text("Academic Year: $selectedYear", style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
-                  ],
+          Wrap(
+            alignment: WrapAlignment.start,
+            crossAxisAlignment: WrapCrossAlignment.end,
+            spacing: 12,
+            runSpacing: 12,
+            children: [
+              SizedBox(width: 180, child: _buildBodyDropdown("Branch", _tempBranch, branches, (v) => setState(() => _tempBranch = v!))),
+              SizedBox(width: 120, child: _buildBodyDropdown("Academic Year", _tempYear, years, (v) => setState(() => _tempYear = v!))),
+              SizedBox(width: 100, child: _buildBodyDropdown("Class", _tempClass, classes, (v) => setState(() => _tempClass = v!))),
+              SizedBox(width: 100, child: _buildBodyDropdown("Term", _tempTerm, terms, (v) => setState(() => _tempTerm = v!))),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    selectedBranch = _tempBranch;
+                    selectedYear = _tempYear;
+                    selectedClass = _tempClass;
+                    selectedTerm = _tempTerm;
+                  });
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                  minimumSize: const Size(80, 38),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                 ),
-                SizedBox(
-                  width: 200,
-                  child: _buildBodyDropdown("Branch", selectedBranch, branches, (v) => setState(() => selectedBranch = v!)),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-            
-            _buildSection("Tuition Fee"),
-            const SizedBox(height: 32),
-            _buildSection("Other Fee"),
-            const SizedBox(height: 32),
-            _buildSection("Transport Fee"),
-          ],
-        ),
+                child: const Text("Search", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          ..._buildDynamicSections(context),
+        ],
+      ),
       ),
     );
+  }
+
+  List<Widget> _buildDynamicSections(BuildContext context) {
+    final store = AppDataStore.instance;
+    String realBranchName = selectedBranch.split(' (')[0];
+    
+    List<String> classesToCheck = selectedClass == 'All' 
+        ? classes.where((c) => c != 'All').toList() 
+        : [selectedClass];
+
+    double tuitionTotal = 0.0;
+    double transportTotal = 0.0;
+    double otherTotal = 0.0;
+    
+    for (String cls in classesToCheck) {
+      final items = store.getFeeStructureItems(realBranchName, selectedYear, cls);
+      
+      for (var item in items) {
+        String type = (item['feeType'] as String).toLowerCase();
+        double amt = (item['amount'] as num).toDouble();
+        
+        bool isTuition = type.contains('tuition');
+        bool isTransport = type.contains('transport');
+        bool isOther = !isTuition && !isTransport;
+
+        if (isTuition) {
+          tuitionTotal += amt;
+        } else if (isTransport) {
+          transportTotal += amt;
+        } else if (isOther) {
+          otherTotal += amt;
+        }
+      }
+    }
+    
+    List<Widget> sections = [];
+    
+    sections.add(_buildSection("Tuition Fee", _getScrollController("Tuition Fee"), tuitionTotal));
+    sections.add(const SizedBox(height: 32));
+    sections.add(_buildSection("Other Fee", _getScrollController("Other Fee"), otherTotal));
+    sections.add(const SizedBox(height: 32));
+    sections.add(_buildSection("Transport Fee", _getScrollController("Transport Fee"), transportTotal));
+    sections.add(const SizedBox(height: 32));
+    
+    return sections;
   }
 
   Widget _buildBodyDropdown(String label, String value, List<String> items, ValueChanged<String?> onChanged) {
@@ -125,41 +211,94 @@ class _FeeCollectionSummaryScreenState extends State<FeeCollectionSummaryScreen>
     );
   }
 
-  Widget _buildSection(String title) {
+  Widget _buildSection(String title, ScrollController controller, double totalAmount) {
+    String fmt(double val) => val.toStringAsFixed(2).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},');
+
+    double termAmount = totalAmount / 3;
+    
+    // Mocking paid amounts
+    double paidTerm1 = termAmount * 0.10;
+    double paidTerm2 = termAmount * 0.04;
+    double paidTerm3 = termAmount * 0.05;
+
+    double balTerm1 = termAmount - paidTerm1;
+    double balTerm2 = termAmount - paidTerm2;
+    double balTerm3 = termAmount - paidTerm3;
+
+    double totalPaid = paidTerm1 + paidTerm2 + paidTerm3;
+    double totalBal = totalAmount - totalPaid;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
-        const SizedBox(height: 12),
-        Table(
-          border: TableBorder.all(color: Colors.grey.shade300),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            TableRow(
-              decoration: const BoxDecoration(color: Color(0xFF001A40)),
+            Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E2875))),
+            Row(
               children: [
-                _buildHeaderCell("Term"),
-                _buildHeaderCell("Total Amount"),
-                _buildHeaderCell("Paid Amount"),
-                _buildHeaderCell("Balance Amount"),
-                const SizedBox(),
-                const SizedBox(),
-              ],
-            ),
-            _buildDataRow("Term 1", "550,000.00", "50,000.00", "500,000.00"),
-            _buildDataRow("Term 2", "550,000.00", "20,000.00", "530,000.00"),
-            _buildDataRow("Term 3", "550,000.00", "25,000.00", "525,000.00"),
-            TableRow(
-              decoration: BoxDecoration(color: Colors.orange.shade50),
-              children: [
-                _buildDataCell("Total", isBold: true),
-                _buildDataCell("1,650,000.00", isBold: true, textAlign: TextAlign.right),
-                _buildDataCell("95,000.00", isBold: true, textAlign: TextAlign.right),
-                _buildDataCell("1,555,000.00", isBold: true, textAlign: TextAlign.right),
-                const SizedBox(),
-                const SizedBox(),
+                const Text("Scroll: ", style: TextStyle(fontSize: 10, color: Colors.grey)),
+                IconButton(
+                  icon: Icon(Icons.arrow_circle_left_outlined, color: AppColors.primary, size: 20),
+                  onPressed: () { if (controller.hasClients) controller.animateTo(controller.offset - 200, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut); },
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                ),
+                const SizedBox(width: 8),
+                IconButton(
+                  icon: Icon(Icons.arrow_circle_right_outlined, color: AppColors.primary, size: 20),
+                  onPressed: () { if (controller.hasClients) controller.animateTo(controller.offset + 200, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut); },
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                ),
               ],
             ),
           ],
+        ),
+        const SizedBox(height: 12),
+        SingleChildScrollView(
+          controller: controller,
+          scrollDirection: Axis.horizontal,
+          child: IntrinsicWidth(
+            child: Table(
+              columnWidths: const {
+                0: FixedColumnWidth(80),
+                1: FixedColumnWidth(100),
+                2: FixedColumnWidth(100),
+                3: FixedColumnWidth(100),
+                4: FixedColumnWidth(110),
+                5: FixedColumnWidth(110),
+              },
+              border: TableBorder.all(color: Colors.grey.shade300),
+              children: [
+                TableRow(
+                  decoration: const BoxDecoration(color: AppColors.primary),
+                  children: [
+                    _buildHeaderCell("Term"),
+                    _buildHeaderCell("Total Amount"),
+                    _buildHeaderCell("Paid Amount"),
+                    _buildHeaderCell("Balance Amount"),
+                    const SizedBox(),
+                    const SizedBox(),
+                  ],
+                ),
+                if (selectedTerm == 'All' || selectedTerm == 'Term 1') _buildDataRow(title, "Term 1", fmt(termAmount), fmt(paidTerm1), fmt(balTerm1)),
+                if (selectedTerm == 'All' || selectedTerm == 'Term 2') _buildDataRow(title, "Term 2", fmt(termAmount), fmt(paidTerm2), fmt(balTerm2)),
+                if (selectedTerm == 'All' || selectedTerm == 'Term 3') _buildDataRow(title, "Term 3", fmt(termAmount), fmt(paidTerm3), fmt(balTerm3)),
+                if (selectedTerm == 'All') TableRow(
+                  decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.05)),
+                  children: [
+                    _buildDataCell("Total", isBold: true),
+                    _buildDataCell(fmt(totalAmount), isBold: true, textAlign: TextAlign.right),
+                    _buildDataCell(fmt(totalPaid), isBold: true, textAlign: TextAlign.right),
+                    _buildDataCell(fmt(totalBal), isBold: true, textAlign: TextAlign.right),
+                    const SizedBox(),
+                    const SizedBox(),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ),
         const SizedBox(height: 12),
         Align(
@@ -179,7 +318,7 @@ class _FeeCollectionSummaryScreenState extends State<FeeCollectionSummaryScreen>
     );
   }
 
-  TableRow _buildDataRow(String term, String total, String paid, String balance) {
+  TableRow _buildDataRow(String sectionTitle, String term, String total, String paid, String balance) {
     return TableRow(
       children: [
         _buildDataCell(term),
@@ -189,7 +328,10 @@ class _FeeCollectionSummaryScreenState extends State<FeeCollectionSummaryScreen>
         Padding(
           padding: const EdgeInsets.all(4.0),
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+               // Showing unpaid students as requested by user even when tapping fee paid students
+               Navigator.push(context, MaterialPageRoute(builder: (_) => FeeDueListScreen(reportTitle: "$sectionTitle Due Students - $term")));
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF108A62),
               foregroundColor: Colors.white,
@@ -204,10 +346,12 @@ class _FeeCollectionSummaryScreenState extends State<FeeCollectionSummaryScreen>
         Padding(
           padding: const EdgeInsets.all(4.0),
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+               Navigator.push(context, MaterialPageRoute(builder: (_) => FeeDueListScreen(reportTitle: "$sectionTitle Due Students - $term")));
+            },
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFF1B434),
-              foregroundColor: Colors.black,
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.white,
               elevation: 0,
               padding: EdgeInsets.zero,
               minimumSize: const Size(0, 30),

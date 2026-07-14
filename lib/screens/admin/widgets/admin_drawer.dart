@@ -1,4 +1,5 @@
-import 'dart:io';
+import 'dart:io' show File;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/profile_manager.dart';
@@ -7,7 +8,7 @@ import '../../login/login_screen.dart' show LoginScreen;
 import '../screens/admin_attendance_screen.dart';
 import '../screens/admin_examinations_screen.dart';
 
-import '../screens/admin_id_cards_screen.dart';
+
 import '../screens/admin_invalid_info_screen.dart';
 import '../screens/admin_sms_screen.dart';
 import '../screens/admin_settings_screen.dart';
@@ -25,7 +26,7 @@ import '../screens/student_management/admin_student_promotions_screen.dart';
 import '../screens/student_management/admin_student_siblings_screen.dart';
 import '../screens/admin_employee_list_screen.dart';
 
-import '../screens/admin_employee_id_cards_screen.dart';
+
 import '../screens/admin_assignments_screen.dart';
 import '../screens/admin_class_details_screen.dart';
 import '../screens/admin_class_teachers_screen.dart';
@@ -114,8 +115,8 @@ class AdminDrawer extends StatelessWidget {
                           return CircleAvatar(
                             radius: 28,
                             backgroundColor: Colors.white,
-                            backgroundImage: path != null ? FileImage(File(path)) : null,
-                            child: path == null ? const Icon(Icons.person, color: AppColors.primary, size: 36) : null,
+                            backgroundImage: (!kIsWeb && path != null) ? FileImage(File(path)) : null,
+                            child: (kIsWeb || path == null) ? Icon(Icons.person, color: AppColors.primary, size: 36) : null,
                           );
                         },
                       ),
@@ -232,25 +233,21 @@ class AdminDrawer extends StatelessWidget {
               tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
               childrenPadding: EdgeInsets.zero,
               children: [
-                _buildDrawerSubItem("Students List", false, () {
-                  Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminStudentListScreen()));
-                }),
-                _buildDrawerSubItem("Register New Student", false, () {
+                _buildDrawerSubItem("Register Student", false, () {
                   Navigator.pop(context);
                   Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminRegisterStudentScreen()));
+                }),
+                _buildDrawerSubItem("Student List", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminStudentListScreen()));
                 }),
                 _buildDrawerSubItem("Student Promotions", false, () {
                   Navigator.pop(context);
                   Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminStudentPromotionsScreen()));
                 }),
-                _buildDrawerSubItem("Student Siblings", false, () {
+                _buildDrawerSubItem("Sibling Mapping", false, () {
                   Navigator.pop(context);
                   Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminStudentSiblingsScreen()));
-                }),
-                _buildDrawerSubItem("Student ID Cards", false, () {
-                  Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminIDCardsScreen()));
                 }),
               ],
             ),
@@ -268,21 +265,17 @@ class AdminDrawer extends StatelessWidget {
               tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
               childrenPadding: EdgeInsets.zero,
               children: [
-                _buildDrawerSubItem("Employees List", false, () {
+                _buildDrawerSubItem("Employees", false, () {
                   Navigator.pop(context);
                   Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEmployeeListScreen(staffType: 'Employee')));
                 }),
-                _buildDrawerSubItem("Teachers List", false, () {
+                _buildDrawerSubItem("Teachers", false, () {
                   Navigator.pop(context);
                   Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEmployeeListScreen(staffType: 'Teacher')));
                 }),
-                _buildDrawerSubItem("Attender/Aaya List", false, () {
+                _buildDrawerSubItem("Attender/Aaya", false, () {
                   Navigator.pop(context);
                   Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEmployeeListScreen(staffType: 'Attender')));
-                }),
-                _buildDrawerSubItem("Employee ID Cards", false, () {
-                  Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEmployeeIDCardsScreen()));
                 }),
               ],
             ),
@@ -319,29 +312,29 @@ class AdminDrawer extends StatelessWidget {
               tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
               childrenPadding: EdgeInsets.zero,
               children: [
-                _buildDrawerSubItem("Assignments", false, () {
+                _buildDrawerSubItem("Class Routine", false, () {
                   Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminAssignmentsScreen()));
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminTimeTableScreen()));
                 }),
                 _buildDrawerSubItem("Attendance", false, () {
                   Navigator.pop(context);
                   Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminAttendanceScreen()));
                 }),
-                _buildDrawerSubItem("Class Details", false, () {
-                  Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminClassDetailsScreen()));
-                }),
-                _buildDrawerSubItem("Class Teachers", false, () {
-                  Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminClassTeachersScreen()));
-                }),
                 _buildDrawerSubItem("Diary", false, () {
                   Navigator.pop(context);
                   Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminDiaryScreen()));
                 }),
-                _buildDrawerSubItem("Time Table", false, () {
+                _buildDrawerSubItem("Class Details", false, () {
                   Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminTimeTableScreen()));
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminClassDetailsScreen()));
+                }),
+                _buildDrawerSubItem("Assignments", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminAssignmentsScreen()));
+                }),
+                _buildDrawerSubItem("Class Teachers", false, () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminClassTeachersScreen()));
                 }),
               ],
             ),
@@ -464,29 +457,7 @@ class AdminDrawer extends StatelessWidget {
             ),
           ),
 
-          Theme(
-            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-            child: ExpansionTile(
-              leading: const Icon(Icons.badge_outlined, color: Color(0xFF757897)),
-              title: const Text("ID Card", style: TextStyle(
-                color: Color(0xFF1E2875),
-                fontWeight: FontWeight.w500,
-                fontSize: 13,
-              )),
-              tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-              childrenPadding: EdgeInsets.zero,
-              children: [
-                _buildDrawerSubItem("Student ID Cards", false, () {
-                  Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminIDCardsScreen()));
-                }),
-                _buildDrawerSubItem("Employee ID Cards", false, () {
-                  Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEmployeeIDCardsScreen()));
-                }),
-              ],
-            ),
-          ),
+
 
           
           // Reports Item
@@ -523,11 +494,11 @@ class AdminDrawer extends StatelessWidget {
                   Navigator.pop(context);
                   Navigator.push(context, MaterialPageRoute(builder: (_) => const FeeDueListScreen(reportTitle: "Transport Fee Due Students")));
                 }),
-                _buildDrawerSubItem("Collection By Date", false, () {
+                _buildDrawerSubItem("Fee Paid By date", false, () {
                   Navigator.pop(context);
                   Navigator.push(context, MaterialPageRoute(builder: (_) => const FeeCollectionByDateScreen()));
                 }),
-                _buildDrawerSubItem("Attendance Report", false, () {
+                _buildDrawerSubItem("Students Attendance Rept", false, () {
                   Navigator.pop(context);
                   Navigator.push(context, MaterialPageRoute(builder: (_) => const ClassAttendanceReportScreen()));
                 }),

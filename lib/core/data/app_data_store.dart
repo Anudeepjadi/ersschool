@@ -1,11 +1,85 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Central in-memory data store — single source of truth for the entire app.
 /// All screens read/write through this singleton so data stays consistent.
 class AppDataStore {
   AppDataStore._();
   static final AppDataStore instance = AppDataStore._();
+
+  Future<void> init() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? feeData = prefs.getString('feeStructureItems');
+    if (feeData != null) {
+      try {
+        final List<dynamic> decoded = jsonDecode(feeData);
+        feeStructureItems.clear();
+        for (var item in decoded) {
+          feeStructureItems.add(Map<String, dynamic>.from(item));
+        }
+      } catch (e) {
+        debugPrint("Error loading fee structure: $e");
+      }
+    }
+    final String? feeTypesData = prefs.getString('feeTypes');
+    if (feeTypesData != null) {
+      try {
+        final List<dynamic> decoded = jsonDecode(feeTypesData);
+        feeTypes.clear();
+        for (var item in decoded) {
+          feeTypes.add(Map<String, dynamic>.from(item));
+        }
+      } catch (e) {
+        debugPrint("Error loading fee types: $e");
+      }
+    }
+    final String? teachersData = prefs.getString('teachers');
+    if (teachersData != null) {
+      try {
+        final List<dynamic> decoded = jsonDecode(teachersData);
+        teachers.clear();
+        for (var item in decoded) {
+          teachers.add(Map<String, dynamic>.from(item));
+        }
+      } catch (e) {
+        debugPrint("Error loading teachers: $e");
+      }
+    }
+    final String? studentsData = prefs.getString('students');
+    if (studentsData != null) {
+      try {
+        final List<dynamic> decoded = jsonDecode(studentsData);
+        students.clear();
+        for (var item in decoded) {
+          students.add(Map<String, dynamic>.from(item));
+        }
+      } catch (e) {
+        debugPrint("Error loading students: $e");
+      }
+    }
+  }
+
+  Future<void> _saveFeeTypes() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('feeTypes', jsonEncode(feeTypes));
+  }
+
+  Future<void> _saveFeeStructure() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('feeStructureItems', jsonEncode(feeStructureItems));
+  }
+
+  Future<void> saveTeachers() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('teachers', jsonEncode(teachers));
+  }
+
+  Future<void> saveStudents() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('students', jsonEncode(students));
+  }
 
   // ─── Students ────────────────────────────────────────────────────────────
   final List<Map<String, dynamic>> students = [
@@ -740,8 +814,8 @@ class AppDataStore {
     final student = students.firstWhere(
       (s) =>
           (s['admission'] as String).toUpperCase() == id.toUpperCase() &&
-          (s['password'] as String) == pw,
-      orElse: () => {},
+          ((s['password'] ?? s['admission']) as String) == pw,
+      orElse: () => <String, dynamic>{},
     );
     if (student.isNotEmpty) return 'student';
 
@@ -749,8 +823,8 @@ class AppDataStore {
     final teacher = teachers.firstWhere(
       (t) =>
           (t['employeeCode'] as String).toUpperCase() == id.toUpperCase() &&
-          (t['password'] as String) == pw,
-      orElse: () => {},
+          ((t['password'] ?? t['employeeCode']) as String) == pw,
+      orElse: () => <String, dynamic>{},
     );
     if (teacher.isNotEmpty) return 'teacher';
 
@@ -969,32 +1043,69 @@ class AppDataStore {
   }
 
   // ─── Fee Structures ────────────────────────────────────────────────────────
-  final List<Map<String, dynamic>> feeStructures = [
-    {
-      'school': 'Ecstasy School 1',
-      'branchCode': 'ECS001',
-      'tuition': 45000,
-      'transport': 12000,
-      'exam': 3000,
-      'total': 60000,
-    },
-    {
-      'school': 'Ecstasy School 2',
-      'branchCode': 'ECS002',
-      'tuition': 38000,
-      'transport': 10000,
-      'exam': 2500,
-      'total': 50500,
-    },
-    {
-      'school': 'Ecstasy School 3',
-      'branchCode': 'ECS003',
-      'tuition': 32000,
-      'transport': 8000,
-      'exam': 2000,
-      'total': 42000,
-    },
-  ];
+  List<Map<String, dynamic>> get feeStructures {
+    final Map<String, Map<String, dynamic>> schoolTotals = {};
+    
+    // Initialize for all schools based on branches
+    for (var branch in branches) {
+      final schoolName = branch['school'] as String? ?? 'Unknown School';
+      if (!schoolTotals.containsKey(schoolName)) {
+        String branchCode = "ECS001";
+        if (schoolName == "Ecstasy School 2") branchCode = "ECS002";
+        if (schoolName == "Ecstasy School 3") branchCode = "ECS003";
+
+        schoolTotals[schoolName] = {
+          'school': schoolName,
+          'branchCode': branchCode,
+          'tuition': 0.0,
+          'transport': 0.0,
+          'exam': 0.0,
+          'total': 0.0,
+        };
+      }
+    }
+
+    // Accumulate fees from feeStructureItems
+    for (var item in feeStructureItems) {
+      final branchName = item['branch'] as String? ?? '';
+      
+      String schoolName = 'Unknown School';
+      final matchingBranches = branches.where((b) => b['name'] == branchName || b['school'] == branchName);
+      
+      if (matchingBranches.isNotEmpty) {
+        schoolName = matchingBranches.first['school'] as String? ?? 'Unknown School';
+      }
+
+      final schoolTotal = schoolTotals[schoolName];
+      if (schoolTotal != null) {
+        final feeType = (item['feeType'] as String? ?? '').toLowerCase();
+        final amount = (item['amount'] as num?)?.toDouble() ?? 0.0;
+        
+        if (feeType.contains('tuition')) {
+          schoolTotal['tuition'] = (schoolTotal['tuition'] as double) + amount;
+        } else if (feeType.contains('transport')) {
+          schoolTotal['transport'] = (schoolTotal['transport'] as double) + amount;
+        } else if (feeType.contains('exam')) {
+          schoolTotal['exam'] = (schoolTotal['exam'] as double) + amount;
+        }
+        schoolTotal['total'] = (schoolTotal['total'] as double) + amount;
+      }
+    }
+    
+    final sortedTotals = schoolTotals.values.toList();
+    sortedTotals.sort((a, b) => (a['branchCode'] as String).compareTo(b['branchCode'] as String));
+
+    return sortedTotals.map((s) {
+      return {
+        'school': s['school'],
+        'branchCode': s['branchCode'],
+        'tuition': (s['tuition'] as double).toInt(),
+        'transport': (s['transport'] as double).toInt(),
+        'exam': (s['exam'] as double).toInt(),
+        'total': (s['total'] as double).toInt(),
+      };
+    }).toList();
+  }
 
   // ─── Config Change Notifier ─────────────────────────────────────────────────
   /// Increment this whenever ANY config data changes.
@@ -1039,18 +1150,17 @@ class AppDataStore {
   // ─── Fee Types ───────────────────────────────────────────────────────────────
   final List<Map<String, dynamic>> feeTypes = [
     {'type': 'Registration Fee', 'isActive': true},
-    {'type': 'Activity Fee', 'isActive': true},
     {'type': 'Tuition Fee', 'isActive': true},
-    {'type': 'books fee', 'isActive': true},
-    {'type': 'cultural activity fee', 'isActive': true},
-    {'type': 'id card fee', 'isActive': true},
-    {'type': 'residential', 'isActive': true},
-    {'type': 'hostel', 'isActive': true},
+    {'type': 'Books fee', 'isActive': true},
+    {'type': 'Cultural activity fee', 'isActive': true},
+    {'type': "I'd card fee", 'isActive': true},
+    {'type': 'Hostel', 'isActive': true},
+    {'type': 'Transport fee', 'isActive': true},
   ];
 
-  void addFeeType(Map<String, dynamic> f) { feeTypes.add(f); notifyConfigChange(); }
-  void updateFeeType(int i, Map<String, dynamic> f) { feeTypes[i] = f; notifyConfigChange(); }
-  void deleteFeeType(int i) { feeTypes.removeAt(i); notifyConfigChange(); }
+  void addFeeType(Map<String, dynamic> f) { feeTypes.add(f); _saveFeeTypes(); notifyConfigChange(); }
+  void updateFeeType(int i, Map<String, dynamic> f) { feeTypes[i] = f; _saveFeeTypes(); notifyConfigChange(); }
+  void deleteFeeType(int i) { feeTypes.removeAt(i); _saveFeeTypes(); notifyConfigChange(); }
 
   // ─── Payment Types ───────────────────────────────────────────────────────────
   final List<Map<String, dynamic>> paymentTypes = [
@@ -1204,13 +1314,72 @@ class AppDataStore {
     {'branch': 'Ecstasy School 1', 'year': '2025-26', 'class': 'Class 1', 'feeType': 'cultural activity fee', 'amount': 4000.0},
   ];
 
-  void addFeeStructureItem(Map<String, dynamic> item) { feeStructureItems.add(item); notifyConfigChange(); }
-  void updateFeeStructureItem(int i, Map<String, dynamic> item) { feeStructureItems[i] = item; notifyConfigChange(); }
-  void deleteFeeStructureItem(int i) { feeStructureItems.removeAt(i); notifyConfigChange(); }
+  void addFeeStructureItem(Map<String, dynamic> item) { feeStructureItems.add(item); _saveFeeStructure(); notifyConfigChange(); }
+  void updateFeeStructureItem(int i, Map<String, dynamic> item) { feeStructureItems[i] = item; _saveFeeStructure(); notifyConfigChange(); }
+  void deleteFeeStructureItem(int i) { feeStructureItems.removeAt(i); _saveFeeStructure(); notifyConfigChange(); }
 
   List<Map<String, dynamic>> getFeeStructureItems(String branch, String year, String cls) {
-    return feeStructureItems
+    var existing = feeStructureItems
         .where((r) => r['branch'] == branch && r['year'] == year && r['class'] == cls)
+        .toList();
+
+    final activeFeeTypes = feeTypes.where((f) => f['isActive'] == true).toList();
+    final activeTypeNames = activeFeeTypes.map((f) => f['type']).toSet();
+    
+    // Parse class level
+    int level = 0;
+    String clsLower = cls.toLowerCase();
+    if (clsLower.contains('class')) {
+      level = int.tryParse(clsLower.replaceAll(RegExp(r'[^0-9]'), '')) ?? 0;
+    }
+    
+    bool newlyAdded = false;
+    for (int i = 0; i < activeFeeTypes.length; i++) {
+        String typeName = activeFeeTypes[i]['type'];
+        if (!existing.any((e) => e['feeType'] == typeName)) {
+            String lowerType = typeName.toLowerCase();
+            double amount = 1000.0; // default
+            
+            if (lowerType.contains('registration') || lowerType.contains('id') || lowerType.contains('transport')) {
+                if (lowerType.contains('registration')) {
+                  amount = 3000.0;
+                } else if (lowerType.contains('id')) {
+                  amount = 500.0;
+                } else if (lowerType.contains('transport')) {
+                  amount = 15000.0;
+                } else {
+                  amount = 2000.0;
+                }
+            } else if (lowerType.contains('tuition')) {
+                amount = 20000.0 + (level * 8000.0);
+                if (amount > 100000.0) amount = 100000.0;
+            } else if (lowerType.contains('books') || lowerType.contains('cultural') || lowerType.contains('hostel')) {
+                double base = lowerType.contains('hostel') ? 40000.0 : 5000.0;
+                if (level >= 6) {
+                    amount = base + 10000.0;
+                } else {
+                    amount = base;
+                }
+            } else {
+                amount = (10 + ((level + i) % 50)) * 100.0;
+            }
+
+            var newItem = {
+                'branch': branch,
+                'year': year,
+                'class': cls,
+                'feeType': typeName,
+                'amount': amount,
+            };
+            feeStructureItems.add(newItem);
+            newlyAdded = true;
+        }
+    }
+    
+    if (newlyAdded) _saveFeeStructure();
+    
+    return feeStructureItems
+        .where((r) => r['branch'] == branch && r['year'] == year && r['class'] == cls && activeTypeNames.contains(r['feeType']))
         .toList();
   }
 

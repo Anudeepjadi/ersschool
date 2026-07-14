@@ -4,6 +4,8 @@ import 'package:ersschool/core/localization/language_manager.dart';
 import 'package:ersschool/core/theme/app_colors.dart';
 import '../../widgets/admin_app_bar.dart';
 import 'admin_add_driver_screen.dart';
+import 'admin_driver_details_screen.dart';
+import '../../../../core/data/app_data_store.dart';
 
 class AdminDriversListScreen extends StatefulWidget {
   const AdminDriversListScreen({super.key});
@@ -19,24 +21,19 @@ class _AdminDriversListScreenState extends State<AdminDriversListScreen> {
   int _currentPage = 1;
   int _itemsPerPage = 25;
 
-  List<Map<String, dynamic>> _dummyData = [
-    {
-      'branch': 'Ecstasy School 1 (ECS001)',
-      'role': 'Driver',
-      'code': '',
-      'name': 'Srinu',
-      'mobile': '1398405756',
-      'email': '',
-    },
-    {
-      'branch': 'Ecstasy School 1 (ECS001)',
-      'role': 'Driver',
-      'code': '',
-      'name': 'Kumar',
-      'mobile': '1652949043',
-      'email': '',
-    },
-  ];
+  List<Map<String, dynamic>> get _allData {
+    return AppDataStore.instance.teachers.where((t) => t['department'] == 'Driver').map((t) {
+      return {
+        'branch': t['school'] ?? '',
+        'role': t['department'] ?? 'Driver',
+        'code': t['employeeCode'] ?? '',
+        'name': t['name'] ?? '',
+        'mobile': t['phone'] ?? '',
+        'email': t['email'] ?? '',
+        'originalData': t,
+      };
+    }).toList();
+  }
 
   @override
   void dispose() {
@@ -104,13 +101,15 @@ class _AdminDriversListScreenState extends State<AdminDriversListScreen> {
                   );
                   if (result != null && result is Map<String, dynamic>) {
                     setState(() {
-                      result["branch"] = _selectedBranch;
-                      _dummyData = List.from(_dummyData)..add(result);
+                      result["department"] = "Driver";
+                      if (result["school"] == null) result["school"] = _selectedBranch;
+                      AppDataStore.instance.teachers.insert(0, result);
+                      AppDataStore.instance.saveTeachers();
                     });
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
+                  backgroundColor: const Color(0xFFD35400),
                   padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                 ),
@@ -169,28 +168,15 @@ class _AdminDriversListScreenState extends State<AdminDriversListScreen> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     InkWell(
-                                      onTap: () async {
-                                        final result = await Navigator.push(
+                                      onTap: () {
+                                        Navigator.push(
                                           context,
-                                          MaterialPageRoute(builder: (_) => AdminAddDriverScreen(existingData: data)),
+                                          MaterialPageRoute(builder: (_) => AdminDriverDetailsScreen(driver: data)),
                                         );
-                                        if (result != null && result is Map<String, dynamic>) {
-                                          setState(() {
-                                            result["branch"] = _selectedBranch;
-                                            _dummyData = List.from(_dummyData);
-                                            final index = _dummyData.indexOf(data);
-                                            if (index != -1) _dummyData[index] = result;
-                                          });
-                                        }
                                       },
-                                      child: Container(
-                                        width: 32,
-                                        height: 32,
-                                        decoration: const BoxDecoration(
-                                            color: Color(0xFF1E2875),
-                                            shape: BoxShape.circle),
-                                        child: const Icon(Icons.remove_red_eye,
-                                            color: Colors.white, size: 16),
+                                      child: const Padding(
+                                        padding: EdgeInsets.all(4.0),
+                                        child: Icon(Icons.visibility, color: Color(0xFF2563EB), size: 20),
                                       ),
                                     ),
                                     const SizedBox(width: 8),
@@ -198,42 +184,37 @@ class _AdminDriversListScreenState extends State<AdminDriversListScreen> {
                                       onTap: () async {
                                         final result = await Navigator.push(
                                           context,
-                                          MaterialPageRoute(builder: (_) => AdminAddDriverScreen(existingData: data)),
+                                          MaterialPageRoute(builder: (_) => AdminAddDriverScreen(existingData: data['originalData'])),
                                         );
                                         if (result != null && result is Map<String, dynamic>) {
                                           setState(() {
-                                            result["branch"] = _selectedBranch;
-                                            _dummyData = List.from(_dummyData);
-                                            final index = _dummyData.indexOf(data);
-                                            if (index != -1) _dummyData[index] = result;
+                                            result["department"] = "Driver";
+                                            final index = AppDataStore.instance.teachers.indexOf(data['originalData']);
+                                            if (index != -1) {
+                                              AppDataStore.instance.teachers[index] = result;
+                                            } else {
+                                              AppDataStore.instance.teachers.insert(0, result);
+                                            }
+                                            AppDataStore.instance.saveTeachers();
                                           });
                                         }
                                       },
-                                      child: Container(
-                                        width: 32,
-                                        height: 32,
-                                        decoration: const BoxDecoration(
-                                            color: Color(0xFF2563EB),
-                                            shape: BoxShape.circle),
-                                        child: const Icon(Icons.edit,
-                                            color: Colors.white, size: 16),
+                                      child: const Padding(
+                                        padding: EdgeInsets.all(4.0),
+                                        child: Icon(Icons.edit, color: Color(0xFF2563EB), size: 20),
                                       ),
                                     ),
                                     const SizedBox(width: 8),
                                     InkWell(
                                       onTap: () {
                                         setState(() {
-                                          _dummyData = List.from(_dummyData)..remove(data);
+                                          AppDataStore.instance.teachers.remove(data['originalData']);
+                                          AppDataStore.instance.saveTeachers();
                                         });
                                       },
-                                      child: Container(
-                                        width: 32,
-                                        height: 32,
-                                        decoration: BoxDecoration(
-                                            color: Colors.red.shade100,
-                                            shape: BoxShape.circle),
-                                        child: Icon(Icons.delete_outline,
-                                            color: Colors.red.shade700, size: 16),
+                                      child: const Padding(
+                                        padding: EdgeInsets.all(4.0),
+                                        child: Icon(Icons.delete, color: Color(0xFFDC2626), size: 20),
                                       ),
                                     ),
                                   ],
@@ -337,9 +318,9 @@ class _AdminDriversListScreenState extends State<AdminDriversListScreen> {
   }
 
   List<Map<String, dynamic>> get _filteredData {
-    if (_searchQuery.isEmpty) return _dummyData;
+    if (_searchQuery.isEmpty) return _allData;
     final query = _searchQuery.toLowerCase();
-    return _dummyData.where((item) {
+    return _allData.where((item) {
       return item.values.any((val) => val.toString().toLowerCase().contains(query));
     }).toList();
   }

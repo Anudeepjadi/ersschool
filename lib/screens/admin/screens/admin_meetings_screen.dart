@@ -36,21 +36,26 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
   final TextEditingController _descriptionController = TextEditingController();
   DateTime _startDate = DateTime(2026, 6, 29);
   DateTime _endDate = DateTime(2026, 6, 29);
-  
+
   String _startHour = '09';
   String _startMinute = '00';
   String _startPeriod = 'AM';
-  
+
   String _endHour = '10';
   String _endMinute = '00';
   String _endPeriod = 'AM';
 
   String _requiredPeople = 'Everyone';
+  bool _reqAllEmployee = false;
+  bool _reqAllTeachers = false;
+  bool _reqAllStudents = false;
+  String _reqClass = 'All';
+  String _reqSection = 'All';
 
   // Calendar states
   String _calendarBranch = 'Ecstasy School 1 (ECS001)';
   DateTime _calendarMonth = DateTime(2026, 6);
-  
+
   // List of events (mocked)
   final List<Map<String, dynamic>> _events = [
     {
@@ -60,7 +65,11 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
   ];
 
   // Options
-  final List<String> _branches = ['Ecstasy School 1', 'Ecstasy School 2', 'Ecstasy School 3'];
+  final List<String> _branches = [
+    'Ecstasy School 1',
+    'Ecstasy School 2',
+    'Ecstasy School 3'
+  ];
   final List<String> _calendarBranches = [
     'Ecstasy School 1 (ECS001)',
     'Ecstasy School 2 (ECS002)',
@@ -113,8 +122,8 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: const Color(0xFFF5F7FF),
-      bottomNavigationBar: widget.onOpenDrawer == null 
-          ? AdminBottomNavBar(currentIndex: 4) 
+      bottomNavigationBar: widget.onOpenDrawer == null
+          ? AdminBottomNavBar(currentIndex: 4)
           : null,
       drawer: const AdminDrawer(),
       appBar: AdminAppBar(
@@ -130,7 +139,8 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
                 },
               )
             : null,
-        onOpenDrawer: widget.onOpenDrawer ?? () => _scaffoldKey.currentState?.openDrawer(),
+        onOpenDrawer: widget.onOpenDrawer ??
+            () => _scaffoldKey.currentState?.openDrawer(),
       ),
       body: Column(
         children: [
@@ -184,7 +194,8 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 title: Text(
                   (item['title'] as String).tr,
                   style: const TextStyle(
@@ -193,7 +204,8 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
                     fontSize: 14,
                   ),
                 ),
-                trailing: const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
+                trailing: const Icon(Icons.arrow_forward_ios,
+                    size: 14, color: Colors.grey),
                 onTap: () {
                   setState(() {
                     _previousFeature = MeetingsFeature.menu;
@@ -215,16 +227,15 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          )
-        ]
-      ),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.02),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            )
+          ]),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -234,17 +245,21 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
             children: [
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF0F172A), // Dark slate/black
+                  backgroundColor: AppColors.primary, // Dark slate/black
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4)),
                 ),
                 onPressed: () {
                   setState(() {
                     _selectedFeature = _previousFeature;
                   });
                 },
-                child: Text("Close".tr, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                child: Text("Close".tr,
+                    style: const TextStyle(
+                        fontSize: 12, fontWeight: FontWeight.bold)),
               ),
               const SizedBox(width: 8),
               ElevatedButton(
@@ -253,16 +268,19 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
                   foregroundColor: Colors.grey.shade600,
                   surfaceTintColor: Colors.white,
                   elevation: 0,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   side: BorderSide(color: Colors.grey.shade300),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4)),
                 ),
                 onPressed: () {
                   if (_titleController.text.isNotEmpty) {
                     setState(() {
                       _events.add({
                         'date': _startDate,
-                        'title': "$_startHour:$_startMinute $_startPeriod ${_titleController.text}",
+                        'title':
+                            "$_startHour:$_startMinute $_startPeriod ${_titleController.text}",
                       });
                     });
                   }
@@ -278,7 +296,9 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
                     _descriptionController.clear();
                   });
                 },
-                child: Text("Save".tr, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                child: Text("Save".tr,
+                    style: const TextStyle(
+                        fontSize: 12, fontWeight: FontWeight.bold)),
               ),
             ],
           ),
@@ -329,10 +349,15 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
           const SizedBox(height: 8),
           Row(
             children: [
-              Expanded(child: Column(
+              Expanded(
+                  child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("Start Time", style: TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
+                  const Text("Start Time",
+                      style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold)),
                   const SizedBox(height: 4),
                   _buildTimeDropdown('start'),
                 ],
@@ -358,10 +383,15 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
           const SizedBox(height: 8),
           Row(
             children: [
-              Expanded(child: Column(
+              Expanded(
+                  child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("End Time", style: TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
+                  const Text("End Time",
+                      style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold)),
                   const SizedBox(height: 4),
                   _buildTimeDropdown('end'),
                 ],
@@ -373,14 +403,59 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
           // Required People section
           Text(
             "Required People".tr,
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
+            style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF1E2875)),
           ),
           const SizedBox(height: 12),
-          Column(
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildRadioOption('Everyone'),
-              _buildRadioOption('Specific People'),
-              _buildRadioOption('Class Students'),
+              // Left side: Radio buttons
+              Expanded(
+                flex: 1,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildRadioOption('Everyone'),
+                    _buildRadioOption('Specific People'),
+                    _buildRadioOption('Class Students'),
+                  ],
+                ),
+              ),
+              // Right side: Conditionally rendered options
+              Expanded(
+                flex: 1,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (_requiredPeople == 'Specific People') ...[
+                      _buildCheckboxOption('All Employee', _reqAllEmployee,
+                          (v) => setState(() => _reqAllEmployee = v!)),
+                      _buildCheckboxOption('All Teachers', _reqAllTeachers,
+                          (v) => setState(() => _reqAllTeachers = v!)),
+                      _buildCheckboxOption('All Students', _reqAllStudents,
+                          (v) => setState(() => _reqAllStudents = v!)),
+                    ],
+                    if (_requiredPeople == 'Class Students') ...[
+                      _buildFormDropdown(
+                        label: "Class",
+                        value: _reqClass,
+                        items: ['All', 'Class 1', 'Class 2', 'Class 3'],
+                        onChanged: (val) => setState(() => _reqClass = val!),
+                      ),
+                      const SizedBox(height: 12),
+                      _buildFormDropdown(
+                        label: "Section",
+                        value: _reqSection,
+                        items: ['All', 'A', 'B', 'C'],
+                        onChanged: (val) => setState(() => _reqSection = val!),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
             ],
           ),
         ],
@@ -402,7 +477,7 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: isSelected ? const Color(0xFF0038FF) : Colors.grey.shade400,
+                  color: isSelected ? AppColors.primary : Colors.grey.shade400,
                   width: 2,
                 ),
               ),
@@ -413,23 +488,52 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
                         height: 8,
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Color(0xFF0038FF),
+                          color: AppColors.primary,
                         ),
                       ),
                     )
                   : null,
             ),
             const SizedBox(width: 10),
-            Text(value.tr, style: const TextStyle(fontSize: 12, color: Colors.black)),
+            Text(value.tr,
+                style: const TextStyle(fontSize: 12, color: Colors.black)),
           ],
         ),
       ),
     );
   }
 
+  Widget _buildCheckboxOption(
+      String title, bool value, ValueChanged<bool?> onChanged) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        children: [
+          SizedBox(
+            height: 24,
+            width: 24,
+            child: Checkbox(
+              value: value,
+              onChanged: onChanged,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4)),
+              side: BorderSide(color: Colors.grey.shade400, width: 1.5),
+              activeColor: AppColors.primary,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text(title.tr,
+              style: const TextStyle(fontSize: 12, color: Colors.black)),
+        ],
+      ),
+    );
+  }
+
   Widget _buildTimeDropdown(String prefix) {
-    final List<String> hours = List.generate(12, (i) => (i + 1).toString().padLeft(2, '0'));
-    final List<String> minutes = List.generate(12, (i) => (i * 5).toString().padLeft(2, '0'));
+    final List<String> hours =
+        List.generate(12, (i) => (i + 1).toString().padLeft(2, '0'));
+    final List<String> minutes =
+        List.generate(12, (i) => (i * 5).toString().padLeft(2, '0'));
     final List<String> periods = ['AM', 'PM'];
 
     final isStart = prefix == 'start';
@@ -444,13 +548,18 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
           child: Container(
             height: 32,
             padding: const EdgeInsets.symmetric(horizontal: 4),
-            decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(4)),
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey.shade300),
+                borderRadius: BorderRadius.circular(4)),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
                 value: selectedHour,
                 style: const TextStyle(fontSize: 11, color: Colors.black),
-                onChanged: (v) => setState(() => isStart ? _startHour = v! : _endHour = v!),
-                items: hours.map((h) => DropdownMenuItem(value: h, child: Text(h))).toList(),
+                onChanged: (v) =>
+                    setState(() => isStart ? _startHour = v! : _endHour = v!),
+                items: hours
+                    .map((h) => DropdownMenuItem(value: h, child: Text(h)))
+                    .toList(),
               ),
             ),
           ),
@@ -463,13 +572,18 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
           child: Container(
             height: 32,
             padding: const EdgeInsets.symmetric(horizontal: 4),
-            decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(4)),
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey.shade300),
+                borderRadius: BorderRadius.circular(4)),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
                 value: selectedMinute,
                 style: const TextStyle(fontSize: 11, color: Colors.black),
-                onChanged: (v) => setState(() => isStart ? _startMinute = v! : _endMinute = v!),
-                items: minutes.map((m) => DropdownMenuItem(value: m, child: Text(m))).toList(),
+                onChanged: (v) => setState(
+                    () => isStart ? _startMinute = v! : _endMinute = v!),
+                items: minutes
+                    .map((m) => DropdownMenuItem(value: m, child: Text(m)))
+                    .toList(),
               ),
             ),
           ),
@@ -480,13 +594,18 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
           child: Container(
             height: 32,
             padding: const EdgeInsets.symmetric(horizontal: 4),
-            decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(4)),
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey.shade300),
+                borderRadius: BorderRadius.circular(4)),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
                 value: selectedPeriod,
                 style: const TextStyle(fontSize: 11, color: Colors.black),
-                onChanged: (v) => setState(() => isStart ? _startPeriod = v! : _endPeriod = v!),
-                items: periods.map((p) => DropdownMenuItem(value: p, child: Text(p))).toList(),
+                onChanged: (v) => setState(
+                    () => isStart ? _startPeriod = v! : _endPeriod = v!),
+                items: periods
+                    .map((p) => DropdownMenuItem(value: p, child: Text(p)))
+                    .toList(),
               ),
             ),
           ),
@@ -503,7 +622,9 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label.tr, style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
+        Text(label.tr,
+            style: const TextStyle(
+                fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
         const SizedBox(height: 6),
         InkWell(
           onTap: onTap,
@@ -516,8 +637,10 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("${date.day}/${date.month}/${date.year}", style: const TextStyle(fontSize: 12)),
-                Icon(Icons.calendar_month, color: Colors.grey.shade600, size: 16),
+                Text("${date.day}/${date.month}/${date.year}",
+                    style: const TextStyle(fontSize: 12)),
+                Icon(Icons.calendar_month,
+                    color: Colors.grey.shade600, size: 16),
               ],
             ),
           ),
@@ -535,7 +658,9 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label.tr, style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
+        Text(label.tr,
+            style: const TextStyle(
+                fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
         const SizedBox(height: 6),
         TextField(
           controller: controller,
@@ -543,7 +668,8 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
           style: const TextStyle(fontSize: 13),
           decoration: InputDecoration(
             hintText: hint,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(6),
               borderSide: BorderSide(color: Colors.grey.shade300),
@@ -563,7 +689,9 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label.tr, style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
+        Text(label.tr,
+            style: const TextStyle(
+                fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
         const SizedBox(height: 6),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
@@ -575,7 +703,10 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
             child: DropdownButton<String>(
               value: value,
               isExpanded: true,
-              style: const TextStyle(fontSize: 12, color: Colors.black, fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                  fontSize: 12,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold),
               items: items.map((String item) {
                 return DropdownMenuItem<String>(
                   value: item,
@@ -593,13 +724,23 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
   // ─── 2. CALENDAR VIEW ──────────────────────────────────────────────────────
   Widget _buildCalendarView() {
     final months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
     ];
 
     final year = _calendarMonth.year;
     final month = _calendarMonth.month;
-    
+
     final firstDay = DateTime(year, month, 1);
     final daysInMonth = DateTime(year, month + 1, 0).day;
     final weekdayOfFirst = firstDay.weekday % 7;
@@ -615,8 +756,6 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-
-
           _buildFormDropdown(
             label: "Branch",
             value: _calendarBranch,
@@ -624,7 +763,6 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
             onChanged: (val) => setState(() => _calendarBranch = val!),
           ),
           const SizedBox(height: 16),
-
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -639,43 +777,57 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFFEAB308),
                             foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4)),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 8),
                           ),
                           onPressed: () {
                             setState(() {
-                              _calendarMonth = DateTime(_calendarMonth.year, _calendarMonth.month - 1);
+                              _calendarMonth = DateTime(_calendarMonth.year,
+                                  _calendarMonth.month - 1);
                             });
                           },
-                          child: Text("< Previous".tr, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+                          child: Text("< Previous".tr,
+                              style: const TextStyle(
+                                  fontSize: 10, fontWeight: FontWeight.bold)),
                         ),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF10B981),
                             foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4)),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 8),
                           ),
                           onPressed: () {
                             setState(() {
                               _calendarMonth = DateTime(2026, 6);
                             });
                           },
-                          child: Text("Current Month".tr, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+                          child: Text("Current Month".tr,
+                              style: const TextStyle(
+                                  fontSize: 10, fontWeight: FontWeight.bold)),
                         ),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFFEAB308),
                             foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4)),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 8),
                           ),
                           onPressed: () {
                             setState(() {
-                              _calendarMonth = DateTime(_calendarMonth.year, _calendarMonth.month + 1);
+                              _calendarMonth = DateTime(_calendarMonth.year,
+                                  _calendarMonth.month + 1);
                             });
                           },
-                          child: Text("Next >".tr, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+                          child: Text("Next >".tr,
+                              style: const TextStyle(
+                                  fontSize: 10, fontWeight: FontWeight.bold)),
                         ),
                       ],
                     ),
@@ -684,8 +836,10 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFC2410C),
                       foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4)),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 8),
                     ),
                     onPressed: () {
                       setState(() {
@@ -695,19 +849,23 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
                         _descriptionController.clear();
                       });
                     },
-                    child: Text("Add New".tr, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+                    child: Text("Add New".tr,
+                        style: const TextStyle(
+                            fontSize: 10, fontWeight: FontWeight.bold)),
                   ),
                 ],
               ),
               const SizedBox(height: 8),
               Text(
                 "${months[month - 1].tr} $year",
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87),
               ),
             ],
           ),
           const SizedBox(height: 16),
-
           Table(
             border: TableBorder.all(color: Colors.grey.shade200),
             children: [
@@ -726,8 +884,10 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
               ...List.generate(weeksCount, (weekIdx) {
                 return TableRow(
                   children: List.generate(7, (dayIdx) {
-                    final dayCellNum = weekIdx * 7 + dayIdx - weekdayOfFirst + 1;
-                    final isValidDay = dayCellNum > 0 && dayCellNum <= daysInMonth;
+                    final dayCellNum =
+                        weekIdx * 7 + dayIdx - weekdayOfFirst + 1;
+                    final isValidDay =
+                        dayCellNum > 0 && dayCellNum <= daysInMonth;
 
                     if (!isValidDay) {
                       return TableCell(
@@ -759,10 +919,11 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
                               style: TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold,
-                                color: cellDate.day == DateTime.now().day && 
-                                        cellDate.month == DateTime.now().month &&
+                                color: cellDate.day == DateTime.now().day &&
+                                        cellDate.month ==
+                                            DateTime.now().month &&
                                         cellDate.year == DateTime.now().year
-                                    ? const Color(0xFF0038FF)
+                                    ? AppColors.primary
                                     : Colors.black54,
                               ),
                             ),
@@ -770,14 +931,16 @@ class AdminMeetingsScreenState extends State<AdminMeetingsScreen> {
                             ...cellEvents.map((evt) {
                               return Container(
                                 width: double.infinity,
-                                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 4, vertical: 2),
                                 decoration: BoxDecoration(
                                   color: Colors.grey.shade700,
                                   borderRadius: BorderRadius.circular(2),
                                 ),
                                 child: Text(
                                   evt['title'] as String,
-                                  style: const TextStyle(fontSize: 8, color: Colors.white),
+                                  style: const TextStyle(
+                                      fontSize: 8, color: Colors.white),
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                 ),
