@@ -24,6 +24,7 @@ class _AdminDriversListScreenState extends State<AdminDriversListScreen> {
   List<Map<String, dynamic>> get _allData {
     return AppDataStore.instance.teachers.where((t) => t['department'] == 'Driver').map((t) {
       return {
+        ...t,
         'branch': t['school'] ?? '',
         'role': t['department'] ?? 'Driver',
         'code': t['employeeCode'] ?? '',

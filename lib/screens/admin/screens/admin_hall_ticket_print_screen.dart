@@ -4,6 +4,8 @@ import 'package:ersschool/core/localization/language_manager.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 
 class AdminHallTicketPrintScreen extends StatefulWidget {
   final Map<String, dynamic> student;
@@ -25,6 +27,12 @@ class _AdminHallTicketPrintScreenState extends State<AdminHallTicketPrintScreen>
   Future<void> _simulatePrint() async {
     setState(() => _isPrinting = true);
     try {
+      pw.ImageProvider? studentPhoto;
+      final photo = widget.student['avatar'] ?? widget.student['photoPath'];
+      if (!kIsWeb && photo != null && File(photo.toString()).existsSync()) {
+        studentPhoto = pw.MemoryImage(File(photo.toString()).readAsBytesSync());
+      }
+
       await Printing.layoutPdf(
         onLayout: (PdfPageFormat format) async {
           final doc = pw.Document();
@@ -40,10 +48,31 @@ class _AdminHallTicketPrintScreenState extends State<AdminHallTicketPrintScreen>
                       child: pw.Text("HALL TICKET (${widget.examination})", style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
                     ),
                     pw.SizedBox(height: 24),
-                    pw.Text("Student Name: ${widget.student['name'] ?? ''}"),
-                    pw.Text("Admission Number: ${widget.student['admission'] ?? ''}"),
-                    pw.Text("Class & Section: ${widget.student['class'] ?? ''} - ${widget.student['section'] ?? ''}"),
-                    pw.Text("Academic Year: 2025-26"),
+                    pw.Row(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Expanded(
+                          child: pw.Column(
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            children: [
+                              pw.Text("Student Name: ${widget.student['name'] ?? ''}"),
+                              pw.Text("Admission Number: ${widget.student['admission'] ?? ''}"),
+                              pw.Text("Class & Section: ${widget.student['class'] ?? ''} - ${widget.student['section'] ?? ''}"),
+                              pw.Text("Academic Year: 2025-26"),
+                            ],
+                          ),
+                        ),
+                        if (studentPhoto != null)
+                          pw.Container(
+                            width: 80,
+                            height: 100,
+                            decoration: pw.BoxDecoration(
+                              border: pw.Border.all(color: PdfColors.grey300),
+                            ),
+                            child: pw.Image(studentPhoto, fit: pw.BoxFit.cover),
+                          ),
+                      ],
+                    ),
                     pw.SizedBox(height: 40),
                     pw.Text("EXAMINATION SCHEDULE", style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold)),
                     pw.SizedBox(height: 12),
@@ -82,6 +111,8 @@ class _AdminHallTicketPrintScreenState extends State<AdminHallTicketPrintScreen>
     final Map<String, dynamic> student = widget.student;
     final String schoolName = student['school'] ?? 'Ecstasy School 1';
     final String classAndSec = "${student['class'] ?? 'LKG'} - ${student['section'] ?? 'A'}";
+    final photo = student['avatar'] ?? student['photoPath'];
+    final bool hasValidPhoto = !kIsWeb && photo != null && File(photo.toString()).existsSync();
 
     // Mock subject dates for selected examination
     final List<Map<String, String>> timetable = [
@@ -289,15 +320,12 @@ class _AdminHallTicketPrintScreenState extends State<AdminHallTicketPrintScreen>
                                   borderRadius: BorderRadius.circular(4),
                                   color: Colors.grey.shade100,
                                 ),
-                                child: student['avatar'] != null
-                                    ? Center(
-                                        child: Text(
-                                          student['avatar'],
-                                          style: const TextStyle(
-                                            fontSize: 28,
-                                            fontWeight: FontWeight.bold,
-                                            color: Color(0xFF1E2875),
-                                          ),
+                                child: hasValidPhoto
+                                    ? ClipRRect(
+                                        borderRadius: BorderRadius.circular(4),
+                                        child: Image.file(
+                                          File(photo.toString()),
+                                          fit: BoxFit.cover,
                                         ),
                                       )
                                     : const Icon(Icons.person, size: 50, color: Colors.grey),
