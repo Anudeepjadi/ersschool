@@ -10,6 +10,7 @@ import '../../../widgets/calendar_popup.dart';
 import '../screens/admin_attendance_screen.dart';
 import '../screens/admin_fees_screen.dart';
 import '../screens/admin_communications_screen.dart';
+import '../screens/reports/class_attendance_report_screen.dart';
 import '../screens/admin_events_screen.dart';
 import '../../ai_assistant/ai_assistant_screen.dart';
 import '../widgets/admin_app_bar.dart';
@@ -45,11 +46,11 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
   void initState() {
     super.initState();
     _quickActions = [
-      {'id': 'add_student', 'icon': Icons.person_add, 'label': "Add Student".tr.replaceAll(' ', '\n'), 'color': Color(0xFF0038FF)},
+      {'id': 'add_student', 'icon': Icons.person_add, 'label': "Add Student".tr.replaceAll(' ', '\n'), 'color': AppColors.primary},
       {'id': 'add_teacher', 'icon': Icons.person_add, 'label': "Add Teacher".tr.replaceAll(' ', '\n'), 'color': Color(0xFF10B981)},
       {'id': 'mark_attendance', 'icon': Icons.calendar_today, 'label': "Mark Attendance".tr.replaceAll(' ', '\n'), 'color': Color(0xFF8B5CF6)},
       {'id': 'collect_fees', 'icon': Icons.receipt_long, 'label': "Collect Fees".tr.replaceAll(' ', '\n'), 'color': Color(0xFFF59E0B)},
-      {'id': 'notice_board', 'icon': Icons.campaign, 'label': "Notice Board".tr.replaceAll(' ', '\n'), 'color': Color(0xFF0038FF)},
+      {'id': 'notice_board', 'icon': Icons.campaign, 'label': "Notice Board".tr.replaceAll(' ', '\n'), 'color': AppColors.primary},
       {'id': 'more', 'icon': Icons.more_horiz, 'label': "More".tr, 'color': Color(0xFF6B7280)},
     ];
   }
@@ -278,8 +279,8 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
   // 3. STATS ROW
   // ══════════════════════════════════════════════════════════════════════════
   Widget _buildStatsRowForSchool(String school) {
-    final studentsCount = 1234 + AppDataStore.instance.students.where((s) => s['school'] == school).length;
-    final teachersCount = 76 + AppDataStore.instance.teachers.where((t) => t['school'] == school).length;
+    final studentsCount = AppDataStore.instance.students.where((s) => s['school'] == school).length;
+    final teachersCount = AppDataStore.instance.teachers.where((t) => t['school'] == school).length;
     final branchesCount = AppDataStore.instance.branches.where((b) => b['school'] == school).length;
     final metrics = AppDataStore.instance.getSchoolMetrics(school);
     final presentPercent = metrics['presentPercent'];
@@ -289,7 +290,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
         Expanded(
           child: _buildStatCard(
             icon: Icons.people,
-            iconBgColor: Color(0xFF0038FF),
+            iconBgColor: AppColors.primary,
             label: "Total Students".tr,
             value: studentsCount.toString(),
             change: "↑ 12 this month",
@@ -332,7 +333,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
             changeColor: metrics['attendanceChangeColor'] as Color,
             onTap: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => AdminAttendanceScreen()),
+              MaterialPageRoute(builder: (_) => const ClassAttendanceReportScreen()),
             ),
           ),
         ),
@@ -1121,7 +1122,7 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
           SizedBox(height: 12),
           InkWell(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => AdminAttendanceScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const ClassAttendanceReportScreen()));
             },
             child: Row(children: [
                 Text("View attendance report".tr,

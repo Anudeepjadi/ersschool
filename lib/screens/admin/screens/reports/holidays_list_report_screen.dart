@@ -1,7 +1,10 @@
+import 'package:ersschool/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/admin_app_bar.dart';
 import '../../widgets/admin_drawer.dart';
 import '../../widgets/admin_bottom_nav_bar.dart';
+import '../../../../core/data/app_data_store.dart';
+import 'package:intl/intl.dart';
 
 class HolidaysListReportScreen extends StatefulWidget {
   const HolidaysListReportScreen({super.key});
@@ -13,18 +16,45 @@ class HolidaysListReportScreen extends StatefulWidget {
 class _HolidaysListReportScreenState extends State<HolidaysListReportScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  final AppDataStore _store = AppDataStore.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    _store.configVersion.addListener(_onStoreChanged);
+  }
+
+  void _onStoreChanged() {
+    if (mounted) setState(() {});
+  }
+
+  @override
+  void dispose() {
+    _store.configVersion.removeListener(_onStoreChanged);
+    super.dispose();
+  }
+
+  String _getDayName(String dateStr) {
+    try {
+      // Assuming date format is dd/MM/yyyy or d/M/yyyy
+      final parts = dateStr.split('/');
+      if (parts.length == 3) {
+        final date = DateTime(int.parse(parts[2]), int.parse(parts[1]), int.parse(parts[0]));
+        return DateFormat('EEEE').format(date);
+      }
+    } catch (_) {}
+    return '';
+  }
+
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, String>> holidays = [
-      {'date': '2/10/2026', 'day': 'Friday', 'description': 'Gandhi Jayanthi'},
-      {'date': '25/12/2025', 'day': 'Friday', 'description': 'Christmas Day'},
-      {'date': '20/3/2026', 'day': 'Wednesday', 'description': 'krishna birthday'},
-      {'date': '27/3/2026', 'day': 'Wednesday', 'description': 'bakrid'},
-      {'date': '30/3/2026', 'day': 'Saturday', 'description': 'Second saturday'},
-      {'date': '25/6/2026', 'day': 'Thursday', 'description': 'muhharam'},
-      {'date': '15/8/2026', 'day': 'Saturday', 'description': 'Independence Day'},
-      {'date': '26/1/2027', 'day': 'Tuesday', 'description': 'Republic Day'},
-    ];
+    final holidays = _store.holidays.map((h) {
+      return {
+        'date': h['date']?.toString() ?? '',
+        'day': _getDayName(h['date']?.toString() ?? ''),
+        'description': h['description']?.toString() ?? '',
+      };
+    }).toList();
 
     return Scaffold(
       key: _scaffoldKey,
@@ -58,7 +88,7 @@ class _HolidaysListReportScreenState extends State<HolidaysListReportScreen> {
       },
       children: [
         TableRow(
-          decoration: const BoxDecoration(color: Color(0xFF001A40)),
+          decoration: const BoxDecoration(color: AppColors.primary),
           children: [
             _buildHeaderCell("Date"),
             _buildHeaderCell("Day"),

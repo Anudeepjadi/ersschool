@@ -1,3 +1,4 @@
+import 'package:ersschool/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:ersschool/screens/student/class/tabs/timetable_screen.dart';
 import '../../../widgets/scrollable_table_wrapper.dart';
@@ -75,9 +76,9 @@ class _ClassScreenState extends State<ClassScreen> with SingleTickerProviderStat
       padding: EdgeInsets.symmetric(vertical: 4),
       child: TabBar(
         controller: _tabController,
-        indicatorColor: Color(0xFF0038FF),
+        indicatorColor: AppColors.primary,
         indicatorWeight: 3,
-        labelColor: Color(0xFF0038FF),
+        labelColor: AppColors.primary,
         unselectedLabelColor: Color(0xFF666666),
         labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
         unselectedLabelStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
@@ -139,7 +140,7 @@ class _ClassScreenState extends State<ClassScreen> with SingleTickerProviderStat
                     MaterialPageRoute(builder: (_) => TimetableScreen())),
                 child: Text("View Full Timetable".tr,
                   style: TextStyle(
-                      color: Color(0xFF0038FF),
+                      color: AppColors.primary,
                       fontSize: 13,
                       fontWeight: FontWeight.bold),
                 ),
@@ -314,7 +315,7 @@ class _ClassScreenState extends State<ClassScreen> with SingleTickerProviderStat
           child: Text(
             action,
             style: TextStyle(
-                color: Color(0xFF0038FF),
+                color: AppColors.primary,
                 fontSize: 13,
                 fontWeight: FontWeight.bold),
           ),

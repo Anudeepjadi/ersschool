@@ -179,12 +179,21 @@ class _AdminFeeTypesScreenState extends State<AdminFeeTypesScreen> {
                                     fontWeight: FontWeight.w500))),
                         Expanded(
                           flex: 2,
-                          child: Icon(
-                            (f['isActive'] as bool? ?? true)
-                                ? Icons.check_box
-                                : Icons.check_box_outline_blank,
-                            color: Color(0xFF2563EB),
-                            size: 20,
+                          child: InkWell(
+                            onTap: () {
+                                bool current = f['isActive'] as bool? ?? true;
+                                _store.updateFeeType(i, {...f, 'isActive': !current});
+                            },
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Icon(
+                                (f['isActive'] as bool? ?? true)
+                                    ? Icons.check_box
+                                    : Icons.check_box_outline_blank,
+                                color: Color(0xFF2563EB),
+                                size: 20,
+                              ),
+                            ),
                           ),
                         ),
                         Row(children: [

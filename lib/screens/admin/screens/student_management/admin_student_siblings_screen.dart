@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:printing/printing.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
 import '../../widgets/admin_bottom_nav_bar.dart';
 import 'package:ersschool/core/theme/app_colors.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
@@ -76,8 +79,43 @@ class _AdminStudentSiblingsScreenState extends State<AdminStudentSiblingsScreen>
       'siblings': [
         {'name': 'Srishti Paiyala', 'gender': 'Female', 'class': 'Grade 3 - A', 'active': 'True', 'branch': 'Ecstasy School 1'}
       ]
-    },
+    }
   ];
+
+  Future<void> _printDocument() async {
+    final pdf = pw.Document();
+    
+    pdf.addPage(
+      pw.MultiPage(
+        pageFormat: PdfPageFormat.a4.landscape,
+        build: (context) {
+          return [
+            pw.Text("Student Siblings", style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
+            pw.SizedBox(height: 16),
+            pw.TableHelper.fromTextArray(
+              context: context,
+              headers: ['Admission No', 'Name', 'Father Name', 'Gender', 'Class', 'Mobile No', 'Active'],
+              data: _filteredData.map((data) => [
+                data['admission'],
+                data['name'],
+                data['father'],
+                data['gender'],
+                data['class'],
+                data['mobile'],
+                data['active'],
+              ]).toList(),
+              headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 10),
+              cellStyle: const pw.TextStyle(fontSize: 10),
+            ),
+          ];
+        }
+      ),
+    );
+
+    await Printing.layoutPdf(
+      onLayout: (PdfPageFormat format) async => pdf.save(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -178,11 +216,7 @@ class _AdminStudentSiblingsScreenState extends State<AdminStudentSiblingsScreen>
                       ),
                     ),
                     ElevatedButton(
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Print dialog mock".tr)),
-                        );
-                      },
+                      onPressed: _printDocument,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.black,
                         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -328,10 +362,10 @@ class _AdminStudentSiblingsScreenState extends State<AdminStudentSiblingsScreen>
   }
 
   List<Map<String, dynamic>> get _filteredData {
-    if (_searchQuery.isEmpty) return _dummyData;
-    final query = _searchQuery.toLowerCase();
     return _dummyData.where((student) {
-      return student.values.any((val) => val.toString().toLowerCase().contains(query));
+      bool matchesClass = _selectedClass == 'All' || (student['class'] ?? '').contains(_selectedClass);
+      bool matchesSearch = _searchQuery.isEmpty || student.values.any((val) => val.toString().toLowerCase().contains(_searchQuery.toLowerCase()));
+      return matchesClass && matchesSearch;
     }).toList();
   }
 

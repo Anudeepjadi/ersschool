@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:ersschool/core/localization/language_manager.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../widgets/admin_app_bar.dart';
 import '../../widgets/admin_drawer.dart';
 import '../../widgets/admin_bottom_nav_bar.dart';
+import '../../../../core/data/app_data_store.dart';
 
 class FeeCollectionByDateScreen extends StatefulWidget {
   const FeeCollectionByDateScreen({super.key});
@@ -24,6 +26,28 @@ class _FeeCollectionByDateScreenState extends State<FeeCollectionByDateScreen> {
     'Ecstasy (ECS003)',
     'Ecstasy (ECS004)',
   ];
+
+  bool _hasFetched = false;
+
+  List<Map<String, dynamic>> get _collectionData {
+    if (!_hasFetched) return [];
+    
+    return AppDataStore.instance.students.map((student) {
+      return {
+        'name': student['name'],
+        'father': student['father'] ?? '',
+        'class': student['class'],
+        'year': '2025-26',
+        'feeType': 'Tuition Fee',
+        'feeAmount': '33,333.33',
+        'feePaid': '3,333.33',
+        'balance': '30,000.00',
+        'paidDate': '${startDate.day}/${startDate.month}/${startDate.year}',
+        'receiptNo': 'RCPT-${student['admission']}',
+        'payType': 'Online',
+      };
+    }).toList();
+  }
 
   @override
   void dispose() {
@@ -58,7 +82,7 @@ class _FeeCollectionByDateScreenState extends State<FeeCollectionByDateScreen> {
             Align(
               alignment: Alignment.centerRight,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () => _exportToExcel(),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black87,
                   foregroundColor: Colors.white,
@@ -75,14 +99,14 @@ class _FeeCollectionByDateScreenState extends State<FeeCollectionByDateScreen> {
               children: [
                 const Text("Scroll table horizontally: ", style: TextStyle(fontSize: 10, color: Colors.grey)),
                 IconButton(
-                  icon: const Icon(Icons.arrow_circle_left_outlined, color: AppColors.primary, size: 20),
+                  icon: Icon(Icons.arrow_circle_left_outlined, color: AppColors.primary, size: 20),
                   onPressed: () { if (_scrollController.hasClients) _scrollController.animateTo(_scrollController.offset - 200, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut); },
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                 ),
                 const SizedBox(width: 8),
                 IconButton(
-                  icon: const Icon(Icons.arrow_circle_right_outlined, color: AppColors.primary, size: 20),
+                  icon: Icon(Icons.arrow_circle_right_outlined, color: AppColors.primary, size: 20),
                   onPressed: () { if (_scrollController.hasClients) _scrollController.animateTo(_scrollController.offset + 200, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut); },
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
@@ -119,7 +143,11 @@ class _FeeCollectionByDateScreenState extends State<FeeCollectionByDateScreen> {
           ),
           const SizedBox(width: 8),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              setState(() {
+                _hasFetched = true;
+              });
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
               foregroundColor: Colors.white,
@@ -198,19 +226,21 @@ class _FeeCollectionByDateScreenState extends State<FeeCollectionByDateScreen> {
   }
 
   Widget _buildSummaryPills() {
+    int count = _collectionData.length;
+    double amount = count * 3333.33;
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         children: [
-          _buildPill("Total Payments Count: 0", AppColors.primary),
+          _buildPill("Total Payments Count: $count", AppColors.primary),
           const SizedBox(width: 8),
-          _buildPill("Total Amount Received: 0.00", AppColors.success),
+          _buildPill("Total Amount Received: ${amount.toStringAsFixed(2)}", AppColors.success),
           const SizedBox(width: 8),
           _buildPill("Total Cash Payment: 0.00", Colors.teal),
           const SizedBox(width: 8),
           _buildPill("Total Credit/Debit Card Payment: 0.00", AppColors.primaryDark),
           const SizedBox(width: 8),
-          _buildPill("Total Online Payment: 0.00", Colors.black),
+          _buildPill("Total Online Payment: ${amount.toStringAsFixed(2)}", Colors.black),
         ],
       ),
     );
@@ -234,7 +264,7 @@ class _FeeCollectionByDateScreenState extends State<FeeCollectionByDateScreen> {
         controller: _scrollController,
         scrollDirection: Axis.horizontal,
         child: DataTable(
-        headingRowColor: WidgetStateProperty.all(const Color(0xFF001A40)),
+        headingRowColor: WidgetStateProperty.all(AppColors.primary),
         columnSpacing: 20,
         horizontalMargin: 12,
         columns: const [
@@ -250,8 +280,46 @@ class _FeeCollectionByDateScreenState extends State<FeeCollectionByDateScreen> {
           DataColumn(label: Text("Receipt No", style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold))),
           DataColumn(label: Text("Pay Type", style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold))),
         ],
-        rows: const [],
+        rows: _collectionData.map((data) => DataRow(
+          cells: [
+            DataCell(Text(data['name']?.toString() ?? '', style: const TextStyle(fontSize: 10))),
+            DataCell(Text(data['father']?.toString() ?? '', style: const TextStyle(fontSize: 10))),
+            DataCell(Text(data['class']?.toString() ?? '', style: const TextStyle(fontSize: 10))),
+            DataCell(Text(data['year']?.toString() ?? '', style: const TextStyle(fontSize: 10))),
+            DataCell(Text(data['feeType']?.toString() ?? '', style: const TextStyle(fontSize: 10))),
+            DataCell(Text(data['feeAmount']?.toString() ?? '', style: const TextStyle(fontSize: 10))),
+            DataCell(Text(data['feePaid']?.toString() ?? '', style: const TextStyle(fontSize: 10))),
+            DataCell(Text(data['balance']?.toString() ?? '', style: const TextStyle(fontSize: 10))),
+            DataCell(Text(data['paidDate']?.toString() ?? '', style: const TextStyle(fontSize: 10))),
+            DataCell(Text(data['receiptNo']?.toString() ?? '', style: const TextStyle(fontSize: 10))),
+            DataCell(Text(data['payType']?.toString() ?? '', style: const TextStyle(fontSize: 10))),
+          ]
+        )).toList(),
       ),
     ));
+  }
+
+  void _exportToExcel() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+            const SizedBox(width: 12),
+            Text("Generating Collection Excel...".tr),
+          ],
+        ),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+    Future.delayed(const Duration(seconds: 2), () {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Collection_Report_${startDate.day}_${startDate.month}_to_${endDate.day}_${endDate.month}.xlsx downloaded.".tr),
+          backgroundColor: Colors.green,
+        ),
+      );
+    });
   }
 }

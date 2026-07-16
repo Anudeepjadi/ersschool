@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
+import 'package:flutter/foundation.dart';
+import 'dart:io' show File;
 import 'package:ersschool/core/theme/app_colors.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 import 'package:ersschool/core/data/app_data_store.dart';
@@ -25,9 +26,7 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
   int _currentPage = 1;
   int _itemsPerPage = 25;
 
-  List<Map<String, dynamic>> get _employees => AppDataStore.instance.teachers
-      .where((s) => s['school'] == ProfileManager().selectedSchool.value)
-      .toList();
+  List<Map<String, dynamic>> get _employees => AppDataStore.instance.teachers.toList();
 
   @override
   Widget build(BuildContext context) {
@@ -194,7 +193,8 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
                     DataColumn(label: const Text("")), // Action
                   ],
                   rows: _getPaginatedData().map((data) {
-                    final photoPath = data['photoPath'];
+                    final photo = data['photoPath'] ?? data['photo_path'] ?? data['avatar'];
+                    final bool fileExists = !kIsWeb && photo != null && photo.toString().length > 2 && File(photo.toString()).existsSync();
                     return DataRow(
                       cells: [
                         DataCell(
@@ -217,12 +217,19 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
                               color: Colors.grey.shade300,
                               borderRadius: BorderRadius.circular(4),
                             ),
-                            child: photoPath != null && File(photoPath).existsSync()
+                            child: fileExists
                                 ? ClipRRect(
                                     borderRadius: BorderRadius.circular(4),
-                                    child: Image.file(File(photoPath), fit: BoxFit.cover),
+                                    child: Image.file(File(photo.toString()), fit: BoxFit.cover),
                                   )
-                                : const Icon(Icons.person, color: Colors.white, size: 20),
+                                : Center(
+                                    child: Text(
+                                      (data['avatar'] != null && data['avatar'].toString().length <= 2)
+                                          ? data['avatar'].toString()
+                                          : (data['name'] != null && data['name'].toString().isNotEmpty ? data['name'].toString()[0] : 'E'),
+                                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+                                    ),
+                                  ),
                           ),
                         ),
                         DataCell(Text(data['employeeCode'] ?? "")),
@@ -258,11 +265,11 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
               children: [
                 Text("Scroll table horizontally: ".tr, style: const TextStyle(fontSize: 12, color: Colors.grey)),
                 IconButton(
-                  icon: const Icon(Icons.arrow_circle_left_outlined, color: AppColors.primary),
+                  icon: Icon(Icons.arrow_circle_left_outlined, color: AppColors.primary),
                   onPressed: () { if (_scrollController.hasClients) _scrollController.animateTo(_scrollController.offset - 250, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut); },
                 ),
                 IconButton(
-                  icon: const Icon(Icons.arrow_circle_right_outlined, color: AppColors.primary),
+                  icon: Icon(Icons.arrow_circle_right_outlined, color: AppColors.primary),
                   onPressed: () { if (_scrollController.hasClients) _scrollController.animateTo(_scrollController.offset + 250, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut); },
                 ),
               ],
@@ -489,8 +496,8 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
   }
 
   Widget _buildIdCardPreview(Map<String, dynamic> employeeData) {
-    final photo = employeeData['photoPath'];
-    final bool hasValidPhoto = photo != null && File(photo.toString()).existsSync();
+    final photo = employeeData['photoPath'] ?? employeeData['photo_path'] ?? employeeData['avatar'];
+    final bool hasValidPhoto = !kIsWeb && photo != null && File(photo.toString()).existsSync();
     final headerColor = Colors.blue.shade800;
     
     return Container(

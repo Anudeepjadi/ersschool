@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'dart:io';
 import '../../widgets/admin_bottom_nav_bar.dart';
 import 'package:ersschool/core/theme/app_colors.dart';
@@ -40,9 +41,10 @@ class _AdminStudentListScreenState extends State<AdminStudentListScreen> {
     final filtered = _allStudents.where((student) {
       final matchesBranch = _selectedBranch == 'All' || student['school'] == _selectedBranch;
       final matchesStatus = _activeStatusFilter == 'All' || student['status'] == _activeStatusFilter;
+      final name = student['name']?.toString() ?? '';
       final matchesSearch = _searchQuery.isEmpty ||
-          student['name'].toLowerCase().contains(_searchQuery.toLowerCase()) ||
-          (student['admission'] ?? '').toLowerCase().contains(_searchQuery.toLowerCase());
+          name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+          (student['admission'] ?? '').toString().toLowerCase().contains(_searchQuery.toLowerCase());
       return matchesBranch && matchesStatus && matchesSearch;
     }).toList();
 
@@ -115,6 +117,7 @@ class _AdminStudentListScreenState extends State<AdminStudentListScreen> {
                         if (newStudent != null && newStudent is Map<String, dynamic>) {
                           setState(() {
                             AppDataStore.instance.students.insert(0, newStudent);
+                            AppDataStore.instance.saveStudents();
                           });
                         }
                       });
@@ -222,10 +225,10 @@ class _AdminStudentListScreenState extends State<AdminStudentListScreen> {
               CircleAvatar(
                 radius: 24,
                 backgroundColor: AppColors.primary.withValues(alpha: 0.1),
-                backgroundImage: student['photoPath'] != null && File(student['photoPath']).existsSync()
+                backgroundImage: !kIsWeb && student['photoPath'] != null && File(student['photoPath']).existsSync()
                     ? FileImage(File(student['photoPath']))
                     : null,
-                child: student['photoPath'] != null && File(student['photoPath']).existsSync()
+                child: !kIsWeb && student['photoPath'] != null && File(student['photoPath']).existsSync()
                     ? null
                     : Text(
                         student['avatar'] ?? 'S',
@@ -290,6 +293,7 @@ class _AdminStudentListScreenState extends State<AdminStudentListScreen> {
                     onTap: () {
                       setState(() {
                         student['status'] = isActive ? 'Inactive' : 'Active';
+                        AppDataStore.instance.saveStudents();
                       });
                     },
                     child: Container(
@@ -328,6 +332,7 @@ class _AdminStudentListScreenState extends State<AdminStudentListScreen> {
                           if (updatedData != null && updatedData is Map<String, dynamic>) {
                             setState(() {
                               student.addAll(updatedData);
+                              AppDataStore.instance.saveStudents();
                             });
                           }
                         });
@@ -449,6 +454,7 @@ class _AdminStudentListScreenState extends State<AdminStudentListScreen> {
             onPressed: () {
               setState(() {
                 AppDataStore.instance.students.remove(student);
+                AppDataStore.instance.saveStudents();
               });
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(

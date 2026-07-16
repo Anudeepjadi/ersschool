@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 
 class AdminHallTicketPrintScreen extends StatefulWidget {
   final Map<String, dynamic> student;
@@ -19,81 +24,86 @@ class AdminHallTicketPrintScreen extends StatefulWidget {
 class _AdminHallTicketPrintScreenState extends State<AdminHallTicketPrintScreen> {
   bool _isPrinting = false;
 
-  void _simulatePrint() {
-    setState(() {
-      _isPrinting = true;
-    });
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setDialogState) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const SizedBox(height: 10),
-                  const CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    "Preparing document...".tr,
-                    style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E2875)),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    "Generating PDF and sending to printer.".tr,
-                    style: const TextStyle(fontSize: 12, color: Colors.grey),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 10),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-
-    Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) {
-        Navigator.pop(context); // Close progress dialog
-        setState(() {
-          _isPrinting = false;
-        });
-        
-        // Show Success Dialog
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-              title: Row(
-                children: [
-                  const Icon(Icons.check_circle, color: Color(0xFF10B981), size: 28),
-                  const SizedBox(width: 10),
-                  Text("Print Status".tr, style: const TextStyle(color: Color(0xFF1E2875))),
-                ],
-              ),
-              content: Text(
-                "Hall ticket printed successfully or saved as PDF!".tr,
-                style: const TextStyle(color: Color(0xFF1E2875)),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text("OK".tr, style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
-                ),
-              ],
-            );
-          },
-        );
+  Future<void> _simulatePrint() async {
+    setState(() => _isPrinting = true);
+    try {
+      pw.ImageProvider? studentPhoto;
+      final photo = widget.student['avatar'] ?? widget.student['photoPath'];
+      if (!kIsWeb && photo != null && File(photo.toString()).existsSync()) {
+        studentPhoto = pw.MemoryImage(File(photo.toString()).readAsBytesSync());
       }
-    });
+
+      await Printing.layoutPdf(
+        onLayout: (PdfPageFormat format) async {
+          final doc = pw.Document();
+          doc.addPage(
+            pw.Page(
+              pageFormat: format,
+              margin: const pw.EdgeInsets.all(32),
+              build: (pw.Context context) {
+                return pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Center(
+                      child: pw.Text("HALL TICKET (${widget.examination})", style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
+                    ),
+                    pw.SizedBox(height: 24),
+                    pw.Row(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Expanded(
+                          child: pw.Column(
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            children: [
+                              pw.Text("Student Name: ${widget.student['name'] ?? ''}"),
+                              pw.Text("Admission Number: ${widget.student['admission'] ?? ''}"),
+                              pw.Text("Class & Section: ${widget.student['class'] ?? ''} - ${widget.student['section'] ?? ''}"),
+                              pw.Text("Academic Year: 2025-26"),
+                            ],
+                          ),
+                        ),
+                        if (studentPhoto != null)
+                          pw.Container(
+                            width: 80,
+                            height: 100,
+                            decoration: pw.BoxDecoration(
+                              border: pw.Border.all(color: PdfColors.grey300),
+                            ),
+                            child: pw.Image(studentPhoto, fit: pw.BoxFit.cover),
+                          ),
+                      ],
+                    ),
+                    pw.SizedBox(height: 40),
+                    pw.Text("EXAMINATION SCHEDULE", style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold)),
+                    pw.SizedBox(height: 12),
+                    pw.TableHelper.fromTextArray(
+                      border: pw.TableBorder.all(),
+                      headers: ['Subject', 'Date', 'Time'],
+                      data: [
+                        ['Telugu', '2/1/2026', '09:00 AM - 10:00 AM'],
+                        ['English', '3/1/2026', '09:00 AM - 10:00 AM'],
+                        ['Hindi', '5/1/2026', '09:00 AM - 10:00 AM'],
+                        ['Maths', '6/1/2026', '09:00 AM - 10:00 AM'],
+                      ],
+                    ),
+                  ],
+                );
+              },
+            ),
+          );
+          return doc.save();
+        },
+        name: 'Hall_Ticket_${widget.student['name'] ?? 'student'}',
+      );
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Print Error: $e")));
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isPrinting = false);
+      }
+    }
   }
 
   @override
@@ -101,6 +111,8 @@ class _AdminHallTicketPrintScreenState extends State<AdminHallTicketPrintScreen>
     final Map<String, dynamic> student = widget.student;
     final String schoolName = student['school'] ?? 'Ecstasy School 1';
     final String classAndSec = "${student['class'] ?? 'LKG'} - ${student['section'] ?? 'A'}";
+    final photo = student['avatar'] ?? student['photoPath'];
+    final bool hasValidPhoto = !kIsWeb && photo != null && File(photo.toString()).existsSync();
 
     // Mock subject dates for selected examination
     final List<Map<String, String>> timetable = [
@@ -308,15 +320,12 @@ class _AdminHallTicketPrintScreenState extends State<AdminHallTicketPrintScreen>
                                   borderRadius: BorderRadius.circular(4),
                                   color: Colors.grey.shade100,
                                 ),
-                                child: student['avatar'] != null
-                                    ? Center(
-                                        child: Text(
-                                          student['avatar'],
-                                          style: const TextStyle(
-                                            fontSize: 28,
-                                            fontWeight: FontWeight.bold,
-                                            color: Color(0xFF1E2875),
-                                          ),
+                                child: hasValidPhoto
+                                    ? ClipRRect(
+                                        borderRadius: BorderRadius.circular(4),
+                                        child: Image.file(
+                                          File(photo.toString()),
+                                          fit: BoxFit.cover,
                                         ),
                                       )
                                     : const Icon(Icons.person, size: 50, color: Colors.grey),
@@ -469,7 +478,7 @@ class _AdminHallTicketPrintScreenState extends State<AdminHallTicketPrintScreen>
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                     fontStyle: FontStyle.italic,
-                                    color: Color(0xFF0038FF),
+                                    color: AppColors.primary,
                                   ),
                                 ),
                               ),

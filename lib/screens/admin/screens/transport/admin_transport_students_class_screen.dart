@@ -3,10 +3,15 @@ import '../../widgets/admin_bottom_nav_bar.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 import 'package:ersschool/core/theme/app_colors.dart';
 import '../../widgets/admin_app_bar.dart';
+import 'package:printing/printing.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
 import '../student_management/admin_student_details_screen.dart';
 import '../student_management/admin_student_fee_details_screen.dart';
 import '../student_management/admin_student_attendance_report_screen.dart';
 import '../student_management/admin_register_student_screen.dart';
+import '../../../../core/data/app_data_store.dart';
+
 class AdminTransportStudentsClassScreen extends StatefulWidget {
   const AdminTransportStudentsClassScreen({super.key});
 
@@ -20,41 +25,44 @@ class _AdminTransportStudentsClassScreenState extends State<AdminTransportStuden
   String _searchQuery = '';
   final ScrollController _scrollController = ScrollController();
   
-  final List<Map<String, dynamic>> _dummyData = [
-    {
-      'name': 'Vihaan Dindi',
-      'father': 'father D.Siva Krishna',
-      'gender': 'Male',
-      'class': 'Grade 2 - A',
-      'mobile': '1502375080, 1573754521',
-      'address': 'New Road, Hyderabad',
-      'transport': 'Two Way',
-      'pickup': 'Route# 1 - City Road 1\nStart Time 8:00 AM',
-      'drop': 'Route# 2 - City Road 2\nStart Time 8:00 AM',
-    },
-    {
-      'name': 'Jashwanth Krishna',
-      'father': 'father J.Raja',
-      'gender': 'Male',
-      'class': 'Grade 2 - A',
-      'mobile': '9885147049, 9885147049',
-      'address': 'New Road, Hyderabad',
-      'transport': 'Two Way',
-      'pickup': 'Route# 2 - City Road 2\nStart Time 8:00 AM',
-      'drop': 'Route# 2 - City Road 2\nStart Time 8:00 AM',
-    },
-    {
-      'name': 'Raju rao',
-      'father': '',
-      'gender': 'Male',
-      'class': 'Grade 4 - C',
-      'mobile': '9889889881',
-      'address': '',
-      'transport': 'Two Way',
-      'pickup': 'Route# 1 - City Road 1\nStart Time 8:00 AM',
-      'drop': 'Route# 2 - City Road 2\nStart Time 8:00 AM',
-    },
-  ];
+  // _dummyData removed, using AppDataStore.instance.students instead
+
+  Future<void> _printDocument() async {
+    final pdf = pw.Document();
+    
+    pdf.addPage(
+      pw.MultiPage(
+        pageFormat: PdfPageFormat.a4.landscape,
+        build: (context) {
+          return [
+            pw.Text("Students By Class", style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
+            pw.SizedBox(height: 16),
+            pw.TableHelper.fromTextArray(
+              context: context,
+              headers: ['Name', 'Father', 'Gender', 'Class', 'Mobile', 'Address', 'Transport', 'Pickup', 'Drop'],
+              data: _filteredData.map((data) => [
+                data['name'],
+                data['father'],
+                data['gender'],
+                data['class'],
+                data['mobile'],
+                data['address'],
+                data['transport'],
+                data['pickup']?.toString().replaceAll('\n', ' ') ?? '',
+                data['drop']?.toString().replaceAll('\n', ' ') ?? '',
+              ]).toList(),
+              headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 10),
+              cellStyle: const pw.TextStyle(fontSize: 10),
+            ),
+          ];
+        }
+      ),
+    );
+
+    await Printing.layoutPdf(
+      onLayout: (PdfPageFormat format) async => pdf.save(),
+    );
+  }
 
   @override
   void dispose() {
@@ -135,7 +143,7 @@ class _AdminTransportStudentsClassScreenState extends State<AdminTransportStuden
                 ),
               ),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: _printDocument,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,
                   padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -185,15 +193,15 @@ class _AdminTransportStudentsClassScreenState extends State<AdminTransportStuden
                     rows: _filteredData.map((data) {
                       return DataRow(
                         cells: [
-                          DataCell(Text(data['name'])),
-                          DataCell(Text(data['father'])),
-                          DataCell(Text(data['gender'])),
-                          DataCell(Text(data['class'])),
-                          DataCell(Text(data['mobile'])),
-                          DataCell(Text(data['address'])),
-                          DataCell(Text(data['transport'])),
-                          DataCell(Text(data['pickup'])),
-                          DataCell(Text(data['drop'])),
+                          DataCell(Text(data['name']?.toString() ?? 'N/A')),
+                          DataCell(Text(data['father']?.toString() ?? 'N/A')),
+                          DataCell(Text(data['gender']?.toString() ?? 'N/A')),
+                          DataCell(Text(data['class']?.toString() ?? 'N/A')),
+                          DataCell(Text(data['mobile']?.toString() ?? 'N/A')),
+                          DataCell(Text(data['address']?.toString() ?? 'N/A')),
+                          DataCell(Text(data['transport']?.toString() ?? 'N/A')),
+                          DataCell(Text(data['pickup']?.toString() ?? 'N/A')),
+                          DataCell(Text(data['drop']?.toString() ?? 'N/A')),
                           DataCell(_buildActionButtons(data)),
                         ],
                       );
@@ -275,11 +283,29 @@ class _AdminTransportStudentsClassScreenState extends State<AdminTransportStuden
     );
   }
 
+  List<Map<String, dynamic>> get _allData {
+    return AppDataStore.instance.students.map((student) {
+      return {
+        ...student,
+        'father': student['father'] ?? 'N/A',
+        'mobile': student['phone'] ?? student['mobile'] ?? 'N/A',
+        'address': student['address'] ?? 'N/A',
+        'transport': student['transport'] ?? 'Two Way',
+        'pickup': student['pickup'] ?? 'Route# 1 - City Road 1\nStart Time 8:00 AM',
+        'drop': student['drop'] ?? 'Route# 2 - City Road 2\nStart Time 8:00 AM',
+      };
+    }).toList();
+  }
+
   List<Map<String, dynamic>> get _filteredData {
-    if (_searchQuery.isEmpty) return _dummyData;
-    final query = _searchQuery.toLowerCase();
-    return _dummyData.where((student) {
-      return student.values.any((val) => val.toString().toLowerCase().contains(query));
+    return _allData.where((student) {
+      String studentClass = student['class'] ?? '';
+      bool matchesClass = _selectedClass == 'All' || 
+          studentClass == _selectedClass || 
+          studentClass.startsWith('$_selectedClass -') || 
+          studentClass.startsWith('$_selectedClass ');
+      bool matchesSearch = _searchQuery.isEmpty || student.values.any((val) => val.toString().toLowerCase().contains(_searchQuery.toLowerCase()));
+      return matchesClass && matchesSearch;
     }).toList();
   }
 }

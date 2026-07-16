@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:ersschool/core/localization/language_manager.dart';
 import 'package:ersschool/core/theme/app_colors.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
@@ -92,6 +93,7 @@ class _AdminEmployeeDetailsScreenState extends State<AdminEmployeeDetailsScreen>
                       _buildDetailRow("Branch", widget.employee['school'] ?? "N/A"),
                       _buildDetailRow("Date of Join", widget.employee['date_of_join'] ?? "N/A"),
                       _buildDetailRow("Experience", widget.employee['experience'] ?? "N/A"),
+                      _buildDetailRow("Salary", widget.employee['salary'] != null ? "₹${widget.employee['salary']}" : "N/A"),
                     ],
                   ),
                 ],
@@ -106,9 +108,8 @@ class _AdminEmployeeDetailsScreenState extends State<AdminEmployeeDetailsScreen>
   Widget _buildProfileHeader() {
     final String status = (widget.employee['status'] ?? 'Active').toString();
     final bool isActive = status == 'Active';
-
-    final photo = widget.employee['avatar'] ?? widget.employee['photoPath'];
-    final bool hasValidPhoto = photo != null && File(photo.toString()).existsSync();
+    final photo = widget.employee['photoPath'] ?? widget.employee['photo_path'] ?? widget.employee['avatar'];
+    final bool hasValidPhoto = !kIsWeb && photo != null && File(photo.toString()).existsSync();
 
     return Container(
       width: double.infinity,
@@ -130,7 +131,7 @@ class _AdminEmployeeDetailsScreenState extends State<AdminEmployeeDetailsScreen>
               radius: 60,
               backgroundColor: Colors.grey.shade100,
               backgroundImage: hasValidPhoto
-                  ? FileImage(File(photo.toString()))
+                  ? FileImage(File(photo.toString())) as ImageProvider
                   : null,
               child: !hasValidPhoto
                   ? const Icon(Icons.person, size: 60, color: Colors.grey)
@@ -295,7 +296,8 @@ class _AdminEmployeeDetailsScreenState extends State<AdminEmployeeDetailsScreen>
                           _pdfDetailRow("Full Name:", widget.employee['name'] ?? 'N/A'),
                           _pdfDetailRow("Gender:", widget.employee['gender'] ?? 'N/A'),
                           _pdfDetailRow("Contact Mobile:", widget.employee['phone'] ?? 'N/A'),
-                          _pdfDetailRow("Address:", "Hyderabad"),
+                          _pdfDetailRow("Experience:", widget.employee['experience'] ?? "15 years"),
+                          _pdfDetailRow("Salary:", "₹${widget.employee['salary'] ?? '0'}"),
                           _pdfDetailRow("Employee Type:", "Full Time Employee"),
                           _pdfDetailRow("Designation:", widget.employee['subject'] ?? 'Staff'),
                           _pdfDetailRow("Date of Join:", "-"),
