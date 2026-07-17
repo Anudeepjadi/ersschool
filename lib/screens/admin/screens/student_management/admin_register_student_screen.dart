@@ -24,18 +24,6 @@ class _AdminRegisterStudentScreenState extends State<AdminRegisterStudentScreen>
   void initState() {
     super.initState();
     _formData = Map.from(widget.student ?? {});
-    
-    // Set default values for all dropdowns and critical fields so they are never null
-    _formData['school'] ??= "Ecstasy School 1";
-    _formData['academic_year'] ??= "2025-26";
-    _formData['class'] ??= "Class 1";
-    _formData['first_language'] ??= "English";
-    _formData['second_language'] ??= "Hindi";
-    _formData['third_language'] ??= "Telugu";
-    _formData['gender'] ??= "Male";
-    _formData['blood_group'] ??= "A+";
-    _formData['status'] ??= "Active";
-
     final photo = _formData['avatar'] ?? _formData['photoPath'];
     if (photo != null) {
       _studentPhoto = File(photo.toString());
@@ -139,7 +127,7 @@ class _AdminRegisterStudentScreenState extends State<AdminRegisterStudentScreen>
                     title: "Academic Information",
                     icon: Icons.school_outlined,
                     children: [
-                      _buildDropdownField("Branch", _formData['school'] ?? "Ecstasy School 1", items: ["Ecstasy School 1", "Ecstasy School 2", "Ecstasy School 3"], onChanged: (v) => setState(() => _formData['school'] = v)),
+                      _buildDropdownField("Branch", _formData['branch'] ?? "Ecstasy School 1 (ECS001)", items: ["Ecstasy School 1 (ECS001)", "Ecstay School 2 (ECS002)", "Ecstasy (ECS003)", "Ecstasy (ECS004)"], onChanged: (v) => setState(() => _formData['branch'] = v)),
                       _buildDropdownField("Academic Year", _formData['academic_year'] ?? "2025-26", items: ["2025-26", "2026-27"], onChanged: (v) => setState(() => _formData['academic_year'] = v)),
                       _buildDropdownField("Study Class", _formData['class'] ?? "Class 1", items: ["Passed out", "LKG", "UKG", "Class 1", "Class 2", "Class 3", "Class 4", "Class 5", "Class 6", "Class 7", "Class 8", "Class 9", "Class 10"], onChanged: (v) => setState(() => _formData['class'] = v)),
                       _buildDropdownField("First Language", _formData['first_language'] ?? "English", items: ["English", "Hindi", "Telugu", "Tamil", "Kannada", "Malayalam", "Marathi", "Sanskrit", "French", "None"], onChanged: (v) => setState(() => _formData['first_language'] = v)),

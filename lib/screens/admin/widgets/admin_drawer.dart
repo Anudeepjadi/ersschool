@@ -20,7 +20,6 @@ import '../screens/admin_about_us_screen.dart';
 import '../screens/admin_meetings_screen.dart';
 
 
-import '../../../core/data/app_data_store.dart';
 import '../screens/student_management/admin_student_list_screen.dart';
 import '../screens/student_management/admin_register_student_screen.dart';
 import '../screens/student_management/admin_student_promotions_screen.dart';
@@ -236,13 +235,7 @@ class AdminDrawer extends StatelessWidget {
               children: [
                 _buildDrawerSubItem("Register Student", false, () {
                   Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminRegisterStudentScreen())).then((newStudent) {
-                    if (newStudent != null && newStudent is Map<String, dynamic>) {
-                      AppDataStore.instance.students.insert(0, newStudent);
-                      AppDataStore.instance.saveStudents();
-                      Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminStudentListScreen()));
-                    }
-                  });
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminRegisterStudentScreen()));
                 }),
                 _buildDrawerSubItem("Student List", false, () {
                   Navigator.pop(context);

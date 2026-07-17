@@ -8,10 +8,7 @@ import 'widgets/admin_drawer.dart';
 
 // Import all sub-screens
 import 'screens/student_management/admin_register_student_screen.dart';
-import 'screens/student_management/admin_student_list_screen.dart';
 import 'screens/admin_register_employee_screen.dart';
-import 'screens/admin_employee_list_screen.dart';
-import '../../../core/data/app_data_store.dart';
 
 import 'widgets/admin_bottom_nav_bar.dart';
 
@@ -49,29 +46,13 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (_) => AdminRegisterStudentScreen())).then((newStudent) {
-            if (newStudent != null && newStudent is Map<String, dynamic>) {
-              setState(() {
-                AppDataStore.instance.students.insert(0, newStudent);
-                AppDataStore.instance.saveStudents();
-              });
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminStudentListScreen()));
-            }
-          });
+                  builder: (_) => AdminRegisterStudentScreen()));
         },
         onAddTeacher: () {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (_) => const AdminRegisterEmployeeScreen())).then((newTeacher) {
-            if (newTeacher != null && newTeacher is Map<String, dynamic>) {
-              setState(() {
-                AppDataStore.instance.teachers.insert(0, newTeacher);
-                AppDataStore.instance.saveTeachers();
-              });
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminEmployeeListScreen(staffType: 'Teacher')));
-            }
-          });
+                  builder: (_) => const AdminRegisterEmployeeScreen()));
         },
       ),
       AdminStudentsTab(

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
-import 'package:flutter/foundation.dart';
+// import 'dart:io';
 import 'package:ersschool/core/localization/language_manager.dart';
 import 'package:ersschool/core/theme/app_colors.dart';
 import '../widgets/admin_bottom_nav_bar.dart';
@@ -108,8 +107,6 @@ class _AdminEmployeeDetailsScreenState extends State<AdminEmployeeDetailsScreen>
   Widget _buildProfileHeader() {
     final String status = (widget.employee['status'] ?? 'Active').toString();
     final bool isActive = status == 'Active';
-    final photo = widget.employee['photoPath'] ?? widget.employee['photo_path'] ?? widget.employee['avatar'];
-    final bool hasValidPhoto = !kIsWeb && photo != null && File(photo.toString()).existsSync();
 
     return Container(
       width: double.infinity,
@@ -130,12 +127,7 @@ class _AdminEmployeeDetailsScreenState extends State<AdminEmployeeDetailsScreen>
             child: CircleAvatar(
               radius: 60,
               backgroundColor: Colors.grey.shade100,
-              backgroundImage: hasValidPhoto
-                  ? FileImage(File(photo.toString())) as ImageProvider
-                  : null,
-              child: !hasValidPhoto
-                  ? const Icon(Icons.person, size: 60, color: Colors.grey)
-                  : null,
+              child: const Icon(Icons.person, size: 60, color: Colors.grey),
             ),
           ),
           const SizedBox(height: 16),

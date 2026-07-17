@@ -3,6 +3,7 @@ import 'package:ersschool/core/localization/language_manager.dart';
 import 'package:ersschool/core/theme/app_colors.dart';
 import '../../widgets/admin_app_bar.dart';
 import '../../widgets/admin_bottom_nav_bar.dart';
+import 'package:intl/intl.dart';
 import 'dart:typed_data';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -36,6 +37,7 @@ class _AdminStudentFeeReceiptScreenState extends State<AdminStudentFeeReceiptScr
 
   @override
   Widget build(BuildContext context) {
+    final dateStr = DateFormat('dd/MM/yyyy').format(DateTime.now());
 
     return Scaffold(
       backgroundColor: AppColors.background,

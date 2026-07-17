@@ -279,8 +279,8 @@ class _AdminHomeTabState extends State<AdminHomeTab> {
   // 3. STATS ROW
   // ══════════════════════════════════════════════════════════════════════════
   Widget _buildStatsRowForSchool(String school) {
-    final studentsCount = AppDataStore.instance.students.where((s) => s['school'] == school).length;
-    final teachersCount = AppDataStore.instance.teachers.where((t) => t['school'] == school).length;
+    final studentsCount = 1234 + AppDataStore.instance.students.where((s) => s['school'] == school).length;
+    final teachersCount = 76 + AppDataStore.instance.teachers.where((t) => t['school'] == school).length;
     final branchesCount = AppDataStore.instance.branches.where((b) => b['school'] == school).length;
     final metrics = AppDataStore.instance.getSchoolMetrics(school);
     final presentPercent = metrics['presentPercent'];

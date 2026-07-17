@@ -47,7 +47,7 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
 
   // Filter selection states
   String _selectedBranch = 'Ecstasy School 1';
-  String _selectedClass = 'Class 1';
+  String _selectedClass = 'LKG';
   String _selectedExam = 'SA1';
   String _selectedYear = '2025-26';
   String _selectedSection = 'A';
@@ -59,7 +59,7 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
 
   // Searched states for the Grade Report Table
   String _searchedBranch = 'Ecstasy School 1';
-  String _searchedClass = 'Class 1';
+  String _searchedClass = 'LKG';
   String _searchedSection = 'A';
 
   static final Map<String, Map<String, Map<int, String>>> _mockStudentMarksDB = {};
@@ -1211,12 +1211,13 @@ class AdminExaminationsScreenState extends State<AdminExaminationsScreen> {
           .toList();
     }
 
+    // Apply search query filter
     if (_searchQuery.isNotEmpty) {
       studentsList = studentsList
-          .where((s) {
-            final name = s['name']?.toString() ?? '';
-            return name.toLowerCase().contains(_searchQuery.toLowerCase());
-          })
+          .where((s) => s['name']!
+              .toString()
+              .toLowerCase()
+              .contains(_searchQuery.toLowerCase()))
           .toList();
     }
 

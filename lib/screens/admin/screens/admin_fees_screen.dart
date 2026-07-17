@@ -640,47 +640,36 @@ class _AdminFeesScreenState extends State<AdminFeesScreen> {
   }
 
   List<BarChartGroupData> _buildFeeDueBarGroups(String school) {
-    int count = AppDataStore.instance.students.where((s) {
-      final sSchool = s['school']?.toString() ?? '';
-      return sSchool == school || sSchool.startsWith('$school (');
-    }).length;
-
-    double total = count.toDouble();
-    if (total == 0) total = 0.1; // Prevent completely invisible bars if 0
-
-    double term1Paid = total * 0.85;
-    double term1Due = total * 0.15;
-    double term2Paid = total * 0.70;
-    double term2Due = total * 0.30;
-    double term3Paid = total * 0.55;
-    double term3Due = total * 0.45;
+    double scale = 1.0;
+    if (school == "Ecstasy School 2") scale = 0.6;
+    if (school == "Ecstasy School 3") scale = 0.4;
 
     return [
       BarChartGroupData(
         x: 0,
         barRods: [
-          BarChartRodData(toY: total, color: const Color(0xFF1E3A8A), width: 14, borderRadius: BorderRadius.circular(4)),
+          BarChartRodData(toY: 100 * scale, color: Color(0xFF1E3A8A), width: 14, borderRadius: BorderRadius.circular(4)),
         ],
       ),
       BarChartGroupData(
         x: 1,
         barRods: [
-          BarChartRodData(toY: term1Paid, color: const Color(0xFF0F5A35), width: 10, borderRadius: BorderRadius.circular(4)),
-          BarChartRodData(toY: term1Due, color: const Color(0xFFB3241F), width: 10, borderRadius: BorderRadius.circular(4)),
+          BarChartRodData(toY: 85 * scale, color: Color(0xFF0F5A35), width: 10, borderRadius: BorderRadius.circular(4)),
+          BarChartRodData(toY: 15 * scale, color: Color(0xFFB3241F), width: 10, borderRadius: BorderRadius.circular(4)),
         ],
       ),
       BarChartGroupData(
         x: 2,
         barRods: [
-          BarChartRodData(toY: term2Paid, color: const Color(0xFF10B981), width: 10, borderRadius: BorderRadius.circular(4)),
-          BarChartRodData(toY: term2Due, color: const Color(0xFFF59E0B), width: 10, borderRadius: BorderRadius.circular(4)),
+          BarChartRodData(toY: 70 * scale, color: Color(0xFF10B981), width: 10, borderRadius: BorderRadius.circular(4)),
+          BarChartRodData(toY: 30 * scale, color: Color(0xFFF59E0B), width: 10, borderRadius: BorderRadius.circular(4)),
         ],
       ),
       BarChartGroupData(
         x: 3,
         barRods: [
-          BarChartRodData(toY: term3Paid, color: const Color(0xFFA7F3D0), width: 10, borderRadius: BorderRadius.circular(4)),
-          BarChartRodData(toY: term3Due, color: const Color(0xFFFCA5A5), width: 10, borderRadius: BorderRadius.circular(4)),
+          BarChartRodData(toY: 55 * scale, color: Color(0xFFA7F3D0), width: 10, borderRadius: BorderRadius.circular(4)),
+          BarChartRodData(toY: 45 * scale, color: Color(0xFFFCA5A5), width: 10, borderRadius: BorderRadius.circular(4)),
         ],
       ),
     ];

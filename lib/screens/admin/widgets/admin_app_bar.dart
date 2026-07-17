@@ -8,8 +8,6 @@ import '../../../core/localization/language_manager.dart';
 import '../tabs/admin_more_tab.dart';
 import '../admin_dashboard_screen.dart';
 
-import '../../../core/data/app_data_store.dart';
-
 // Import necessary screens for navigation
 import '../screens/student_management/admin_register_student_screen.dart';
 import '../screens/student_management/admin_student_list_screen.dart';
@@ -17,7 +15,6 @@ import '../screens/student_management/admin_student_promotions_screen.dart';
 import '../screens/student_management/admin_student_siblings_screen.dart';
 import '../screens/admin_class_details_screen.dart';
 import '../screens/admin_class_teachers_screen.dart';
-import '../../../core/data/app_data_store.dart';
 import '../screens/admin_time_table_screen.dart';
 
 import '../screens/admin_employee_list_screen.dart';
@@ -119,13 +116,7 @@ class AdminAppBar extends StatelessWidget implements PreferredSizeWidget {
                         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => const AdminDashboardScreen(initialIndex: 0)), (r) => false);
                       }),
                       _buildWebNavDropdown(context, 'Student', [
-                        _MenuItem('Register Student', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminRegisterStudentScreen())).then((newStudent) {
-                          if (newStudent != null && newStudent is Map<String, dynamic>) {
-                            AppDataStore.instance.students.insert(0, newStudent);
-                            AppDataStore.instance.saveStudents();
-                            Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminStudentListScreen()));
-                          }
-                        })),
+                        _MenuItem('Register Student', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminRegisterStudentScreen()))),
                         _MenuItem('Student List', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminStudentListScreen()))),
                         _MenuItem('Student Promotions', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminStudentPromotionsScreen()))),
                         _MenuItem('Sibling Mapping', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminStudentSiblingsScreen()))),

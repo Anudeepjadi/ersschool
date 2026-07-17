@@ -7,7 +7,6 @@ import '../screens/student_management/admin_register_student_screen.dart';
 import '../screens/student_management/admin_student_promotions_screen.dart';
 import '../screens/student_management/admin_student_siblings_screen.dart';
 import '../screens/admin_id_cards_screen.dart';
-import '../../../core/data/app_data_store.dart';
 
 class AdminStudentsTab extends StatelessWidget {
   final VoidCallback? onOpenDrawer;
@@ -41,13 +40,7 @@ class AdminStudentsTab extends StatelessWidget {
                   title: "Register New Student",
                   icon: Icons.person_add,
                   color: const Color(0xFF10B981),
-                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminRegisterStudentScreen())).then((newStudent) {
-                    if (newStudent != null && newStudent is Map<String, dynamic>) {
-                      AppDataStore.instance.students.insert(0, newStudent);
-                      AppDataStore.instance.saveStudents();
-                      Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminStudentListScreen()));
-                    }
-                  }),
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminRegisterStudentScreen())),
                 ),
                 const SizedBox(height: 12),
                 _buildCard(

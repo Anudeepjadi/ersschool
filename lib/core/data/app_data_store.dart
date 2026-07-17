@@ -41,11 +41,7 @@ class AppDataStore {
         final List<dynamic> decoded = jsonDecode(teachersData);
         teachers.clear();
         for (var item in decoded) {
-          final map = Map<String, dynamic>.from(item);
-          if (map['school'] != null && map['school'].toString().contains(' (ECS')) {
-            map['school'] = map['school'].toString().split(' (ECS')[0];
-          }
-          teachers.add(map);
+          teachers.add(Map<String, dynamic>.from(item));
         }
       } catch (e) {
         debugPrint("Error loading teachers: $e");
@@ -57,11 +53,7 @@ class AppDataStore {
         final List<dynamic> decoded = jsonDecode(studentsData);
         students.clear();
         for (var item in decoded) {
-          final map = Map<String, dynamic>.from(item);
-          if (map['school'] != null && map['school'].toString().contains(' (ECS')) {
-            map['school'] = map['school'].toString().split(' (ECS')[0];
-          }
-          students.add(map);
+          students.add(Map<String, dynamic>.from(item));
         }
       } catch (e) {
         debugPrint("Error loading students: $e");

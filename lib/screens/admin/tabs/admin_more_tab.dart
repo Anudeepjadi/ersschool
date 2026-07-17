@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../core/theme/app_colors.dart';
@@ -625,6 +624,13 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
 
   // 1. Profile Header Card
   Widget _buildProfileHeaderCard() {
+    ImageProvider? avatarImage;
+    if (_selectedLocalImage != null) {
+      avatarImage = FileImage(_selectedLocalImage!);
+    } else if (_networkImageUrl != null) {
+      avatarImage = NetworkImage(_networkImageUrl!);
+    }
+
     return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -657,19 +663,13 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                     ),
                   ],
                 ),
-                child: ValueListenableBuilder<String?>(
-                  valueListenable: ProfileManager().adminProfileImagePath,
-                  builder: (context, path, _) {
-                    final hasValidFile = !kIsWeb && path != null && File(path).existsSync();
-                    return CircleAvatar(
-                      radius: 34,
-                      backgroundColor: Colors.grey.shade200,
-                      backgroundImage: hasValidFile ? FileImage(File(path)) as ImageProvider : null,
-                      child: !hasValidFile
-                          ? Icon(Icons.person, size: 48, color: AppColors.primary)
-                          : null,
-                    );
-                  },
+                child: CircleAvatar(
+                  radius: 34,
+                  backgroundColor: Colors.grey.shade200,
+                  backgroundImage: avatarImage,
+                  child: avatarImage == null
+                      ? Icon(Icons.person, size: 48, color: AppColors.primary)
+                      : null,
                 ),
               ),
               Positioned(
@@ -703,20 +703,15 @@ class _AdminMoreTabState extends State<AdminMoreTab> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: ValueListenableBuilder<String>(
-                        valueListenable: ProfileManager().adminName,
-                        builder: (context, name, _) {
-                          return Text(
-                            name,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF1E2875),
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          );
-                        }
+                      child: Text(
+                        _adminName,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF1E2875),
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     OutlinedButton.icon(

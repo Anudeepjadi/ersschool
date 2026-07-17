@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
-import 'package:flutter/foundation.dart';
+// import 'dart:io';
 import '../widgets/admin_bottom_nav_bar.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/data/app_data_store.dart';
@@ -212,8 +211,6 @@ class _AdminEmployeeListScreenState extends State<AdminEmployeeListScreen> {
 
   Widget _buildEmployeeCard(Map<String, dynamic> emp) {
     final isActive = emp['status'] == 'Active';
-    final photo = emp['photoPath'] ?? emp['photo_path'] ?? emp['avatar'];
-    final bool hasValidPhoto = !kIsWeb && photo != null && File(photo.toString()).existsSync();
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -241,12 +238,15 @@ class _AdminEmployeeListScreenState extends State<AdminEmployeeListScreen> {
               CircleAvatar(
                 radius: 24,
                 backgroundColor: AppColors.primary.withValues(alpha: 0.1),
-                backgroundImage: hasValidPhoto
-                    ? FileImage(File(photo.toString())) as ImageProvider
-                    : null,
-                child: !hasValidPhoto
-                    ? const Icon(Icons.person, color: AppColors.primary)
-                    : null,
+                backgroundImage: null,
+                child: Text(
+                        emp['avatar'] ?? 'E',
+                        style: const TextStyle(
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
               ),
               const SizedBox(width: 12),
               Expanded(
