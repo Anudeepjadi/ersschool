@@ -193,8 +193,8 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
                     DataColumn(label: const Text("")), // Action
                   ],
                   rows: _getPaginatedData().map((data) {
-                    final photoPath = data['photoPath'];
-                    final bool fileExists = !kIsWeb && photoPath != null && File(photoPath).existsSync();
+                    final photo = data['photoPath'] ?? data['photo_path'] ?? data['avatar'];
+                    final bool fileExists = !kIsWeb && photo != null && photo.toString().length > 2 && File(photo.toString()).existsSync();
                     return DataRow(
                       cells: [
                         DataCell(
@@ -220,9 +220,16 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
                             child: fileExists
                                 ? ClipRRect(
                                     borderRadius: BorderRadius.circular(4),
-                                    child: Image.file(File(photoPath!), fit: BoxFit.cover),
+                                    child: Image.file(File(photo.toString()), fit: BoxFit.cover),
                                   )
-                                : const Icon(Icons.person, color: Colors.white, size: 20),
+                                : Center(
+                                    child: Text(
+                                      (data['avatar'] != null && data['avatar'].toString().length <= 2)
+                                          ? data['avatar'].toString()
+                                          : (data['name'] != null && data['name'].toString().isNotEmpty ? data['name'].toString()[0] : 'E'),
+                                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+                                    ),
+                                  ),
                           ),
                         ),
                         DataCell(Text(data['employeeCode'] ?? "")),
@@ -489,7 +496,7 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
   }
 
   Widget _buildIdCardPreview(Map<String, dynamic> employeeData) {
-    final photo = employeeData['photoPath'];
+    final photo = employeeData['photoPath'] ?? employeeData['photo_path'] ?? employeeData['avatar'];
     final bool hasValidPhoto = !kIsWeb && photo != null && File(photo.toString()).existsSync();
     final headerColor = Colors.blue.shade800;
     

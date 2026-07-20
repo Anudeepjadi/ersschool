@@ -124,7 +124,7 @@ class _AdminEmployeeIdCardPrintScreenState extends State<AdminEmployeeIdCardPrin
   }
 
   Widget _buildProfessionalIdCard(Map<String, dynamic> employeeData) {
-    final photo = employeeData['photoPath'];
+    final photo = employeeData['photoPath'] ?? employeeData['photo_path'] ?? employeeData['avatar'];
     final bool hasValidPhoto = !kIsWeb && photo != null && File(photo.toString()).existsSync();
     const headerColor = Color(0xFF1E40AF); // Deeper blue
     
@@ -348,7 +348,7 @@ class _AdminEmployeeIdCardPrintScreenState extends State<AdminEmployeeIdCardPrin
 
     for (var employeeData in employeesData) {
       pw.ImageProvider? studentPhoto;
-      final photo = employeeData['photoPath'];
+      final photo = employeeData['photoPath'] ?? employeeData['photo_path'] ?? employeeData['avatar'];
       if (!kIsWeb && photo != null && File(photo.toString()).existsSync()) {
         studentPhoto = pw.MemoryImage(File(photo.toString()).readAsBytesSync());
       }
