@@ -434,6 +434,7 @@ class _AdminEmployeeIDCardsScreenState extends State<AdminEmployeeIDCardsScreen>
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          scrollable: true,
           titlePadding: const EdgeInsets.all(0),
           contentPadding: const EdgeInsets.all(24),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
