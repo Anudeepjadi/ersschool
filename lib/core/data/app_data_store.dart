@@ -42,7 +42,8 @@ class AppDataStore {
         teachers.clear();
         for (var item in decoded) {
           final map = Map<String, dynamic>.from(item);
-          if (map['school'] != null && map['school'].toString().contains(' (ECS')) {
+          if (map['school'] != null &&
+              map['school'].toString().contains(' (ECS')) {
             map['school'] = map['school'].toString().split(' (ECS')[0];
           }
           teachers.add(map);
@@ -58,7 +59,8 @@ class AppDataStore {
         students.clear();
         for (var item in decoded) {
           final map = Map<String, dynamic>.from(item);
-          if (map['school'] != null && map['school'].toString().contains(' (ECS')) {
+          if (map['school'] != null &&
+              map['school'].toString().contains(' (ECS')) {
             map['school'] = map['school'].toString().split(' (ECS')[0];
           }
           students.add(map);
@@ -322,7 +324,6 @@ class AppDataStore {
       'school': 'Ecstasy School 2',
     },
 
-
     // --- Ecstasy School 3 ---
     {
       'name': 'Vivaan Kapoor',
@@ -389,7 +390,6 @@ class AppDataStore {
       'gender': 'Male',
       'school': 'Ecstasy School 3',
     },
-
   ];
 
   // ─── Teachers ─────────────────────────────────────────────────────────────
@@ -608,7 +608,6 @@ class AppDataStore {
       'school': 'Ecstasy School 2',
     },
 
-
     // --- Ecstasy School 3 ---
     {
       'name': 'Dr. APJ Kalam',
@@ -666,7 +665,6 @@ class AppDataStore {
       'password': 'ECS03E04',
       'school': 'Ecstasy School 3',
     },
-
   ];
 
   // ─── Branches ─────────────────────────────────────────────────────────────
@@ -887,7 +885,8 @@ class AppDataStore {
   }
 
   void deleteBranch(Map<String, dynamic> branch) {
-    branches.removeWhere((b) => b['name'] == branch['name'] && b['school'] == branch['school']);
+    branches.removeWhere(
+        (b) => b['name'] == branch['name'] && b['school'] == branch['school']);
   }
 
   // ─── Logged-in user profile (set on login) ────────────────────────────────
@@ -914,12 +913,24 @@ class AppDataStore {
         'transportPendingPercent': 70.0,
         // Chart spots
         'chartCollected': const [
-          FlSpot(0, 15), FlSpot(1, 10), FlSpot(2, 18), FlSpot(3, 20),
-          FlSpot(4, 15.5), FlSpot(5, 22), FlSpot(6, 25), FlSpot(7, 19),
-          FlSpot(8, 17), FlSpot(9, 21), FlSpot(10, 24), FlSpot(11, 26),
+          FlSpot(0, 15),
+          FlSpot(1, 10),
+          FlSpot(2, 18),
+          FlSpot(3, 20),
+          FlSpot(4, 15.5),
+          FlSpot(5, 22),
+          FlSpot(6, 25),
+          FlSpot(7, 19),
+          FlSpot(8, 17),
+          FlSpot(9, 21),
+          FlSpot(10, 24),
+          FlSpot(11, 26),
         ],
         'chartPending': const [
-          FlSpot(0, 5), FlSpot(1, 12), FlSpot(2, 8), FlSpot(3, 11),
+          FlSpot(0, 5),
+          FlSpot(1, 12),
+          FlSpot(2, 8),
+          FlSpot(3, 11),
         ],
       };
     } else if (school == 'Ecstasy School 3') {
@@ -940,12 +951,24 @@ class AppDataStore {
         'transportPendingPercent': 50.0,
         // Chart spots
         'chartCollected': const [
-          FlSpot(0, 12), FlSpot(1, 15), FlSpot(2, 14), FlSpot(3, 22),
-          FlSpot(4, 28.0), FlSpot(5, 30), FlSpot(6, 22), FlSpot(7, 24),
-          FlSpot(8, 20), FlSpot(9, 18), FlSpot(10, 19), FlSpot(11, 23),
+          FlSpot(0, 12),
+          FlSpot(1, 15),
+          FlSpot(2, 14),
+          FlSpot(3, 22),
+          FlSpot(4, 28.0),
+          FlSpot(5, 30),
+          FlSpot(6, 22),
+          FlSpot(7, 24),
+          FlSpot(8, 20),
+          FlSpot(9, 18),
+          FlSpot(10, 19),
+          FlSpot(11, 23),
         ],
         'chartPending': const [
-          FlSpot(0, 10), FlSpot(1, 8), FlSpot(2, 11), FlSpot(3, 9),
+          FlSpot(0, 10),
+          FlSpot(1, 8),
+          FlSpot(2, 11),
+          FlSpot(3, 9),
         ],
       };
     } else {
@@ -967,12 +990,24 @@ class AppDataStore {
         'transportPendingPercent': 88.0,
         // Chart spots
         'chartCollected': const [
-          FlSpot(0, 10), FlSpot(1, 12), FlSpot(2, 15), FlSpot(3, 18),
-          FlSpot(4, 24.5), FlSpot(5, 20), FlSpot(6, 18), FlSpot(7, 15),
-          FlSpot(8, 22), FlSpot(9, 25), FlSpot(10, 20), FlSpot(11, 18),
+          FlSpot(0, 10),
+          FlSpot(1, 12),
+          FlSpot(2, 15),
+          FlSpot(3, 18),
+          FlSpot(4, 24.5),
+          FlSpot(5, 20),
+          FlSpot(6, 18),
+          FlSpot(7, 15),
+          FlSpot(8, 22),
+          FlSpot(9, 25),
+          FlSpot(10, 20),
+          FlSpot(11, 18),
         ],
         'chartPending': const [
-          FlSpot(0, 8), FlSpot(1, 10), FlSpot(2, 12), FlSpot(3, 14),
+          FlSpot(0, 8),
+          FlSpot(1, 10),
+          FlSpot(2, 12),
+          FlSpot(3, 14),
         ],
       };
     }
@@ -984,22 +1019,33 @@ class AppDataStore {
 
   void initAttendanceIfNeeded() {
     if (attendanceRecords.isNotEmpty) return;
-    
-    final dates = ['20 May 2026', '21 May 2026', '22 May 2026', '23 May 2026', '24 May 2026'];
-    for (final school in ['Ecstasy School 1', 'Ecstasy School 2', 'Ecstasy School 3']) {
+
+    final dates = [
+      '20 May 2026',
+      '21 May 2026',
+      '22 May 2026',
+      '23 May 2026',
+      '24 May 2026'
+    ];
+    for (final school in [
+      'Ecstasy School 1',
+      'Ecstasy School 2',
+      'Ecstasy School 3'
+    ]) {
       attendanceRecords[school] = {};
       for (final date in dates) {
         attendanceRecords[school]![date] = {};
         // Seed student status for this date
-        final schoolStudents = students.where((s) => s['school'] == school).toList();
+        final schoolStudents =
+            students.where((s) => s['school'] == school).toList();
         for (int i = 0; i < schoolStudents.length; i++) {
           final student = schoolStudents[i];
           final admission = student['admission'] as String;
-          
+
           // Seed varying statuses for different dates to make the data change
           String status = 'Present';
           final defaultActive = student['status'] == 'Active';
-          
+
           if (!defaultActive) {
             status = 'Absent';
           } else {
@@ -1023,7 +1069,8 @@ class AppDataStore {
     }
   }
 
-  String getStudentAttendance(String school, String date, String admission, String defaultStatus) {
+  String getStudentAttendance(
+      String school, String date, String admission, String defaultStatus) {
     initAttendanceIfNeeded();
     final schoolRecords = attendanceRecords[school];
     if (schoolRecords != null) {
@@ -1036,10 +1083,13 @@ class AppDataStore {
       }
     }
     // Fallback if not seeded
-    return defaultStatus == 'Active' || defaultStatus == 'Present' ? 'Present' : 'Absent';
+    return defaultStatus == 'Active' || defaultStatus == 'Present'
+        ? 'Present'
+        : 'Absent';
   }
 
-  void setStudentAttendance(String school, String date, String admission, String status) {
+  void setStudentAttendance(
+      String school, String date, String admission, String status) {
     initAttendanceIfNeeded();
     if (!attendanceRecords.containsKey(school)) {
       attendanceRecords[school] = {};
@@ -1053,7 +1103,7 @@ class AppDataStore {
   // ─── Fee Structures ────────────────────────────────────────────────────────
   List<Map<String, dynamic>> get feeStructures {
     final Map<String, Map<String, dynamic>> schoolTotals = {};
-    
+
     // Initialize for all schools based on branches
     for (var branch in branches) {
       final schoolName = branch['school'] as String? ?? 'Unknown School';
@@ -1076,32 +1126,36 @@ class AppDataStore {
     // Accumulate fees from feeStructureItems
     for (var item in feeStructureItems) {
       final branchName = item['branch'] as String? ?? '';
-      
+
       String schoolName = 'Unknown School';
-      final matchingBranches = branches.where((b) => b['name'] == branchName || b['school'] == branchName);
-      
+      final matchingBranches = branches
+          .where((b) => b['name'] == branchName || b['school'] == branchName);
+
       if (matchingBranches.isNotEmpty) {
-        schoolName = matchingBranches.first['school'] as String? ?? 'Unknown School';
+        schoolName =
+            matchingBranches.first['school'] as String? ?? 'Unknown School';
       }
 
       final schoolTotal = schoolTotals[schoolName];
       if (schoolTotal != null) {
         final feeType = (item['feeType'] as String? ?? '').toLowerCase();
         final amount = (item['amount'] as num?)?.toDouble() ?? 0.0;
-        
+
         if (feeType.contains('tuition')) {
           schoolTotal['tuition'] = (schoolTotal['tuition'] as double) + amount;
         } else if (feeType.contains('transport')) {
-          schoolTotal['transport'] = (schoolTotal['transport'] as double) + amount;
+          schoolTotal['transport'] =
+              (schoolTotal['transport'] as double) + amount;
         } else if (feeType.contains('exam')) {
           schoolTotal['exam'] = (schoolTotal['exam'] as double) + amount;
         }
         schoolTotal['total'] = (schoolTotal['total'] as double) + amount;
       }
     }
-    
+
     final sortedTotals = schoolTotals.values.toList();
-    sortedTotals.sort((a, b) => (a['branchCode'] as String).compareTo(b['branchCode'] as String));
+    sortedTotals.sort((a, b) =>
+        (a['branchCode'] as String).compareTo(b['branchCode'] as String));
 
     return sortedTotals.map((s) {
       return {
@@ -1138,9 +1192,20 @@ class AppDataStore {
     {'date': '30/5/2026', 'description': 'Second Saturday'},
   ];
 
-  void addHoliday(Map<String, dynamic> h) { holidays.add(h); notifyConfigChange(); }
-  void updateHoliday(int i, Map<String, dynamic> h) { holidays[i] = h; notifyConfigChange(); }
-  void deleteHoliday(int i) { holidays.removeAt(i); notifyConfigChange(); }
+  void addHoliday(Map<String, dynamic> h) {
+    holidays.add(h);
+    notifyConfigChange();
+  }
+
+  void updateHoliday(int i, Map<String, dynamic> h) {
+    holidays[i] = h;
+    notifyConfigChange();
+  }
+
+  void deleteHoliday(int i) {
+    holidays.removeAt(i);
+    notifyConfigChange();
+  }
 
   // ─── Academic Years ──────────────────────────────────────────────────────────
   final List<Map<String, dynamic>> academicYears = [
@@ -1150,10 +1215,25 @@ class AppDataStore {
   ];
   String currentAcademicYear = '2025-26';
 
-  void addAcademicYear(Map<String, dynamic> y) { academicYears.add(y); notifyConfigChange(); }
-  void updateAcademicYear(int i, Map<String, dynamic> y) { academicYears[i] = y; notifyConfigChange(); }
-  void deleteAcademicYear(int i) { academicYears.removeAt(i); notifyConfigChange(); }
-  void setCurrentAcademicYear(String year) { currentAcademicYear = year; notifyConfigChange(); }
+  void addAcademicYear(Map<String, dynamic> y) {
+    academicYears.add(y);
+    notifyConfigChange();
+  }
+
+  void updateAcademicYear(int i, Map<String, dynamic> y) {
+    academicYears[i] = y;
+    notifyConfigChange();
+  }
+
+  void deleteAcademicYear(int i) {
+    academicYears.removeAt(i);
+    notifyConfigChange();
+  }
+
+  void setCurrentAcademicYear(String year) {
+    currentAcademicYear = year;
+    notifyConfigChange();
+  }
 
   // ─── Fee Types ───────────────────────────────────────────────────────────────
   final List<Map<String, dynamic>> feeTypes = [
@@ -1166,239 +1246,285 @@ class AppDataStore {
     {'type': 'Transport fee', 'isActive': true},
   ];
 
-  void addFeeType(Map<String, dynamic> f) { feeTypes.add(f); _saveFeeTypes(); notifyConfigChange(); }
-  void updateFeeType(int i, Map<String, dynamic> f) { feeTypes[i] = f; _saveFeeTypes(); notifyConfigChange(); }
-  void deleteFeeType(int i) { feeTypes.removeAt(i); _saveFeeTypes(); notifyConfigChange(); }
+  void addFeeType(Map<String, dynamic> f) {
+    feeTypes.add(f);
+    _saveFeeTypes();
+    notifyConfigChange();
+  }
+
+  void updateFeeType(int i, Map<String, dynamic> f) {
+    feeTypes[i] = f;
+    _saveFeeTypes();
+    notifyConfigChange();
+  }
+
+  void deleteFeeType(int i) {
+    feeTypes.removeAt(i);
+    _saveFeeTypes();
+    notifyConfigChange();
+  }
 
   // ─── Payment Types ───────────────────────────────────────────────────────────
   final List<Map<String, dynamic>> paymentTypes = [
-    {'name': 'Online Payment',
-      'father': 'Mr. Payment', 'isActive': true},
-    {'name': 'Cash',
-      'father': 'Mr. Kumar', 'isActive': true},
-    {'name': 'UPI',
-      'father': 'Mr. Kumar', 'isActive': true},
-    {'name': 'Credit/Debit Card',
-      'father': 'Mr. Card', 'isActive': true},
-    {'name': 'Cheque',
-      'father': 'Mr. Kumar', 'isActive': true},
+    {'name': 'Online Payment', 'father': 'Mr. Payment', 'isActive': true},
+    {'name': 'Cash', 'father': 'Mr. Kumar', 'isActive': true},
+    {'name': 'UPI', 'father': 'Mr. Kumar', 'isActive': true},
+    {'name': 'Credit/Debit Card', 'father': 'Mr. Card', 'isActive': true},
+    {'name': 'Cheque', 'father': 'Mr. Kumar', 'isActive': true},
   ];
 
   // ─── Study Classes ───────────────────────────────────────────────────────────
   final List<Map<String, dynamic>> studyClasses = [
-    {'name': 'Nursery',
-      'father': 'Mr. Kumar', 'isActive': true},
-    {'name': 'L.K.G',
-      'father': 'Mr. Kumar', 'isActive': true},
-    {'name': 'U.K.G',
-      'father': 'Mr. Kumar', 'isActive': true},
-    {'name': 'Class 1',
-      'father': 'Mr. 1', 'isActive': true},
-    {'name': 'Class 2',
-      'father': 'Mr. 2', 'isActive': true},
-    {'name': 'Class 3',
-      'father': 'Mr. 3', 'isActive': true},
-    {'name': 'Class 4',
-      'father': 'Mr. 4', 'isActive': true},
-    {'name': 'Class 5',
-      'father': 'Mr. 5', 'isActive': true},
-    {'name': 'Class 6',
-      'father': 'Mr. 6', 'isActive': true},
-    {'name': 'Class 7',
-      'father': 'Mr. 7', 'isActive': true},
-    {'name': 'Class 8',
-      'father': 'Mr. 8', 'isActive': true},
-    {'name': 'Class 9',
-      'father': 'Mr. 9', 'isActive': true},
-    {'name': 'Class 10',
-      'father': 'Mr. 10', 'isActive': true},
+    {'name': 'Nursery', 'father': 'Mr. Kumar', 'isActive': true},
+    {'name': 'L.K.G', 'father': 'Mr. Kumar', 'isActive': true},
+    {'name': 'U.K.G', 'father': 'Mr. Kumar', 'isActive': true},
+    {'name': 'Class 1', 'father': 'Mr. 1', 'isActive': true},
+    {'name': 'Class 2', 'father': 'Mr. 2', 'isActive': true},
+    {'name': 'Class 3', 'father': 'Mr. 3', 'isActive': true},
+    {'name': 'Class 4', 'father': 'Mr. 4', 'isActive': true},
+    {'name': 'Class 5', 'father': 'Mr. 5', 'isActive': true},
+    {'name': 'Class 6', 'father': 'Mr. 6', 'isActive': true},
+    {'name': 'Class 7', 'father': 'Mr. 7', 'isActive': true},
+    {'name': 'Class 8', 'father': 'Mr. 8', 'isActive': true},
+    {'name': 'Class 9', 'father': 'Mr. 9', 'isActive': true},
+    {'name': 'Class 10', 'father': 'Mr. 10', 'isActive': true},
   ];
 
   // ─── Class Sections ──────────────────────────────────────────────────────────
   final List<Map<String, dynamic>> classSections = [
-    {'name': 'Section A',
-      'father': 'Mr. A', 'isActive': true},
-    {'name': 'Section B',
-      'father': 'Mr. B', 'isActive': true},
-    {'name': 'Section C',
-      'father': 'Mr. C', 'isActive': true},
-    {'name': 'Section D',
-      'father': 'Mr. D', 'isActive': true},
+    {'name': 'Section A', 'father': 'Mr. A', 'isActive': true},
+    {'name': 'Section B', 'father': 'Mr. B', 'isActive': true},
+    {'name': 'Section C', 'father': 'Mr. C', 'isActive': true},
+    {'name': 'Section D', 'father': 'Mr. D', 'isActive': true},
   ];
 
   // ─── Subjects ────────────────────────────────────────────────────────────────
   final List<Map<String, dynamic>> subjects = [
-    {'name': 'Mathematics',
-      'father': 'Mr. Kumar', 'isActive': true},
-    {'name': 'English',
-      'father': 'Mr. Kumar', 'isActive': true},
-    {'name': 'Science',
-      'father': 'Mr. Kumar', 'isActive': true},
-    {'name': 'Hindi',
-      'father': 'Mr. Kumar', 'isActive': true},
-    {'name': 'Social Studies',
-      'father': 'Mr. Studies', 'isActive': true},
-    {'name': 'Computer Science',
-      'father': 'Mr. Science', 'isActive': true},
-    {'name': 'Physics',
-      'father': 'Mr. Kumar', 'isActive': true},
-    {'name': 'Chemistry',
-      'father': 'Mr. Kumar', 'isActive': true},
-    {'name': 'Biology',
-      'father': 'Mr. Kumar', 'isActive': true},
+    {'name': 'Mathematics', 'father': 'Mr. Kumar', 'isActive': true},
+    {'name': 'English', 'father': 'Mr. Kumar', 'isActive': true},
+    {'name': 'Science', 'father': 'Mr. Kumar', 'isActive': true},
+    {'name': 'Hindi', 'father': 'Mr. Kumar', 'isActive': true},
+    {'name': 'Social Studies', 'father': 'Mr. Studies', 'isActive': true},
+    {'name': 'Computer Science', 'father': 'Mr. Science', 'isActive': true},
+    {'name': 'Physics', 'father': 'Mr. Kumar', 'isActive': true},
+    {'name': 'Chemistry', 'father': 'Mr. Kumar', 'isActive': true},
+    {'name': 'Biology', 'father': 'Mr. Kumar', 'isActive': true},
   ];
 
   // ─── Exam Types ──────────────────────────────────────────────────────────────
   final List<Map<String, dynamic>> examTypes = [
-    {'name': 'Unit Test',
-      'father': 'Mr. Test', 'isActive': true},
-    {'name': 'Mid Term',
-      'father': 'Mr. Term', 'isActive': true},
-    {'name': 'Final Exam',
-      'father': 'Mr. Exam', 'isActive': true},
-    {'name': 'Quarterly',
-      'father': 'Mr. Kumar', 'isActive': true},
-    {'name': 'Annual',
-      'father': 'Mr. Kumar', 'isActive': true},
+    {'name': 'Unit Test', 'father': 'Mr. Test', 'isActive': true},
+    {'name': 'Mid Term', 'father': 'Mr. Term', 'isActive': true},
+    {'name': 'Final Exam', 'father': 'Mr. Exam', 'isActive': true},
+    {'name': 'Quarterly', 'father': 'Mr. Kumar', 'isActive': true},
+    {'name': 'Annual', 'father': 'Mr. Kumar', 'isActive': true},
   ];
 
   // ─── Grade System ────────────────────────────────────────────────────────────
   final List<Map<String, dynamic>> gradeSystem = [
-    {'name': 'A+ (90-100)',
-      'father': 'Mr. (90-100)', 'isActive': true},
-    {'name': 'A (80-89)',
-      'father': 'Mr. (80-89)', 'isActive': true},
-    {'name': 'B+ (70-79)',
-      'father': 'Mr. (70-79)', 'isActive': true},
-    {'name': 'B (60-69)',
-      'father': 'Mr. (60-69)', 'isActive': true},
-    {'name': 'C (50-59)',
-      'father': 'Mr. (50-59)', 'isActive': true},
-    {'name': 'D (40-49)',
-      'father': 'Mr. (40-49)', 'isActive': true},
-    {'name': 'F (Below 40)',
-      'father': 'Mr. 40)', 'isActive': true},
+    {'name': 'A+ (90-100)', 'father': 'Mr. (90-100)', 'isActive': true},
+    {'name': 'A (80-89)', 'father': 'Mr. (80-89)', 'isActive': true},
+    {'name': 'B+ (70-79)', 'father': 'Mr. (70-79)', 'isActive': true},
+    {'name': 'B (60-69)', 'father': 'Mr. (60-69)', 'isActive': true},
+    {'name': 'C (50-59)', 'father': 'Mr. (50-59)', 'isActive': true},
+    {'name': 'D (40-49)', 'father': 'Mr. (40-49)', 'isActive': true},
+    {'name': 'F (Below 40)', 'father': 'Mr. 40)', 'isActive': true},
   ];
 
   // ─── Grade Report Designs ─────────────────────────────────────────────────────
   final List<Map<String, dynamic>> gradeReportDesigns = [
-    {'name': 'Standard Template',
-      'father': 'Mr. Template', 'isActive': true},
-    {'name': 'Modern Template',
-      'father': 'Mr. Template', 'isActive': true},
-    {'name': 'Classic Template',
-      'father': 'Mr. Template', 'isActive': true},
+    {'name': 'Standard Template', 'father': 'Mr. Template', 'isActive': true},
+    {'name': 'Modern Template', 'father': 'Mr. Template', 'isActive': true},
+    {'name': 'Classic Template', 'father': 'Mr. Template', 'isActive': true},
   ];
 
   // ─── Student/Parent User Types ────────────────────────────────────────────────
   final List<Map<String, dynamic>> studentParentUsers = [
-    {'name': 'Student Portal',
-      'father': 'Mr. Portal', 'isActive': true},
-    {'name': 'Parent App',
-      'father': 'Mr. App', 'isActive': true},
-    {'name': 'Guardian Access',
-      'father': 'Mr. Access', 'isActive': true},
+    {'name': 'Student Portal', 'father': 'Mr. Portal', 'isActive': true},
+    {'name': 'Parent App', 'father': 'Mr. App', 'isActive': true},
+    {'name': 'Guardian Access', 'father': 'Mr. Access', 'isActive': true},
   ];
 
   // ─── Class Subjects Mapping ───────────────────────────────────────────────────
   final List<Map<String, String>> classSubjectsMapping = [
-    {'class': 'Class 1', 'subject': 'Mathematics', 'teacher': 'Dr. Ramesh Kumar'},
+    {
+      'class': 'Class 1',
+      'subject': 'Mathematics',
+      'teacher': 'Dr. Ramesh Kumar'
+    },
     {'class': 'Class 1', 'subject': 'English', 'teacher': 'Mrs. Sunita Devi'},
     {'class': 'Class 2', 'subject': 'Science', 'teacher': 'Mr. Anil Mishra'},
     {'class': 'Class 3', 'subject': 'Hindi', 'teacher': 'Mrs. Latha Iyer'},
-    {'class': 'Class 4', 'subject': 'Social Studies', 'teacher': 'Mr. Prakash Jha'},
+    {
+      'class': 'Class 4',
+      'subject': 'Social Studies',
+      'teacher': 'Mr. Prakash Jha'
+    },
   ];
 
-  void addClassSubjectMapping(Map<String, String> m) { classSubjectsMapping.add(m); notifyConfigChange(); }
-  void updateClassSubjectMapping(int i, Map<String, String> m) { classSubjectsMapping[i] = m; notifyConfigChange(); }
-  void deleteClassSubjectMapping(int i) { classSubjectsMapping.removeAt(i); notifyConfigChange(); }
+  void addClassSubjectMapping(Map<String, String> m) {
+    classSubjectsMapping.add(m);
+    notifyConfigChange();
+  }
+
+  void updateClassSubjectMapping(int i, Map<String, String> m) {
+    classSubjectsMapping[i] = m;
+    notifyConfigChange();
+  }
+
+  void deleteClassSubjectMapping(int i) {
+    classSubjectsMapping.removeAt(i);
+    notifyConfigChange();
+  }
 
   // ─── Fee Structure Items (per class) ─────────────────────────────────────────
   final List<Map<String, dynamic>> feeStructureItems = [
-    {'branch': 'Ecstasy School 1', 'year': '2025-26', 'class': 'Class 1', 'feeType': 'Registration Fee', 'amount': 3000.0},
-    {'branch': 'Ecstasy School 1', 'year': '2025-26', 'class': 'Class 1', 'feeType': 'Activity Fee', 'amount': 6000.0},
-    {'branch': 'Ecstasy School 1', 'year': '2025-26', 'class': 'Class 1', 'feeType': 'Tuition Fee', 'amount': 38000.0},
-    {'branch': 'Ecstasy School 1', 'year': '2025-26', 'class': 'Class 1', 'feeType': 'books fee', 'amount': 11000.0},
-    {'branch': 'Ecstasy School 1', 'year': '2025-26', 'class': 'Class 1', 'feeType': 'cultural activity fee', 'amount': 4000.0},
+    {
+      'branch': 'Ecstasy School 1',
+      'year': '2025-26',
+      'class': 'Class 1',
+      'feeType': 'Registration Fee',
+      'amount': 3000.0
+    },
+    {
+      'branch': 'Ecstasy School 1',
+      'year': '2025-26',
+      'class': 'Class 1',
+      'feeType': 'Activity Fee',
+      'amount': 6000.0
+    },
+    {
+      'branch': 'Ecstasy School 1',
+      'year': '2025-26',
+      'class': 'Class 1',
+      'feeType': 'Tuition Fee',
+      'amount': 38000.0
+    },
+    {
+      'branch': 'Ecstasy School 1',
+      'year': '2025-26',
+      'class': 'Class 1',
+      'feeType': 'books fee',
+      'amount': 11000.0
+    },
+    {
+      'branch': 'Ecstasy School 1',
+      'year': '2025-26',
+      'class': 'Class 1',
+      'feeType': 'cultural activity fee',
+      'amount': 4000.0
+    },
   ];
 
-  void addFeeStructureItem(Map<String, dynamic> item) { feeStructureItems.add(item); _saveFeeStructure(); notifyConfigChange(); }
-  void updateFeeStructureItem(int i, Map<String, dynamic> item) { feeStructureItems[i] = item; _saveFeeStructure(); notifyConfigChange(); }
-  void deleteFeeStructureItem(int i) { feeStructureItems.removeAt(i); _saveFeeStructure(); notifyConfigChange(); }
+  void addFeeStructureItem(Map<String, dynamic> item) {
+    feeStructureItems.add(item);
+    _saveFeeStructure();
+    notifyConfigChange();
+  }
 
-  List<Map<String, dynamic>> getFeeStructureItems(String branch, String year, String cls) {
+  void updateFeeStructureItem(int i, Map<String, dynamic> item) {
+    feeStructureItems[i] = item;
+    _saveFeeStructure();
+    notifyConfigChange();
+  }
+
+  void deleteFeeStructureItem(int i) {
+    feeStructureItems.removeAt(i);
+    _saveFeeStructure();
+    notifyConfigChange();
+  }
+
+  List<Map<String, dynamic>> getFeeStructureItems(
+      String branch, String year, String cls) {
     var existing = feeStructureItems
-        .where((r) => r['branch'] == branch && r['year'] == year && r['class'] == cls)
+        .where((r) =>
+            r['branch'] == branch && r['year'] == year && r['class'] == cls)
         .toList();
 
-    final activeFeeTypes = feeTypes.where((f) => f['isActive'] == true).toList();
+    final activeFeeTypes =
+        feeTypes.where((f) => f['isActive'] == true).toList();
     final activeTypeNames = activeFeeTypes.map((f) => f['type']).toSet();
-    
+
     // Parse class level
     int level = 0;
     String clsLower = cls.toLowerCase();
     if (clsLower.contains('class')) {
       level = int.tryParse(clsLower.replaceAll(RegExp(r'[^0-9]'), '')) ?? 0;
     }
-    
+
     bool newlyAdded = false;
     for (int i = 0; i < activeFeeTypes.length; i++) {
-        String typeName = activeFeeTypes[i]['type'];
-        if (!existing.any((e) => e['feeType'] == typeName)) {
-            String lowerType = typeName.toLowerCase();
-            double amount = 1000.0; // default
-            
-            if (lowerType.contains('registration') || lowerType.contains('id') || lowerType.contains('transport')) {
-                if (lowerType.contains('registration')) {
-                  amount = 3000.0;
-                } else if (lowerType.contains('id')) {
-                  amount = 500.0;
-                } else if (lowerType.contains('transport')) {
-                  amount = 15000.0;
-                } else {
-                  amount = 2000.0;
-                }
-            } else if (lowerType.contains('tuition')) {
-                amount = 20000.0 + (level * 8000.0);
-                if (amount > 100000.0) amount = 100000.0;
-            } else if (lowerType.contains('books') || lowerType.contains('cultural') || lowerType.contains('hostel')) {
-                double base = lowerType.contains('hostel') ? 40000.0 : 5000.0;
-                if (level >= 6) {
-                    amount = base + 10000.0;
-                } else {
-                    amount = base;
-                }
-            } else {
-                amount = (10 + ((level + i) % 50)) * 100.0;
-            }
+      String typeName = activeFeeTypes[i]['type'];
+      if (!existing.any((e) => e['feeType'] == typeName)) {
+        String lowerType = typeName.toLowerCase();
+        double amount = 1000.0; // default
 
-            var newItem = {
-                'branch': branch,
-                'year': year,
-                'class': cls,
-                'feeType': typeName,
-                'amount': amount,
-            };
-            feeStructureItems.add(newItem);
-            newlyAdded = true;
+        if (lowerType.contains('registration') ||
+            lowerType.contains('id') ||
+            lowerType.contains('transport')) {
+          if (lowerType.contains('registration')) {
+            amount = 3000.0;
+          } else if (lowerType.contains('id')) {
+            amount = 500.0;
+          } else if (lowerType.contains('transport')) {
+            amount = 15000.0;
+          } else {
+            amount = 2000.0;
+          }
+        } else if (lowerType.contains('tuition')) {
+          amount = 20000.0 + (level * 8000.0);
+          if (amount > 100000.0) amount = 100000.0;
+        } else if (lowerType.contains('books') ||
+            lowerType.contains('cultural') ||
+            lowerType.contains('hostel')) {
+          double base = lowerType.contains('hostel') ? 40000.0 : 5000.0;
+          if (level >= 6) {
+            amount = base + 10000.0;
+          } else {
+            amount = base;
+          }
+        } else {
+          amount = (10 + ((level + i) % 50)) * 100.0;
         }
+
+        var newItem = {
+          'branch': branch,
+          'year': year,
+          'class': cls,
+          'feeType': typeName,
+          'amount': amount,
+        };
+        feeStructureItems.add(newItem);
+        newlyAdded = true;
+      }
     }
-    
+
     if (newlyAdded) _saveFeeStructure();
-    
+
     return feeStructureItems
-        .where((r) => r['branch'] == branch && r['year'] == year && r['class'] == cls && activeTypeNames.contains(r['feeType']))
+        .where((r) =>
+            r['branch'] == branch &&
+            r['year'] == year &&
+            r['class'] == cls &&
+            activeTypeNames.contains(r['feeType']))
         .toList();
   }
 
   // ─── Generic config list CRUD (for lists stored directly in AppDataStore) ─────
-  void addConfigItem(List<Map<String, dynamic>> list, Map<String, dynamic> item) {
-    list.add(item); notifyConfigChange();
+  void addConfigItem(
+      List<Map<String, dynamic>> list, Map<String, dynamic> item) {
+    list.add(item);
+    notifyConfigChange();
   }
-  void updateConfigItem(List<Map<String, dynamic>> list, int index, Map<String, dynamic> item) {
-    list[index] = item; notifyConfigChange();
+
+  void updateConfigItem(
+      List<Map<String, dynamic>> list, int index, Map<String, dynamic> item) {
+    list[index] = item;
+    notifyConfigChange();
   }
+
   void deleteConfigItem(List<Map<String, dynamic>> list, int index) {
-    list.removeAt(index); notifyConfigChange();
+    list.removeAt(index);
+    notifyConfigChange();
   }
 }
