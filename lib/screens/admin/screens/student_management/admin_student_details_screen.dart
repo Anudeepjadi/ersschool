@@ -130,8 +130,16 @@ class _AdminStudentDetailsScreenState extends State<AdminStudentDetailsScreen> {
     final String status = (widget.student?['status'] ?? 'Active').toString();
     final bool isActive = status == 'Active';
 
-    final photo = widget.student?['avatar'] ?? widget.student?['photoPath'];
-    final bool hasValidPhoto = !kIsWeb && photo != null && File(photo.toString()).existsSync();
+    final photo = (widget.student?['avatar'] ?? widget.student?['photoPath'])?.toString();
+    
+    ImageProvider? imageProvider;
+    if (photo != null && photo.length > 5) {
+      if (photo.startsWith('http') || photo.startsWith('blob')) {
+        imageProvider = NetworkImage(photo);
+      } else if (!kIsWeb && File(photo).existsSync()) {
+        imageProvider = FileImage(File(photo));
+      }
+    }
 
     return Container(
       width: double.infinity,
@@ -152,10 +160,8 @@ class _AdminStudentDetailsScreenState extends State<AdminStudentDetailsScreen> {
             child: CircleAvatar(
               radius: 60,
               backgroundColor: Colors.grey.shade100,
-              backgroundImage: hasValidPhoto
-                  ? FileImage(File(photo.toString()))
-                  : null,
-              child: !hasValidPhoto
+              backgroundImage: imageProvider,
+              child: imageProvider == null
                   ? const Icon(Icons.person, size: 60, color: Colors.grey)
                   : null,
             ),
