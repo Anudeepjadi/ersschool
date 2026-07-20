@@ -16,7 +16,6 @@ class AdminRegisterStudentScreen extends StatefulWidget {
 }
 
 class _AdminRegisterStudentScreenState extends State<AdminRegisterStudentScreen> {
-  File? _studentPhoto;
   final ImagePicker _picker = ImagePicker();
   late Map<String, dynamic> _formData;
 
@@ -36,10 +35,7 @@ class _AdminRegisterStudentScreenState extends State<AdminRegisterStudentScreen>
     _formData['blood_group'] ??= "A+";
     _formData['status'] ??= "Active";
 
-    final photo = _formData['avatar'] ?? _formData['photoPath'];
-    if (photo != null) {
-      _studentPhoto = File(photo.toString());
-    }
+    final photo = (_formData['avatar'] ?? _formData['photoPath'])?.toString();
   }
 
   Future<void> _pickPhoto() async {
@@ -47,7 +43,6 @@ class _AdminRegisterStudentScreenState extends State<AdminRegisterStudentScreen>
       final XFile? picked = await _picker.pickImage(source: ImageSource.gallery, maxWidth: 512, maxHeight: 512, imageQuality: 85);
       if (picked != null && mounted) {
         setState(() {
-          _studentPhoto = File(picked.path);
           _formData['avatar'] = picked.path;
           _formData['photoPath'] = picked.path; // Keep for safety
         });
@@ -185,6 +180,17 @@ class _AdminRegisterStudentScreenState extends State<AdminRegisterStudentScreen>
   }
 
   Widget _buildPhotoHeader() {
+    final photo = (_formData['avatar'] ?? _formData['photoPath'])?.toString();
+    
+    ImageProvider? imageProvider;
+    if (photo != null && photo.length > 5) {
+      if (photo.startsWith('http') || photo.startsWith('blob')) {
+        imageProvider = NetworkImage(photo);
+      } else if (!kIsWeb && File(photo).existsSync()) {
+        imageProvider = FileImage(File(photo));
+      }
+    }
+
     return Container(
       width: double.infinity,
       color: Colors.white,
@@ -202,8 +208,8 @@ class _AdminRegisterStudentScreenState extends State<AdminRegisterStudentScreen>
                 child: CircleAvatar(
                   radius: 50,
                   backgroundColor: Colors.grey.shade100,
-                  backgroundImage: _studentPhoto != null ? FileImage(_studentPhoto!) : null,
-                  child: _studentPhoto == null ? const Icon(Icons.person, size: 50, color: Colors.grey) : null,
+                  backgroundImage: imageProvider,
+                  child: imageProvider == null ? const Icon(Icons.person, size: 50, color: Colors.grey) : null,
                 ),
               ),
               Positioned(

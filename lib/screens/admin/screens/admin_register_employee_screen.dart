@@ -24,7 +24,6 @@ class AdminRegisterEmployeeScreen extends StatefulWidget {
 
 class _AdminRegisterEmployeeScreenState
     extends State<AdminRegisterEmployeeScreen> {
-  dynamic _employeePhoto; // Removed File for web compatibility
   final ImagePicker _picker = ImagePicker();
   late Map<String, dynamic> _formData;
 
@@ -58,10 +57,7 @@ class _AdminRegisterEmployeeScreenState
       _formData['status'] ??= "Active";
     }
 
-    final photo = _formData['avatar'] ?? _formData['photoPath'];
-    if (photo != null && !kIsWeb) {
-      // _employeePhoto = File(photo.toString());
-    }
+    final photo = (_formData['avatar'] ?? _formData['photoPath'])?.toString();
   }
 
   Future<void> _pickPhoto() async {
@@ -73,7 +69,6 @@ class _AdminRegisterEmployeeScreenState
           imageQuality: 85);
       if (picked != null && mounted) {
         setState(() {
-          // if (!kIsWeb) _employeePhoto = File(picked.path);
           _formData['avatar'] = picked.path;
           _formData['photoPath'] = picked.path; // Keep for safety
         });
@@ -266,8 +261,16 @@ class _AdminRegisterEmployeeScreenState
   }
 
   Widget _buildPhotoHeader() {
-    final photo = _formData['photoPath'] ?? _formData['photo_path'] ?? _formData['avatar'];
-    final bool hasValidPhoto = !kIsWeb && photo != null && File(photo.toString()).existsSync();
+    final photo = (_formData['photoPath'] ?? _formData['photo_path'] ?? _formData['avatar'])?.toString();
+    
+    ImageProvider? imageProvider;
+    if (photo != null && photo.length > 5) {
+      if (photo.startsWith('http') || photo.startsWith('blob')) {
+        imageProvider = NetworkImage(photo);
+      } else if (!kIsWeb && File(photo).existsSync()) {
+        imageProvider = FileImage(File(photo));
+      }
+    }
 
     return Container(
       width: double.infinity,
@@ -288,10 +291,8 @@ class _AdminRegisterEmployeeScreenState
                 child: CircleAvatar(
                   radius: 50,
                   backgroundColor: Colors.grey.shade100,
-                  backgroundImage: hasValidPhoto
-                      ? FileImage(File(photo.toString())) as ImageProvider
-                      : null,
-                  child: !hasValidPhoto
+                  backgroundImage: imageProvider,
+                  child: imageProvider == null
                       ? const Icon(Icons.person, size: 50, color: Colors.grey)
                       : null,
                 ),

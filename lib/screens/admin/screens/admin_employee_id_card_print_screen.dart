@@ -124,8 +124,16 @@ class _AdminEmployeeIdCardPrintScreenState extends State<AdminEmployeeIdCardPrin
   }
 
   Widget _buildProfessionalIdCard(Map<String, dynamic> employeeData) {
-    final photo = employeeData['photoPath'] ?? employeeData['photo_path'] ?? employeeData['avatar'];
-    final bool hasValidPhoto = !kIsWeb && photo != null && File(photo.toString()).existsSync();
+    final photo = (employeeData['photoPath'] ?? employeeData['photo_path'] ?? employeeData['avatar'])?.toString();
+    
+    Widget? photoWidget;
+    if (photo != null && photo.length > 5) {
+      if (photo.startsWith('http') || photo.startsWith('blob')) {
+        photoWidget = Image.network(photo, fit: BoxFit.cover);
+      } else if (!kIsWeb && File(photo).existsSync()) {
+        photoWidget = Image.file(File(photo), fit: BoxFit.cover);
+      }
+    }
     const headerColor = Color(0xFF1E40AF); // Deeper blue
     
     return Container(
@@ -194,10 +202,10 @@ class _AdminEmployeeIdCardPrintScreenState extends State<AdminEmployeeIdCardPrin
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(color: Colors.grey.shade300, width: 2),
                       ),
-                      child: hasValidPhoto
+                      child: photoWidget != null
                           ? ClipRRect(
                               borderRadius: BorderRadius.circular(6),
-                              child: Image.file(File(photo.toString()), fit: BoxFit.cover),
+                              child: photoWidget,
                             )
                           : const Icon(Icons.person, color: Colors.grey, size: 50),
                     ),

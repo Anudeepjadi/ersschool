@@ -108,8 +108,16 @@ class _AdminEmployeeDetailsScreenState extends State<AdminEmployeeDetailsScreen>
   Widget _buildProfileHeader() {
     final String status = (widget.employee['status'] ?? 'Active').toString();
     final bool isActive = status == 'Active';
-    final photo = widget.employee['photoPath'] ?? widget.employee['photo_path'] ?? widget.employee['avatar'];
-    final bool hasValidPhoto = !kIsWeb && photo != null && File(photo.toString()).existsSync();
+    final photo = (widget.employee['photoPath'] ?? widget.employee['photo_path'] ?? widget.employee['avatar'])?.toString();
+    
+    ImageProvider? imageProvider;
+    if (photo != null && photo.length > 5) {
+      if (photo.startsWith('http') || photo.startsWith('blob')) {
+        imageProvider = NetworkImage(photo);
+      } else if (!kIsWeb && File(photo).existsSync()) {
+        imageProvider = FileImage(File(photo));
+      }
+    }
 
     return Container(
       width: double.infinity,
@@ -130,10 +138,8 @@ class _AdminEmployeeDetailsScreenState extends State<AdminEmployeeDetailsScreen>
             child: CircleAvatar(
               radius: 60,
               backgroundColor: Colors.grey.shade100,
-              backgroundImage: hasValidPhoto
-                  ? FileImage(File(photo.toString())) as ImageProvider
-                  : null,
-              child: !hasValidPhoto
+              backgroundImage: imageProvider,
+              child: imageProvider == null
                   ? const Icon(Icons.person, size: 60, color: Colors.grey)
                   : null,
             ),
