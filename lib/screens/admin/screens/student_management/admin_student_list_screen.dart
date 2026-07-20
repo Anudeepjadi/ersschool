@@ -197,6 +197,7 @@ class _AdminStudentListScreenState extends State<AdminStudentListScreen> {
   }
 
   Widget _buildStudentCard(Map<String, dynamic> student) {
+    final isActive = student['status'] == 'Active';
     final photo = (student['photoPath'] ?? student['photo_path'] ?? student['avatar'])?.toString();
     
     ImageProvider? imageProvider;
