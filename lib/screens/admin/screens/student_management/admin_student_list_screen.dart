@@ -198,6 +198,16 @@ class _AdminStudentListScreenState extends State<AdminStudentListScreen> {
 
   Widget _buildStudentCard(Map<String, dynamic> student) {
     final isActive = student['status'] == 'Active';
+    final photo = (student['photoPath'] ?? student['photo_path'] ?? student['avatar'])?.toString();
+    
+    ImageProvider? imageProvider;
+    if (photo != null && photo.length > 5) {
+      if (photo.startsWith('http') || photo.startsWith('blob')) {
+        imageProvider = NetworkImage(photo);
+      } else if (!kIsWeb && File(photo).existsSync()) {
+        imageProvider = FileImage(File(photo));
+      }
+    }
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -225,19 +235,17 @@ class _AdminStudentListScreenState extends State<AdminStudentListScreen> {
               CircleAvatar(
                 radius: 24,
                 backgroundColor: AppColors.primary.withValues(alpha: 0.1),
-                backgroundImage: !kIsWeb && student['photoPath'] != null && File(student['photoPath']).existsSync()
-                    ? FileImage(File(student['photoPath']))
-                    : null,
-                child: !kIsWeb && student['photoPath'] != null && File(student['photoPath']).existsSync()
-                    ? null
-                    : Text(
+                backgroundImage: imageProvider,
+                child: imageProvider == null
+                    ? Text(
                         student['avatar'] ?? 'S',
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: AppColors.primary,
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
                         ),
-                      ),
+                      )
+                    : null,
               ),
               const SizedBox(width: 12),
               Expanded(

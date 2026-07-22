@@ -212,8 +212,16 @@ class _AdminEmployeeListScreenState extends State<AdminEmployeeListScreen> {
 
   Widget _buildEmployeeCard(Map<String, dynamic> emp) {
     final isActive = emp['status'] == 'Active';
-    final photo = emp['photoPath'] ?? emp['photo_path'] ?? emp['avatar'];
-    final bool hasValidPhoto = !kIsWeb && photo != null && File(photo.toString()).existsSync();
+    final photo = (emp['photoPath'] ?? emp['photo_path'] ?? emp['avatar'])?.toString();
+    
+    ImageProvider? imageProvider;
+    if (photo != null && photo.length > 5) {
+      if (photo.startsWith('http') || photo.startsWith('blob')) {
+        imageProvider = NetworkImage(photo);
+      } else if (!kIsWeb && File(photo).existsSync()) {
+        imageProvider = FileImage(File(photo));
+      }
+    }
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -241,10 +249,8 @@ class _AdminEmployeeListScreenState extends State<AdminEmployeeListScreen> {
               CircleAvatar(
                 radius: 24,
                 backgroundColor: AppColors.primary.withValues(alpha: 0.1),
-                backgroundImage: hasValidPhoto
-                    ? FileImage(File(photo.toString())) as ImageProvider
-                    : null,
-                child: !hasValidPhoto
+                backgroundImage: imageProvider,
+                child: imageProvider == null
                     ? const Icon(Icons.person, color: AppColors.primary)
                     : null,
               ),

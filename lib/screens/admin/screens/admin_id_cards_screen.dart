@@ -207,8 +207,17 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
                     DataColumn(label: const Text("")), // Action
                   ],
                   rows: _getPaginatedData().map((data) {
-                    final photo = data['photoPath'] ?? data['photo_path'] ?? data['avatar'];
-                    final bool fileExists = !kIsWeb && photo != null && photo.toString().length > 2 && File(photo.toString()).existsSync();
+                    final photo = (data['photoPath'] ?? data['photo_path'] ?? data['avatar'])?.toString();
+                    
+                    Widget? photoWidget;
+                    if (photo != null && photo.length > 5) {
+                      if (photo.startsWith('http') || photo.startsWith('blob')) {
+                        photoWidget = Image.network(photo, fit: BoxFit.cover);
+                      } else if (!kIsWeb && File(photo).existsSync()) {
+                        photoWidget = Image.file(File(photo), fit: BoxFit.cover);
+                      }
+                    }
+
                     return DataRow(
                       cells: [
                         DataCell(
@@ -231,10 +240,10 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
                               color: Colors.grey.shade300,
                               borderRadius: BorderRadius.circular(4),
                             ),
-                            child: fileExists
+                            child: photoWidget != null
                                 ? ClipRRect(
                                     borderRadius: BorderRadius.circular(4),
-                                    child: Image.file(File(photo.toString()), fit: BoxFit.cover),
+                                    child: photoWidget,
                                   )
                                 : Center(
                                     child: Text(
@@ -439,6 +448,7 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          scrollable: true,
           titlePadding: const EdgeInsets.all(0),
           contentPadding: const EdgeInsets.all(24),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
@@ -510,8 +520,16 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
   }
 
   Widget _buildIdCardPreview(Map<String, dynamic> studentData) {
-    final photo = studentData['photoPath'];
-    final bool hasValidPhoto = !kIsWeb && photo != null && File(photo.toString()).existsSync();
+    final photo = (studentData['photoPath'] ?? studentData['avatar'])?.toString();
+    
+    Widget? photoWidget;
+    if (photo != null && photo.length > 5) {
+      if (photo.startsWith('http') || photo.startsWith('blob')) {
+        photoWidget = Image.network(photo, fit: BoxFit.cover);
+      } else if (!kIsWeb && File(photo).existsSync()) {
+        photoWidget = Image.file(File(photo), fit: BoxFit.cover);
+      }
+    }
     final headerColor = Colors.blue.shade800;
     
     return Container(
@@ -566,10 +584,10 @@ class _AdminIDCardsScreenState extends State<AdminIDCardsScreen> {
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(color: Colors.grey.shade300, width: 2),
                       ),
-                      child: hasValidPhoto
+                      child: photoWidget != null
                           ? ClipRRect(
                               borderRadius: BorderRadius.circular(6),
-                              child: Image.file(File(photo.toString()), fit: BoxFit.cover),
+                              child: photoWidget,
                             )
                           : const Icon(Icons.person, color: Colors.grey, size: 50),
                     ),
